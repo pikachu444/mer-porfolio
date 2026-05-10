@@ -19,6 +19,10 @@ on:
         default: ""
         type: string
 
+# Node.js 24 강제 사용 (Node.js 20 deprecation 경고 해결)
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   analyze:
     runs-on: ubuntu-latest
@@ -45,6 +49,8 @@ jobs:
       - name: 메르AI 포트폴리오 분석 실행
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           FETCH_DAYS: ${{ github.event.inputs.fetch_days || '14' }}
           GEMINI_MODEL: ${{ github.event.inputs.gemini_model || '' }}
           OUTPUT_DIR: output

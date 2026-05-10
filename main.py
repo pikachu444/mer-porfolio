@@ -15,6 +15,8 @@ from pathlib import Path
 
 from fetch_mer import fetch_recent_posts
 from analyze import analyze_posts
+from track_returns import update_and_get_performance
+from telegram_notify import send_report
 
 
 # ─── 설정 ────────────────────────────────────────────────────────────────────
@@ -68,7 +70,7 @@ def main() -> int:
     print("=" * 60)
 
     # ── 1단계: 블로그 글 수집 ──────────────────────────────────────────────────
-    print("\n[1/3] 메르 블로그 글 수집 중...")
+    print("\n[1/5] 메르 블로그 글 수집 중...")
     try:
         posts = fetch_recent_posts(days=FETCH_DAYS)
     except Exception as e:
@@ -94,7 +96,7 @@ def main() -> int:
         print(f"     · ... 외 {len(posts) - 3}편")
 
     # ── 2단계: AI 분석 ─────────────────────────────────────────────────────────
-    print("\n[2/3] 메르AI 분석 중... (모델에 따라 수 분 소요)")
+    print("\n[2/5] 메르AI 분석 중... (모델에 따라 수 분 소요)")
     try:
         report = analyze_posts(posts, today_str)
     except Exception as e:
@@ -103,20 +105,36 @@ def main() -> int:
         save_error_log(msg, today)
         return 1
 
-    # ── 3단계: 저장 ────────────────────────────────────────────────────────────
-    print("\n[3/3] 리포트 저장 중...")
+    # ── 3단계: 수익률 추적 ────────────────────────────────────────────────────
+    print("\n[3/5] 누적 수익률 계산 중...")
+    try:
+        performance_section = update_and_get_performance(report, today)
+        report = report + performance_section
+    except Exception as e:
+        print(f"  ⚠ 수익률 추적 실패 (건너뜀): {e}")
+        # 수익률 추적 실패해도 메인 리포트는 정상 진행
+
+    # ── 4단계: 저장 ────────────────────────────────────────────────────────────
+    print("\n[4/5] 리포트 저장 중...")
     try:
         saved_path = save_report(report, today)
         print(f"  → 저장 완료: {saved_path}")
         print(f"  → 최신본: {OUTPUT_DIR}/latest.md")
     except Exception as e:
         print(f"❌ 파일 저장 실패: {e}")
-        # 저장 실패해도 stdout에는 출력
         print("\n" + "=" * 60)
         print("리포트 (stdout 출력):")
         print("=" * 60)
         print(report)
         return 1
+
+    # ── 5단계: 텔레그램 알림 ──────────────────────────────────────────────────
+    print("\n[5/5] 텔레그램 알림 전송 중...")
+    try:
+        send_report(report, today_str)
+    except Exception as e:
+        print(f"  ⚠ 텔레그램 전송 실패 (건너뜀): {e}")
+        # 알림 실패해도 전체 파이프라인은 성공으로 처리
 
     # ── 완료 요약 ──────────────────────────────────────────────────────────────
     print("\n" + "=" * 60)
