@@ -1,0 +1,62 @@
+name: 메르AI 포트폴리오 분석
+
+on:
+  # ── 자동 스케줄 (매월 1일, 15일 자정 KST = UTC 15:00) ──────────────────────
+  schedule:
+    - cron: "0 15 1,15 * *"
+
+  # ── 수동 실행 (GitHub Actions 탭에서 직접 버튼 클릭 가능) ───────────────────
+  workflow_dispatch:
+    inputs:
+      fetch_days:
+        description: "수집 기간 (일)"
+        required: false
+        default: "14"
+        type: string
+      gemini_model:
+        description: "Gemini 모델명 (비워두면 기본값 사용)"
+        required: false
+        default: ""
+        type: string
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 리포트 파일 커밋을 위해 필요
+
+    steps:
+      # ── 코드 체크아웃 ──────────────────────────────────────────────────────
+      - name: 코드 체크아웃
+        uses: actions/checkout@v4
+
+      # ── Python 설치 ────────────────────────────────────────────────────────
+      - name: Python 3.11 설치
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      # ── 패키지 설치 ────────────────────────────────────────────────────────
+      - name: 패키지 설치
+        run: pip install -r requirements.txt
+
+      # ── 분석 실행 ──────────────────────────────────────────────────────────
+      - name: 메르AI 포트폴리오 분석 실행
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          FETCH_DAYS: ${{ github.event.inputs.fetch_days || '14' }}
+          GEMINI_MODEL: ${{ github.event.inputs.gemini_model || '' }}
+          OUTPUT_DIR: output
+        run: python main.py
+
+      # ── 리포트 커밋 및 푸시 ──────────────────────────────────────────────
+      - name: 리포트 커밋
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add output/
+          # 변경사항이 있을 때만 커밋 (변경 없으면 스킵)
+          git diff --staged --quiet && echo "변경사항 없음 — 커밋 스킵" || \
+            git commit -m "📊 메르AI 리포트 업데이트 $(date +'%Y-%m-%d' --utc)"
+          git push
