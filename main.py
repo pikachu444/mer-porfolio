@@ -16,7 +16,8 @@ from pathlib import Path
 from fetch_mer import fetch_recent_posts
 from analyze import analyze_posts
 from track_returns import update_and_get_performance
-from telegram_notify import send_report
+from generate_dashboard import generate_all
+from telegram_notify import send_report, send_photo
 
 
 # ─── 설정 ────────────────────────────────────────────────────────────────────
@@ -28,24 +29,17 @@ FETCH_DAYS = int(os.environ.get("FETCH_DAYS", "14"))
 # ─── 출력 저장 ────────────────────────────────────────────────────────────────
 
 def save_report(report: str, today: datetime) -> Path:
-    """리포트를 마크다운 파일로 저장하고 경로 반환."""
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
     filename = OUTPUT_DIR / f"report_{today.strftime('%Y%m%d')}.md"
-
     with open(filename, "w", encoding="utf-8") as f:
         f.write(report)
-
-    # 항상 최신 리포트를 latest.md 로도 저장 (쉬운 접근용)
     latest_path = OUTPUT_DIR / "latest.md"
     with open(latest_path, "w", encoding="utf-8") as f:
         f.write(report)
-
     return filename
 
 
 def save_error_log(error: str, today: datetime) -> None:
-    """오류 발생 시 로그 파일 저장."""
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     log_path = OUTPUT_DIR / f"error_{today.strftime('%Y%m%d_%H%M%S')}.log"
     with open(log_path, "w", encoding="utf-8") as f:
@@ -56,10 +50,6 @@ def save_error_log(error: str, today: datetime) -> None:
 # ─── 메인 ─────────────────────────────────────────────────────────────────────
 
 def main() -> int:
-    """
-    전체 파이프라인 실행.
-    Returns: 0 (성공) or 1 (실패)
-    """
     today = datetime.now()
     today_str = today.strftime("%Y년 %m월 %d일")
 
@@ -70,7 +60,7 @@ def main() -> int:
     print("=" * 60)
 
     # ── 1단계: 블로그 글 수집 ──────────────────────────────────────────────────
-    print("\n[1/5] 메르 블로그 글 수집 중...")
+    print("\n[1/6] 메르 블로그 글 수집 중...")
     try:
         posts = fetch_recent_posts(days=FETCH_DAYS)
     except Exception as e:
@@ -82,7 +72,6 @@ def main() -> int:
     if not posts:
         msg = (
             f"최근 {FETCH_DAYS}일간 수집된 글이 없습니다.\n"
-            "메르가 휴가 중이거나 네트워크 문제일 수 있습니다.\n"
             "FETCH_DAYS 값을 늘려서 재시도해 보세요."
         )
         print(f"⚠ {msg}")
@@ -96,7 +85,7 @@ def main() -> int:
         print(f"     · ... 외 {len(posts) - 3}편")
 
     # ── 2단계: AI 분석 ─────────────────────────────────────────────────────────
-    print("\n[2/5] 메르AI 분석 중... (모델에 따라 수 분 소요)")
+    print("\n[2/6] 메르AI 분석 중... (수 분 소요)")
     try:
         report = analyze_posts(posts, today_str)
     except Exception as e:
@@ -106,37 +95,43 @@ def main() -> int:
         return 1
 
     # ── 3단계: 수익률 추적 ────────────────────────────────────────────────────
-    print("\n[3/5] 누적 수익률 계산 중...")
+    print("\n[3/6] 누적 수익률 계산 중...")
     try:
         performance_section = update_and_get_performance(report, today)
         report = report + performance_section
     except Exception as e:
         print(f"  ⚠ 수익률 추적 실패 (건너뜀): {e}")
-        # 수익률 추적 실패해도 메인 리포트는 정상 진행
 
     # ── 4단계: 저장 ────────────────────────────────────────────────────────────
-    print("\n[4/5] 리포트 저장 중...")
+    print("\n[4/6] 리포트 저장 중...")
     try:
         saved_path = save_report(report, today)
         print(f"  → 저장 완료: {saved_path}")
-        print(f"  → 최신본: {OUTPUT_DIR}/latest.md")
     except Exception as e:
         print(f"❌ 파일 저장 실패: {e}")
-        print("\n" + "=" * 60)
-        print("리포트 (stdout 출력):")
-        print("=" * 60)
         print(report)
         return 1
 
-    # ── 5단계: 텔레그램 알림 ──────────────────────────────────────────────────
-    print("\n[5/5] 텔레그램 알림 전송 중...")
+    # ── 5단계: 대시보드 생성 ──────────────────────────────────────────────────
+    print("\n[5/6] 대시보드 생성 중...")
+    png_path = None
     try:
+        _, png_path = generate_all(report, today)
+    except Exception as e:
+        print(f"  ⚠ 대시보드 생성 실패 (건너뜀): {e}")
+
+    # ── 6단계: 텔레그램 알림 ──────────────────────────────────────────────────
+    print("\n[6/6] 텔레그램 알림 전송 중...")
+    try:
+        # PNG 차트 먼저 전송 (있을 경우)
+        if png_path and png_path.exists():
+            send_photo(str(png_path), f"📊 메르AI 포트폴리오 성과 | {today_str}")
+        # 리포트 텍스트 전송
         send_report(report, today_str)
     except Exception as e:
         print(f"  ⚠ 텔레그램 전송 실패 (건너뜀): {e}")
-        # 알림 실패해도 전체 파이프라인은 성공으로 처리
 
-    # ── 완료 요약 ──────────────────────────────────────────────────────────────
+    # ── 완료 ──────────────────────────────────────────────────────────────────
     print("\n" + "=" * 60)
     print("✅ 분석 완료!")
     print(f"   분석 글 수: {len(posts)}편")
@@ -144,7 +139,6 @@ def main() -> int:
     print(f"   저장 경로: {saved_path}")
     print("=" * 60)
 
-    # 리포트 앞부분 미리보기 (GitHub Actions 로그에서 확인용)
     preview_lines = report.split("\n")[:30]
     print("\n--- 리포트 미리보기 ---")
     print("\n".join(preview_lines))

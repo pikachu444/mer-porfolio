@@ -1,9 +1,9 @@
 name: 메르AI 포트폴리오 분석
 
 on:
-  # ── 자동 스케줄 (매월 1일, 15일 자정 KST = UTC 15:00) ──────────────────────
+  # ── 자동 스케줄 (매일 자정 KST = UTC 15:00) ───────────────────────────────
   schedule:
-    - cron: "0 15 1,15 * *"
+    - cron: "0 15 * * *"
 
   # ── 수동 실행 (GitHub Actions 탭에서 직접 버튼 클릭 가능) ───────────────────
   workflow_dispatch:
@@ -11,7 +11,7 @@ on:
       fetch_days:
         description: "수집 기간 (일)"
         required: false
-        default: "14"
+        default: "2"
         type: string
       gemini_model:
         description: "Gemini 모델명 (비워두면 기본값 사용)"
@@ -51,7 +51,8 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          FETCH_DAYS: ${{ github.event.inputs.fetch_days || '14' }}
+          DASHBOARD_URL: https://pikachu444.github.io/mer-porfolio/output/dashboard.html
+          FETCH_DAYS: ${{ github.event.inputs.fetch_days || '2' }}
           GEMINI_MODEL: ${{ github.event.inputs.gemini_model || '' }}
           OUTPUT_DIR: output
         run: python main.py

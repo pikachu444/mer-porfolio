@@ -3,16 +3,15 @@ track_returns.py
 포트폴리오 추천 누적 수익률 추적 모듈
 
 매 리포트 실행 시:
-  1. 이번 리포트 추천 종목을 파싱 → 진입가(당일 종가) 기록
-  2. 과거 추천 종목의 현재가를 조회해 수익률 계산
-  3. 리포트 하단에 붙일 "📈 누적 수익률 추적" 섹션 반환
+  1. 이번 리포트 추천 종목을 파싱 → 진입가 + 환율 기록
+  2. 과거 추천 종목의 현재가/환율을 조회해 수익률 계산
+  3. performance_cache.json 저장 (대시보드에서 사용)
+  4. 리포트 하단에 붙일 마크다운 섹션 반환
 
-데이터 저장:
-  output/portfolio_history.json — 누적 추천/가격 기록
-
-야후파이낸스 한국 주식 티커 형식:
-  KOSPI:  {6자리코드}.KS  예: 005930.KS (삼성전자)
-  KOSDAQ: {6자리코드}.KQ  예: 035720.KQ (카카오)
+야후파이낸스 티커:
+  KOSPI:   {6자리코드}.KS  예: 005930.KS
+  KOSDAQ:  {6자리코드}.KQ  예: 035720.KQ
+  USD/KRW: KRW=X
 """
 
 import json
@@ -32,26 +31,44 @@ except ImportError:
 
 OUTPUT_DIR = Path(os.environ.get("OUTPUT_DIR", "output"))
 HISTORY_FILE = OUTPUT_DIR / "portfolio_history.json"
-MAX_HISTORY_MONTHS = 12  # 12개월 이전 레코드 자동 삭제
+CACHE_FILE = OUTPUT_DIR / "performance_cache.json"
+MAX_HISTORY_MONTHS = 12
+
+
+# ─── 환율 조회 ────────────────────────────────────────────────────────────────
+
+def _get_usdkrw(date_str: Optional[str] = None) -> Optional[float]:
+    """
+    USD/KRW 환율 반환.
+    date_str=None 이면 현재 환율, 날짜 지정 시 해당일 환율.
+    """
+    if not YFINANCE_AVAILABLE:
+        return None
+    try:
+        ticker = yf.Ticker("KRW=X")
+        if date_str is None:
+            rate = getattr(ticker.fast_info, "last_price", None)
+            return float(rate) if rate and rate > 0 else None
+        # 특정 날짜
+        target = datetime.strptime(date_str, "%Y-%m-%d")
+        start = (target - timedelta(days=5)).strftime("%Y-%m-%d")
+        end = (target + timedelta(days=5)).strftime("%Y-%m-%d")
+        hist = ticker.history(start=start, end=end)
+        if hist.empty:
+            return None
+        hist.index = hist.index.tz_localize(None) if hist.index.tzinfo else hist.index
+        closest = min(hist.index, key=lambda d: abs((d.to_pydatetime() - target).days))
+        return float(hist.loc[closest, "Close"])
+    except Exception:
+        return None
 
 
 # ─── 리포트 파싱 ──────────────────────────────────────────────────────────────
 
 def parse_portfolio_from_report(report_text: str) -> dict:
-    """
-    마크다운 리포트에서 종목 추천 테이블 파싱.
-
-    Returns:
-        {
-          "kr": [{"name": "한국조선해양", "code": "009540",
-                  "action": "매수", "weight": "15%"}],
-          "us": [{"name": "Nvidia", "ticker": "NVDA",
-                  "action": "Buy",  "weight": "20%"}]
-        }
-    """
+    """마크다운 리포트에서 종목 추천 테이블 파싱."""
     result = {"kr": [], "us": []}
 
-    # 국내주식 섹션 파싱 (🇰🇷 또는 국내주식)
     kr_match = re.search(
         r"(?:🇰🇷|국내주식)[^\n]*\n\|[^\n]+\|\n\|[-| :]+\|\n((?:\|[^\n]+\|\n?)+)",
         report_text,
@@ -69,7 +86,6 @@ def parse_portfolio_from_report(report_text: str) -> dict:
                         "weight": cells[3],
                     })
 
-    # 해외주식 섹션 파싱 (🇺🇸 또는 해외주식)
     us_match = re.search(
         r"(?:🇺🇸|해외주식)[^\n]*\n\|[^\n]+\|\n\|[-| :]+\|\n((?:\|[^\n]+\|\n?)+)",
         report_text,
@@ -93,17 +109,13 @@ def parse_portfolio_from_report(report_text: str) -> dict:
 # ─── 주가 조회 ────────────────────────────────────────────────────────────────
 
 def _resolve_kr_ticker(code: str) -> Optional[str]:
-    """
-    6자리 코드로 야후파이낸스 티커 반환.
-    KOSPI(.KS) → KOSDAQ(.KQ) 순으로 시도.
-    """
+    """6자리 코드 → 야후파이낸스 티커 (KOSPI 우선, KOSDAQ 폴백)."""
     if not YFINANCE_AVAILABLE:
         return None
     for suffix in [".KS", ".KQ"]:
         ticker = code + suffix
         try:
-            fast = yf.Ticker(ticker).fast_info
-            price = getattr(fast, "last_price", None)
+            price = getattr(yf.Ticker(ticker).fast_info, "last_price", None)
             if price and price > 0:
                 return ticker
         except Exception:
@@ -113,10 +125,7 @@ def _resolve_kr_ticker(code: str) -> Optional[str]:
 
 
 def _get_price_on_date(ticker: str, date_str: str) -> Optional[float]:
-    """
-    특정 날짜(YYYY-MM-DD) 종가 반환.
-    해당일 거래 없으면 ±5영업일 내 가장 가까운 날짜 사용.
-    """
+    """특정 날짜 종가 반환. 없으면 ±7일 내 가장 가까운 날짜 사용."""
     if not YFINANCE_AVAILABLE:
         return None
     try:
@@ -134,18 +143,17 @@ def _get_price_on_date(ticker: str, date_str: str) -> Optional[float]:
 
 
 def _get_current_price(ticker: str) -> Optional[float]:
-    """현재가(장중 실시간 or 전일 종가) 반환."""
+    """현재가 반환."""
     if not YFINANCE_AVAILABLE:
         return None
     try:
-        fast = yf.Ticker(ticker).fast_info
-        price = getattr(fast, "last_price", None)
+        price = getattr(yf.Ticker(ticker).fast_info, "last_price", None)
         return float(price) if price and price > 0 else None
     except Exception:
         return None
 
 
-# ─── 히스토리 파일 관리 ───────────────────────────────────────────────────────
+# ─── 히스토리 관리 ────────────────────────────────────────────────────────────
 
 def _load_history() -> dict:
     if HISTORY_FILE.exists():
@@ -164,7 +172,6 @@ def _save_history(history: dict) -> None:
 
 
 def _prune_old_records(history: dict) -> dict:
-    """MAX_HISTORY_MONTHS 이전 오래된 레코드 삭제."""
     cutoff = datetime.now() - timedelta(days=MAX_HISTORY_MONTHS * 30)
     history["records"] = [
         r for r in history["records"]
@@ -173,7 +180,98 @@ def _prune_old_records(history: dict) -> dict:
     return history
 
 
-# ─── 성과 섹션 포맷 ───────────────────────────────────────────────────────────
+# ─── 성과 계산 ────────────────────────────────────────────────────────────────
+
+def calculate_performance_rows(history: dict, today_str: str) -> list:
+    """
+    과거 추천 종목의 현재 수익률을 계산해서 반환.
+    US 종목은 USD 수익률 + KRW 수익률 모두 계산.
+    """
+    past = [r for r in history["records"] if r["date"] < today_str]
+    if not past:
+        return []
+
+    current_usdkrw = _get_usdkrw()
+    rows = []
+
+    for rec in past:
+        if not rec.get("entry_price") or not rec.get("ticker"):
+            continue
+
+        current_price = _get_current_price(rec["ticker"])
+        if current_price is None:
+            continue
+
+        entry = rec["entry_price"]
+        ret_pct = (current_price - entry) / entry * 100
+
+        row = {
+            "name": rec["name"],
+            "ticker": rec["ticker"],
+            "type": rec["type"],
+            "date": rec["date"],
+            "action": rec["action"],
+            "weight": rec.get("weight", ""),
+            "entry_price": entry,
+            "current_price": current_price,
+            "return_pct": ret_pct,  # USD 기준 (KR은 KRW 기준)
+        }
+
+        # US 종목: KRW 기준 수익률 추가
+        if rec["type"] == "US":
+            entry_usdkrw = rec.get("entry_usdkrw")
+            if entry_usdkrw and current_usdkrw:
+                entry_krw = entry * entry_usdkrw
+                current_krw = current_price * current_usdkrw
+                row["return_pct_krw"] = (current_krw - entry_krw) / entry_krw * 100
+                row["entry_usdkrw"] = entry_usdkrw
+                row["current_usdkrw"] = current_usdkrw
+            else:
+                row["return_pct_krw"] = ret_pct  # 환율 없으면 USD와 동일
+
+        rows.append(row)
+        time.sleep(0.1)
+
+    return rows
+
+
+def _save_performance_cache(rows: list, today_str: str) -> None:
+    """대시보드용 성과 데이터 캐시 저장."""
+    # 날짜별로 그룹화
+    by_date = {}
+    for r in rows:
+        d = r["date"]
+        if d not in by_date:
+            by_date[d] = []
+        by_date[d].append(r)
+
+    # 날짜별 평균 수익률 계산 (KRW 기준 통일)
+    report_summaries = []
+    for d, stocks in sorted(by_date.items()):
+        returns = []
+        for s in stocks:
+            ret = s.get("return_pct_krw", s["return_pct"])
+            returns.append(ret)
+        avg = sum(returns) / len(returns) if returns else 0
+        report_summaries.append({
+            "date": d,
+            "avg_return_krw": round(avg, 2),
+            "stock_count": len(stocks),
+            "stocks": stocks,
+        })
+
+    cache = {
+        "updated": today_str,
+        "report_summaries": report_summaries,
+        "all_rows": rows,
+    }
+
+    CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with open(CACHE_FILE, "w", encoding="utf-8") as f:
+        json.dump(cache, f, ensure_ascii=False, indent=2)
+
+
+# ─── 마크다운 섹션 포맷 ───────────────────────────────────────────────────────
 
 def _format_no_history(today_str: str) -> str:
     return (
@@ -189,53 +287,45 @@ def _format_performance(rows: list, today_str: str) -> str:
         return (
             "\n\n---\n\n"
             "## 📈 누적 수익률 추적\n\n"
-            "> 주가 조회 실패 또는 기록 없음 — 다음 실행 시 재시도됩니다.\n"
+            "> 주가 조회 실패 또는 기록 없음\n"
         )
 
-    rows.sort(key=lambda x: x["return_pct"], reverse=True)
+    rows_sorted = sorted(rows, key=lambda x: x.get("return_pct_krw", x["return_pct"]), reverse=True)
 
     lines = [
-        "",
-        "",
-        "---",
-        "",
+        "", "", "---", "",
         "## 📈 누적 수익률 추적",
-        f"*기준일: {today_str}*",
+        f"*기준일: {today_str} | 미국 주식은 원화 환산 기준*",
         "",
-        "| 종목 | 추천일 | 진입가 | 현재가 | 수익률 | 판단 |",
-        "|------|--------|--------|--------|--------|------|",
+        "| 종목 | 추천일 | 진입가 | 현재가 | 수익률(KRW) | 판단 |",
+        "|------|--------|--------|--------|-------------|------|",
     ]
 
-    total_ret = 0.0
-    count = 0
-
-    for r in rows:
-        pct = r["return_pct"]
-        sign = "▲" if pct >= 0 else "▼"
-        emoji = "🟢" if pct >= 5 else ("🔴" if pct <= -5 else "🟡")
+    total, count = 0.0, 0
+    for r in rows_sorted:
+        ret = r.get("return_pct_krw", r["return_pct"])
+        sign = "▲" if ret >= 0 else "▼"
+        emoji = "🟢" if ret >= 5 else ("🔴" if ret <= -5 else "🟡")
         cur = "₩" if r["type"] == "KR" else "$"
         lines.append(
             f"| {r['name']} | {r['date']} | "
             f"{cur}{r['entry_price']:,.0f} | "
             f"{cur}{r['current_price']:,.0f} | "
-            f"{emoji} {sign}{abs(pct):.1f}% | "
+            f"{emoji} {sign}{abs(ret):.1f}% | "
             f"{r['action']} |"
         )
-        total_ret += pct
+        total += ret
         count += 1
 
     if count:
-        avg = total_ret / count
-        avg_sign = "▲" if avg >= 0 else "▼"
-        lines.append(
-            f"| **평균 ({count}종목)** | — | — | — | "
-            f"**{avg_sign}{abs(avg):.1f}%** | — |"
-        )
+        avg = total / count
+        s = "▲" if avg >= 0 else "▼"
+        lines.append(f"| **평균 ({count}종목)** | — | — | — | **{s}{abs(avg):.1f}%** | — |")
 
     lines += [
         "",
-        "> ⚠️ 단순 가격 변동 기준. 배당·환율·세금·슬리피지 미반영.",
-        "> 추천 후 첫 거래일 종가 기준으로 수익률 계산.",
+        "> ⚠️ 단순 가격 변동 기준. 배당·세금·슬리피지 미반영.",
+        "> 미국 주식: 추천일 환율 vs 현재 환율 적용.",
     ]
 
     return "\n".join(lines)
@@ -246,33 +336,23 @@ def _format_performance(rows: list, today_str: str) -> str:
 def update_and_get_performance(report_text: str, today: datetime) -> str:
     """
     이번 리포트 추천 종목을 히스토리에 기록하고,
-    과거 추천의 누적 수익률 섹션(마크다운 문자열)을 반환.
-
-    Args:
-        report_text: 이번 리포트 전체 텍스트
-        today:       실행 기준 datetime
-
-    Returns:
-        리포트 하단에 붙일 마크다운 섹션 문자열
+    누적 수익률 마크다운 섹션을 반환.
+    performance_cache.json도 저장 (대시보드용).
     """
     if not YFINANCE_AVAILABLE:
-        return (
-            "\n\n---\n\n"
-            "## 📈 누적 수익률 추적\n\n"
-            "> `yfinance` 미설치 — `pip install yfinance` 후 재실행\n"
-        )
+        return "\n\n---\n\n## 📈 누적 수익률 추적\n\n> `yfinance` 미설치\n"
 
     today_str = today.strftime("%Y-%m-%d")
     portfolio = parse_portfolio_from_report(report_text)
     history = _load_history()
 
-    # ── 이번 추천 진입가 기록 ────────────────────────────────────────────────
+    # ── 이번 추천 진입가 + 환율 기록 ─────────────────────────────────────────
     print("  📌 이번 추천 종목 진입가 기록 중...")
+    current_usdkrw = _get_usdkrw()
     new_entries = []
 
     for stock in portfolio["kr"]:
         code = stock["code"]
-        print(f"     KR: {stock['name']} ({code}) — 티커 조회 중...")
         yahoo_ticker = _resolve_kr_ticker(code)
         entry_price = _get_price_on_date(yahoo_ticker, today_str) if yahoo_ticker else None
         new_entries.append({
@@ -285,11 +365,10 @@ def update_and_get_performance(report_text: str, today: datetime) -> str:
             "date": today_str,
             "entry_price": entry_price,
         })
-        print(f"       → ticker={yahoo_ticker}, price={entry_price}")
+        print(f"     KR: {stock['name']} → {yahoo_ticker}, ₩{entry_price:,.0f}" if entry_price else f"     KR: {stock['name']} → 가격 조회 실패")
 
     for stock in portfolio["us"]:
         ticker = stock["ticker"]
-        print(f"     US: {stock['name']} ({ticker}) — 가격 조회 중...")
         entry_price = _get_price_on_date(ticker, today_str)
         new_entries.append({
             "type": "US",
@@ -299,45 +378,30 @@ def update_and_get_performance(report_text: str, today: datetime) -> str:
             "weight": stock["weight"],
             "date": today_str,
             "entry_price": entry_price,
+            "entry_usdkrw": current_usdkrw,
         })
-        print(f"       → price={entry_price}")
+        krw_price = f"₩{entry_price * current_usdkrw:,.0f}" if entry_price and current_usdkrw else "환율 없음"
+        print(f"     US: {stock['name']} → ${entry_price:,.2f} ({krw_price})" if entry_price else f"     US: {stock['name']} → 가격 조회 실패")
         time.sleep(0.3)
 
-    # 오늘 날짜 중복 레코드 교체 후 저장
+    if current_usdkrw:
+        print(f"  💱 현재 USD/KRW: {current_usdkrw:,.1f}")
+
     history["records"] = [r for r in history["records"] if r["date"] != today_str]
     history["records"].extend(new_entries)
     history = _prune_old_records(history)
     _save_history(history)
     print(f"  💾 히스토리 저장 완료 (총 {len(history['records'])}건)")
 
-    # ── 과거 추천 수익률 계산 ─────────────────────────────────────────────────
-    past = [r for r in history["records"] if r["date"] < today_str]
-    if not past:
+    # ── 과거 수익률 계산 + 캐시 저장 ─────────────────────────────────────────
+    print("  📊 과거 추천 수익률 계산 중...")
+    perf_rows = calculate_performance_rows(history, today_str)
+    _save_performance_cache(perf_rows, today_str)
+    print(f"  → 수익률 계산 완료: {len(perf_rows)}종목")
+
+    if not perf_rows:
         return _format_no_history(today_str)
 
-    print("  📊 과거 추천 수익률 계산 중...")
-    perf_rows = []
-
-    for rec in past:
-        if not rec.get("entry_price") or not rec.get("ticker"):
-            continue
-        current = _get_current_price(rec["ticker"])
-        if current is None:
-            continue
-        ret = (current - rec["entry_price"]) / rec["entry_price"] * 100
-        perf_rows.append({
-            "name": rec["name"],
-            "ticker": rec["ticker"],
-            "type": rec["type"],
-            "date": rec["date"],
-            "entry_price": rec["entry_price"],
-            "current_price": current,
-            "return_pct": ret,
-            "action": rec["action"],
-        })
-        time.sleep(0.1)
-
-    print(f"  → 수익률 계산 완료: {len(perf_rows)}종목")
     return _format_performance(perf_rows, today_str)
 
 
