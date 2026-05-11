@@ -66,4 +66,5 @@ jobs:
           # 변경사항이 있을 때만 커밋 (변경 없으면 스킵)
           git diff --staged --quiet && echo "변경사항 없음 — 커밋 스킵" || \
             git commit -m "📊 메르AI 리포트 업데이트 $(date +'%Y-%m-%d' --utc)"
+          git pull --rebase origin main
           git push
