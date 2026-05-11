@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>메르AI 포트폴리오 대시보드</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --border: #334155;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --green: #22c55e;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --yellow: #eab308;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
+  header { background: var(--card); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+  header h1 { font-size: 1.2rem; font-weight: 700; }
+  header span { font-size: 0.8rem; color: var(--muted); }
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 20px; margin-bottom: 24px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .card h2 { font-size: 0.95rem; color: var(--muted); margin-bottom: 16px; font-weight: 600; }
+  .chart-wrap { position: relative; height: 280px; }
+  .empty-msg { color: var(--muted); font-size: 0.85rem; text-align: center; padding: 60px 0; }
+  /* 리포트 섹션 */
+  #report-section { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; }
+  #report-section h2 { font-size: 0.95rem; color: var(--muted); margin-bottom: 20px; font-weight: 600; }
+  #report-content h1 { font-size: 1.4rem; margin: 20px 0 10px; color: var(--text); }
+  #report-content h2 { font-size: 1.1rem; margin: 20px 0 8px; color: var(--blue); border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+  #report-content h3 { font-size: 0.95rem; margin: 14px 0 6px; color: var(--yellow); }
+  #report-content p { font-size: 0.88rem; line-height: 1.7; color: #cbd5e1; margin: 6px 0; }
+  #report-content table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin: 12px 0; }
+  #report-content th { background: #0f172a; color: var(--muted); padding: 8px 10px; text-align: left; border: 1px solid var(--border); }
+  #report-content td { padding: 7px 10px; border: 1px solid var(--border); color: #cbd5e1; }
+  #report-content tr:hover td { background: #0f172a44; }
+  #report-content blockquote { border-left: 3px solid var(--blue); padding-left: 12px; color: var(--muted); font-size: 0.85rem; margin: 10px 0; }
+  #report-content hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+  #report-content strong { color: var(--text); }
+  #report-content code { background: #0f172a; padding: 2px 6px; border-radius: 4px; font-size: 0.82rem; color: var(--green); }
+  #report-content ul, #report-content ol { padding-left: 20px; font-size: 0.88rem; color: #cbd5e1; line-height: 1.7; }
+</style>
+</head>
+<body>
+<header>
+  <h1>📊 메르AI 포트폴리오 대시보드</h1>
+  <span>마지막 업데이트: <strong id="updatedAt"></strong></span>
+</header>
+<div class="container">
+  <div class="grid">
+    <!-- 이번 회차 종목별 수익률 -->
+    <div class="card">
+      <h2>📊 최신 리포트 종목별 수익률 (원화 기준)</h2>
+      <div class="chart-wrap">
+        <canvas id="stocksChart"></canvas>
+        <div id="stocksEmpty" class="empty-msg" style="display:none">첫 실행 — 다음 리포트부터 표시됩니다</div>
+      </div>
+    </div>
+    <!-- 회차별 평균 수익률 -->
+    <div class="card">
+      <h2>📈 리포트 회차별 평균 수익률</h2>
+      <div class="chart-wrap">
+        <canvas id="reportChart"></canvas>
+        <div id="reportEmpty" class="empty-msg" style="display:none">데이터 2회 이상 누적 후 표시됩니다</div>
+      </div>
+    </div>
+  </div>
+  <!-- 리포트 전문 -->
+  <div id="report-section">
+    <h2>📄 최신 리포트 전문</h2>
+    <div id="report-content"></div>
+  </div>
+</div>
+<script>
+
+const reportDates = [];
+const reportAvgs = [];
+const latestNames = [];
+const latestReturns = [];
+const reportText = `# 메르AI 포트폴리오 리포트
+**분석 기간:** 2026-05-10 ~ 2026-05-11
+**리포트 생성:** 2026-05-11
+**학습 글 수:** 4편
+
+---
+
+## 📌 시장 분석 핵심 인사이트
+
+### 인사이트 1: 중국의 국가 전략적 인재 재배치 — AI, 반도체, 에너지, 로봇
+
+1.  중국 정부는 의료개혁과 금융권 임금 삭감을 통해 의사와 금융권의 매력을 의도적으로 낮추고 있음.
+2.  2022년 중국 의사 평균 임금은 월 150만원 수준이며, 의대 졸업생의 96%가 병원이 아닌 제약, 의료기기, IT 헬스케어, 공무원 등 다른 분야로 진출하고 있음.
+3.  2025년 중국 10대 고임금 업종 최상단은 인공지능&데이터 과학자로 연봉 15억원까지 기록하는 등 특정 분야의 임금을 대폭 인상하고 있음.
+
+**해석(나비효과):**
+4.  중국은 인재를 반도체, AI, 에너지, 로봇 등 4대 핵심 전략 산업으로 유도하려는 명확한 정책 의도를 보인 것임.
+5.  이는 장기적으로 해당 산업 분야의 기술 발전과 생산성 향상에 기여하며, 글로벌 기술 패권 경쟁 구도에 영향을 미치게 됨.
+6.  중국 시장에 진출했거나, 중국의 기술 발전에 영향을 받는 한국 및 미국 기업들은 이러한 인재 흐름과 산업 정책 변화를 주시해야 함.
+
+**투자판단:** Watch — 중국의 정책 방향에 따른 장기적 산업 변화를 관찰해야 함.
+
+---
+
+### 인사이트 2: 호르무즈 해협 지정학적 리스크 재부상 — 해운, 에너지, 방산
+
+1.  이란 혁명수비대가 호르무즈 해협의 통제 범위를 대폭 확대했음.
+2.  한국 화물선 HMM NAMU호가 이란이 새로 설정한 통제구역 근접 해역에서 2기의 미상 비행체(드론)에 의해 공격받았음.
+3.  공격은 1분 간격으로 두 차례 이루어졌으며, 선박 외부에 폭 5m, 깊이 7m의 훼손이 확인되었고 비행체 엔진 잔해가 수거됨.
+
+**해석(나비효과):**
+4.  이란의 통제구역 확대와 선박에 대한 드론 공격은 호르무즈 해협의 지정학적 리스크가 고조되었음을 의미함.
+5.  이는 중동발 에너지(원유, LNG) 공급망 불안정성을 가중시키고, 해상 운송 비용 및 보험료 상승으로 이어질 수 있는 것임.
+6.  에너지 관련 기업 및 해운 업종의 변동성이 확대될 수 있으며, 드론 공격에 대한 방어 기술을 가진 방산 분야에 대한 관심이 높아질 수 있음.
+
+**투자판단:** Watch — 에너지 및 해운 섹터의 변동성 확대 가능성에 대비해야 함.
+
+---
+
+### 인사이트 3: 미국 스테이블코인 규제와 정치적 변수 — 블록체인, 금융
+
+1.  미국 CLARITY Act는 스테이블코인 보유자에게 이자 지급 허용 여부를 두고 은행권과 코인업계가 치열하게 로비전을 벌이고 있음.
+2.  최근 합의안은 '활동 기반' 인센티브를 통해 사실상 이자 지급의 우회로를 열어두어 코인업계에 유리한 방향으로 해석될 여지가 있음.
+3.  민주당은 트럼프 가문의 코인 사업(World Liberty Financial, WLF)과 관련된 이해상충 조항 강화를 요구하며 법안 통과에 새로운 정치적 변수로 작용하고 있음.
+
+**해석(나비효과):**
+4.  백악관이 코인업계에 우호적인 입장을 보이며, 스테이블코인 시장의 성장을 간접적으로 지원하려는 의도가 엿보이는 것임.
+5.  규제 불확실성이 해소될 경우, 스테이블코인 및 관련 블록체인 기술의 제도권 편입이 가속화될 수 있음.
+6.  트럼프 관련 윤리 조항은 법안 통과를 지연시키거나, 향후 트럼프 재선 시 코인 정책에 대한 불확실성을 높일 수 있음.
+
+**투자판단:** Watch — 규제 불확실성이 크지만, 장기적으로 코인업계에 긍정적일 수 있는 흐름을 주시해야 함.
+
+---
+
+## 📊 포트폴리오 추천
+
+> ※ 이 추천은 메르 블로그의 거시 분석을 기반으로 한 참고 의견이며,
+> 투자 결정은 본인 판단 하에 이루어져야 합니다.
+
+### 🇰🇷 국내주식 (한국)
+
+| 종목명 | 코드 | 판단 | 목표비중 | 핵심 근거 |
+|--------|------|------|----------|-----------|
+| HMM    | 011200 | 관망 | 0%       | 호르무즈 해협 리스크 증가 및 피격 사실 확인. |
+
+**국내 주의종목 (리스크):**
+- HMM: 호르무즈 해협의 지정학적 리스크 고조로 운송 불확실성 증가.
+
+---
+
+### 🇺🇸 해외주식 (미국)
+
+| 종목명 | 티커 | 판단 | 목표비중 | 핵심 근거 |
+|--------|------|------|----------|-----------|
+| -      | -    | -    | -        | -         |
+
+**미국 주의종목 (리스크):**
+- World Liberty Financial (WLF): 트럼프 가문 관련 이해상충 논란으로 규제 불확실성 증대.
+
+---
+
+### 📦 ETF / 대안자산
+
+| 이름 | 코드/티커 | 판단 | 목표비중 | 용도 |
+|------|----------|------|----------|------|
+| -    | -        | -    | -        | -    |
+
+---
+
+## 🔍 섹터별 온도계
+
+| 섹터 | 온도 | 변화 | 근거 요약 |
+|------|------|------|-----------|
+| 조선/해운 | 🔥🔥🔥 | ▲ | 호르무즈 해협 리스크 고조로 운임 및 보험료 상승 압력. |
+| 에너지/정유 | 🔥🔥 | ▲ | 호르무즈 해협 불안정성으로 에너지 공급망 리스크 증가. |
+| 방산 | 🔥 | ▲ | 드론 공격 사례 발생으로 드론 방어 기술 수요 증가 가능성. |
+| 반도체 | 🔥🔥 | ▲ | 중국의 전략적 인재 재배치로 장기적 기술 발전 기대. |
+| 2차전지 | 🌡 | - | 언급 없음. |
+| 금/귀금속 | 🌡 | - | 언급 없음. |
+| 미국 빅테크 | 🔥🔥 | ▲ | 중국의 AI/데이터 과학자 고임금 정책으로 AI 기술 발전 기대. |
+| 블록체인/암호화폐 | 🌡 | - | 스테이블코인 규제 불확실성 및 정치적 변수 존재. |
+| 금융 | 🧊 | ▼ | 중국의 금융권 임금 삭감 정책 및 미국 은행권의 코인업계와의 경쟁 심화. |
+| 의료 | 🧊 | ▼ | 중국의 의료개혁으로 의사 소득 감소 및 비인기 전공화. |
+| 식품/편의점 | 🌡 | - | 저항성 전분 관련 긍정적 연구 결과, 직접적인 투자 테마로 보기 어려움. |
+
+(온도: 🧊=매우 부정적, 🌡=중립, 🔥=긍정적, 🔥🔥🔥=매우 긍정적)
+
+---
+
+## 💬 한 줄 코멘트
+
+> 지정학적 리스크와 중국의 전략적 인재 재배치, 그리고 미국 규제 환경 변화가 시장의 큰 흐름을 결정하는 중임.
+
+---
+
+## ⚠️ 전회 대비 주요 변경사항
+
+- 이번이 첫 리포트임.
+
+---
+
+## 📈 누적 수익률 추적
+
+> 오늘(2026-05-11)이 첫 기록입니다. 다음 리포트부터 수익률이 표시됩니다.
+`;
+const updatedAt = "2026-05-11";
+    
+
+document.getElementById('updatedAt').textContent = updatedAt;
+
+// 색상 헬퍼
+function barColor(val) { return val >= 0 ? '#22c55e' : '#ef4444'; }
+
+Chart.defaults.color = '#94a3b8';
+Chart.defaults.borderColor = '#334155';
+
+// ── 종목별 수익률 차트 ──────────────────────────────────────────────────
+if (latestNames.length > 0) {
+  const ctx1 = document.getElementById('stocksChart').getContext('2d');
+  new Chart(ctx1, {
+    type: 'bar',
+    data: {
+      labels: latestNames,
+      datasets: [{
+        label: '수익률 (%)',
+        data: latestReturns,
+        backgroundColor: latestReturns.map(barColor),
+        borderRadius: 6,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.raw >= 0 ? '+' : ''}${ctx.raw.toFixed(1)}%`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: '#334155' },
+          ticks: { callback: v => (v >= 0 ? '+' : '') + v + '%' }
+        },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+} else {
+  document.getElementById('stocksChart').style.display = 'none';
+  document.getElementById('stocksEmpty').style.display = 'block';
+}
+
+// ── 회차별 평균 수익률 차트 ─────────────────────────────────────────────
+if (reportDates.length >= 2) {
+  const ctx2 = document.getElementById('reportChart').getContext('2d');
+  new Chart(ctx2, {
+    type: 'bar',
+    data: {
+      labels: reportDates,
+      datasets: [
+        {
+          type: 'bar',
+          label: '회차별 평균 수익률',
+          data: reportAvgs,
+          backgroundColor: reportAvgs.map(barColor),
+          borderRadius: 6,
+          yAxisID: 'y',
+        },
+        {
+          type: 'line',
+          label: '추세',
+          data: reportAvgs,
+          borderColor: '#3b82f6',
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          pointRadius: 4,
+          pointBackgroundColor: '#3b82f6',
+          tension: 0.3,
+          yAxisID: 'y',
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { boxWidth: 12, font: { size: 11 } } },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.raw >= 0 ? '+' : ''}${ctx.raw.toFixed(1)}%`
+          }
+        }
+      },
+      scales: {
+        y: {
+          grid: { color: '#334155' },
+          ticks: { callback: v => (v >= 0 ? '+' : '') + v + '%' }
+        },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+} else {
+  document.getElementById('reportChart').style.display = 'none';
+  document.getElementById('reportEmpty').style.display = 'block';
+}
+
+// ── 리포트 마크다운 렌더링 ─────────────────────────────────────────────
+if (reportText.trim()) {
+  document.getElementById('report-content').innerHTML = marked.parse(reportText);
+} else {
+  document.getElementById('report-content').innerHTML = '<p style="color:#94a3b8">리포트가 없습니다.</p>';
+}
+</script>
+</body>
+</html>
