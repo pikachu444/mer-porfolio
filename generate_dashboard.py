@@ -73,18 +73,34 @@ def _load_portfolio_state() -> list:
         return []
 
 
-def _donut_color(market: str, idx: int) -> str:
-    """마켓별 색상 팔레트."""
-    kr = ["#3b82f6", "#60a5fa", "#2563eb", "#93c5fd", "#1d4ed8", "#1e40af"]
-    us = ["#22c55e", "#4ade80", "#16a34a", "#86efac", "#15803d", "#166534"]
-    et = ["#f59e0b", "#fbbf24", "#d97706", "#94a3b8", "#64748b", "#475569"]
+def _donut_color(idx: int) -> str:
+    """종목별 고대비 12색 팔레트 — 인접 종목이 확실히 구분되도록."""
+    palette = [
+        "#ef4444",  # 선명한 빨강
+        "#3b82f6",  # 파랑
+        "#22c55e",  # 초록
+        "#f97316",  # 주황
+        "#a855f7",  # 보라
+        "#06b6d4",  # 시안
+        "#eab308",  # 노랑
+        "#ec4899",  # 핑크
+        "#14b8a6",  # 틸
+        "#f59e0b",  # 앰버
+        "#6366f1",  # 인디고
+        "#84cc16",  # 라임
+    ]
+    return palette[idx % len(palette)]
+
+
+def _market_border_color(market: str) -> str:
+    """마켓별 구분 테두리색 (범례 섹션 헤더용)."""
     m = market.upper()
     if "KR" in m:
-        return kr[idx % len(kr)]
+        return "#60a5fa"
     elif "US" in m or m in ("USD", "NYSE", "NASDAQ"):
-        return us[idx % len(us)]
+        return "#4ade80"
     else:
-        return et[idx % len(et)]
+        return "#fbbf24"
 
 
 def generate_png(cache: dict, report_text: str = "", today_str: str = "") -> Optional[Path]:
@@ -164,7 +180,7 @@ def generate_png(cache: dict, report_text: str = "", today_str: str = "") -> Opt
 
     if donut_items:
         wedge_vals   = [d["weight"] for d in donut_items]
-        wedge_colors = [_donut_color(d["market"], i) for i, d in enumerate(donut_items)]
+        wedge_colors = [_donut_color(i) for i, d in enumerate(donut_items)]
         total_w      = sum(wedge_vals)
 
         ax1.pie(
@@ -178,24 +194,60 @@ def generate_png(cache: dict, report_text: str = "", today_str: str = "") -> Opt
                  ha="center", va="center", color="#f1f5f9",
                  fontsize=11, fontweight="bold")
 
-        # 종목별 범례 (우측)
-        stock_handles = [
-            mpatches.Patch(color=wedge_colors[i],
-                           label=f"{d['name']}  {d['weight']:.0f}%")
-            for i, d in enumerate(donut_items)
-        ]
-        # 시장 소듙색 구분 표시
-        market_handles = [
-            mpatches.Patch(color="#3b82f6", label="\U0001f1f0\U0001f1f7 KR"),
-            mpatches.Patch(color="#22c55e", label="\U0001f1fa\U0001f1f8 US"),
-            mpatches.Patch(color="#f59e0b", label="ETF/\ud604\uae08"),
-        ]
-        ax1.legend(
-            handles=stock_handles + [mpatches.Patch(color="none", label="")] + market_handles,
-            loc="center left", bbox_to_anchor=(0.88, 0.5),
-            fontsize=8, framealpha=0, labelcolor="#f1f5f9",
-            handlelength=1.2, handleheight=1.2,
+        # 마켓별 섹션으로 범례 구성
+        from collections import OrderedDict
+        market_order = ["KR", "US", "ETF"]
+        market_label = {
+            "KR":  "\u25aa KR (\uad6d\ub0b4)",
+            "US":  "\u25aa US (\ud574\uc678)",
+            "ETF": "\u25aa ETF / \ud604\uae08",
+        }
+        def _get_market_key(m):
+            mu = m.upper()
+            if "KR" in mu:   return "KR"
+            if "US" in mu or mu in ("USD","NYSE","NASDAQ"): return "US"
+            return "ETF"
+
+        grouped = OrderedDict()
+        for mk in market_order:
+            grouped[mk] = []
+        for i, d in enumerate(donut_items):
+            mk = _get_market_key(d["market"])
+            grouped.setdefault(mk, []).append((i, d))
+
+        all_handles = []
+        for mk, items in grouped.items():
+            if not items:
+                continue
+            # 섹션 헤더 (빈 패치 + 굵은 텍스트)
+            header = mpatches.Patch(color="none", label=market_label.get(mk, mk))
+            all_handles.append(header)
+            for i, d in items:
+                patch = mpatches.Patch(
+                    color=wedge_colors[i],
+                    label=f"  {d['name']}  {d['weight']:.0f}%"
+                )
+                all_handles.append(patch)
+
+        leg = ax1.legend(
+            handles=all_handles,
+            loc="center left", bbox_to_anchor=(0.90, 0.5),
+            fontsize=8.5, framealpha=0.15,
+            facecolor="#1e293b", edgecolor="#334155",
+            labelcolor="#f1f5f9",
+            handlelength=1.0, handleheight=1.1,
+            borderpad=0.8, labelspacing=0.55,
         )
+        # 섹션 헤더 텍스트만 볼드 + 밝은 색
+        legend_texts = leg.get_texts()
+        hi = 0
+        for mk, items in grouped.items():
+            if not items:
+                continue
+            legend_texts[hi].set_color("#94a3b8")
+            legend_texts[hi].set_fontsize(7.5)
+            hi += 1 + len(items)
+
         ax1.set_title("\ud3ec\ud2b8\ud3f4\ub9ac\uc624 \ud604\uc7ac \ube44\uc911", color="#f1f5f9", fontsize=12, pad=10)
     else:
         ax1.text(0.5, 0.5,
