@@ -423,17 +423,16 @@ def generate_all(report_text: str, today: datetime) -> tuple:
         print(f"  ⚠ HTML 대시보드 생성 실패: {e}")
 
     try:
-        if cache:
+        # 실제 수익률 데이터가 있을 때만 PNG 생성 (첫 실행 시 빈 이미지 전송 방지)
+        has_data = cache and cache.get("all_rows")
+        if has_data:
             png_path = generate_png(cache, today_str)
+        else:
+            print("  PNG 생성 스킵: 수익률 데이터 없음 (첫 실행 또는 데이터 미수집)")
     except Exception as e:
-        print(f"  ⚠ PNG 차트 생성 실패: {e}")
+        print(f"  !! PNG 차트 생성 실패: {e}")
 
     return html_path, png_path
 
 
-# ─── 직접 실행 테스트 ─────────────────────────────────────────────────────────
-
-if __name__ == "__main__":
-    html, png = generate_all("# 테스트 리포트\n\n테스트입니다.", datetime.now())
-    print(f"HTML: {html}")
-    print(f"PNG:  {png}")
+# ─── 직접 실행 테스트 ────────────────────
