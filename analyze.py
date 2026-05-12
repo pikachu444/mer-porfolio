@@ -3,8 +3,11 @@ analyze.py
 Google AI Studio (Gemini) 무료 API를 이용한 메르AI 분석 모듈
 
 무료 티어 한도 (2026년 기준):
-  - gemini-2.5-pro:        분당 5회,  일 25회  ← 격주 실행이면 충분
-  - gemini-2.0-flash:      분당 15회, 일 1500회 ← 폴백용
+  - gemini-2.5-pro:        분당 5회,  일 100회 ← 기본값
+  - gemini-2.5-flash:      분당 10회, 일 500회 ← 주력 폴백
+  - gemini-2.5-flash-lite: 분당 30회, 일 1000회← 비상 폴백
+
+※ gemini-2.0-flash / gemini-2.0-flash-lite 는 2026-06-01 종료 예정 — 사용 금지
 
 API 키 발급: https://aistudio.google.com/app/apikey
 환경변수: GEMINI_API_KEY
@@ -27,18 +30,16 @@ from fetch_mer import posts_to_context
 #   gemini-2.5-pro       : 무료, 5 RPM / 100 RPD  ← 최고 품질, 기본값
 #   gemini-2.5-flash     : 무료, 더 넉넉한 한도     ← 주력 폴백
 #   gemini-2.5-flash-lite: 무료, 매우 넉넉         ← 비상 폴백
-#   gemini-2.0-flash     : 무료, 구버전 안정적      ← 최후 수단
 #
-# ※ gemini-3.1-pro 는 유료 API 전용 ($2/M tokens). 무료 아님.
-# ※ gemini-3.1-flash-preview 는 무료이나 프리뷰라 불안정할 수 있음.
+# ※ gemini-2.0-flash / gemini-2.0-flash-lite : 2026-06-01 종료 — 제거됨
+# ※ gemini-3.1-pro-preview : 유료 전용 (billing 필요). 무료 아님.
 
 DEFAULT_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-pro")
 
 FALLBACK_MODELS = [
     "gemini-2.5-pro",           # 최고품질, 무료 100 RPD
-    "gemini-2.5-flash",         # 준수한 품질, 한도 넉넉 — 품질 하락 있음
-    "gemini-2.5-flash-lite",    # 빠르고 한도 많음 — 분석 깊이 얕아짐
-    "gemini-2.0-flash",         # 구버전, 안정적 — 분석 품질 눈에 띄게 낮아짐
+    "gemini-2.5-flash",         # 준수한 품질, 한도 넉넉
+    "gemini-2.5-flash-lite",    # 빠르고 한도 많음 — 분석 깊이 다소 얕아짐
 ]
 
 # 투자 분석 특성상 안전 필터 완화 (주식 분석 용어 오탐 방지)
@@ -60,13 +61,6 @@ SAFETY_SETTINGS = [
         threshold=types.HarmBlockThreshold.BLOCK_NONE,
     ),
 ]
-
-GENERATION_CONFIG = types.GenerateContentConfig(
-    temperature=0.3,         # 낮을수록 일관성↑ → 분석에는 낮게
-    top_p=0.85,
-    max_output_tokens=8192,  # 충분한 리포트 길이 확보
-    safety_settings=SAFETY_SETTINGS,
-)
 
 
 # ─── API 클라이언트 초기화 ────────────────────────────────────────────────────
@@ -131,13 +125,22 @@ def _try_model(client: genai.Client, model_name: str,
 
 # ─── 메인 분석 함수 ───────────────────────────────────────────────────────────
 
-def analyze_posts(posts: List[Dict], today_str: str) -> str:
+def analyze_posts(
+    posts: List[Dict],
+    today_str: str,
+    run_mode: str = "scheduled",
+    current_holdings_text: str = "",
+    is_rebalance: bool = False,
+) -> str:
     """
     수집된 포스트 목록을 받아 메르AI 스타일 포트폴리오 리포트 반환.
 
     Args:
-        posts: fetch_mer.fetch_recent_posts() 반환값
-        today_str: "2026년 05월 08일" 형식의 오늘 날짜
+        posts:                 fetch_mer.fetch_recent_posts() 반환값
+        today_str:             "2026년 05월 08일" 형식의 오늘 날짜
+        run_mode:              "scheduled" | "adhoc" | "test"
+        current_holdings_text: 현재 보유 종목 텍스트 (portfolio_state에서)
+        is_rebalance:          True면 전면 리밸런싱 모드
 
     Returns:
         마크다운 형식의 리포트 문자열
@@ -158,6 +161,9 @@ def analyze_posts(posts: List[Dict], today_str: str) -> str:
         post_count=len(posts),
         start_date=start_date,
         end_date=end_date,
+        run_mode=run_mode,
+        current_holdings_text=current_holdings_text,
+        is_rebalance=is_rebalance,
     )
 
     total_chars = len(user_message)
