@@ -198,31 +198,46 @@ def send_photo(image_path: str, caption: str = "") -> bool:
 
 # ─── 리포트 전송 (요약 + URL) ─────────────────────────────────────────────────
 
+def _is_valid_report(report: str) -> bool:
+    """실제 분석 리포트인지 확인 (테스트/빈 내용 필터링)."""
+    if not report or len(report) < 500:
+        return False
+    # 핵심 섹션이 하나라도 있어야 함
+    return any(keyword in report for keyword in ("인사이트", "포트폴리오", "국내주식", "해외주식"))
+
+
 def send_report(report: str, today_str: str) -> bool:
     """
     리포트 요약 + 대시보드 URL을 텔레그램으로 전송.
-    (전문 대신 핵심 요약만 전송 — 전문은 대시보드에서 확인)
+    헤더와 요약을 하나의 메시지로 결합해 전송합니다.
 
     Returns:
-        True (성공) / False (환경변수 미설정 또는 실패)
+        True (성공) / False (환경변수 미설정, 빈 리포트, 또는 실패)
     """
     token, chat_id = _get_credentials()
     if not token or not chat_id:
         print("  !! TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID 미설정 -> 텔레그램 알림 스킵")
         return False
 
-    # 헤더
+    # 빈/테스트 리포트 가드
+    if not _is_valid_report(report):
+        print("  !! 리포트가 비어있거나 테스트 내용 -> 텔레그램 전송 스킵")
+        return False
+
+    # 헤더 + 요약을 하나의 메시지로 결합 (메시지 분리 혼란 방지)
     header = (
         f"\U0001f4ca *메르AI 포트폴리오 리포트*\n"
         f"\U0001f4c5 {today_str}\n"
-        f"{'─' * 22}"
+        f"{'─' * 22}\n"
     )
-    _send_message(token, chat_id, header)
-    time.sleep(0.5)
-
-    # 요약 메시지 (핵심 인사이트 + 포트폴리오 + 섹터 + 코멘트 + URL)
     summary = extract_summary(report)
-    ok = _send_message(token, chat_id, summary)
+    combined = header + summary
+
+    # MAX_MSG_LEN 초과 시 헤더+서두만 잘라서 전송
+    if len(combined) > MAX_MSG_LEN:
+        combined = combined[:MAX_MSG_LEN - 3] + "..."
+
+    ok = _send_message(token, chat_id, combined)
 
     print(f"  텔레그램 요약 전송: {'성공' if ok else '실패'}")
     return ok
@@ -279,5 +294,4 @@ if __name__ == "__main__":
     print("=== 요약 미리보기 ===")
     print(summary)
     print("\n=== 전송 테스트 ===")
-    result = send_report(sample_report, "2026년 05월 12일")
-    print("OK" if result else "FAIL (환경변수 확인 필요)")
+    result = send_
