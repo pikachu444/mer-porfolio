@@ -61,11 +61,17 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           DASHBOARD_URL: https://pikachu444.github.io/mer-porfolio/output/dashboard.html
           OUTPUT_DIR: output
-          # schedule 이벤트 → "scheduled" / workflow_dispatch → 입력값 (adhoc or test)
           RUN_MODE: ${{ github.event_name == 'schedule' && 'scheduled' || github.event.inputs.run_mode || 'adhoc' }}
           FETCH_DAYS: ${{ github.event.inputs.fetch_days || '' }}
           GEMINI_MODEL: ${{ github.event.inputs.gemini_model || '' }}
         run: python main.py
 
       # ── 리포트 커밋 및 푸시 (test 모드 제외) ────────────────────────────────
-      - name: 리포트 커
+      - name: 리포트 커밋 및 푸시
+        if: ${{ github.event_name == 'schedule' || github.event.inputs.run_mode != 'test' }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add output/
+          git diff --cached --quiet || git commit -m "chore: 자동 리포트 업데이트 $(date +'%Y-%m-%d %H:%M KST')"
+          git push
