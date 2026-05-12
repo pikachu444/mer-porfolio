@@ -57,7 +57,6 @@ SYSTEM_PROMPT = """
 
 아래 템플릿을 정확히 따를 것. 항목 순서·헤더 이름을 변경하지 않는다.
 
-```
 # 메르AI 포트폴리오 리포트
 **분석 기간:** [입력받은 시작일] ~ [입력받은 종료일]
 **리포트 생성:** [오늘 날짜]
@@ -147,7 +146,6 @@ SYSTEM_PROMPT = """
 ## ⚠️ 전회 대비 주요 변경사항
 
 - [이전 판단에서 달라진 점 명시 / 없으면 "변경사항 없음"]
-```
 
 ---
 
@@ -186,15 +184,67 @@ SYSTEM_PROMPT = """
 이제 제공된 메르 블로그 글들을 분석하여 위 형식에 따라 리포트를 작성하십시오.
 """
 
+
 # 분석 요청 메시지 템플릿
-def build_user_message(context: str, today_str: str, post_count: int,
-                        start_date: str, end_date: str) -> str:
-    return f"""다음은 메르 블로그에서 수집한 글입니다.
+def build_user_message(
+    context: str,
+    today_str: str,
+    post_count: int,
+    start_date: str,
+    end_date: str,
+    run_mode: str = "scheduled",
+    current_holdings_text: str = "",
+    is_rebalance: bool = False,
+) -> str:
+    """
+    Gemini에게 전달할 유저 메시지 생성.
 
-{context}
+    Args:
+        context:               fetch_mer.posts_to_context() 결과 (블로그 글 전문)
+        today_str:             "2026년 05월 12일" 형식
+        post_count:            수집된 글 수
+        start_date:            수집 시작일
+        end_date:              수집 종료일
+        run_mode:              "scheduled" | "adhoc" | "test"
+        current_holdings_text: portfolio_state에서 변환한 현재 보유 종목 텍스트
+        is_rebalance:          True면 전면 리밸런싱 모드
+    """
+    # 블로그 글 섹션
+    blog_section = "다음은 메르 블로그에서 수집한 글입니다.\n\n" + context + "\n\n---"
 
----
+    # 포트폴리오 지시 섹션
+    if not current_holdings_text:
+        # 최초 실행
+        portfolio_section = "portfolio_state.json이 없습니다 (최초 실행).\n위 글들을 바탕으로 포트폴리오를 새로 구성해 주세요."
+        task_section = (
+            f"위 {post_count}편의 글을 바탕으로, {today_str} 기준 메르AI 포트폴리오 리포트를 작성해주세요.\n"
+            f"분석 기간은 {start_date} ~ {end_date}입니다."
+        )
+    elif is_rebalance:
+        # 리밸런싱 모드
+        portfolio_section = current_holdings_text + "\n\n위 포트폴리오를 전면 재검토합니다 (리밸런싱 모드)."
+        task_section = (
+            f"위 {post_count}편의 글을 종합해 포트폴리오를 전면 재검토하세요 ({today_str} 기준).\n"
+            f"분석 기간: {start_date} ~ {end_date}\n\n"
+            "지시사항:\n"
+            "1. 각 보유 종목의 thesis가 여전히 유효한지 평가하세요.\n"
+            "2. 매도/비중축소가 필요한 종목은 판단 컬럼에 \"매도\" 또는 \"Avoid\"로 명시하세요.\n"
+            "3. 비중 조정이 필요한 종목을 식별하세요.\n"
+            "4. 새로 편입할 종목을 제안하세요.\n"
+            "5. 전체 포트폴리오 재구성 결과를 지정 양식에 맞게 출력하세요."
+        )
+    else:
+        # 모니터링 모드
+        portfolio_section = current_holdings_text
+        task_section = (
+            f"위 {post_count}편의 새 글을 읽고, {today_str} 기준으로 현재 포트폴리오를 점검하세요.\n"
+            f"분석 기간: {start_date} ~ {end_date}\n\n"
+            "지시사항:\n"
+            "1. 새 글 기반으로 각 보유 종목의 thesis가 여전히 유효한지 평가하세요.\n"
+            "2. 매도/회피가 필요한 종목이 있으면 판단 컬럼에 \"매도\" 또는 \"Avoid\"로 명시하세요.\n"
+            "3. 주의가 필요한 종목은 \"주의종목\" 섹션에 이유와 함께 나열하세요.\n"
+            "4. 새로 주목할 종목이 있으면 추가하세요.\n"
+            "5. 전체 포트폴리오(기존 종목 포함)를 지정 양식에 맞게 출력하세요."
+        )
 
-위 {post_count}편의 글을 바탕으로, {today_str} 기준 메르AI 포트폴리오 리포트를 작성해주세요.
-분석 기간은 {start_date} ~ {end_date}입니다.
-"""
+    return f"{blog_section}\n\n{portfolio_section}\n\n{task_section}\n"
