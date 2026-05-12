@@ -1,0 +1,22 @@
+# 환경변수 (절대 커밋 금지)
+.env
+.env.local
+.env*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# 로컬 테스트 출력 (output/ 폴더는 GitHub Actions가 커밋)
+# output/ 주석처리 — Actions에서 커밋 필요
