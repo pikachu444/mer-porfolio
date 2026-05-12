@@ -49,6 +49,10 @@ jobs:
           python-version: "3.11"
           cache: "pip"
 
+      # ── 한글 폰트 설치 (matplotlib 차트 한글 깨짐 방지) ────────────────────
+      - name: 한글 폰트 설치
+        run: sudo apt-get install -y -q fonts-nanum && fc-cache -fv
+
       # ── 패키지 설치 ────────────────────────────────────────────────────────
       - name: 패키지 설치
         run: pip install -r requirements.txt
@@ -71,7 +75,4 @@ jobs:
         if: ${{ github.event_name == 'schedule' || github.event.inputs.run_mode != 'test' }}
         run: |
           git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add output/
-          git diff --cached --quiet || git commit -m "chore: 자동 리포트 업데이트 $(date +'%Y-%m-%d %H:%M KST')"
-          git push
+    
