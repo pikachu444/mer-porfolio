@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2026-05-12",
+  "last_report_date": "2026-05-12",
+  "rebalance_count": 1,
+  "holdings": [
+    {
+      "name": "LS",
+      "code": "006220",
+      "market": "KR",
+      "action": "매수",
+      "weight": "10%",
+      "thesis": "해저/초고압 케이블 수요 증가, 전력 인프라 투자 확대 수혜",
+      "entry_date": "2026-05-12",
+      "last_confirmed_date": "2026-05-12",
+      "status": "active"
+    },
+    {
+      "name": "대한전선",
+      "code": "001440",
+      "market": "KR",
+      "action": "매수",
+      "weight": "10%",
+      "thesis": "해저/초고압 케이블 수요 증가, 전력 인프라 투자 확대 수혜",
+      "entry_date": "2026-05-12",
+      "last_confirmed_date": "2026-05-12",
+      "status": "active"
+    },
+    {
+      "name": "삼성중공업",
+      "code": "010140",
+      "market": "KR",
+      "action": "매수",
+      "weight": "10%",
+      "thesis": "조선업 호황, 유조선 재매각 이익, LNG선 수요 증가 기대",
+      "entry_date": "2026-05-12",
+      "last_confirmed_date": "2026-05-12",
+      "status": "active"
+    },
+    {
+      "name": "HMM",
+      "code": "011200",
+      "market": "KR",
+      "action": "관망",
+      "weight": "5%",
+      "thesis": "지정학적 리스크에 따른 운임 변동성, 공격 사례 발생",
+      "entry_date": "2026-05-12",
+      "last_confirmed_date": "2026-05-12",
+      "status": "removed",
+      "removed_date": "2026-05-12",
+      "removed_reason": "초기 생성 시 매도 시그널 감지"
+    },
+    {
+      "name": "NVIDIA",
+      "code": "NVDA",
+      "market": "US",
+      "action": "Buy",
+      "weight": "10%",
+      "thesis": "AI 데이터센터 확산에 따른 반도체 수요 폭증",
+      "entry_date": "2026-05-12",
+      "last_confirmed_date": "2026-05-12",
+      "status": "active"
+    },
+    {
+      "name": "Google (Alphabet)",
+      "code": "GOOGL",
+      "market": "US",
+      "action": "Buy",
+      "weight": "8%",
+      "thesis": "AI 기술 개발 및 서비스 확장, 중국 인재 재배치 수혜",
+      "entry_date": "2026-05-12",
+      "last_confirmed_date": "2026-05-12",
+      "status": "active"
+    },
+    {
+      "name": "Microsoft",
+      "code": "MSFT",
+      "market": "US",
+      "action": "Buy",
+      "weight": "8%",
+      "thesis": "AI 기술 투자 및 클라우드 서비스 성장, 국방부 계약 수혜",
+      "entry_date": "2026-05-12",
+      "last_confirmed_date": "2026-05-12",
+      "status": "active"
+    },
+    {
+      "name": "Comfort Systems USA",
+      "code": "FIX",
+      "market": "US",
+      "action": "Buy",
+      "weight": "7%",
+      "thesis": "데이터센터 냉난방/공조(HVAC) 전문, AI 인프라 투자 수혜",
+      "entry_date": "2026-05-12",
+      "last_confirmed_date": "2026-05-12",
+      "status": "active"
+    },
+    {
+      "name": "GOP ETF",
+      "code": "GOP",
+      "market": "US",
+      "action": "Buy",
+      "weight": "10%",
+      "thesis": "공화당 의원 포트폴리오 기반, S&P 500 대비 높은 수익률",
+      "entry_date": "2026-05-12",
+      "last_confirmed_date": "2026-05-12",
+      "status": "active"
+    }
+  ]
+}
