@@ -22,7 +22,8 @@ BLOG_ID = "ranto28"
 RSS_URL = f"https://rss.blog.naver.com/{BLOG_ID}.xml"
 MOBILE_BASE = "https://m.blog.naver.com"
 STATE_FILE = "last_processed.json"
-DEFAULT_DAYS = int(os.environ.get("FETCH_DAYS", "14"))  # 환경변수로 조정 가능
+_fetch_days_env = os.environ.get("FETCH_DAYS", "").strip()
+DEFAULT_DAYS = int(_fetch_days_env) if _fetch_days_env else 14  # 빈 문자열 방어
 
 HEADERS = {
     "User-Agent": (
@@ -269,4 +270,4 @@ if __name__ == "__main__":
     if posts:
         print(f"제목: {posts[0]['title']}")
         print(f"날짜: {posts[0]['date']}")
-        print(f"내용 앞 500자:\n{posts[0]['content'][:500]}")
+        
