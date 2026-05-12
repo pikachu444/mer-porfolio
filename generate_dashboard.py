@@ -59,12 +59,53 @@ def _parse_weights_from_report(report_text: str) -> list:
     return result
 
 
+def _load_portfolio_state() -> list:
+    """portfolio_state.json에서 active 종목 로드."""
+    import json as _json
+    state_path = OUTPUT_DIR / "portfolio_state.json"
+    if not state_path.exists():
+        return []
+    try:
+        with open(state_path, encoding="utf-8") as f:
+            state = _json.load(f)
+        return [h for h in state.get("holdings", []) if h.get("status") == "active"]
+    except Exception:
+        return []
+
+
+def _donut_color(market: str, idx: int) -> str:
+    """마켓별 색상 팔레트."""
+    kr = ["#3b82f6", "#60a5fa", "#2563eb", "#93c5fd", "#1d4ed8", "#1e40af"]
+    us = ["#22c55e", "#4ade80", "#16a34a", "#86efac", "#15803d", "#166534"]
+    et = ["#f59e0b", "#fbbf24", "#d97706", "#94a3b8", "#64748b", "#475569"]
+    m = market.upper()
+    if "KR" in m:
+        return kr[idx % len(kr)]
+    elif "US" in m or m in ("USD", "NYSE", "NASDAQ"):
+        return us[idx % len(us)]
+    else:
+        return et[idx % len(et)]
+
+
 def generate_png(cache: dict, report_text: str = "", today_str: str = "") -> Optional[Path]:
-    """수익률 또는 목표비중 PNG 차트 생성 (텔레그램 전송용)."""
+    """
+    PNG 차트 생성 (텔레그램 전송용).
+
+    항상 생성:
+      도넛 차트 — portfolio_state.json active 종목 비중
+                  (KR=파랑, US=초록, ETF/현금=주황)
+                  없으면 report_text 파싱으로 fallback
+    데이터 있을 때 추가:
+      누적 수익률 라인 — performance_cache.json report_summaries
+    레이아웃:
+      도넛만      → 1행
+      도넛+수익률 → 2행 (위: 도넛, 아래: 라인)
+    """
     try:
         import matplotlib
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
+        import matplotlib.patches as mpatches
         from matplotlib import font_manager
     except ImportError:
         print("  ⚠ matplotlib 미설치 — PNG 생성 스킵")
@@ -80,82 +121,135 @@ def generate_png(cache: dict, report_text: str = "", today_str: str = "") -> Opt
         plt.rcParams["font.family"] = "DejaVu Sans"
     plt.rcParams["axes.unicode_minus"] = False
 
-    summaries = cache.get("report_summaries", [])
-    all_rows = cache.get("all_rows", [])
-    latest_date = max((r["date"] for r in all_rows), default=None) if all_rows else None
-    latest_stocks = [r for r in all_rows if r["date"] == latest_date] if latest_date else []
+    # ── 도넓 데이터 준비 ───────────────────────────────────────────────
+    holdings = _load_portfolio_state()
+    donut_items = []
+    for h in holdings:
+        w_str = h.get("weight", "0").replace("%", "").strip()
+        try:
+            donut_items.append({
+                "name": h.get("name", "?"),
+                "weight": float(w_str),
+                "market": h.get("market", "ETF"),
+            })
+        except ValueError:
+            pass
 
-    fig_rows = 1 if not summaries or len(summaries) < 2 else 2
-    fig, axes = plt.subplots(fig_rows, 1, figsize=(10, 5 * fig_rows))
+    # fallback: portfolio_state 없으면 리포트에서 파싱
+    if not donut_items and report_text:
+        import re as _re
+        raw = _parse_weights_from_report(report_text)
+        for item in raw:
+            name = item.get("name", "")
+            action = item.get("action", "")
+            market = "US" if (action in ("Buy", "Hold", "Sell")
+                              or _re.match(r"^[A-Za-z]", name)) else "KR"
+            donut_items.append({"name": name, "weight": item["weight"], "market": market})
+
+    # ── 수익률 데이터 준비 ─────────────────────────────────────────────
+    summaries = cache.get("report_summaries", []) if cache else []
+    has_returns = len(summaries) >= 1
+
+    # ── 레이아웃 결정 ───────────────────────────────────────────────
+    fig_rows = 2 if (donut_items and has_returns) else 1
+    fig_h    = 5.5 if fig_rows == 1 else 10
+    fig, axes = plt.subplots(fig_rows, 1, figsize=(9, fig_h))
     fig.patch.set_facecolor("#0f172a")
     if fig_rows == 1:
         axes = [axes]
 
+    # ── 차트 1: 도넓 차트 ───────────────────────────────────────────────
     ax1 = axes[0]
-    ax1.set_facecolor("#1e293b")
+    ax1.set_facecolor("#0f172a")
 
-    if latest_stocks:
-        names = [s["name"] for s in latest_stocks]
-        returns = [s.get("return_pct_krw", s["return_pct"]) for s in latest_stocks]
-        colors = ["#22c55e" if r >= 0 else "#ef4444" for r in returns]
-        bars = ax1.barh(names, returns, color=colors, edgecolor="none", height=0.6)
-        ax1.axvline(0, color="#94a3b8", linewidth=0.8, linestyle="--")
-        for bar, ret in zip(bars, returns):
-            sign = "+" if ret >= 0 else ""
-            ax1.text(bar.get_width() + (0.3 if ret >= 0 else -0.3),
-                     bar.get_y() + bar.get_height() / 2,
-                     f"{sign}{ret:.1f}%", va="center",
-                     ha="left" if ret >= 0 else "right", color="#f1f5f9", fontsize=9)
-        ax1.set_title(f"종목별 수익률 ({latest_date} 추천 기준)", color="#f1f5f9", fontsize=12, pad=10)
-        ax1.set_xlabel("수익률 (%)", color="#94a3b8", fontsize=9)
+    if donut_items:
+        wedge_vals   = [d["weight"] for d in donut_items]
+        wedge_colors = [_donut_color(d["market"], i) for i, d in enumerate(donut_items)]
+        total_w      = sum(wedge_vals)
+
+        ax1.pie(
+            wedge_vals,
+            colors=wedge_colors,
+            wedgeprops=dict(width=0.52, edgecolor="#0f172a", linewidth=1.8),
+            startangle=90,
+            counterclock=False,
+        )
+        ax1.text(0, 0, f"\ud569\uacc4\n{total_w:.0f}%",
+                 ha="center", va="center", color="#f1f5f9",
+                 fontsize=11, fontweight="bold")
+
+        # 종목별 범례 (우측)
+        stock_handles = [
+            mpatches.Patch(color=wedge_colors[i],
+                           label=f"{d['name']}  {d['weight']:.0f}%")
+            for i, d in enumerate(donut_items)
+        ]
+        # 시장 소듙색 구분 표시
+        market_handles = [
+            mpatches.Patch(color="#3b82f6", label="\U0001f1f0\U0001f1f7 KR"),
+            mpatches.Patch(color="#22c55e", label="\U0001f1fa\U0001f1f8 US"),
+            mpatches.Patch(color="#f59e0b", label="ETF/\ud604\uae08"),
+        ]
+        ax1.legend(
+            handles=stock_handles + [mpatches.Patch(color="none", label="")] + market_handles,
+            loc="center left", bbox_to_anchor=(0.88, 0.5),
+            fontsize=8, framealpha=0, labelcolor="#f1f5f9",
+            handlelength=1.2, handleheight=1.2,
+        )
+        ax1.set_title("\ud3ec\ud2b8\ud3f4\ub9ac\uc624 \ud604\uc7ac \ube44\uc911", color="#f1f5f9", fontsize=12, pad=10)
     else:
-        portfolio_items = _parse_weights_from_report(report_text) if report_text else []
-        if portfolio_items:
-            names = [p["name"] for p in portfolio_items]
-            weights = [p["weight"] for p in portfolio_items]
-            bars = ax1.barh(names, weights, color=["#3b82f6"] * len(weights), edgecolor="none", height=0.6)
-            for bar, w in zip(bars, weights):
-                ax1.text(bar.get_width() + 0.2, bar.get_y() + bar.get_height() / 2,
-                         f"{w:.0f}%", va="center", ha="left", color="#f1f5f9", fontsize=9)
-            ax1.set_title("포트폴리오 목표비중 (수익률은 다음 리포트부터)", color="#f1f5f9", fontsize=11, pad=10)
-            ax1.set_xlabel("목표비중 (%)", color="#94a3b8", fontsize=9)
-        else:
-            ax1.text(0.5, 0.5, "첫 실행 - 다음 리포트부터 표시",
-                     ha="center", va="center", color="#94a3b8", fontsize=12, transform=ax1.transAxes)
-            ax1.set_title("종목별 수익률", color="#f1f5f9", fontsize=12)
+        ax1.text(0.5, 0.5,
+                 "portfolio_state.json \uc5c6\uc74c\n\ub2e4\uc74c \uc2e4\ud589 \ud6c4 \ud45c\uc2dc",
+                 ha="center", va="center", color="#94a3b8", fontsize=11,
+                 transform=ax1.transAxes, linespacing=1.8)
+        ax1.set_title("\ud3ec\ud2b8\ud3f4\ub9ac\uc624 \ube44\uc911", color="#f1f5f9", fontsize=12)
+        ax1.axis("off")
 
-    ax1.tick_params(colors="#94a3b8")
-    for spine in ax1.spines.values():
-        spine.set_color("#334155")
-
-    if fig_rows == 2:
+    # ── 차트 2: 누적 수익률 라인 ───────────────────────────────────────
+    if has_returns and fig_rows == 2:
         ax2 = axes[1]
         ax2.set_facecolor("#1e293b")
-        dates = [s["date"] for s in summaries]
-        avgs = [s["avg_return_krw"] for s in summaries]
-        colors2 = ["#22c55e" if a >= 0 else "#ef4444" for a in avgs]
-        ax2.bar(range(len(dates)), avgs, color=colors2, edgecolor="none", width=0.6)
+        dates = [s["date"][5:] for s in summaries]
+        avgs  = [s["avg_return_krw"] for s in summaries]
+        xs    = list(range(len(dates)))
+
+        ax2.plot(xs, avgs, color="#3b82f6", linewidth=2.5,
+                 marker="o", markersize=7, markerfacecolor="#3b82f6",
+                 markeredgecolor="#0f172a", markeredgewidth=1.5, zorder=3)
+        ax2.fill_between(xs, avgs, 0,
+                         where=[a >= 0 for a in avgs],
+                         color="#22c55e", alpha=0.12)
+        ax2.fill_between(xs, avgs, 0,
+                         where=[a < 0 for a in avgs],
+                         color="#ef4444", alpha=0.12)
         ax2.axhline(0, color="#94a3b8", linewidth=0.8, linestyle="--")
-        ax2.set_xticks(range(len(dates)))
-        ax2.set_xticklabels([d[5:] for d in dates], color="#94a3b8", fontsize=9)
+        ax2.set_xticks(xs)
+        ax2.set_xticklabels(dates, color="#94a3b8", fontsize=9)
         for i, avg in enumerate(avgs):
-            sign = "+" if avg >= 0 else ""
-            ax2.text(i, avg + (0.3 if avg >= 0 else -0.3), f"{sign}{avg:.1f}%",
-                     ha="center", va="bottom" if avg >= 0 else "top", color="#f1f5f9", fontsize=9)
-        ax2.set_title("리포트 회차별 평균 수익률 (원화 기준)", color="#f1f5f9", fontsize=12, pad=10)
-        ax2.set_ylabel("평균 수익률 (%)", color="#94a3b8", fontsize=9)
+            sign  = "+" if avg >= 0 else ""
+            color = "#22c55e" if avg >= 0 else "#ef4444"
+            ax2.text(i, avg + (0.4 if avg >= 0 else -0.4),
+                     f"{sign}{avg:.1f}%", ha="center",
+                     va="bottom" if avg >= 0 else "top",
+                     color=color, fontsize=8.5, fontweight="bold")
+        ax2.set_title("\ub9ac\ud3ec\ud2b8 \ud68c\ucc28\ubcc4 \ud3c9\uade0 \uc218\uc775\ub960 (\uc6d0\ud654 \uae30\uc900)",
+                      color="#f1f5f9", fontsize=12, pad=10)
+        ax2.set_ylabel("\ud3c9\uade0 \uc218\uc775\ub960 (%)", color="#94a3b8", fontsize=9)
         ax2.tick_params(colors="#94a3b8")
         for spine in ax2.spines.values():
             spine.set_color("#334155")
 
-    plt.suptitle(f"메르AI 포트폴리오 성과  |  {today_str}",
-                 color="#f1f5f9", fontsize=13, fontweight="bold", y=1.01)
+    plt.suptitle(f"\uba54\ub974AI \ud3ec\ud2b8\ud3f4\ub9ac\uc624  |  {today_str}",
+                 color="#f1f5f9", fontsize=13, fontweight="bold", y=1.02)
     plt.tight_layout(pad=2.0)
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    fig.savefig(PNG_FILE, dpi=150, bbox_inches="tight", facecolor="#0f172a", edgecolor="none")
+    fig.savefig(PNG_FILE, dpi=150, bbox_inches="tight",
+                facecolor="#0f172a", edgecolor="none")
     plt.close(fig)
     print(f"  PNG 차트 생성 완료: {PNG_FILE}")
     return PNG_FILE
+
+
 
 
 def generate_html(cache: dict, report_text: str, today_str: str) -> Path:
