@@ -8,13 +8,21 @@ on:
   # ── 수동 실행 (GitHub Actions 탭에서 직접 버튼 클릭 가능) ───────────────────
   workflow_dispatch:
     inputs:
+      run_mode:
+        description: "실행 모드 (adhoc=강제분석+리밸런싱, test=테스트전송없음)"
+        required: true
+        default: "adhoc"
+        type: choice
+        options:
+          - adhoc
+          - test
       fetch_days:
-        description: "수집 기간 (일)"
+        description: "수집 기간 (일) — 비워두면 모드 기본값 사용"
         required: false
-        default: "2"
+        default: ""
         type: string
       gemini_model:
-        description: "Gemini 모델명 (비워두면 기본값 사용)"
+        description: "Gemini 모델명 (비워두면 기본값 gemini-2.5-pro)"
         required: false
         default: ""
         type: string
@@ -52,19 +60,12 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           DASHBOARD_URL: https://pikachu444.github.io/mer-porfolio/output/dashboard.html
-          FETCH_DAYS: ${{ github.event.inputs.fetch_days || '2' }}
-          GEMINI_MODEL: ${{ github.event.inputs.gemini_model || '' }}
           OUTPUT_DIR: output
+          # schedule 이벤트 → "scheduled" / workflow_dispatch → 입력값 (adhoc or test)
+          RUN_MODE: ${{ github.event_name == 'schedule' && 'scheduled' || github.event.inputs.run_mode || 'adhoc' }}
+          FETCH_DAYS: ${{ github.event.inputs.fetch_days || '' }}
+          GEMINI_MODEL: ${{ github.event.inputs.gemini_model || '' }}
         run: python main.py
 
-      # ── 리포트 커밋 및 푸시 ──────────────────────────────────────────────
-      - name: 리포트 커밋
-        run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add output/
-          # 변경사항이 있을 때만 커밋 (변경 없으면 스킵)
-          git diff --staged --quiet && echo "변경사항 없음 — 커밋 스킵" || \
-            git commit -m "📊 메르AI 리포트 업데이트 $(date +'%Y-%m-%d' --utc)"
-          git pull --rebase origin main
-          git push
+      # ── 리포트 커밋 및 푸시 (test 모드 제외) ────────────────────────────────
+      - name: 리포트 커
