@@ -102,15 +102,31 @@ def _try_model(client: genai.Client, model_name: str,
             config=config,
         )
 
-        # 응답 검증
         text = response.text
-        if not text or len(text) < 200:
-            return False, f"응답이 너무 짧거나 비어 있음 ({len(text) if text else 0}자)"
+        
+        # [강화된 응답 검증]
+        if not text:
+            return False, "응답이 완전히 비어 있음"
+            
+        # 1. 최소 길이 검증 (Pro 모델의 완성본 리포트는 최소 1,500자 확보되어야 함)
+        if len(text) < 1500:
+            return False, f"응답 길이가 너무 짧아 분석 중단으로 의심됨 ({len(text)}자)"
+            
+        # 2. 필수 마크다운 세션 검증 (정규식 파싱 안전성 보증)
+        required_headers = ["포트폴리오 추천", "섹터별 온도계"]
+        missing_headers = [h for h in required_headers if h not in text]
+        if missing_headers:
+            return False, f"필수 세션 누락: {', '.join(missing_headers)} (Gemini 답변 중간 끊김 발생)"
 
         return True, text
 
     except Exception as e:
+        import traceback
         err = str(e)
+        print(f"    ❌ API 예외 발생: {type(e).__name__} — {err[:120]}")
+        print("    [상세 에러 트레이스백]")
+        traceback.print_exc()  # 100% 상세 에러 트레이스백 로그 기록
+        
         # 할당량 초과
         if "429" in err or "quota" in err.lower() or "rate" in err.lower() or "resource" in err.lower():
             print(f"    ⚠ 할당량 초과: {model_name}")
@@ -120,7 +136,6 @@ def _try_model(client: genai.Client, model_name: str,
             print(f"    ⚠ 모델 없음/유효하지 않음: {model_name}")
             return False, f"모델 없음: {err}"
         # 기타 오류
-        print(f"    ❌ 오류 ({type(e).__name__}): {err[:120]}")
         return False, err
 
 
