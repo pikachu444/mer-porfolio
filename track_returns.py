@@ -70,7 +70,7 @@ def parse_portfolio_from_report(report_text: str) -> dict:
     result = {"kr": [], "us": []}
 
     kr_match = re.search(
-        r"(?:🇰🇷|국내주식)[^\n]*\n\|[^\n]+\|\n\|[-| :]+\|\n((?:\|[^\n]+\|\n?)+)",
+        r"(?:🇰🇷|국내주식)[^\n]*\n\n?\|[^\n]+\|\n\|[-| :]+\|\n((?:\|[^\n]+\|\n?)+)",
         report_text,
     )
     if kr_match:
@@ -87,7 +87,7 @@ def parse_portfolio_from_report(report_text: str) -> dict:
                     })
 
     us_match = re.search(
-        r"(?:🇺🇸|해외주식)[^\n]*\n\|[^\n]+\|\n\|[-| :]+\|\n((?:\|[^\n]+\|\n?)+)",
+        r"(?:🇺🇸|해외주식)[^\n]*\n\n?\|[^\n]+\|\n\|[-| :]+\|\n((?:\|[^\n]+\|\n?)+)",
         report_text,
     )
     if us_match:
@@ -245,17 +245,33 @@ def _save_performance_cache(rows: list, today_str: str) -> None:
             by_date[d] = []
         by_date[d].append(r)
 
-    # 날짜별 평균 수익률 계산 (KRW 기준 통일)
+    # 날짜별 가중 평균 수익률 계산
     report_summaries = []
     for d, stocks in sorted(by_date.items()):
-        returns = []
+        weighted_sum = 0.0
+        total_weight = 0.0
+        
         for s in stocks:
             ret = s.get("return_pct_krw", s["return_pct"])
-            returns.append(ret)
-        avg = sum(returns) / len(returns) if returns else 0
+            w_str = s.get("weight", "0").replace("%", "").strip()
+            try:
+                w_val = float(w_str) / 100.0 if w_str else 0.0
+            except ValueError:
+                w_val = 0.0
+            
+            weighted_sum += ret * w_val
+            total_weight += w_val
+        
+        # 가중 평균 수익률 (현금 비중은 0% 수익률로 처리)
+        # 즉, 전체 비중이 100% 미만이면 나머지는 현금(0% 수익률)이므로 weighted_sum 자체가 포트폴리오 수익률임.
+        if total_weight > 1.0:
+            portfolio_return = weighted_sum / total_weight
+        else:
+            portfolio_return = weighted_sum
+            
         report_summaries.append({
             "date": d,
-            "avg_return_krw": round(avg, 2),
+            "avg_return_krw": round(portfolio_return, 2),
             "stock_count": len(stocks),
             "stocks": stocks,
         })
@@ -297,34 +313,62 @@ def _format_performance(rows: list, today_str: str) -> str:
         "## 📈 누적 수익률 추적",
         f"*기준일: {today_str} | 미국 주식은 원화 환산 기준*",
         "",
-        "| 종목 | 추천일 | 진입가 | 현재가 | 수익률(KRW) | 판단 |",
-        "|------|--------|--------|--------|-------------|------|",
+        "| 종목 | 추천일 | 진입가 | 현재가 | 비중 | 수익률(KRW) | 판단 |",
+        "|------|--------|--------|--------|------|-------------|------|",
     ]
 
-    total, count = 0.0, 0
+    # 날짜별로 그룹화하여 가중 평균 계산
+    by_date = {}
+    for r in rows:
+        d = r["date"]
+        if d not in by_date:
+            by_date[d] = []
+        by_date[d].append(r)
+        
+    # 모든 날짜(회차)의 가중 평균 수익률들을 계산하여 평균을 냄
+    weighted_returns_by_date = []
+    for d, stocks in by_date.items():
+        weighted_sum = 0.0
+        total_weight = 0.0
+        for s in stocks:
+            ret = s.get("return_pct_krw", s["return_pct"])
+            w_str = s.get("weight", "0").replace("%", "").strip()
+            try:
+                w_val = float(w_str) / 100.0 if w_str else 0.0
+            except ValueError:
+                w_val = 0.0
+            weighted_sum += ret * w_val
+            total_weight += w_val
+        
+        if total_weight > 1.0:
+            weighted_returns_by_date.append(weighted_sum / total_weight)
+        else:
+            weighted_returns_by_date.append(weighted_sum)
+            
+    # 전체 회차의 평균 포트폴리오 수익률
+    overall_portfolio_return = sum(weighted_returns_by_date) / len(weighted_returns_by_date) if weighted_returns_by_date else 0.0
+
     for r in rows_sorted:
         ret = r.get("return_pct_krw", r["return_pct"])
         sign = "▲" if ret >= 0 else "▼"
         emoji = "🟢" if ret >= 5 else ("🔴" if ret <= -5 else "🟡")
         cur = "₩" if r["type"] == "KR" else "$"
+        weight = r.get("weight", "0%")
         lines.append(
             f"| {r['name']} | {r['date']} | "
             f"{cur}{r['entry_price']:,.0f} | "
             f"{cur}{r['current_price']:,.0f} | "
+            f"{weight} | "
             f"{emoji} {sign}{abs(ret):.1f}% | "
             f"{r['action']} |"
         )
-        total += ret
-        count += 1
 
-    if count:
-        avg = total / count
-        s = "▲" if avg >= 0 else "▼"
-        lines.append(f"| **평균 ({count}종목)** | — | — | — | **{s}{abs(avg):.1f}%** | — |")
+    s = "▲" if overall_portfolio_return >= 0 else "▼"
+    lines.append(f"| **포트폴리오 누적 수익률** | — | — | — | — | **{s}{abs(overall_portfolio_return):.1f}%** | — |")
 
     lines += [
         "",
-        "> ⚠️ 단순 가격 변동 기준. 배당·세금·슬리피지 미반영.",
+        "> ⚠️ 실제 펀드 운용과 동일하게 각 회차별 추천 비중(현금 비중 포함)을 반영한 **포트폴리오 가중 평균 수익률**입니다.",
         "> 미국 주식: 추천일 환율 vs 현재 환율 적용.",
     ]
 

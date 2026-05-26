@@ -26,7 +26,7 @@ TELEGRAM_API = "https://api.telegram.org/bot{token}/{method}"
 MAX_MSG_LEN = 4000
 
 DEFAULT_DASHBOARD_URL = (
-    "https://pikachu444.github.io/mer-porfolio/output/dashboard.html"
+    "https://pikachu444.github.io/mer-portfolio/output/dashboard.html"
 )
 
 
@@ -39,7 +39,10 @@ def _get_credentials():
 
 
 def _get_dashboard_url() -> str:
-    return os.environ.get("DASHBOARD_URL", DEFAULT_DASHBOARD_URL)
+    url = os.environ.get("DASHBOARD_URL", "")
+    if not url or "mer-porfolio" in url:
+        return DEFAULT_DASHBOARD_URL
+    return url
 
 
 # ─── 요약 추출 ────────────────────────────────────────────────────────────────
@@ -60,7 +63,7 @@ def extract_summary(report: str) -> str:
 
     # ── 1. 핵심 인사이트 ──────────────────────────────────────────────────────
     insight_blocks = re.findall(
-        r"### 인사이트 \d+[:：]\s*(.+?)\n([\s\S]+?)(?=### 인사이트|\Z|## )",
+        r"###\s*(?:핵심\s*)?인사이트\s*\d+[^:\n]*[:：.]?\s*(.+?)\n([\s\S]+?)(?=###\s*(?:핵심\s*)?인사이트|\Z|## )",
         report,
     )
 
@@ -132,6 +135,7 @@ def extract_summary(report: str) -> str:
     # ── 6. 대시보드 URL ───────────────────────────────────────────────────────
     url = _get_dashboard_url()
     parts.append(f"\n\U0001f310 [대시보드 전체 보기]({url})")
+    parts.append("\n※ 깃허브 배포 지연으로 인해 대시보드 반영에 1~2분이 소요될 수 있습니다.")
 
     if not parts:
         return "요약 추출 실패 — 대시보드에서 전체 내용을 확인하세요."

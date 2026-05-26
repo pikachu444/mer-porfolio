@@ -1,3 +1,84 @@
 {
-  "records": []
+  "records": [
+    {
+      "type": "KR",
+      "name": "삼성전자",
+      "code": "005930",
+      "ticker": "005930.KS",
+      "action": "매수",
+      "weight": "20%",
+      "date": "2026-05-26",
+      "entry_price": 300000.0
+    },
+    {
+      "type": "KR",
+      "name": "HD현대중공업",
+      "code": "329180",
+      "ticker": "329180.KS",
+      "action": "매수",
+      "weight": "15%",
+      "date": "2026-05-26",
+      "entry_price": 743000.0
+    },
+    {
+      "type": "US",
+      "name": "Nvidia",
+      "ticker": "NVDA",
+      "action": "Buy",
+      "weight": "25%",
+      "date": "2026-05-26",
+      "entry_price": 215.3300018310547,
+      "entry_usdkrw": 1504.8800048828125
+    },
+    {
+      "type": "US",
+      "name": "ExxonMobil",
+      "ticker": "XOM",
+      "action": "Buy",
+      "weight": "10%",
+      "date": "2026-05-26",
+      "entry_price": 154.9199981689453,
+      "entry_usdkrw": 1504.8800048828125
+    },
+    {
+      "type": "KR",
+      "name": "삼성전자",
+      "code": "005930",
+      "ticker": "005930.KS",
+      "action": "매수",
+      "weight": "20%",
+      "date": "2026-05-27",
+      "entry_price": 299750.0
+    },
+    {
+      "type": "KR",
+      "name": "HD현대중공업",
+      "code": "329180",
+      "ticker": "329180.KS",
+      "action": "매수",
+      "weight": "15%",
+      "date": "2026-05-27",
+      "entry_price": 743000.0
+    },
+    {
+      "type": "US",
+      "name": "Nvidia",
+      "ticker": "NVDA",
+      "action": "Buy",
+      "weight": "25%",
+      "date": "2026-05-27",
+      "entry_price": 215.3300018310547,
+      "entry_usdkrw": 1504.5400390625
+    },
+    {
+      "type": "US",
+      "name": "ExxonMobil",
+      "ticker": "XOM",
+      "action": "Buy",
+      "weight": "10%",
+      "date": "2026-05-27",
+      "entry_price": 154.9199981689453,
+      "entry_usdkrw": 1504.5400390625
+    }
+  ]
 }

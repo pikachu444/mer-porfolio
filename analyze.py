@@ -34,7 +34,8 @@ from fetch_mer import posts_to_context
 # ※ gemini-2.0-flash / gemini-2.0-flash-lite : 2026-06-01 종료 — 제거됨
 # ※ gemini-3.1-pro-preview : 유료 전용 (billing 필요). 무료 아님.
 
-DEFAULT_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-pro")
+_gemini_model_env = os.environ.get("GEMINI_MODEL", "").strip()
+DEFAULT_MODEL = _gemini_model_env if _gemini_model_env else "gemini-2.5-pro"
 
 FALLBACK_MODELS = [
     "gemini-2.5-pro",           # 최고품질, 무료 100 RPD

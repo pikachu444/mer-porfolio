@@ -1,5 +1,114 @@
 {
-  "updated": "2026-05-12",
-  "report_summaries": [],
-  "all_rows": []
+  "updated": "2026-05-27",
+  "report_summaries": [
+    {
+      "date": "2026-05-26",
+      "avg_return_krw": -0.02,
+      "stock_count": 4,
+      "stocks": [
+        {
+          "name": "삼성전자",
+          "ticker": "005930.KS",
+          "type": "KR",
+          "date": "2026-05-26",
+          "action": "매수",
+          "weight": "20%",
+          "entry_price": 300000.0,
+          "current_price": 299750.0,
+          "return_pct": -0.08333333333333334
+        },
+        {
+          "name": "HD현대중공업",
+          "ticker": "329180.KS",
+          "type": "KR",
+          "date": "2026-05-26",
+          "action": "매수",
+          "weight": "15%",
+          "entry_price": 743000.0,
+          "current_price": 743000.0,
+          "return_pct": 0.0
+        },
+        {
+          "name": "Nvidia",
+          "ticker": "NVDA",
+          "type": "US",
+          "date": "2026-05-26",
+          "action": "Buy",
+          "weight": "25%",
+          "entry_price": 215.3300018310547,
+          "current_price": 215.3300018310547,
+          "return_pct": 0.0,
+          "return_pct_krw": -0.022590892244526414,
+          "entry_usdkrw": 1504.8800048828125,
+          "current_usdkrw": 1504.5400390625
+        },
+        {
+          "name": "ExxonMobil",
+          "ticker": "XOM",
+          "type": "US",
+          "date": "2026-05-26",
+          "action": "Buy",
+          "weight": "10%",
+          "entry_price": 154.9199981689453,
+          "current_price": 154.9199981689453,
+          "return_pct": 0.0,
+          "return_pct_krw": -0.022590892244526414,
+          "entry_usdkrw": 1504.8800048828125,
+          "current_usdkrw": 1504.5400390625
+        }
+      ]
+    }
+  ],
+  "all_rows": [
+    {
+      "name": "삼성전자",
+      "ticker": "005930.KS",
+      "type": "KR",
+      "date": "2026-05-26",
+      "action": "매수",
+      "weight": "20%",
+      "entry_price": 300000.0,
+      "current_price": 299750.0,
+      "return_pct": -0.08333333333333334
+    },
+    {
+      "name": "HD현대중공업",
+      "ticker": "329180.KS",
+      "type": "KR",
+      "date": "2026-05-26",
+      "action": "매수",
+      "weight": "15%",
+      "entry_price": 743000.0,
+      "current_price": 743000.0,
+      "return_pct": 0.0
+    },
+    {
+      "name": "Nvidia",
+      "ticker": "NVDA",
+      "type": "US",
+      "date": "2026-05-26",
+      "action": "Buy",
+      "weight": "25%",
+      "entry_price": 215.3300018310547,
+      "current_price": 215.3300018310547,
+      "return_pct": 0.0,
+      "return_pct_krw": -0.022590892244526414,
+      "entry_usdkrw": 1504.8800048828125,
+      "current_usdkrw": 1504.5400390625
+    },
+    {
+      "name": "ExxonMobil",
+      "ticker": "XOM",
+      "type": "US",
+      "date": "2026-05-26",
+      "action": "Buy",
+      "weight": "10%",
+      "entry_price": 154.9199981689453,
+      "current_price": 154.9199981689453,
+      "return_pct": 0.0,
+      "return_pct_krw": -0.022590892244526414,
+      "entry_usdkrw": 1504.8800048828125,
+      "current_usdkrw": 1504.5400390625
+    }
+  ]
 }
