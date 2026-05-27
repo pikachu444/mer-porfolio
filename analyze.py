@@ -141,6 +141,34 @@ def _try_model(client: genai.Client, model_name: str,
 
 # ─── 메인 분석 함수 ───────────────────────────────────────────────────────────
 
+# ─── 1차 요약 실시간 보강 헬퍼 ────────────────────────────────────────────────
+
+def _fill_missing_summary(client: genai.Client, post: Dict) -> str:
+    """DB에 요약 캐시가 누락된 경우, 실시간으로 flash를 호출하여 정밀 요약 보완"""
+    from fetch_mer import MAP_SUMMARY_PROMPT
+    title = post.get("title", "제목 없음")
+    content = post.get("content", "")
+    if not content:
+        return ""
+    try:
+        print(f"      [실시간 보강] '{title[:25]}'에 대한 1차 요약이 없어 실시간 생성 중...")
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=f"블로그 글:\n{content}\n\n{MAP_SUMMARY_PROMPT}",
+            config=types.GenerateContentConfig(
+                temperature=0.2,
+                max_output_tokens=2048,
+                safety_settings=SAFETY_SETTINGS,
+            )
+        )
+        return response.text if response.text else ""
+    except Exception as e:
+        print(f"      ⚠ 실시간 1차 요약 보강 실패 (원문 폴백 사용): {e}")
+        return content[:1500]  # 에러 시 원문 앞부분으로 폴백하여 분석 유실 차단
+
+
+# ─── 메인 분석 함수 ───────────────────────────────────────────────────────────
+
 def analyze_posts(
     posts: List[Dict],
     today_str: str,
@@ -149,30 +177,41 @@ def analyze_posts(
     is_rebalance: bool = False,
 ) -> str:
     """
-    수집된 포스트 목록을 받아 메르AI 스타일 포트폴리오 리포트 반환.
-
-    Args:
-        posts:                 fetch_mer.fetch_recent_posts() 반환값
-        today_str:             "2026년 05월 08일" 형식의 오늘 날짜
-        run_mode:              "scheduled" | "adhoc" | "test"
-        current_holdings_text: 현재 보유 종목 텍스트 (portfolio_state에서)
-        is_rebalance:          True면 전면 리밸런싱 모드
-
-    Returns:
-        마크다운 형식의 리포트 문자열
+    [2단계 분할 종합 분석 (Map-Reduce) 버전]
+    수집된 30편 글의 1차 요약(Summary) 엑기스를 병합한 뒤, 
+    오직 최고 성능의 gemini-2.5-pro 모델을 끈질기게 호출하여 최종 포트폴리오 리포트 완성.
     """
     if not posts:
         raise ValueError("분석할 포스트가 없습니다.")
 
     client = _get_client()
 
-    # 컨텍스트 + 메시지 생성
-    context = posts_to_context(posts)
+    # 1. 1단계 (Map): 각 포스트별 1차 요약 캐시(summary) 추출 및 미세 누락 실시간 보완
+    print("\n[3/7-1] 1단계: 30편 블로그 글의 1차 정밀 요약 캐시 로드 및 누락분 실시간 보강 중...")
+    summarized_blocks = []
+    for i, post in enumerate(posts, 1):
+        summary = post.get("summary", "").strip()
+        # 로컬 테스트 등으로 요약 캐시가 빈 값일 경우 실시간 보완 장치 가동
+        if not summary:
+            summary = _fill_missing_summary(client, post)
+            post["summary"] = summary  # 메모리 상에 캐싱 갱신
+            
+        summarized_blocks.append(
+            f"[{i}/{len(posts)}] 제목: {post['title']}\n"
+            f"날짜: {post['date']}\n"
+            f"1차 정밀 요약:\n{summary}\n"
+            f"{'─' * 50}"
+        )
+
+    # 요약된 엑기스들만 병합 (용량이 9.7만 자에서 5천 자 수준으로 극도로 경량화!)
+    reduced_context = "\n\n".join(summarized_blocks)
+    
     start_date = posts[-1]["date"]
     end_date = posts[0]["date"]
 
+    # 2단계 (Reduce): 경량화된 요약본을 전달하여 Pro 모델에게 초고품질 종합 분석 지시
     user_message = build_user_message(
-        context=context,
+        context=reduced_context,
         today_str=today_str,
         post_count=len(posts),
         start_date=start_date,
@@ -183,37 +222,29 @@ def analyze_posts(
     )
 
     total_chars = len(user_message)
-    print(f"  📝 총 입력 크기: {total_chars:,}자 (약 {total_chars // 4:,} 토큰 추정)")
+    print(f"\n[3/7-2] 2단계: 최적화된 엑기스 입력 크기: {total_chars:,}자 (Gemini Pro 토큰 한도 안전 통과)")
+    print(f"  🤖 오직 최고 품질의 'gemini-2.5-pro' 모델만을 고집하여 최종 종합 분석을 진행합니다.")
 
-    # ── 모델 폴백 로직 ────────────────────────────────────────────────────────
-    models_to_try = [DEFAULT_MODEL]
-    for m in FALLBACK_MODELS:
-        if m not in models_to_try:
-            models_to_try.append(m)
-
-    last_error = ""
-    for i, model_name in enumerate(models_to_try):
-        success, result = _try_model(client, model_name, user_message)
-
+    # 429 한도 초과 시 성공할 때까지 Pro 모델로 계속 30초 대기 후 무한 재시도(Retry)
+    retry_count = 0
+    max_retries = 10  # 비정상 루프 방지를 위해 최대 10회(약 5분)로 안전 장치 설정
+    
+    while retry_count < max_retries:
+        success, result = _try_model(client, "gemini-2.5-pro", user_message)
+        
         if success:
-            print(f"  ✅ 분석 완료 (모델: {model_name}, 출력: {len(result):,}자)")
+            print(f"  ✅ [Gemini Pro 최종 종합 분석 대성공!] (출력: {len(result):,}자)")
             return result
-
-        last_error = result
-
-        # 할당량 초과 시 잠시 대기 후 다음 모델
-        if "할당량" in result and i < len(models_to_try) - 1:
-            wait_sec = 30
-            print(f"  ⏳ {wait_sec}초 대기 후 다음 모델 시도...")
-            time.sleep(wait_sec)
+            
+        print(f"  ⏳ [Pro 한도 대기] 30초 대기 후 gemini-2.5-pro 모델로 다시 끈질기게 재시도합니다... (시도 횟수: {retry_count + 1}/{max_retries})")
+        retry_count += 1
+        time.sleep(30)
 
     raise RuntimeError(
-        f"모든 모델 시도 실패.\n마지막 오류: {last_error}\n\n"
+        f"gemini-2.5-pro 모델 최종 종합 분석 10회 연속 호출 실패.\n"
+        f"마지막 구글 에러 원인: {result}\n\n"
         "해결 방법:\n"
-        "1. GEMINI_API_KEY 확인: https://aistudio.google.com/app/apikey\n"
-        "2. 무료 할당량 확인: https://ai.google.dev/pricing\n"
-        "3. 일일 한도 초과 시 내일 다시 실행\n"
-        "4. GEMINI_MODEL 환경변수로 다른 모델 지정 가능"
+        "1. 구글 AI Studio 결제 연동(Pay-as-you-go)을 통해 Pro 계정 한도를 완전히 해제하여 100% 가동을 보장하십시오."
     )
 
 

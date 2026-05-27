@@ -15,6 +15,9 @@ import json
 import os
 from datetime import datetime, timedelta
 from typing import List, Dict, Optional
+from pathlib import Path
+from google import genai
+from google.genai import types
 
 # ─── 설정 ───────────────────────────────────────────────────────────────────
 
@@ -22,8 +25,20 @@ BLOG_ID = "ranto28"
 RSS_URL = f"https://rss.blog.naver.com/{BLOG_ID}.xml"
 MOBILE_BASE = "https://m.blog.naver.com"
 STATE_FILE = "last_processed.json"
+DB_FILE = "output/posts_db.json"  # 증분 누적 데이터베이스 경로
 _fetch_days_env = os.environ.get("FETCH_DAYS", "").strip()
 DEFAULT_DAYS = int(_fetch_days_env) if _fetch_days_env else 14  # 빈 문자열 방어
+
+# 1차 정밀 요약 프롬프트 (나비효과 및 종목 팩트 100% 보존용)
+MAP_SUMMARY_PROMPT = """
+당신은 거시경제 분석가 메르의 글을 정밀 압축 요약하는 1차 요약 엔진입니다.
+제공된 블로그 전문을 읽고, 다음 세 가지 정보를 100% 보존하여 콤팩트하게 요약하십시오:
+1. **핵심 거시경제/지정학적 사건 팩트**: 날짜, 구체적 수치, 선언 내용 등.
+2. **나비효과 인과관계**: 사건이 유발하는 1차/2차/3차 파급효과와 업종 연결 고리 (예: A로 인해 B가 발생하고 이로 인해 C가 수혜/리스크를 입는다).
+3. **직간접 언급 주식/섹터 명단**: 구체적으로 거론된 종목 이름, 티커, 해당 업종.
+
+절대 없는 사실을 창작하거나 지어내지 말고, 나비효과의 정교한 인과 관계 연결 고리를 단순화하여 누락시키지 마십시오.
+"""
 
 HEADERS = {
     "User-Agent": (
@@ -159,81 +174,119 @@ def _clean_text(text: str) -> str:
 
 # ─── 메인 수집 함수 ───────────────────────────────────────────────────────────
 
+def summarize_single_post(content: str) -> str:
+    """가벼운 gemini-2.5-flash 모델을 1회만 사용하여 글 1편을 콤팩트 요약"""
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        print("    [Info] GEMINI_API_KEY 미설정으로 1차 요약 요소를 생략하고 원본을 유지합니다.")
+        return ""
+    try:
+        client = genai.Client(api_key=api_key)
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=f"블로그 글:\n{content}\n\n{MAP_SUMMARY_PROMPT}",
+            config=types.GenerateContentConfig(
+                temperature=0.2,
+                max_output_tokens=2048,
+            )
+        )
+        return response.text if response.text else ""
+    except Exception as e:
+        print(f"    ⚠ 1차 요약 생성 중 API 에러 발생 (건너뜀): {e}")
+        return ""
+
+
 def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
     """
-    최근 N일간의 메르 블로그 포스트를 수집해 반환.
-
-    반환 형식:
-    [
-        {
-            "title": str,
-            "date": "YYYY-MM-DD",
-            "url": str,
-            "content": str  # 전문 (없으면 RSS 요약)
-        },
-        ...
-    ]
-    날짜 내림차순 정렬 (최신 글 먼저).
+    [스마트 증분 수집 및 요약 캐싱 DB 버전]
+    신규 작성된 새 글만 부분 수집하여 posts_db.json 데이터베이스에 누적하고, 
+    최종적으로 최신 30개만 슬라이싱하여 안정적으로 반환합니다.
     """
+    # 1. 기존 누적 데이터베이스 로드
+    db_posts = []
+    db_path = Path(DB_FILE)
+    if db_path.exists():
+        try:
+            with open(db_path, encoding="utf-8") as f:
+                db_posts = json.load(f)
+            print(f"📂 기존 posts_db.json 로드 성공 (총 {len(db_posts)}편 누적 상태)")
+        except Exception as e:
+            print(f"⚠ 기존 posts_db.json 로드 실패 (새로 빌드): {e}")
+
+    existing_urls = {p["url"] for p in db_posts}
+
+    # 2. RSS 파싱 시작
     print(f"📡 RSS 파싱 중: {RSS_URL}")
     feed = feedparser.parse(RSS_URL)
-
     if feed.bozo and not feed.entries:
         raise RuntimeError(f"RSS 파싱 실패: {feed.bozo_exception}")
 
     cutoff = datetime.now() - timedelta(days=days)
     print(f"📅 수집 기간: {cutoff.strftime('%Y-%m-%d')} ~ 오늘")
 
-    posts = []
-    skipped = 0
+    new_posts_count = 0
+    newly_added = []
 
     for entry in feed.entries:
         try:
             pub_date = datetime(*entry.published_parsed[:6])
         except (AttributeError, TypeError):
-            skipped += 1
             continue
 
         if pub_date < cutoff:
             continue
 
+        # 중복 URL 체크 (이미 DB에 있다면 부분 수집 건너뜀)
+        if entry.link in existing_urls:
+            continue
+
         post_id = extract_post_id(entry.link)
         if not post_id:
-            print(f"  ⚠ 포스트 ID 추출 실패: {entry.link}")
-            skipped += 1
             continue
 
         title = entry.get("title", "제목 없음").strip()
-        print(f"  📄 [{pub_date.strftime('%m/%d')}] {title[:55]}...")
+        print(f"  🆕 [신규 증분 발견] [{pub_date.strftime('%m/%d')}] {title[:45]}...")
 
-        # 전문 스크래핑
+        # 신규 전문 스크래핑
         full_text = fetch_full_post(post_id, title)
-
-        # 전문 실패 시 RSS 요약 사용
         if not full_text:
             full_text = entry.get("summary", "")
-            print(f"      → RSS 요약으로 대체 ({len(full_text)}자)")
-        else:
-            print(f"      → 전문 수집 완료 ({len(full_text)}자)")
 
-        # 토큰 오버플로우 방지: 포스트당 최대 글자 수 제한
         if len(full_text) > MAX_CHARS_PER_POST:
             full_text = full_text[:MAX_CHARS_PER_POST] + "\n...(이하 생략)"
 
-        posts.append({
+        # 새로 긁어온 딱 요 글에 대해서만 Flash로 1차 정밀 요약 실행
+        print(f"      → [1차 요약 캐싱 가동] {title[:30]}...")
+        summary = summarize_single_post(full_text)
+
+        newly_added.append({
             "title": title,
             "date": pub_date.strftime("%Y-%m-%d"),
             "url": entry.link,
             "content": full_text,
+            "summary": summary,
         })
+        new_posts_count += 1
+        time.sleep(1.2)  # 네이버 서버 부하 방지
 
-        # 네이버 서버 부하 방지
-        time.sleep(1.2)
+    # 3. 새로운 포스트 병합 및 저장
+    if newly_added:
+        db_posts.extend(newly_added)
+        # 날짜 최신순 정렬
+        db_posts.sort(key=lambda x: x["date"], reverse=True)
+        
+        # output 폴더 확보 후 DB 저장
+        db_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(db_path, "w", encoding="utf-8") as f:
+            json.dump(db_posts, f, ensure_ascii=False, indent=2)
+        print(f"💾 신규 {new_posts_count}편 1차 요약 병합 완료 및 posts_db.json 누적 갱신 성공!")
+    else:
+        print("✨ 신규 업로드된 증분 글이 존재하지 않습니다. 스크래핑 0회 통과 완료.")
 
-    posts.sort(key=lambda x: x["date"], reverse=True)
-
-    print(f"\n✅ 수집 완료: {len(posts)}개 (스킵: {skipped}개)")
-    return posts
+    # 4. 분석에 최신 30개만 슬라이싱하여 반환
+    final_posts = db_posts[:30]
+    print(f"🎯 최종 분석을 위한 최신 {len(final_posts)}편 데이터 보존 및 리턴 완료.")
+    return final_posts
 
 
 def posts_to_context(posts: List[Dict]) -> str:

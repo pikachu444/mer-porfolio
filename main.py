@@ -111,9 +111,6 @@ def main():
     print("\n[2/7] 메르 블로그 글 수집 중... (최근 " + str(FETCH_DAYS) + "일)")
     try:
         posts = fetch_recent_posts(days=FETCH_DAYS)
-        if posts and len(posts) > 12:
-            print(f"  -> [토큰 최적화] 수집된 {len(posts)}편 중 최신 12편만 분석에 사용합니다.")
-            posts = posts[:12]
     except Exception as e:
         msg = "블로그 수집 실패: " + str(e)
         print("X " + msg)
@@ -131,10 +128,7 @@ def main():
                 if not posts:
                     print("X 30일간 글도 없음 -- 종료")
                     return 1
-                if len(posts) > 12:
-                    print(f"  -> [토큰 최적화] 재수집된 {len(posts)}편 중 최신 12편만 분석에 사용합니다.")
-                    posts = posts[:12]
-                print("  -> 30일 범위로 재수집 (최적화 완료): " + str(len(posts)) + "편")
+                print("  -> 30일 범위로 재수집: " + str(len(posts)) + "편")
             except Exception as e:
                 msg = "재수집 실패: " + str(e)
                 print("X " + msg)
