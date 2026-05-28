@@ -39,7 +39,17 @@ def is_transient_error(message: str) -> bool:
 
 
 def is_daily_quota_error(message: str) -> bool:
-    return any(token in message for token in ("PerDay", "RequestsPerDay", "TokensPerDay"))
+    msg = message.lower()
+    return any(
+        token in msg
+        for token in (
+            "perday",
+            "requestsperday",
+            "tokensperday",
+            "daily quota",
+            "quota exceeded",
+        )
+    )
 
 
 def parse_retry_delay(message: str) -> float | None:
@@ -47,6 +57,8 @@ def parse_retry_delay(message: str) -> float | None:
         r"retry in ([\d.]+)s",
         r"retryDelay': '(\d+)s'",
         r'"retryDelay"\s*:\s*"(\d+)s"',
+        r"retry_delay\s*\{\s*seconds:\s*(\d+)",
+        r"retryDelay[^\d]+(\d+)\s*s",
     )
     for pattern in patterns:
         match = re.search(pattern, message, re.IGNORECASE)

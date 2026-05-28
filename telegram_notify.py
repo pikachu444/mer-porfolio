@@ -159,9 +159,12 @@ def _send_message(token: str, chat_id: str, text: str,
         if resp.status_code == 200:
             return True
         if resp.status_code == 400 and parse_mode:
-            payload["parse_mode"] = ""
+            payload.pop("parse_mode", None)
             resp2 = requests.post(url, json=payload, timeout=15)
-            return resp2.status_code == 200
+            if resp2.status_code == 200:
+                return True
+            print(f"  !! Telegram message fallback error {resp2.status_code}: {resp2.text[:200]}")
+            return False
         print(f"  !! 텔레그램 메시지 오류 {resp.status_code}: {resp.text[:200]}")
         return False
     except Exception as e:
@@ -170,6 +173,20 @@ def _send_message(token: str, chat_id: str, text: str,
 
 
 # ─── 이미지 전송 ──────────────────────────────────────────────────────────────
+
+def send_status(title: str, body: str = "") -> bool:
+    """Send a short operational status message to Telegram."""
+    token, chat_id = _get_credentials()
+    if not token or not chat_id:
+        print("  !! TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID missing -> status notification skipped")
+        return False
+
+    lines = [f"*{title}*"]
+    if body:
+        lines.append(body)
+    lines.append(f"[Dashboard]({_get_dashboard_url()})")
+    return _send_message(token, chat_id, "\n\n".join(lines))
+
 
 def send_photo(image_path: str, caption: str = "") -> bool:
     """PNG/JPG 이미지 파일을 텔레그램으로 전송."""
@@ -298,4 +315,5 @@ if __name__ == "__main__":
     print("=== 요약 미리보기 ===")
     print(summary)
     print("\n=== 전송 테스트 ===")
-    result = send_
+    result = send_report(sample_report, "test")
+    print(result)

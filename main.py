@@ -31,7 +31,7 @@ from fetch_mer import fetch_recent_posts
 from analyze import analyze_posts
 from track_returns import update_and_get_performance
 from generate_dashboard import generate_all
-from telegram_notify import send_report, send_photo
+from telegram_notify import send_report, send_photo, send_status
 from portfolio_state import (
     load_state,
     save_state,
@@ -78,6 +78,16 @@ def save_error_log(error, today):
 
 # --- 메인 --------------------------------------------------------------------
 
+def notify_status(title: str, body: str = "") -> bool:
+    if RUN_MODE == "test":
+        return True
+    try:
+        return send_status(title, body)
+    except Exception as e:
+        print("  !! Telegram status notification failed: " + str(e))
+        return False
+
+
 def main():
     today = datetime.now()
     today_str = today.strftime("%Y년 %m월 %d일")
@@ -115,11 +125,13 @@ def main():
         msg = "블로그 수집 실패: " + str(e)
         print("X " + msg)
         save_error_log(msg, today)
+        notify_status("MerAI run failed", msg)
         return 1
 
     if not posts:
         if RUN_MODE == "scheduled":
             print("!! 최근 " + str(FETCH_DAYS) + "일간 새 글 없음 -- scheduled 모드: 정상 종료")
+            notify_status("MerAI run finished", "No new posts in the scheduled collection window.")
             return 0
         else:
             print("!! 최근 " + str(FETCH_DAYS) + "일간 새 글 없음 -- " + RUN_MODE + " 모드: 30일로 재수집")
@@ -127,12 +139,14 @@ def main():
                 posts = fetch_recent_posts(days=30)
                 if not posts:
                     print("X 30일간 글도 없음 -- 종료")
+                    notify_status("MerAI run failed", "No posts found even after expanding the collection window to 30 days.")
                     return 1
                 print("  -> 30일 범위로 재수집: " + str(len(posts)) + "편")
             except Exception as e:
                 msg = "재수집 실패: " + str(e)
                 print("X " + msg)
                 save_error_log(msg, today)
+                notify_status("MerAI run failed", msg)
                 return 1
     else:
         print("  -> " + str(len(posts)) + "편 수집 완료")
@@ -155,6 +169,7 @@ def main():
         msg = "AI 분석 실패: " + str(e)
         print("X " + msg)
         save_error_log(msg, today)
+        notify_status("MerAI run failed", msg[:1500])
         return 1
 
     # -- 4단계: portfolio_state 업데이트 ---------------------------------------
@@ -189,6 +204,7 @@ def main():
         print("  -> 저장 완료: " + str(saved_path))
     except Exception as e:
         print("X 파일 저장 실패: " + str(e))
+        notify_status("MerAI run failed", "Failed to save report: " + str(e))
         return 1
 
     png_path = None
@@ -201,11 +217,15 @@ def main():
     print("\n[7/7] 텔레그램 알림 전송 중...")
     if RUN_MODE != "test":
         try:
+            report_sent = False
             if png_path and png_path.exists():
                 send_photo(str(png_path), "포트폴리오 성과 | " + today_str)
-            send_report(report, today_str)
+            report_sent = send_report(report, today_str)
+            if not report_sent:
+                return 1
         except Exception as e:
             print("  !! 텔레그램 전송 실패 (건너뜀): " + str(e))
+            return 1
     else:
         print("  -> TEST 모드: 텔레그램 전송 스킵")
 
