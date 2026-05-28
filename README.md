@@ -143,6 +143,7 @@ output/
 | `GEMINI_MODEL` | `gemini-2.5-pro` | 최종 리포트 생성 우선 모델 |
 | `GEMINI_FALLBACK_MODEL` | `gemini-2.5-flash` | Pro 실패/quota 시 fallback 모델 |
 | `ENABLE_POST_SUMMARIES` | 켜짐 | 신규 글별 1차 요약 API 호출 여부 |
+| `MAX_POST_SUMMARIES_PER_RUN` | `3` | 실행 1회당 신규 글 요약 최대 호출 수 |
 | `OUTPUT_DIR` | `output` | 리포트 저장 경로 |
 
 로컬 실행 예:
@@ -160,6 +161,7 @@ RUN_MODE=adhoc FETCH_DAYS=14 python main.py
 ## 모델 및 한도 운영 정책
 
 - 무료 API 운영에서는 신규 글만 1차 요약하고, 기존 요약 캐시는 재사용해 호출 수를 줄입니다.
+- 백필/adhoc 실행에서 신규 글이 많아도 `MAX_POST_SUMMARIES_PER_RUN` 상한까지만 요약하고 나머지는 원문 fallback합니다.
 - 최종 리포트 생성은 `gemini-2.5-pro`를 먼저 시도하고 실패/quota 시 `gemini-2.5-flash`로 fallback합니다.
 - 신규 블로그 글은 원문을 저장하고, 기본값에서는 Flash로 글별 1차 요약 캐시를 생성합니다.
 - 기존 글의 요약 캐시가 있으면 사용하고, 비어 있으면 원문을 최종 분석 입력에 포함합니다.

@@ -106,7 +106,7 @@ def generate_content_with_retry(client, model: str, contents, config, max_retrie
                 raise
 
             retry_delay = parse_retry_delay(message)
-            if is_daily_quota_error(message) and retry_delay is None:
+            if is_daily_quota_error(message):
                 raise
 
             wait_sec = max(retry_delay or backoff, get_min_interval(model))

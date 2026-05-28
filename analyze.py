@@ -90,7 +90,7 @@ def _model_sequence() -> list[str]:
 
 
 def _retry_count_for_model(model_name: str) -> int:
-    return 2 if "pro" in model_name.lower() else 5
+    return 1 if "pro" in model_name.lower() else 5
 
 
 def _try_model(

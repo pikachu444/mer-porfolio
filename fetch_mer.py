@@ -30,6 +30,8 @@ _fetch_days_env = os.environ.get("FETCH_DAYS", "").strip()
 DEFAULT_DAYS = int(_fetch_days_env) if _fetch_days_env else 14  # 빈 문자열 방어
 _summary_env = os.environ.get("ENABLE_POST_SUMMARIES", "true").strip().lower()
 ENABLE_POST_SUMMARIES = _summary_env not in ("0", "false", "no", "off")
+_max_summaries_env = os.environ.get("MAX_POST_SUMMARIES_PER_RUN", "3").strip()
+MAX_POST_SUMMARIES_PER_RUN = int(_max_summaries_env) if _max_summaries_env else 3
 
 # 1차 정밀 요약 프롬프트 (나비효과 및 종목 팩트 100% 보존용)
 MAP_SUMMARY_PROMPT = """
@@ -227,6 +229,7 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
     print(f"수집 기간: {cutoff.strftime('%Y-%m-%d')} ~ 오늘")
 
     new_posts_count = 0
+    summary_calls = 0
     newly_added = []
 
     for entry in feed.entries:
@@ -258,8 +261,16 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
             full_text = full_text[:MAX_CHARS_PER_POST] + "\n...(이하 생략)"
 
         if ENABLE_POST_SUMMARIES:
-            print(f"      1차 요약 캐시 생성(Flash): {title[:30]}...")
-            summary = summarize_single_post(full_text)
+            if summary_calls < MAX_POST_SUMMARIES_PER_RUN:
+                print(f"      1차 요약 캐시 생성(Flash): {title[:30]}...")
+                summary = summarize_single_post(full_text)
+                summary_calls += 1
+            else:
+                print(
+                    "      1차 요약 호출 상한 도달 "
+                    f"({MAX_POST_SUMMARIES_PER_RUN}회) -> 원문 사용"
+                )
+                summary = ""
         else:
             print("      글별 요약 OFF -> 원문을 최종 분석에 사용")
             summary = ""
