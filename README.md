@@ -159,6 +159,7 @@ RUN_MODE=adhoc FETCH_DAYS=14 python main.py
 
 - 최종 리포트 생성은 `gemini-2.5-pro`를 기본으로 사용합니다.
 - 신규 블로그 글 1차 요약은 `gemini-2.5-flash`를 사용하고 `output/posts_db.json`에 캐시합니다.
+- 기존 글의 요약 캐시가 비어 있으면 분석 단계에서 추가 API 호출로 보강하지 않고 원문을 최종 분석 입력에 포함합니다.
 - `flash-lite` 계열은 품질 저하 우려가 있어 기본 경로에서 사용하지 않습니다.
 - rate limit 또는 quota 오류가 나면 모델별 호출 간격을 두고 재시도합니다.
 - 최종 분석 모델이 계속 실패하면 낮은 모델로 조용히 대체하지 않고, 기존 `latest.md`를 유지한 채 GitHub Actions를 실패 처리합니다.
