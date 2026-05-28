@@ -102,7 +102,7 @@ def _try_model(client: genai.Client, model_name: str,
             model=model_name,
             contents=user_message,
             config=config,
-            max_retries=3,
+            max_retries=5,
         )
 
         text = response.text
