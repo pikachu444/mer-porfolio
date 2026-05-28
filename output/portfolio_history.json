@@ -88,7 +88,7 @@
       "action": "보유",
       "weight": "8%",
       "date": "2026-05-28",
-      "entry_price": NaN
+      "entry_price": 10270.0
     },
     {
       "type": "KR",
@@ -98,27 +98,27 @@
       "action": "보유",
       "weight": "8%",
       "date": "2026-05-28",
-      "entry_price": NaN
+      "entry_price": 47800.0
     },
     {
       "type": "KR",
       "name": "삼성중공업",
       "code": "010140",
       "ticker": "010140.KS",
-      "action": "매수",
+      "action": "보유",
       "weight": "15%",
       "date": "2026-05-28",
-      "entry_price": NaN
+      "entry_price": 28400.0
     },
     {
       "type": "KR",
       "name": "LG이노텍",
       "code": "011070",
       "ticker": "011070.KS",
-      "action": "매수",
+      "action": "보유",
       "weight": "14%",
       "date": "2026-05-28",
-      "entry_price": NaN
+      "entry_price": 1134000.0
     },
     {
       "type": "US",
@@ -127,8 +127,8 @@
       "action": "Buy",
       "weight": "15%",
       "date": "2026-05-28",
-      "entry_price": 212.69000244140625,
-      "entry_usdkrw": 1494.97998046875
+      "entry_price": 214.36000061035156,
+      "entry_usdkrw": 1494.0999755859375
     },
     {
       "type": "US",
@@ -137,18 +137,18 @@
       "action": "Buy",
       "weight": "5%",
       "date": "2026-05-28",
-      "entry_price": 389.9599914550781,
-      "entry_usdkrw": 1494.97998046875
+      "entry_price": 390.0555114746094,
+      "entry_usdkrw": 1494.0999755859375
     },
     {
       "type": "US",
       "name": "Microsoft",
       "ticker": "MSFT",
-      "action": "Buy",
+      "action": "Hold",
       "weight": "5%",
       "date": "2026-05-28",
-      "entry_price": 424.07000732421875,
-      "entry_usdkrw": 1494.97998046875
+      "entry_price": 427.9599914550781,
+      "entry_usdkrw": 1494.0999755859375
     },
     {
       "type": "US",
@@ -157,8 +157,8 @@
       "action": "Hold",
       "weight": "4%",
       "date": "2026-05-28",
-      "entry_price": 1872.530029296875,
-      "entry_usdkrw": 1494.97998046875
+      "entry_price": 1855.3699951171875,
+      "entry_usdkrw": 1494.0999755859375
     },
     {
       "type": "US",
@@ -167,8 +167,8 @@
       "action": "Buy",
       "weight": "8%",
       "date": "2026-05-28",
-      "entry_price": 74.4800033569336,
-      "entry_usdkrw": 1494.97998046875
+      "entry_price": 75.59500122070312,
+      "entry_usdkrw": 1494.0999755859375
     },
     {
       "type": "US",
@@ -177,8 +177,8 @@
       "action": "Buy",
       "weight": "3%",
       "date": "2026-05-28",
-      "entry_price": 3.244999885559082,
-      "entry_usdkrw": 1494.97998046875
+      "entry_price": 3.2699999809265137,
+      "entry_usdkrw": 1494.0999755859375
     },
     {
       "type": "US",
@@ -187,8 +187,8 @@
       "action": "Buy",
       "weight": "3%",
       "date": "2026-05-28",
-      "entry_price": 555.8200073242188,
-      "entry_usdkrw": 1494.97998046875
+      "entry_price": 557.5250244140625,
+      "entry_usdkrw": 1494.0999755859375
     },
     {
       "type": "US",
@@ -197,8 +197,8 @@
       "action": "Buy",
       "weight": "2%",
       "date": "2026-05-28",
-      "entry_price": 262.1700134277344,
-      "entry_usdkrw": 1494.97998046875
+      "entry_price": 261.4700012207031,
+      "entry_usdkrw": 1494.0999755859375
     }
   ]
 }

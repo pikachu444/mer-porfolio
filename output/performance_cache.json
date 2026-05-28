@@ -3,7 +3,7 @@
   "report_summaries": [
     {
       "date": "2026-05-26",
-      "avg_return_krw": -1.78,
+      "avg_return_krw": -1.68,
       "stock_count": 4,
       "stocks": [
         {
@@ -36,11 +36,11 @@
           "action": "Buy",
           "weight": "25%",
           "entry_price": 215.3300018310547,
-          "current_price": 212.69500732421875,
-          "return_pct": -1.2237005918493988,
-          "return_pct_krw": -1.8735117213072507,
+          "current_price": 214.35989379882812,
+          "return_pct": -0.4505215362361337,
+          "return_pct_krw": -1.1636324094260324,
           "entry_usdkrw": 1504.8800048828125,
-          "current_usdkrw": 1494.97998046875
+          "current_usdkrw": 1494.0999755859375
         },
         {
           "name": "ExxonMobil",
@@ -50,17 +50,17 @@
           "action": "Buy",
           "weight": "10%",
           "entry_price": 154.9199981689453,
-          "current_price": 148.29510498046875,
-          "return_pct": -4.276331827251831,
-          "return_pct_krw": -4.906060874643633,
+          "current_price": 147.11000061035156,
+          "return_pct": -5.041310128390715,
+          "return_pct_krw": -5.721535432393296,
           "entry_usdkrw": 1504.8800048828125,
-          "current_usdkrw": 1494.97998046875
+          "current_usdkrw": 1494.0999755859375
         }
       ]
     },
     {
       "date": "2026-05-27",
-      "avg_return_krw": -1.76,
+      "avg_return_krw": -1.66,
       "stock_count": 4,
       "stocks": [
         {
@@ -93,11 +93,11 @@
           "action": "Buy",
           "weight": "25%",
           "entry_price": 215.3300018310547,
-          "current_price": 212.69500732421875,
-          "return_pct": -1.2237005918493988,
-          "return_pct_krw": -1.8513390630755446,
+          "current_price": 214.35989379882812,
+          "return_pct": -0.4505215362361337,
+          "return_pct_krw": -1.1412993468871486,
           "entry_usdkrw": 1504.5400390625,
-          "current_usdkrw": 1494.97998046875
+          "current_usdkrw": 1494.0999755859375
         },
         {
           "name": "ExxonMobil",
@@ -107,11 +107,11 @@
           "action": "Buy",
           "weight": "10%",
           "entry_price": 154.9199981689453,
-          "current_price": 148.29510498046875,
-          "return_pct": -4.276331827251831,
-          "return_pct_krw": -4.884573451124055,
+          "current_price": 147.11000061035156,
+          "return_pct": -5.041310128390715,
+          "return_pct_krw": -5.700232273479358,
           "entry_usdkrw": 1504.5400390625,
-          "current_usdkrw": 1494.97998046875
+          "current_usdkrw": 1494.0999755859375
         }
       ]
     }
@@ -147,11 +147,11 @@
       "action": "Buy",
       "weight": "25%",
       "entry_price": 215.3300018310547,
-      "current_price": 212.69500732421875,
-      "return_pct": -1.2237005918493988,
-      "return_pct_krw": -1.8735117213072507,
+      "current_price": 214.35989379882812,
+      "return_pct": -0.4505215362361337,
+      "return_pct_krw": -1.1636324094260324,
       "entry_usdkrw": 1504.8800048828125,
-      "current_usdkrw": 1494.97998046875
+      "current_usdkrw": 1494.0999755859375
     },
     {
       "name": "ExxonMobil",
@@ -161,11 +161,11 @@
       "action": "Buy",
       "weight": "10%",
       "entry_price": 154.9199981689453,
-      "current_price": 148.29510498046875,
-      "return_pct": -4.276331827251831,
-      "return_pct_krw": -4.906060874643633,
+      "current_price": 147.11000061035156,
+      "return_pct": -5.041310128390715,
+      "return_pct_krw": -5.721535432393296,
       "entry_usdkrw": 1504.8800048828125,
-      "current_usdkrw": 1494.97998046875
+      "current_usdkrw": 1494.0999755859375
     },
     {
       "name": "삼성전자",
@@ -197,11 +197,11 @@
       "action": "Buy",
       "weight": "25%",
       "entry_price": 215.3300018310547,
-      "current_price": 212.69500732421875,
-      "return_pct": -1.2237005918493988,
-      "return_pct_krw": -1.8513390630755446,
+      "current_price": 214.35989379882812,
+      "return_pct": -0.4505215362361337,
+      "return_pct_krw": -1.1412993468871486,
       "entry_usdkrw": 1504.5400390625,
-      "current_usdkrw": 1494.97998046875
+      "current_usdkrw": 1494.0999755859375
     },
     {
       "name": "ExxonMobil",
@@ -211,11 +211,11 @@
       "action": "Buy",
       "weight": "10%",
       "entry_price": 154.9199981689453,
-      "current_price": 148.29510498046875,
-      "return_pct": -4.276331827251831,
-      "return_pct_krw": -4.884573451124055,
+      "current_price": 147.11000061035156,
+      "return_pct": -5.041310128390715,
+      "return_pct_krw": -5.700232273479358,
       "entry_usdkrw": 1504.5400390625,
-      "current_usdkrw": 1494.97998046875
+      "current_usdkrw": 1494.0999755859375
     }
   ]
 }
