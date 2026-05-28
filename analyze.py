@@ -3,8 +3,8 @@ analyze.py
 Google AI Studio (Gemini) 무료 API를 이용한 메르AI 분석 모듈
 
 무료 티어 한도 (2026년 기준):
-  - gemini-2.5-pro:        분당 5회,  일 100회 ← 기본값
-  - gemini-2.5-flash:      분당 10회, 일 500회 ← 1차 요약 기본값
+  - gemini-2.5-flash:      무료 API 기본 모델
+  - gemini-2.5-pro:        프로젝트에 따라 무료 한도가 없을 수 있음
 
 API 키 발급: https://aistudio.google.com/app/apikey
 환경변수: GEMINI_API_KEY
@@ -22,12 +22,11 @@ from gemini_utils import generate_content_with_retry, is_daily_quota_error
 
 # ─── 모델 설정 ────────────────────────────────────────────────────────────────
 #
-# 2026년 5월 기준 무료 API 모델 (ai.google.dev/gemini-api/docs/pricing 확인):
-#   gemini-2.5-pro       : 무료, 5 RPM / 100 RPD  ← 고품질 기본값
-#   gemini-2.5-flash     : 무료, 더 넉넉한 한도     ← 1차 요약 기본값
+# 무료 API 운영에서는 호출 수를 줄이는 것이 우선이다.
+# 최종 분석은 기본적으로 gemini-2.5-flash 1회만 호출한다.
 
 _gemini_model_env = os.environ.get("GEMINI_MODEL", "").strip()
-FINAL_MODEL = _gemini_model_env if _gemini_model_env else "gemini-2.5-pro"
+FINAL_MODEL = _gemini_model_env if _gemini_model_env else "gemini-2.5-flash"
 
 # 투자 분석 특성상 안전 필터 완화 (주식 분석 용어 오탐 방지)
 SAFETY_SETTINGS = [
@@ -112,7 +111,7 @@ def _try_model(client: genai.Client, model_name: str,
         if not text:
             return False, "응답이 완전히 비어 있음"
             
-        # 1. 최소 길이 검증 (Pro 모델의 완성본 리포트는 최소 1,500자 확보되어야 함)
+        # 1. 최소 길이 검증
         if len(text) < 1500:
             return False, f"응답 길이가 너무 짧아 분석 중단으로 의심됨 ({len(text)}자)"
             
@@ -143,31 +142,19 @@ def _try_model(client: genai.Client, model_name: str,
         return False, err
 
 
-# ─── 1차 요약 실시간 보강 헬퍼 ────────────────────────────────────────────────
+# ─── 입력 구성 헬퍼 ──────────────────────────────────────────────────────────
 
-def _fill_missing_summary(client: genai.Client, post: Dict) -> str:
-    """DB에 요약 캐시가 누락된 경우, flash를 호출하여 요약을 보완한다."""
-    from fetch_mer import MAP_SUMMARY_PROMPT
-    title = post.get("title", "제목 없음")
-    content = post.get("content", "")
-    if not content:
-        return ""
-    try:
-        print(f"      [실시간 보강] '{title[:25]}'에 대한 1차 요약이 없어 실시간 생성 중...")
-        response = call_gemini_with_retry(
-            client=client,
-            model="gemini-2.5-flash",
-            contents=f"블로그 글:\n{content}\n\n{MAP_SUMMARY_PROMPT}",
-            config=types.GenerateContentConfig(
-                temperature=0.2,
-                max_output_tokens=2048,
-                safety_settings=SAFETY_SETTINGS,
-            )
-        )
-        return response.text if response.text else ""
-    except Exception as e:
-        print(f"      1차 요약 보강 실패, 원문 일부를 사용합니다: {e}")
-        return content[:1500]
+def _analysis_text_for_post(post: Dict) -> tuple[str, str]:
+    """요약 캐시가 있으면 요약을, 없으면 원문을 최종 분석 입력으로 사용한다."""
+    summary = post.get("summary", "").strip()
+    if summary:
+        return "1차 요약", summary
+
+    content = post.get("content", "").strip()
+    if content:
+        return "원문", content
+
+    return "내용 없음", ""
 
 
 # ─── 메인 분석 함수 ───────────────────────────────────────────────────────────
@@ -186,22 +173,18 @@ def analyze_posts(
     if not posts:
         raise ValueError("분석할 포스트가 없습니다.")
 
-    client = _get_client()
-
-    # 1. 1단계 (Map): 각 포스트별 1차 요약 캐시(summary) 추출 및 미세 누락 실시간 보완
-    print("\n[3/7-1] 1단계: 블로그 글 요약 캐시 로드 및 누락분 보강 중...")
+    # 1. 요약 캐시가 있으면 사용하고, 없으면 API 호출 없이 원문을 사용한다.
+    print("\n[3/7-1] 1단계: 블로그 글 요약 캐시 로드 중...")
     summarized_blocks = []
     for i, post in enumerate(posts, 1):
-        summary = post.get("summary", "").strip()
-        # 로컬 테스트 등으로 요약 캐시가 빈 값일 경우 실시간 보완 장치 가동
-        if not summary:
-            summary = _fill_missing_summary(client, post)
-            post["summary"] = summary  # 메모리 상에 캐싱 갱신
+        label, text = _analysis_text_for_post(post)
+        if label == "원문":
+            print(f"      요약 캐시 없음, 원문 사용: {post.get('title', '제목 없음')[:30]}...")
             
         summarized_blocks.append(
             f"[{i}/{len(posts)}] 제목: {post['title']}\n"
             f"날짜: {post['date']}\n"
-            f"1차 요약:\n{summary}\n"
+            f"{label}:\n{text}\n"
             f"{'─' * 50}"
         )
 
@@ -227,6 +210,7 @@ def analyze_posts(
     print(f"\n[3/7-2] 2단계: 최종 분석 입력 크기: {total_chars:,}자")
     print(f"  최종 분석 모델: {FINAL_MODEL}")
 
+    client = _get_client()
     success, result = _try_model(client, FINAL_MODEL, user_message)
     if success:
         print(f"  최종 분석 완료 (출력: {len(result):,}자)")
