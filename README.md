@@ -6,7 +6,7 @@
 
 | 방식 | 위치 | 자동화 | 필요한 것 |
 |------|------|--------|---------|
-| **GitHub Actions 자동화** | 이 폴더 | ✅ 격주 자동 실행 | Gemini API 키 (무료) |
+| **GitHub Actions 자동화** | 이 폴더 | ✅ 매일 자동 실행 | Gemini API 키 (무료) |
 | **ChatGPT GPTs 페르소나** | `personas/chatgpt-gpt/` | 수동 트리거 | ChatGPT Plus (이미 있음) |
 | **Gemini Gems 페르소나** | `personas/gemini-gem/` | 수동 트리거 | Gemini Advanced (이미 있음) |
 
@@ -25,11 +25,11 @@ prophit_(blog.naver.com/prophit_)이 수동으로 하던 "메르ai포트"를 완
 ## 작동 방식
 
 ```
-[GitHub Actions 스케줄러 — 매월 1일, 15일 자정]
+[GitHub Actions 스케줄러 — 매일 자정 KST]
         ↓
 [메르 블로그 RSS 파싱 + 전문 스크래핑]
         ↓
-[Gemini 2.5 Pro에게 분석 요청]
+[신규 글 1차 요약 캐시 + Gemini 2.5 Pro 최종 분석]
         ↓
 [output/report_YYYYMMDD.md 로 자동 저장 + 커밋]
 ```
@@ -45,7 +45,8 @@ prophit_(blog.naver.com/prophit_)이 수동으로 하던 "메르ai포트"를 완
 3. **"Create API key"** 클릭
 4. 발급된 키 복사 (형식: `AIza...`)
 
-> 무료 한도: Gemini 2.5 Pro 기준 일 25회. 격주 실행이면 여유있게 충분.
+> Gemini API 무료 한도는 모델과 Google Cloud 프로젝트 상태에 따라 달라집니다.
+> 정확한 현재 한도는 Google AI Studio의 rate limits 화면에서 확인하세요.
 
 ---
 
@@ -94,10 +95,10 @@ prophit_(blog.naver.com/prophit_)이 수동으로 하던 "메르ai포트"를 완
 
 | 실행 시점 | 수집 기간 |
 |-----------|-----------|
-| 매월 1일 자정 (KST) | 직전 14일 |
-| 매월 15일 자정 (KST) | 직전 14일 |
+| 매일 자정 (KST) | 직전 2일 |
 
-수동으로도 언제든 실행 가능 (Actions → Run workflow).
+수동 실행은 Actions → Run workflow에서 가능합니다.
+`adhoc` 모드는 기본 14일 수집과 리밸런싱을 수행하고, `test` 모드는 저장/텔레그램 전송을 제한합니다.
 
 ---
 
@@ -137,8 +138,9 @@ output/
 | 변수명 | 기본값 | 설명 |
 |--------|--------|------|
 | `GEMINI_API_KEY` | (필수) | Google AI Studio API 키 |
-| `FETCH_DAYS` | `14` | 수집할 최근 일수 |
-| `GEMINI_MODEL` | `gemini-2.5-pro` | 사용할 모델 |
+| `RUN_MODE` | `scheduled` | `scheduled`, `adhoc`, `test` |
+| `FETCH_DAYS` | 모드별 기본값 | 수집할 최근 일수 (`scheduled` 2일, `adhoc` 14일, `test` 3일) |
+| `GEMINI_MODEL` | `gemini-2.5-pro` | 최종 리포트 생성 모델 |
 | `OUTPUT_DIR` | `output` | 리포트 저장 경로 |
 
 로컬 실행 예:
@@ -147,21 +149,27 @@ output/
 export GEMINI_API_KEY="AIza..."
 python main.py
 
-# 최근 30일 수집, 빠른 모델 사용
-FETCH_DAYS=30 GEMINI_MODEL=gemini-2.0-flash python main.py
+# 최근 14일 수집, 리밸런싱 모드
+RUN_MODE=adhoc FETCH_DAYS=14 python main.py
 ```
 
 ---
 
-## 모델 폴백 순서
+## 모델 및 한도 운영 정책
 
-API 키 할당량 초과나 모델 미지원 시 자동으로 다음 모델로 전환:
+- 최종 리포트 생성은 `gemini-2.5-pro`를 기본으로 사용합니다.
+- 신규 블로그 글 1차 요약은 `gemini-2.5-flash`를 사용하고 `output/posts_db.json`에 캐시합니다.
+- `flash-lite` 계열은 품질 저하 우려가 있어 기본 경로에서 사용하지 않습니다.
+- rate limit 또는 quota 오류가 나면 모델별 호출 간격을 두고 재시도합니다.
+- 최종 분석 모델이 계속 실패하면 낮은 모델로 조용히 대체하지 않고, 기존 `latest.md`를 유지한 채 GitHub Actions를 실패 처리합니다.
 
-1. `gemini-2.5-pro` (최고 품질, 일 25회 무료)
-2. `gemini-2.5-pro-preview-05-06`
-3. `gemini-2.0-flash-thinking-exp-01-21`
-4. `gemini-2.0-flash` (일 1500회 무료, 품질 약간 낮음)
-5. `gemini-1.5-pro`
+기본 호출 간격:
+
+| 모델 | 최소 간격 |
+|------|-----------|
+| `gemini-2.5-pro` | 15초 |
+| `gemini-2.5-flash` | 8초 |
+| `gemini-3-flash-preview` | 8초 |
 
 ---
 
