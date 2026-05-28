@@ -29,7 +29,7 @@ prophit_(blog.naver.com/prophit_)이 수동으로 하던 "메르ai포트"를 완
         ↓
 [메르 블로그 RSS 파싱 + 전문 스크래핑]
         ↓
-[신규 글 1차 요약 캐시 + Gemini 2.5 Pro 최종 분석]
+[원문/요약 캐시 구성 + Gemini 2.5 Flash 최종 분석]
         ↓
 [output/report_YYYYMMDD.md 로 자동 저장 + 커밋]
 ```
@@ -140,7 +140,8 @@ output/
 | `GEMINI_API_KEY` | (필수) | Google AI Studio API 키 |
 | `RUN_MODE` | `scheduled` | `scheduled`, `adhoc`, `test` |
 | `FETCH_DAYS` | 모드별 기본값 | 수집할 최근 일수 (`scheduled` 2일, `adhoc` 14일, `test` 3일) |
-| `GEMINI_MODEL` | `gemini-2.5-pro` | 최종 리포트 생성 모델 |
+| `GEMINI_MODEL` | `gemini-2.5-flash` | 최종 리포트 생성 모델 |
+| `ENABLE_POST_SUMMARIES` | 꺼짐 | 글별 1차 요약 API 호출 여부 |
 | `OUTPUT_DIR` | `output` | 리포트 저장 경로 |
 
 로컬 실행 예:
@@ -157,9 +158,11 @@ RUN_MODE=adhoc FETCH_DAYS=14 python main.py
 
 ## 모델 및 한도 운영 정책
 
-- 최종 리포트 생성은 `gemini-2.5-pro`를 기본으로 사용합니다.
-- 신규 블로그 글 1차 요약은 `gemini-2.5-flash`를 사용하고 `output/posts_db.json`에 캐시합니다.
-- 기존 글의 요약 캐시가 비어 있으면 분석 단계에서 추가 API 호출로 보강하지 않고 원문을 최종 분석 입력에 포함합니다.
+- 무료 API 기본 운영에서는 실행당 API 호출 수를 줄이는 것을 우선합니다.
+- 최종 리포트 생성은 `gemini-2.5-flash`를 기본으로 사용합니다.
+- 신규 블로그 글은 원문을 저장하고, 기본값에서는 글별 1차 요약 API 호출을 하지 않습니다.
+- 기존 글의 요약 캐시가 있으면 사용하고, 비어 있으면 원문을 최종 분석 입력에 포함합니다.
+- `gemini-2.5-pro`는 프로젝트별 무료 한도가 없거나 매우 낮을 수 있으므로 수동으로 `GEMINI_MODEL`을 지정할 때만 사용합니다.
 - `flash-lite` 계열은 품질 저하 우려가 있어 기본 경로에서 사용하지 않습니다.
 - rate limit 또는 quota 오류가 나면 모델별 호출 간격을 두고 재시도합니다.
 - 최종 분석 모델이 계속 실패하면 낮은 모델로 조용히 대체하지 않고, 기존 `latest.md`를 유지한 채 GitHub Actions를 실패 처리합니다.
