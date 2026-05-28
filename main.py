@@ -178,7 +178,6 @@ def main():
     except Exception as e:
         msg = "AI 분석 실패: " + str(e)
         print("X " + msg)
-        save_error_log(msg, today)
         if is_daily_quota_error(msg) and load_latest_report():
             notify_status(
                 "MerAI run skipped",
@@ -186,6 +185,7 @@ def main():
             )
             print("  -> Gemini 일일 quota 초과: 기존 latest.md 유지 후 정상 종료")
             return 0
+        save_error_log(msg, today)
         notify_status("MerAI run failed", msg[:1500])
         return 1
 
