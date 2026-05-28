@@ -31,6 +31,13 @@ def is_rate_limit_error(message: str) -> bool:
     return any(token in msg for token in ("429", "resource", "exhausted", "quota", "rate", "limit"))
 
 
+def is_transient_error(message: str) -> bool:
+    msg = message.lower()
+    return is_rate_limit_error(message) or any(
+        token in msg for token in ("503", "unavailable", "high demand", "try again later")
+    )
+
+
 def is_daily_quota_error(message: str) -> bool:
     return any(token in message for token in ("PerDay", "RequestsPerDay", "TokensPerDay"))
 
@@ -79,10 +86,10 @@ def generate_content_with_retry(client, model: str, contents, config, max_retrie
         except Exception as e:
             mark_model_called(model)
             message = str(e)
-            if not is_rate_limit_error(message):
+            if not is_transient_error(message):
                 raise
 
-            print(f"      Rate limit or quota error: {model} ({attempt + 1}/{max_retries})")
+            print(f"      Retryable Gemini API error: {model} ({attempt + 1}/{max_retries})")
             if attempt == max_retries - 1:
                 raise
 
