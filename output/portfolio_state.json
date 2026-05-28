@@ -1,40 +1,40 @@
 {
   "schema_version": "1.0",
-  "last_updated": "2026-05-12",
-  "last_report_date": "2026-05-12",
-  "rebalance_count": 1,
+  "last_updated": "2026-05-28",
+  "last_report_date": "2026-05-28",
+  "rebalance_count": 2,
   "holdings": [
     {
       "name": "LS",
       "code": "006220",
       "market": "KR",
-      "action": "매수",
+      "action": "보유",
       "weight": "10%",
-      "thesis": "해저/초고압 케이블 수요 증가, 전력 인프라 투자 확대 수혜",
+      "thesis": "전력 인프라 투자 확대 수혜 기대, 국내 시장 수급 부담 고려",
       "entry_date": "2026-05-12",
-      "last_confirmed_date": "2026-05-12",
+      "last_confirmed_date": "2026-05-28",
       "status": "active"
     },
     {
       "name": "대한전선",
       "code": "001440",
       "market": "KR",
-      "action": "매수",
+      "action": "보유",
       "weight": "10%",
-      "thesis": "해저/초고압 케이블 수요 증가, 전력 인프라 투자 확대 수혜",
+      "thesis": "전력 인프라 투자 확대 수혜 기대, 국내 시장 수급 부담 고려",
       "entry_date": "2026-05-12",
-      "last_confirmed_date": "2026-05-12",
+      "last_confirmed_date": "2026-05-28",
       "status": "active"
     },
     {
       "name": "삼성중공업",
       "code": "010140",
       "market": "KR",
-      "action": "매수",
+      "action": "보유",
       "weight": "10%",
-      "thesis": "조선업 호황, 유조선 재매각 이익, LNG선 수요 증가 기대",
+      "thesis": "조선업 호황 및 LNG선 수요 증가 기대, 국내 시장 수급 부담 고려",
       "entry_date": "2026-05-12",
-      "last_confirmed_date": "2026-05-12",
+      "last_confirmed_date": "2026-05-28",
       "status": "active"
     },
     {
@@ -55,10 +55,10 @@
       "code": "NVDA",
       "market": "US",
       "action": "Buy",
-      "weight": "10%",
-      "thesis": "AI 데이터센터 확산에 따른 반도체 수요 폭증",
+      "weight": "15%",
+      "thesis": "AI 디지털 생물학 확장, BioNeMo 플랫폼 통한 신약 개발 시장 선점",
       "entry_date": "2026-05-12",
-      "last_confirmed_date": "2026-05-12",
+      "last_confirmed_date": "2026-05-28",
       "status": "active"
     },
     {
@@ -66,21 +66,21 @@
       "code": "GOOGL",
       "market": "US",
       "action": "Buy",
-      "weight": "8%",
-      "thesis": "AI 기술 개발 및 서비스 확장, 중국 인재 재배치 수혜",
+      "weight": "6%",
+      "thesis": "AI 기술 개발 및 서비스 확장, AlphaFold3 등 디지털 생물학 기여",
       "entry_date": "2026-05-12",
-      "last_confirmed_date": "2026-05-12",
+      "last_confirmed_date": "2026-05-28",
       "status": "active"
     },
     {
       "name": "Microsoft",
       "code": "MSFT",
       "market": "US",
-      "action": "Buy",
-      "weight": "8%",
-      "thesis": "AI 기술 투자 및 클라우드 서비스 성장, 국방부 계약 수혜",
+      "action": "Hold",
+      "weight": "6%",
+      "thesis": "AI 기술 투자 및 클라우드 서비스 성장 지속",
       "entry_date": "2026-05-12",
-      "last_confirmed_date": "2026-05-12",
+      "last_confirmed_date": "2026-05-28",
       "status": "active"
     },
     {
@@ -88,10 +88,10 @@
       "code": "FIX",
       "market": "US",
       "action": "Buy",
-      "weight": "7%",
-      "thesis": "데이터센터 냉난방/공조(HVAC) 전문, AI 인프라 투자 수혜",
+      "weight": "5%",
+      "thesis": "AI 데이터센터 확장에 따른 냉난방/공조(HVAC) 수요 증가 수혜",
       "entry_date": "2026-05-12",
-      "last_confirmed_date": "2026-05-12",
+      "last_confirmed_date": "2026-05-28",
       "status": "active"
     },
     {
@@ -103,6 +103,39 @@
       "thesis": "공화당 의원 포트폴리오 기반, S&P 500 대비 높은 수익률",
       "entry_date": "2026-05-12",
       "last_confirmed_date": "2026-05-12",
+      "status": "active"
+    },
+    {
+      "name": "Alcoa",
+      "code": "AA",
+      "market": "US",
+      "action": "Buy",
+      "weight": "10%",
+      "thesis": "기니 보크사이트 수출 통제 및 중동 공급 차질로 인한 알루미늄 가격 상승 수혜",
+      "entry_date": "2026-05-28",
+      "last_confirmed_date": "2026-05-28",
+      "status": "active"
+    },
+    {
+      "name": "Recursion Pharmaceuticals",
+      "code": "RXRX",
+      "market": "US",
+      "action": "Buy",
+      "weight": "4%",
+      "thesis": "엔비디아 파트너, AI 기반 신약 개발 선두 주자, 디지털 생물학 핵심 수혜",
+      "entry_date": "2026-05-28",
+      "last_confirmed_date": "2026-05-28",
+      "status": "active"
+    },
+    {
+      "name": "Northrop Grumman",
+      "code": "NOC",
+      "market": "US",
+      "action": "Buy",
+      "weight": "4%",
+      "thesis": "DARPA 달 철도 계획 참여, 우주 인프라 및 방산 분야 기술력 보유",
+      "entry_date": "2026-05-28",
+      "last_confirmed_date": "2026-05-28",
       "status": "active"
     }
   ]
