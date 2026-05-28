@@ -33,6 +33,7 @@ from track_returns import update_and_get_performance
 from generate_dashboard import generate_all
 from telegram_notify import send_report, send_photo, send_status
 from portfolio_validation import validate_recommendations
+from gemini_utils import is_daily_quota_error
 from portfolio_state import (
     load_state,
     save_state,
@@ -75,6 +76,14 @@ def save_error_log(error, today):
     with open(log_path, "w", encoding="utf-8") as f:
         f.write("오류 발생 시각: " + today.isoformat() + "\n\n" + error)
     print("  오류 로그: " + str(log_path))
+
+
+def load_latest_report() -> str:
+    latest_path = OUTPUT_DIR / "latest.md"
+    if not latest_path.exists():
+        return ""
+    with open(latest_path, encoding="utf-8") as f:
+        return f.read()
 
 
 # --- 메인 --------------------------------------------------------------------
@@ -170,6 +179,13 @@ def main():
         msg = "AI 분석 실패: " + str(e)
         print("X " + msg)
         save_error_log(msg, today)
+        if is_daily_quota_error(msg) and load_latest_report():
+            notify_status(
+                "MerAI run skipped",
+                "Gemini daily quota exceeded. Previous report was retained; no new portfolio was generated.",
+            )
+            print("  -> Gemini 일일 quota 초과: 기존 latest.md 유지 후 정상 종료")
+            return 0
         notify_status("MerAI run failed", msg[:1500])
         return 1
 

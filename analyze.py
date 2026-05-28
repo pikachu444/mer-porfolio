@@ -142,21 +142,21 @@ def _try_model(
         return True, text
 
     except Exception as e:
-        import traceback
         err = str(e)
-        print(f"    ❌ API 예외 발생: {type(e).__name__} — {err[:120]}")
-        print("    [상세 에러 트레이스백]")
-        traceback.print_exc()
-        
+
         # 재시도 후에도 남은 일시 오류 또는 할당량 초과
         if any(x in err.lower() for x in ("429", "quota", "rate", "resource", "503", "unavailable", "high demand")):
-            print(f"    Gemini API 일시 오류 또는 quota 초과: {model_name}")
+            print(f"    Gemini API 일시 오류 또는 quota 초과: {model_name} — {err[:180]}")
             return False, f"Gemini API 오류: {err}"
         # 모델 없음
         if "404" in err or "not found" in err.lower() or "invalid" in err.lower():
             print(f"    모델 없음/유효하지 않음: {model_name}")
             return False, f"모델 없음: {err}"
         # 기타 오류
+        import traceback
+        print(f"    ❌ API 예외 발생: {type(e).__name__} — {err[:120]}")
+        print("    [상세 에러 트레이스백]")
+        traceback.print_exc()
         return False, err
 
 
