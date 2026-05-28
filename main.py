@@ -32,6 +32,7 @@ from analyze import analyze_posts
 from track_returns import update_and_get_performance
 from generate_dashboard import generate_all
 from telegram_notify import send_report, send_photo, send_status
+from portfolio_validation import validate_recommendations
 from portfolio_state import (
     load_state,
     save_state,
@@ -172,15 +173,31 @@ def main():
         notify_status("MerAI run failed", msg[:1500])
         return 1
 
+    # -- 3.5단계: 추천 검증 -----------------------------------------------------
+    print("\n[3.5/7] 추천 종목 근거 검증 중...")
+    try:
+        validation = validate_recommendations(report, posts, state)
+        report = validation.report_text
+        parsed_portfolio = validation.parsed_portfolio
+    except Exception as e:
+        print("  !! 추천 검증 실패 (원본 리포트 유지): " + str(e))
+        parsed_portfolio = None
+
     # -- 4단계: portfolio_state 업데이트 ---------------------------------------
     print("\n[4/7] 포트폴리오 상태 업데이트 중...")
     if RUN_MODE != "test":
         try:
             if is_first_run:
-                state = create_initial_state(report, today_date_str)
+                state = create_initial_state(report, today_date_str, parsed_portfolio=parsed_portfolio)
                 print("  -> 초기 상태 생성: " + str(len(state["holdings"])) + "개 종목")
             else:
-                state = update_state_from_report(state, report, today_date_str)
+                state = update_state_from_report(
+                    state,
+                    report,
+                    today_date_str,
+                    parsed_portfolio=parsed_portfolio,
+                    replace_active=is_rebalance,
+                )
                 if is_rebalance:
                     state["rebalance_count"] = state.get("rebalance_count", 0) + 1
             save_state(state, STATE_PATH)

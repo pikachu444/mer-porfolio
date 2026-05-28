@@ -162,6 +162,7 @@ def update_state_from_report(
     report_text: str,
     today_str: str,          # "2026-05-12" 형식
     parsed_portfolio: Optional[list[dict]] = None,
+    replace_active: bool = False,
 ) -> dict:
     """
     새 리포트를 바탕으로 portfolio_state 업데이트.
@@ -211,11 +212,18 @@ def update_state_from_report(
                 holding["action"] = matched["action"]
             if matched.get("weight"):
                 holding["weight"] = matched["weight"]
+            if matched.get("basis_type"):
+                holding["basis_type"] = matched["basis_type"]
             if matched.get("thesis"):
                 holding["thesis"] = matched["thesis"]
             holding["last_confirmed_date"] = today_str
             updated_names.add(norm_name)
-        # 언급 없으면 그대로 유지 (last_confirmed_date 갱신 안 함)
+        elif replace_active:
+            holding["status"] = "removed"
+            holding["removed_date"] = today_str
+            holding["removed_reason"] = "리밸런싱 결과 최신 검증 리포트에서 제외"
+            print(f"  ❌ 종목 제거: {holding['name']} — 리밸런싱 제외")
+        # 모니터링 모드에서 언급 없으면 그대로 유지 (last_confirmed_date 갱신 안 함)
 
     # ── 신규 종목 추가 ──────────────────────────────────────────────────────
     for new_h in parsed_portfolio:
@@ -235,6 +243,7 @@ def update_state_from_report(
                 "market": new_h.get("market", ""),
                 "action": new_h.get("action", ""),
                 "weight": new_h.get("weight", ""),
+                "basis_type": new_h.get("basis_type", ""),
                 "thesis": new_h.get("thesis", ""),
                 "entry_date": today_str,
                 "last_confirmed_date": today_str,
@@ -266,7 +275,9 @@ def _parse_portfolio_from_report(report_text: str) -> list[dict]:
     thesis(핵심 근거) 컬럼도 추출.
 
     KR 테이블: | 종목명 | 코드 | 판단 | 목표비중 | 핵심 근거 |
+    KR 테이블: | 종목명 | 코드 | 판단 | 목표비중 | 근거유형 | 핵심 근거 |
     US 테이블: | 종목명 | 티커 | 판단 | 목표비중 | 핵심 근거 |
+    US 테이블: | 종목명 | 티커 | 판단 | 목표비중 | 근거유형 | 핵심 근거 |
     """
     result = []
 
@@ -283,11 +294,12 @@ def _parse_portfolio_from_report(report_text: str) -> list[dict]:
                 code = cells[1].strip() if len(cells) > 1 else ""
                 action = cells[2].strip() if len(cells) > 2 else ""
                 weight = cells[3].strip() if len(cells) > 3 else ""
-                thesis = cells[4].strip() if len(cells) > 4 else ""
-                if name and not name.lower() in ("종목명", "name"):
+                basis_type = cells[4].strip() if len(cells) > 5 else ""
+                thesis = cells[5].strip() if len(cells) > 5 else (cells[4].strip() if len(cells) > 4 else "")
+                if name and not name.lower() in ("종목명", "name", "추천 없음"):
                     result.append({
                         "name": name, "code": code, "market": "KR",
-                        "action": action, "weight": weight, "thesis": thesis,
+                        "action": action, "weight": weight, "basis_type": basis_type, "thesis": thesis,
                     })
 
     # ── US 파싱 ──────────────────────────────────────────────────────────────
@@ -303,11 +315,12 @@ def _parse_portfolio_from_report(report_text: str) -> list[dict]:
                 code = cells[1].strip() if len(cells) > 1 else ""
                 action = cells[2].strip() if len(cells) > 2 else ""
                 weight = cells[3].strip() if len(cells) > 3 else ""
-                thesis = cells[4].strip() if len(cells) > 4 else ""
-                if name and not name.lower() in ("종목명", "name"):
+                basis_type = cells[4].strip() if len(cells) > 5 else ""
+                thesis = cells[5].strip() if len(cells) > 5 else (cells[4].strip() if len(cells) > 4 else "")
+                if name and not name.lower() in ("종목명", "name", "추천 없음"):
                     result.append({
                         "name": name, "code": code, "market": "US",
-                        "action": action, "weight": weight, "thesis": thesis,
+                        "action": action, "weight": weight, "basis_type": basis_type, "thesis": thesis,
                     })
 
     return result
@@ -315,12 +328,16 @@ def _parse_portfolio_from_report(report_text: str) -> list[dict]:
 
 # ─── 초기 상태 생성 ───────────────────────────────────────────────────────────
 
-def create_initial_state(report_text: str, today_str: str) -> dict:
+def create_initial_state(
+    report_text: str,
+    today_str: str,
+    parsed_portfolio: Optional[list[dict]] = None,
+) -> dict:
     """
     portfolio_state.json이 없을 때 최초 상태 생성.
     첫 리포트에서 포트폴리오를 파싱해 초기 holdings 구성.
     """
-    portfolio = _parse_portfolio_from_report(report_text)
+    portfolio = parsed_portfolio if parsed_portfolio is not None else _parse_portfolio_from_report(report_text)
     sell_set = detect_sell_signals(report_text)
 
     holdings = []
@@ -333,6 +350,7 @@ def create_initial_state(report_text: str, today_str: str) -> dict:
             "market": h.get("market", ""),
             "action": h.get("action", ""),
             "weight": h.get("weight", ""),
+            "basis_type": h.get("basis_type", ""),
             "thesis": h.get("thesis", ""),
             "entry_date": today_str,
             "last_confirmed_date": today_str,

@@ -13,6 +13,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
+from portfolio_validation import parse_portfolio_items
+
 OUTPUT_DIR = Path(os.environ.get("OUTPUT_DIR", "output"))
 CACHE_FILE = OUTPUT_DIR / "performance_cache.json"
 DASHBOARD_FILE = OUTPUT_DIR / "dashboard.html"
@@ -42,20 +44,20 @@ def _load_report() -> str:
 
 def _parse_weights_from_report(report_text: str) -> list:
     """리포트에서 종목명 + 목표비중 파싱 (차트용)."""
-    import re
     result = []
-    for table_match in re.finditer(
-        r"(?:\U0001f1f0\U0001f1f7|\U0001f1fa\U0001f1f8|국내주식|해외주식)[^\n]*\n\n?\|[^\n]+\|\n\|[-| :]+\|\n((?:\|[^\n]+\|\n?)+)",
-        report_text,
-    ):
-        for row in table_match.group(1).strip().split("\n"):
-            cells = [c.strip() for c in row.split("|")[1:-1]]
-            if len(cells) >= 4 and cells[0] and not cells[0].startswith("-"):
-                weight_str = cells[3].replace("%", "").strip()
-                try:
-                    result.append({"name": cells[0], "weight": float(weight_str), "action": cells[2]})
-                except ValueError:
-                    pass
+    for item in parse_portfolio_items(report_text, include_etf=True):
+        if item.get("name") == "추천 없음":
+            continue
+        weight_str = item.get("weight", "").replace("%", "").strip()
+        try:
+            result.append({
+                "name": item.get("name", ""),
+                "weight": float(weight_str),
+                "action": item.get("action", ""),
+                "market": item.get("market", ""),
+            })
+        except ValueError:
+            pass
     return result
 
 
@@ -108,9 +110,8 @@ def generate_png(cache: dict, report_text: str = "", today_str: str = "") -> Opt
     PNG 차트 생성 (텔레그램 전송용).
 
     항상 생성:
-      도넛 차트 — portfolio_state.json active 종목 비중
+      도넛 차트 — 최신 검증 리포트의 추천 비중
                   (KR=파랑, US=초록, ETF/현금=주황)
-                  없으면 report_text 파싱으로 fallback
     데이터 있을 때 추가:
       누적 수익률 라인 — performance_cache.json report_summaries
     레이아웃:
@@ -129,38 +130,32 @@ def generate_png(cache: dict, report_text: str = "", today_str: str = "") -> Opt
 
     # 한글 폰트 설정
     try:
-        import subprocess
-        subprocess.run(["apt-get", "install", "-y", "-q", "fonts-nanum"], capture_output=True)
-        font_manager.fontManager.addfont("/usr/share/fonts/truetype/nanum/NanumGothic.ttf")
-        plt.rcParams["font.family"] = "NanumGothic"
+        windows_font = Path(r"C:\Windows\Fonts\malgun.ttf")
+        linux_font = Path("/usr/share/fonts/truetype/nanum/NanumGothic.ttf")
+        if windows_font.exists():
+            font_manager.fontManager.addfont(str(windows_font))
+            plt.rcParams["font.family"] = "Malgun Gothic"
+        else:
+            import subprocess
+            subprocess.run(["apt-get", "install", "-y", "-q", "fonts-nanum"], capture_output=True)
+            if linux_font.exists():
+                font_manager.fontManager.addfont(str(linux_font))
+                plt.rcParams["font.family"] = "NanumGothic"
+            else:
+                plt.rcParams["font.family"] = "DejaVu Sans"
     except Exception:
         plt.rcParams["font.family"] = "DejaVu Sans"
     plt.rcParams["axes.unicode_minus"] = False
 
     # ── 도넓 데이터 준비 ───────────────────────────────────────────────
-    holdings = _load_portfolio_state()
     donut_items = []
-    for h in holdings:
-        w_str = h.get("weight", "0").replace("%", "").strip()
-        try:
+    if report_text:
+        for item in _parse_weights_from_report(report_text):
             donut_items.append({
-                "name": h.get("name", "?"),
-                "weight": float(w_str),
-                "market": h.get("market", "ETF"),
+                "name": item.get("name", "?"),
+                "weight": item["weight"],
+                "market": item.get("market", "ETF"),
             })
-        except ValueError:
-            pass
-
-    # fallback: portfolio_state 없으면 리포트에서 파싱
-    if not donut_items and report_text:
-        import re as _re
-        raw = _parse_weights_from_report(report_text)
-        for item in raw:
-            name = item.get("name", "")
-            action = item.get("action", "")
-            market = "US" if (action in ("Buy", "Hold", "Sell")
-                              or _re.match(r"^[A-Za-z]", name)) else "KR"
-            donut_items.append({"name": name, "weight": item["weight"], "market": market})
 
     # ── 수익률 데이터 준비 ─────────────────────────────────────────────
     summaries = cache.get("report_summaries", []) if cache else []
@@ -198,9 +193,9 @@ def generate_png(cache: dict, report_text: str = "", today_str: str = "") -> Opt
         from collections import OrderedDict
         market_order = ["KR", "US", "ETF"]
         market_label = {
-            "KR":  "\u25aa KR (\uad6d\ub0b4)",
-            "US":  "\u25aa US (\ud574\uc678)",
-            "ETF": "\u25aa ETF / \ud604\uae08",
+            "KR":  "KR (\uad6d\ub0b4)",
+            "US":  "US (\ud574\uc678)",
+            "ETF": "ETF / \ud604\uae08",
         }
         def _get_market_key(m):
             mu = m.upper()
@@ -248,13 +243,13 @@ def generate_png(cache: dict, report_text: str = "", today_str: str = "") -> Opt
             legend_texts[hi].set_fontsize(7.5)
             hi += 1 + len(items)
 
-        ax1.set_title("\ud3ec\ud2b8\ud3f4\ub9ac\uc624 \ud604\uc7ac \ube44\uc911", color="#f1f5f9", fontsize=12, pad=10)
+        ax1.set_title("최신 추천 포트폴리오 비중", color="#f1f5f9", fontsize=12, pad=10)
     else:
         ax1.text(0.5, 0.5,
-                 "portfolio_state.json \uc5c6\uc74c\n\ub2e4\uc74c \uc2e4\ud589 \ud6c4 \ud45c\uc2dc",
+                 "최신 추천 비중 없음\n리포트 표를 확인하세요",
                  ha="center", va="center", color="#94a3b8", fontsize=11,
                  transform=ax1.transAxes, linespacing=1.8)
-        ax1.set_title("\ud3ec\ud2b8\ud3f4\ub9ac\uc624 \ube44\uc911", color="#f1f5f9", fontsize=12)
+        ax1.set_title("최신 추천 포트폴리오 비중", color="#f1f5f9", fontsize=12)
         ax1.axis("off")
 
     # ── 차트 2: 누적 수익률 라인 ───────────────────────────────────────
@@ -307,13 +302,11 @@ def generate_png(cache: dict, report_text: str = "", today_str: str = "") -> Opt
 def generate_html(cache: dict, report_text: str, today_str: str) -> Path:
     """Chart.js 기반 인터랙티브 HTML 대시보드 생성."""
     summaries = cache.get("report_summaries", []) if cache else []
-    all_rows = cache.get("all_rows", []) if cache else []
     report_dates = [s["date"][5:] for s in summaries]
     report_avgs = [round(s["avg_return_krw"], 2) for s in summaries]
-    latest_date = max((r["date"] for r in all_rows), default=None) if all_rows else None
-    latest_stocks = [r for r in all_rows if r["date"] == latest_date] if latest_date else []
-    latest_names = [s["name"] for s in latest_stocks]
-    latest_returns = [round(s.get("return_pct_krw", s["return_pct"]), 2) for s in latest_stocks]
+    latest_weights = _parse_weights_from_report(report_text)
+    latest_names = [s["name"] for s in latest_weights]
+    latest_weight_values = [round(s["weight"], 2) for s in latest_weights]
     report_escaped = report_text.replace("\\", "\\\\").replace("`", "\\`").replace("${", "\\${")
 
     html = """<!DOCTYPE html>
@@ -361,10 +354,10 @@ def generate_html(cache: dict, report_text: str, today_str: str) -> Path:
 <div class="container">
   <div class="grid">
     <div class="card">
-      <h2>📊 최신 리포트 종목별 수익률 (원화 기준)</h2>
+      <h2>📊 최신 추천 포트폴리오 비중</h2>
       <div class="chart-wrap">
         <canvas id="stocksChart"></canvas>
-        <div id="stocksEmpty" class="empty-msg" style="display:none">첫 실행 — 다음 리포트부터 표시됩니다</div>
+        <div id="stocksEmpty" class="empty-msg" style="display:none">최신 추천 비중 없음 — 리포트 표를 확인하세요</div>
       </div>
     </div>
     <div class="card">
@@ -385,7 +378,7 @@ def generate_html(cache: dict, report_text: str, today_str: str) -> Path:
         "const reportDates=" + json.dumps(report_dates, ensure_ascii=False) + ";\n"
         "const reportAvgs=" + json.dumps(report_avgs) + ";\n"
         "const latestNames=" + json.dumps(latest_names, ensure_ascii=False) + ";\n"
-        "const latestReturns=" + json.dumps(latest_returns) + ";\n"
+        "const latestWeights=" + json.dumps(latest_weight_values) + ";\n"
         "const reportText=`" + report_escaped + "`;\n"
         "const updatedAt=" + json.dumps(today_str) + ";\n"
     ) + """
@@ -396,10 +389,10 @@ Chart.defaults.borderColor='#334155';
 if(latestNames.length>0){
   new Chart(document.getElementById('stocksChart'),{
     type:'bar',
-    data:{labels:latestNames,datasets:[{label:'수익률(%)',data:latestReturns,backgroundColor:latestReturns.map(barColor),borderRadius:6,borderSkipped:false}]},
+    data:{labels:latestNames,datasets:[{label:'목표비중(%)',data:latestWeights,backgroundColor:'#3b82f6',borderRadius:6,borderSkipped:false}]},
     options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.raw>=0?'+':''}${ctx.raw.toFixed(1)}%`}}},
-      scales:{x:{grid:{color:'#334155'},ticks:{callback:v=>(v>=0?'+':'')+v+'%'}},y:{grid:{display:false}}}}
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.raw.toFixed(1)}%`}}},
+      scales:{x:{grid:{color:'#334155'},ticks:{callback:v=>v+'%'},beginAtZero:true},y:{grid:{display:false}}}}
   });
 }else{document.getElementById('stocksChart').style.display='none';document.getElementById('stocksEmpty').style.display='block';}
 if(reportDates.length>=2){

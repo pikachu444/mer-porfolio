@@ -24,11 +24,12 @@ from gemini_utils import generate_content_with_retry, is_daily_quota_error
 
 # ─── 모델 설정 ────────────────────────────────────────────────────────────────
 #
-# 무료 API 운영에서는 호출 수를 줄이는 것이 우선이다.
-# 최종 분석은 기본적으로 gemini-2.5-flash 1회만 호출한다.
+# 최종 분석은 Pro를 먼저 시도하고, quota/지원 오류가 나면 Flash로 fallback한다.
+# GEMINI_MODEL을 지정하면 해당 모델을 우선 시도한다.
 
 _gemini_model_env = os.environ.get("GEMINI_MODEL", "").strip()
-FINAL_MODEL = _gemini_model_env if _gemini_model_env else "gemini-2.5-flash"
+PRIMARY_MODEL = _gemini_model_env if _gemini_model_env else "gemini-2.5-pro"
+FALLBACK_MODEL = os.environ.get("GEMINI_FALLBACK_MODEL", "gemini-2.5-flash").strip()
 
 # 투자 분석 특성상 안전 필터 완화 (주식 분석 용어 오탐 방지)
 SAFETY_SETTINGS = [
@@ -81,8 +82,23 @@ def call_gemini_with_retry(client: genai.Client, model: str, contents, config, m
 
 # ─── 모델별 분석 시도 ─────────────────────────────────────────────────────────
 
-def _try_model(client: genai.Client, model_name: str,
-               user_message: str) -> Tuple[bool, str]:
+def _model_sequence() -> list[str]:
+    sequence = [PRIMARY_MODEL]
+    if FALLBACK_MODEL and FALLBACK_MODEL not in sequence:
+        sequence.append(FALLBACK_MODEL)
+    return sequence
+
+
+def _retry_count_for_model(model_name: str) -> int:
+    return 2 if "pro" in model_name.lower() else 5
+
+
+def _try_model(
+    client: genai.Client,
+    model_name: str,
+    user_message: str,
+    max_retries: int | None = None,
+) -> Tuple[bool, str]:
     """
     특정 모델로 분석 시도.
     Returns: (성공 여부, 결과 텍스트 or 오류 메시지)
@@ -104,7 +120,7 @@ def _try_model(client: genai.Client, model_name: str,
             model=model_name,
             contents=user_message,
             config=config,
-            max_retries=5,
+            max_retries=max_retries if max_retries is not None else _retry_count_for_model(model_name),
         )
 
         text = response.text
@@ -242,36 +258,48 @@ def analyze_posts(
 
     total_chars = len(user_message)
     print(f"\n[3/7-2] 2단계: 최종 분석 입력 크기: {total_chars:,}자")
-    print(f"  최종 분석 모델: {FINAL_MODEL}")
+    models = _model_sequence()
+    print(f"  최종 분석 모델 순서: {' -> '.join(models)}")
 
     client = _get_client()
-    success, result = _try_model(client, FINAL_MODEL, user_message)
-    if success:
-        result = _normalize_report_metadata(result, today_str, len(posts), start_date, end_date)
-        print(f"  최종 분석 완료 (출력: {len(result):,}자)")
-        return result
+    last_model = models[-1]
+    last_error = ""
 
-    if "필수 세션 누락" in result or "응답 길이가 너무 짧" in result:
-        print("  필수 섹션이 누락되어 형식 지시를 강화해 한 번 재시도합니다.")
-        retry_message = (
-            user_message
-            + "\n\n중요: 출력은 반드시 '# 메르AI 포트폴리오 리포트'로 시작하고, "
-            + "'## 📌 시장 분석 핵심 인사이트', '## 📊 포트폴리오 추천', "
-            + "'## 🔍 섹터별 온도계', '## 💬 한 줄 코멘트' 섹션을 모두 포함해야 합니다. "
-            + "토큰이 부족하면 각 항목을 짧게 줄이더라도 섹션을 생략하지 마세요."
-        )
-        success, result = _try_model(client, FINAL_MODEL, retry_message)
+    for model_name in models:
+        success, result = _try_model(client, model_name, user_message)
         if success:
             result = _normalize_report_metadata(result, today_str, len(posts), start_date, end_date)
-            print(f"  최종 분석 완료 (재시도, 출력: {len(result):,}자)")
+            print(f"  최종 분석 완료: {model_name} (출력: {len(result):,}자)")
             return result
 
-    if is_daily_quota_error(result):
-        print(f"  {FINAL_MODEL} daily quota exceeded.")
+        last_model = model_name
+        last_error = result
+
+        if "필수 세션 누락" in result or "응답 길이가 너무 짧" in result:
+            print("  필수 섹션이 누락되어 형식 지시를 강화해 같은 모델로 한 번 재시도합니다.")
+            retry_message = (
+                user_message
+                + "\n\n중요: 출력은 반드시 '# 메르AI 포트폴리오 리포트'로 시작하고, "
+                + "'## 📌 시장 분석 핵심 인사이트', '## 📊 포트폴리오 추천', "
+                + "'## 🔍 섹터별 온도계', '## 💬 한 줄 코멘트' 섹션을 모두 포함해야 합니다. "
+                + "토큰이 부족하면 각 항목을 짧게 줄이더라도 섹션을 생략하지 마세요."
+            )
+            success, result = _try_model(client, model_name, retry_message, max_retries=1)
+            if success:
+                result = _normalize_report_metadata(result, today_str, len(posts), start_date, end_date)
+                print(f"  최종 분석 완료: {model_name} (형식 재시도, 출력: {len(result):,}자)")
+                return result
+            last_error = result
+
+        if model_name != models[-1]:
+            print(f"  {model_name} 실패 -> 다음 모델로 fallback합니다.")
+
+    if is_daily_quota_error(last_error):
+        print(f"  {last_model} daily quota exceeded.")
 
     raise RuntimeError(
-        f"{FINAL_MODEL} 호출 실패. 기존 리포트를 유지합니다.\n"
-        f"Google API 오류: {result}\n\n"
+        f"{' -> '.join(models)} 호출 실패. 기존 리포트를 유지합니다.\n"
+        f"Google API 오류: {last_error}\n\n"
         "해결 방법:\n"
         "1. GitHub Actions 로그에서 quota 또는 rate limit 원인을 확인하세요.\n"
         "2. 필요하면 Google AI Studio 결제 연동, 실행 빈도 조정, 또는 호출 간격 조정을 검토하세요."

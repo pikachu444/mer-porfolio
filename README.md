@@ -140,8 +140,9 @@ output/
 | `GEMINI_API_KEY` | (필수) | Google AI Studio API 키 |
 | `RUN_MODE` | `scheduled` | `scheduled`, `adhoc`, `test` |
 | `FETCH_DAYS` | 모드별 기본값 | 수집할 최근 일수 (`scheduled` 2일, `adhoc` 14일, `test` 3일) |
-| `GEMINI_MODEL` | `gemini-2.5-flash` | 최종 리포트 생성 모델 |
-| `ENABLE_POST_SUMMARIES` | 꺼짐 | 글별 1차 요약 API 호출 여부 |
+| `GEMINI_MODEL` | `gemini-2.5-pro` | 최종 리포트 생성 우선 모델 |
+| `GEMINI_FALLBACK_MODEL` | `gemini-2.5-flash` | Pro 실패/quota 시 fallback 모델 |
+| `ENABLE_POST_SUMMARIES` | 켜짐 | 신규 글별 1차 요약 API 호출 여부 |
 | `OUTPUT_DIR` | `output` | 리포트 저장 경로 |
 
 로컬 실행 예:
@@ -158,12 +159,12 @@ RUN_MODE=adhoc FETCH_DAYS=14 python main.py
 
 ## 모델 및 한도 운영 정책
 
-- 무료 API 기본 운영에서는 실행당 API 호출 수를 줄이는 것을 우선합니다.
-- 최종 리포트 생성은 `gemini-2.5-flash`를 기본으로 사용합니다.
-- 신규 블로그 글은 원문을 저장하고, 기본값에서는 글별 1차 요약 API 호출을 하지 않습니다.
+- 무료 API 운영에서는 신규 글만 1차 요약하고, 기존 요약 캐시는 재사용해 호출 수를 줄입니다.
+- 최종 리포트 생성은 `gemini-2.5-pro`를 먼저 시도하고 실패/quota 시 `gemini-2.5-flash`로 fallback합니다.
+- 신규 블로그 글은 원문을 저장하고, 기본값에서는 Flash로 글별 1차 요약 캐시를 생성합니다.
 - 기존 글의 요약 캐시가 있으면 사용하고, 비어 있으면 원문을 최종 분석 입력에 포함합니다.
 - 분석 입력은 `FETCH_DAYS` 기간 안의 글로 제한해 무료 API의 입력 토큰 한도를 아낍니다.
-- `gemini-2.5-pro`는 프로젝트별 무료 한도가 없거나 매우 낮을 수 있으므로 수동으로 `GEMINI_MODEL`을 지정할 때만 사용합니다.
+- `gemini-2.5-pro` 한도가 낮거나 지원되지 않으면 자동으로 Flash fallback을 사용합니다.
 - `flash-lite` 계열은 품질 저하 우려가 있어 기본 경로에서 사용하지 않습니다.
 - rate limit 또는 quota 오류가 나면 모델별 호출 간격을 두고 재시도합니다.
 - 최종 분석 모델이 계속 실패하면 낮은 모델로 조용히 대체하지 않고, 기존 `latest.md`를 유지한 채 GitHub Actions를 실패 처리합니다.

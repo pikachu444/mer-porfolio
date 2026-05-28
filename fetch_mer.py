@@ -28,7 +28,8 @@ STATE_FILE = "last_processed.json"
 DB_FILE = "output/posts_db.json"  # 증분 누적 데이터베이스 경로
 _fetch_days_env = os.environ.get("FETCH_DAYS", "").strip()
 DEFAULT_DAYS = int(_fetch_days_env) if _fetch_days_env else 14  # 빈 문자열 방어
-ENABLE_POST_SUMMARIES = os.environ.get("ENABLE_POST_SUMMARIES", "").strip().lower() in ("1", "true", "yes")
+_summary_env = os.environ.get("ENABLE_POST_SUMMARIES", "true").strip().lower()
+ENABLE_POST_SUMMARIES = _summary_env not in ("0", "false", "no", "off")
 
 # 1차 정밀 요약 프롬프트 (나비효과 및 종목 팩트 100% 보존용)
 MAP_SUMMARY_PROMPT = """
@@ -179,7 +180,7 @@ def summarize_single_post(content: str) -> str:
     """gemini-2.5-flash 모델을 사용하여 글 1편을 요약한다."""
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
-        print("    [Info] GEMINI_API_KEY 미설정으로 1차 요약 요소를 생략하고 원본을 유지합니다.")
+        print("    [Info] GEMINI_API_KEY 미설정: 1차 요약 없이 원문을 최종 분석에 사용합니다.")
         return ""
     try:
         client = genai.Client(api_key=api_key)
@@ -195,7 +196,7 @@ def summarize_single_post(content: str) -> str:
         )
         return response.text if response.text else ""
     except Exception as e:
-        print(f"    1차 요약 생성 실패, 요약 없이 진행합니다: {e}")
+        print(f"    1차 요약 실패 -> 원문 사용: {e}")
         return ""
 
 
@@ -256,13 +257,11 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
         if len(full_text) > MAX_CHARS_PER_POST:
             full_text = full_text[:MAX_CHARS_PER_POST] + "\n...(이하 생략)"
 
-        # 무료 API 기본 운영에서는 글별 요약 호출을 하지 않는다.
-        # 최종 분석 단계에서 원문을 한 번에 전달해 API 호출 수를 줄인다.
         if ENABLE_POST_SUMMARIES:
-            print(f"      1차 요약 생성: {title[:30]}...")
+            print(f"      1차 요약 캐시 생성(Flash): {title[:30]}...")
             summary = summarize_single_post(full_text)
         else:
-            print("      1차 요약 API 호출 생략")
+            print("      글별 요약 OFF -> 원문을 최종 분석에 사용")
             summary = ""
 
         newly_added.append({
