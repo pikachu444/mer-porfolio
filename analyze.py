@@ -92,7 +92,7 @@ def _try_model(client: genai.Client, model_name: str,
             system_instruction=SYSTEM_PROMPT,
             temperature=0.3,
             top_p=0.85,
-            max_output_tokens=8192,
+            max_output_tokens=16384,
             safety_settings=SAFETY_SETTINGS,
         )
 
@@ -215,6 +215,20 @@ def analyze_posts(
     if success:
         print(f"  최종 분석 완료 (출력: {len(result):,}자)")
         return result
+
+    if "필수 세션 누락" in result or "응답 길이가 너무 짧" in result:
+        print("  필수 섹션이 누락되어 형식 지시를 강화해 한 번 재시도합니다.")
+        retry_message = (
+            user_message
+            + "\n\n중요: 출력은 반드시 '# 메르AI 포트폴리오 리포트'로 시작하고, "
+            + "'## 📌 시장 분석 핵심 인사이트', '## 📊 포트폴리오 추천', "
+            + "'## 🔍 섹터별 온도계', '## 💬 한 줄 코멘트' 섹션을 모두 포함해야 합니다. "
+            + "토큰이 부족하면 각 항목을 짧게 줄이더라도 섹션을 생략하지 마세요."
+        )
+        success, result = _try_model(client, FINAL_MODEL, retry_message)
+        if success:
+            print(f"  최종 분석 완료 (재시도, 출력: {len(result):,}자)")
+            return result
 
     if is_daily_quota_error(result):
         print(f"  {FINAL_MODEL} daily quota exceeded.")
