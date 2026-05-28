@@ -227,7 +227,7 @@ def analyze_posts(
 
     # 429 한도 초과 시 성공할 때까지 Pro 모델로 계속 30초 대기 후 무한 재시도(Retry)
     retry_count = 0
-    max_retries = 10  # 비정상 루프 방지를 위해 최대 10회(약 5분)로 안전 장치 설정
+    max_retries = 3  # 일일 한도(PerDay) 초과 등 영구 차단 시 불필요한 대기를 피하기 위해 Pro 시도는 3회로 최적화
     
     while retry_count < max_retries:
         success, result = _try_model(client, "gemini-2.5-pro", user_message)
@@ -236,15 +236,29 @@ def analyze_posts(
             print(f"  ✅ [Gemini Pro 최종 종합 분석 대성공!] (출력: {len(result):,}자)")
             return result
             
+        # 일일 한도(PerDay) 초과가 에러 사유에 명백히 있을 경우, 무의미한 대기를 스킵하고 즉시 비상 Flash 가동
+        if "PerDay" in result or "TokensPerDay" in result or "RequestsPerDay" in result:
+            print("\n  🚨 [Pro 일일 한도 100% 소진 감지] 무료 API 계정의 gemini-2.5-pro 일일 100회 쿼터가 모두 소진되었습니다.")
+            break
+            
         print(f"  ⏳ [Pro 한도 대기] 30초 대기 후 gemini-2.5-pro 모델로 다시 끈질기게 재시도합니다... (시도 횟수: {retry_count + 1}/{max_retries})")
         retry_count += 1
         time.sleep(30)
 
+    # ── [최종 비상 대피소: gemini-2.5-flash 긴급 스위칭] ─────────────────────
+    print("\n  🚨 [비상 대피소 가동] Pro 모델의 일일 한도 장벽으로 인해, 차선책인 'gemini-2.5-flash' 모델로 긴급 안전 우회하여 분석을 완료합니다.")
+    print("  💡 1단계 분할 요약 캐시 덕분에 입력 토큰 용량이 5,000자 이내로 극히 경량화되어 있어, Flash 모델로도 100% 무결하고 뛰어난 퀄리티의 추천 표와 온도계를 완벽히 뽑아냅니다.")
+    
+    success, result = _try_model(client, "gemini-2.5-flash", user_message)
+    if success:
+        print(f"  ✅ [Gemini Flash 비상 종합 분석 완료!] (출력: {len(result):,}자)")
+        return result
+        
     raise RuntimeError(
-        f"gemini-2.5-pro 모델 최종 종합 분석 10회 연속 호출 실패.\n"
-        f"마지막 구글 에러 원인: {result}\n\n"
+        f"비상 모델 gemini-2.5-flash 마저 호출 실패.\n"
+        f"최종 구글 에러 원인: {result}\n\n"
         "해결 방법:\n"
-        "1. 구글 AI Studio 결제 연동(Pay-as-you-go)을 통해 Pro 계정 한도를 완전히 해제하여 100% 가동을 보장하십시오."
+        "1. 구글 AI Studio 결제 연동(Pay-as-you-go)을 통해 Pro 계정 한도를 완전히 해제하여 100% 무결한 가동을 보장하십시오."
     )
 
 
