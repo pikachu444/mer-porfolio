@@ -28,6 +28,7 @@ STATE_FILE = "last_processed.json"
 DB_FILE = "output/posts_db.json"  # 증분 누적 데이터베이스 경로
 _fetch_days_env = os.environ.get("FETCH_DAYS", "").strip()
 DEFAULT_DAYS = int(_fetch_days_env) if _fetch_days_env else 14  # 빈 문자열 방어
+ENABLE_POST_SUMMARIES = os.environ.get("ENABLE_POST_SUMMARIES", "").strip().lower() in ("1", "true", "yes")
 
 # 1차 정밀 요약 프롬프트 (나비효과 및 종목 팩트 100% 보존용)
 MAP_SUMMARY_PROMPT = """
@@ -255,9 +256,14 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
         if len(full_text) > MAX_CHARS_PER_POST:
             full_text = full_text[:MAX_CHARS_PER_POST] + "\n...(이하 생략)"
 
-        # 새로 수집한 글만 요약한다.
-        print(f"      1차 요약 생성: {title[:30]}...")
-        summary = summarize_single_post(full_text)
+        # 무료 API 기본 운영에서는 글별 요약 호출을 하지 않는다.
+        # 최종 분석 단계에서 원문을 한 번에 전달해 API 호출 수를 줄인다.
+        if ENABLE_POST_SUMMARIES:
+            print(f"      1차 요약 생성: {title[:30]}...")
+            summary = summarize_single_post(full_text)
+        else:
+            print("      1차 요약 API 호출 생략")
+            summary = ""
 
         newly_added.append({
             "title": title,
