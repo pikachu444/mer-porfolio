@@ -9,7 +9,6 @@ fetch_mer.py
 import feedparser
 import requests
 from bs4 import BeautifulSoup
-import time
 import re
 import json
 import os
@@ -18,6 +17,7 @@ from typing import List, Dict, Optional
 from pathlib import Path
 from google import genai
 from google.genai import types
+from gemini_utils import generate_content_with_retry
 
 # ─── 설정 ───────────────────────────────────────────────────────────────────
 
@@ -175,61 +175,32 @@ def _clean_text(text: str) -> str:
 # ─── 메인 수집 함수 ───────────────────────────────────────────────────────────
 
 def summarize_single_post(content: str) -> str:
-    """가벼운 gemini-2.5-flash 모델을 사용하여 글 1편을 콤팩트 요약 (429 백오프 완비)"""
+    """gemini-2.5-flash 모델을 사용하여 글 1편을 요약한다."""
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         print("    [Info] GEMINI_API_KEY 미설정으로 1차 요약 요소를 생략하고 원본을 유지합니다.")
         return ""
     try:
         client = genai.Client(api_key=api_key)
-        
-        # 429 및 Rate Limit 지능형 대기 구현
-        import re
-        backoff = 30.0
-        max_retries = 3
-        for attempt in range(max_retries):
-            try:
-                response = client.models.generate_content(
-                    model="gemini-3-flash",
-                    contents=f"블로그 글:\n{content}\n\n{MAP_SUMMARY_PROMPT}",
-                    config=types.GenerateContentConfig(
-                        temperature=0.2,
-                        max_output_tokens=2048,
-                    )
-                )
-                return response.text if response.text else ""
-            except Exception as e:
-                err_msg = str(e)
-                is_rate_limit = any(x in err_msg.lower() for x in ["429", "resource", "exhausted", "quota", "rate", "limit"])
-                if is_rate_limit and attempt < max_retries - 1:
-                    print(f"      [429/RateLimit 감지] 1차 요약 중 한도 도달 ({attempt + 1}/{max_retries})")
-                    
-                    wait_sec = backoff
-                    match = re.search(r"retry in ([\d\.]+)s", err_msg, re.IGNORECASE)
-                    if not match:
-                        match = re.search(r"retryDelay': '(\d+)s'", err_msg, re.IGNORECASE)
-                    if match:
-                        try:
-                            wait_sec = float(match.group(1)) + 1.0
-                        except ValueError:
-                            pass
-                    
-                    print(f"      ⏳ {wait_sec:.1f}초 동안 대기 후 다시 시도합니다...")
-                    time.sleep(wait_sec)
-                    backoff = min(backoff * 1.5, 60.0)
-                else:
-                    raise e
-        return ""
+        response = generate_content_with_retry(
+            client=client,
+            model="gemini-2.5-flash",
+            contents=f"블로그 글:\n{content}\n\n{MAP_SUMMARY_PROMPT}",
+            config=types.GenerateContentConfig(
+                temperature=0.2,
+                max_output_tokens=2048,
+            ),
+            max_retries=3,
+        )
+        return response.text if response.text else ""
     except Exception as e:
-        print(f"    ⚠ 1차 요약 생성 중 최종 API 에러 발생 (건너뜀): {e}")
+        print(f"    1차 요약 생성 실패, 요약 없이 진행합니다: {e}")
         return ""
 
 
 def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
     """
-    [스마트 증분 수집 및 요약 캐싱 DB 버전]
-    신규 작성된 새 글만 부분 수집하여 posts_db.json 데이터베이스에 누적하고, 
-    최종적으로 최신 30개만 슬라이싱하여 안정적으로 반환합니다.
+    신규 작성된 글만 수집해 posts_db.json에 누적하고 최신 30개를 반환한다.
     """
     # 1. 기존 누적 데이터베이스 로드
     db_posts = []
@@ -238,20 +209,20 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
         try:
             with open(db_path, encoding="utf-8") as f:
                 db_posts = json.load(f)
-            print(f"📂 기존 posts_db.json 로드 성공 (총 {len(db_posts)}편 누적 상태)")
+            print(f"기존 posts_db.json 로드 성공 (총 {len(db_posts)}편)")
         except Exception as e:
-            print(f"⚠ 기존 posts_db.json 로드 실패 (새로 빌드): {e}")
+            print(f"기존 posts_db.json 로드 실패, 새로 빌드합니다: {e}")
 
     existing_urls = {p["url"] for p in db_posts}
 
     # 2. RSS 파싱 시작
-    print(f"📡 RSS 파싱 중: {RSS_URL}")
+    print(f"RSS 파싱 중: {RSS_URL}")
     feed = feedparser.parse(RSS_URL)
     if feed.bozo and not feed.entries:
         raise RuntimeError(f"RSS 파싱 실패: {feed.bozo_exception}")
 
     cutoff = datetime.now() - timedelta(days=days)
-    print(f"📅 수집 기간: {cutoff.strftime('%Y-%m-%d')} ~ 오늘")
+    print(f"수집 기간: {cutoff.strftime('%Y-%m-%d')} ~ 오늘")
 
     new_posts_count = 0
     newly_added = []
@@ -274,7 +245,7 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
             continue
 
         title = entry.get("title", "제목 없음").strip()
-        print(f"  🆕 [신규 증분 발견] [{pub_date.strftime('%m/%d')}] {title[:45]}...")
+        print(f"  신규 글: [{pub_date.strftime('%m/%d')}] {title[:45]}...")
 
         # 신규 전문 스크래핑
         full_text = fetch_full_post(post_id, title)
@@ -284,8 +255,8 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
         if len(full_text) > MAX_CHARS_PER_POST:
             full_text = full_text[:MAX_CHARS_PER_POST] + "\n...(이하 생략)"
 
-        # 새로 긁어온 딱 요 글에 대해서만 Flash로 1차 정밀 요약 실행
-        print(f"      → [1차 요약 캐싱 가동] {title[:30]}...")
+        # 새로 수집한 글만 요약한다.
+        print(f"      1차 요약 생성: {title[:30]}...")
         summary = summarize_single_post(full_text)
 
         newly_added.append({
@@ -296,7 +267,6 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
             "summary": summary,
         })
         new_posts_count += 1
-        time.sleep(4.5)  # Gemini RPM 15 무료 한도 선제 방어 (4.5초 간격 유지)
 
     # 3. 새로운 포스트 병합 및 저장
     if newly_added:
@@ -308,13 +278,13 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
         db_path.parent.mkdir(parents=True, exist_ok=True)
         with open(db_path, "w", encoding="utf-8") as f:
             json.dump(db_posts, f, ensure_ascii=False, indent=2)
-        print(f"💾 신규 {new_posts_count}편 1차 요약 병합 완료 및 posts_db.json 누적 갱신 성공!")
+        print(f"신규 {new_posts_count}편을 posts_db.json에 저장했습니다.")
     else:
-        print("✨ 신규 업로드된 증분 글이 존재하지 않습니다. 스크래핑 0회 통과 완료.")
+        print("신규 글이 없습니다.")
 
     # 4. 분석에 최신 30개만 슬라이싱하여 반환
     final_posts = db_posts[:30]
-    print(f"🎯 최종 분석을 위한 최신 {len(final_posts)}편 데이터 보존 및 리턴 완료.")
+    print(f"최신 {len(final_posts)}편을 분석 대상으로 반환합니다.")
     return final_posts
 
 
@@ -352,4 +322,3 @@ if __name__ == "__main__":
     if posts:
         print(f"제목: {posts[0]['title']}")
         print(f"날짜: {posts[0]['date']}")
-        
