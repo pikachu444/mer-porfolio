@@ -190,7 +190,7 @@ def summarize_single_post(content: str) -> str:
         for attempt in range(max_retries):
             try:
                 response = client.models.generate_content(
-                    model="gemini-2.5-flash",
+                    model="gemini-3.1-flash",
                     contents=f"블로그 글:\n{content}\n\n{MAP_SUMMARY_PROMPT}",
                     config=types.GenerateContentConfig(
                         temperature=0.2,
