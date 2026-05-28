@@ -11,6 +11,8 @@ API 키 발급: https://aistudio.google.com/app/apikey
 """
 
 import os
+import re
+from datetime import datetime
 from typing import List, Dict, Tuple
 
 from google import genai
@@ -157,6 +159,38 @@ def _analysis_text_for_post(post: Dict) -> tuple[str, str]:
     return "내용 없음", ""
 
 
+def _format_report_date(today_str: str) -> str:
+    """LLM이 날짜를 잘못 쓰지 않도록 보고서 날짜를 코드에서 고정한다."""
+    match = re.match(r"^\s*(\d{4})년\s*(\d{1,2})월\s*(\d{1,2})일\s*$", today_str)
+    if not match:
+        return today_str
+
+    year, month, day = match.groups()
+    return f"{int(year):04d}-{int(month):02d}-{int(day):02d}"
+
+
+def _normalize_report_metadata(
+    report: str,
+    today_str: str,
+    post_count: int,
+    start_date: str,
+    end_date: str,
+) -> str:
+    """보고서 상단의 결정적 메타데이터는 입력값으로 보정한다."""
+    replacements = {
+        r"(?m)^\*\*분석 기간:\*\*.*$": f"**분석 기간:** {start_date} ~ {end_date}",
+        r"(?m)^\*\*리포트 생성:\*\*.*$": f"**리포트 생성:** {_format_report_date(today_str)}",
+        r"(?m)^\*\*학습 글 수:\*\*.*$": f"**학습 글 수:** {post_count}편",
+    }
+
+    normalized = report
+    for pattern, replacement in replacements.items():
+        if re.search(pattern, normalized):
+            normalized = re.sub(pattern, replacement, normalized, count=1)
+
+    return normalized
+
+
 # ─── 메인 분석 함수 ───────────────────────────────────────────────────────────
 
 def analyze_posts(
@@ -213,6 +247,7 @@ def analyze_posts(
     client = _get_client()
     success, result = _try_model(client, FINAL_MODEL, user_message)
     if success:
+        result = _normalize_report_metadata(result, today_str, len(posts), start_date, end_date)
         print(f"  최종 분석 완료 (출력: {len(result):,}자)")
         return result
 
@@ -227,6 +262,7 @@ def analyze_posts(
         )
         success, result = _try_model(client, FINAL_MODEL, retry_message)
         if success:
+            result = _normalize_report_metadata(result, today_str, len(posts), start_date, end_date)
             print(f"  최종 분석 완료 (재시도, 출력: {len(result):,}자)")
             return result
 
@@ -245,7 +281,6 @@ def analyze_posts(
 # ─── 직접 실행 테스트 ─────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    from datetime import datetime
     from fetch_mer import fetch_recent_posts
 
     print("=== 분석 모듈 테스트 ===")
