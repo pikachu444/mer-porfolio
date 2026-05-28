@@ -243,6 +243,7 @@ def analyze_posts(
         if not summary:
             summary = _fill_missing_summary(client, post)
             post["summary"] = summary  # 메모리 상에 캐싱 갱신
+            time.sleep(4.5)  # Gemini RPM 15 무료 한도 선제 방어 (4.5초 간격 유지)
             
         summarized_blocks.append(
             f"[{i}/{len(posts)}] 제목: {post['title']}\n"

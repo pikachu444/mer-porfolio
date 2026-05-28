@@ -296,7 +296,7 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
             "summary": summary,
         })
         new_posts_count += 1
-        time.sleep(1.2)  # 네이버 서버 부하 방지
+        time.sleep(4.5)  # Gemini RPM 15 무료 한도 선제 방어 (4.5초 간격 유지)
 
     # 3. 새로운 포스트 병합 및 저장
     if newly_added:
