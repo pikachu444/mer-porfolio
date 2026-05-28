@@ -92,7 +92,9 @@ def notify_status(title: str, body: str = "") -> bool:
     if RUN_MODE == "test":
         return True
     try:
-        return send_status(title, body)
+        ok = send_status(title, body)
+        print("  Telegram status notification: " + ("success" if ok else "failed"))
+        return ok
     except Exception as e:
         print("  !! Telegram status notification failed: " + str(e))
         return False
