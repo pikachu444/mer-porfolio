@@ -35,11 +35,12 @@ from fetch_mer import posts_to_context
 # ※ gemini-3.1-pro-preview : 유료 전용 (billing 필요). 무료 아님.
 
 _gemini_model_env = os.environ.get("GEMINI_MODEL", "").strip()
-DEFAULT_MODEL = _gemini_model_env if _gemini_model_env else "gemini-3.1-flash"
+DEFAULT_MODEL = _gemini_model_env if _gemini_model_env else "gemini-3-flash"
 
 FALLBACK_MODELS = [
-    "gemini-3.1-flash",         # 최신 무료 티어 주력
-    "gemini-3.1-flash-lite",    # 최신 무료 티어 비상 폴백
+    "gemini-3-flash",         # 최신 3.x 무료 주력
+    "gemini-3.1-flash-lite",  # 최신 3.1 경량 특화
+    "gemini-2.5-flash",       # 기존 2.5 안정 폴백
 ]
 
 # 투자 분석 특성상 안전 필터 완화 (주식 분석 용어 오탐 방지)
@@ -201,7 +202,7 @@ def _fill_missing_summary(client: genai.Client, post: Dict) -> str:
         print(f"      [실시간 보강] '{title[:25]}'에 대한 1차 요약이 없어 실시간 생성 중...")
         response = call_gemini_with_retry(
             client=client,
-            model="gemini-3.1-flash",
+            model="gemini-3-flash",
             contents=f"블로그 글:\n{content}\n\n{MAP_SUMMARY_PROMPT}",
             config=types.GenerateContentConfig(
                 temperature=0.2,
