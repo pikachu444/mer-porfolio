@@ -77,6 +77,53 @@ def _get_client() -> genai.Client:
     return genai.Client(api_key=api_key)
 
 
+# ─── API 호출 429 지능형 재시도 헬퍼 ──────────────────────────────────────────
+
+def call_gemini_with_retry(client: genai.Client, model: str, contents, config, max_retries: int = 5):
+    """
+    Gemini API 호출 시 429 한도 초과 에러(Rate Limit 등) 발생 시 지능적으로 대기하며 재시도하는 함수.
+    """
+    import re
+    backoff = 30.0
+    for attempt in range(max_retries):
+        try:
+            response = client.models.generate_content(
+                model=model,
+                contents=contents,
+                config=config,
+            )
+            return response
+        except Exception as e:
+            err_msg = str(e)
+            is_rate_limit = any(x in err_msg.lower() for x in ["429", "resource", "exhausted", "quota", "rate", "limit"])
+            if is_rate_limit:
+                print(f"      [429/RateLimit 감지] {model} 한도 도달 ({attempt + 1}/{max_retries})")
+                
+                # Pro 일일 한도 RPD 완전히 소진 감지 시 즉시 탈출 (Flash 우회 유도)
+                if "gemini-2.5-pro" in model and any(x in err_msg for x in ["PerDay", "RequestsPerDay", "TokensPerDay"]):
+                    print("      🚨 Pro 일일 100회 한도가 완전히 소진된 것으로 판단되므로, 대기 없이 즉시 Flash 우회로 전환합니다.")
+                    raise e
+                
+                # 에러 메시지에서 대기 권장 시간(예: retry in 31.5s 등) 파싱 시도
+                wait_sec = backoff
+                match = re.search(r"retry in ([\d\.]+)s", err_msg, re.IGNORECASE)
+                if not match:
+                    match = re.search(r"retryDelay': '(\d+)s'", err_msg, re.IGNORECASE)
+                
+                if match:
+                    try:
+                        wait_sec = float(match.group(1)) + 1.0  # 안전 마진 1초 추가
+                    except ValueError:
+                        pass
+                
+                print(f"      ⏳ {wait_sec:.1f}초 동안 얌전히 대기 후 재시도합니다...")
+                time.sleep(wait_sec)
+                backoff = min(backoff * 1.5, 60.0)
+            else:
+                raise e
+    raise RuntimeError(f"{model} API가 {max_retries}회 재시도에도 불구하고 계속 실패했습니다.")
+
+
 # ─── 모델별 분석 시도 ─────────────────────────────────────────────────────────
 
 def _try_model(client: genai.Client, model_name: str,
@@ -96,10 +143,13 @@ def _try_model(client: genai.Client, model_name: str,
             safety_settings=SAFETY_SETTINGS,
         )
 
-        response = client.models.generate_content(
+        # 지능형 429 백오프 헬퍼를 경유하여 API 호출
+        response = call_gemini_with_retry(
+            client=client,
             model=model_name,
             contents=user_message,
             config=config,
+            max_retries=5,
         )
 
         text = response.text
@@ -138,8 +188,6 @@ def _try_model(client: genai.Client, model_name: str,
         # 기타 오류
         return False, err
 
-
-# ─── 메인 분석 함수 ───────────────────────────────────────────────────────────
 
 # ─── 1차 요약 실시간 보강 헬퍼 ────────────────────────────────────────────────
 

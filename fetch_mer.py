@@ -175,24 +175,53 @@ def _clean_text(text: str) -> str:
 # ─── 메인 수집 함수 ───────────────────────────────────────────────────────────
 
 def summarize_single_post(content: str) -> str:
-    """가벼운 gemini-2.5-flash 모델을 1회만 사용하여 글 1편을 콤팩트 요약"""
+    """가벼운 gemini-2.5-flash 모델을 사용하여 글 1편을 콤팩트 요약 (429 백오프 완비)"""
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         print("    [Info] GEMINI_API_KEY 미설정으로 1차 요약 요소를 생략하고 원본을 유지합니다.")
         return ""
     try:
         client = genai.Client(api_key=api_key)
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=f"블로그 글:\n{content}\n\n{MAP_SUMMARY_PROMPT}",
-            config=types.GenerateContentConfig(
-                temperature=0.2,
-                max_output_tokens=2048,
-            )
-        )
-        return response.text if response.text else ""
+        
+        # 429 및 Rate Limit 지능형 대기 구현
+        import re
+        backoff = 30.0
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                response = client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=f"블로그 글:\n{content}\n\n{MAP_SUMMARY_PROMPT}",
+                    config=types.GenerateContentConfig(
+                        temperature=0.2,
+                        max_output_tokens=2048,
+                    )
+                )
+                return response.text if response.text else ""
+            except Exception as e:
+                err_msg = str(e)
+                is_rate_limit = any(x in err_msg.lower() for x in ["429", "resource", "exhausted", "quota", "rate", "limit"])
+                if is_rate_limit and attempt < max_retries - 1:
+                    print(f"      [429/RateLimit 감지] 1차 요약 중 한도 도달 ({attempt + 1}/{max_retries})")
+                    
+                    wait_sec = backoff
+                    match = re.search(r"retry in ([\d\.]+)s", err_msg, re.IGNORECASE)
+                    if not match:
+                        match = re.search(r"retryDelay': '(\d+)s'", err_msg, re.IGNORECASE)
+                    if match:
+                        try:
+                            wait_sec = float(match.group(1)) + 1.0
+                        except ValueError:
+                            pass
+                    
+                    print(f"      ⏳ {wait_sec:.1f}초 동안 대기 후 다시 시도합니다...")
+                    time.sleep(wait_sec)
+                    backoff = min(backoff * 1.5, 60.0)
+                else:
+                    raise e
+        return ""
     except Exception as e:
-        print(f"    ⚠ 1차 요약 생성 중 API 에러 발생 (건너뜀): {e}")
+        print(f"    ⚠ 1차 요약 생성 중 최종 API 에러 발생 (건너뜀): {e}")
         return ""
 
 
