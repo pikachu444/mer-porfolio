@@ -288,9 +288,18 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
     else:
         print("신규 글이 없습니다.")
 
-    # 4. 분석에 최신 30개만 슬라이싱하여 반환
-    final_posts = db_posts[:30]
-    print(f"최신 {len(final_posts)}편을 분석 대상으로 반환합니다.")
+    # 4. 요청 기간에 해당하는 글만 분석 대상으로 반환한다.
+    # 무료 API에서는 입력 크기도 quota에 영향을 주므로 오래된 글을 매번 다시 넣지 않는다.
+    final_posts = []
+    for post in db_posts:
+        try:
+            post_date = datetime.fromisoformat(post["date"])
+        except Exception:
+            continue
+        if post_date >= cutoff:
+            final_posts.append(post)
+
+    print(f"수집 기간 내 {len(final_posts)}편을 분석 대상으로 반환합니다.")
     return final_posts
 
 
