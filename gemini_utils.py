@@ -83,10 +83,13 @@ def generate_content_with_retry(client, model: str, contents, config, max_retrie
                 raise
 
             print(f"      Rate limit or quota error: {model} ({attempt + 1}/{max_retries})")
-            if is_daily_quota_error(message) or attempt == max_retries - 1:
+            if attempt == max_retries - 1:
                 raise
 
             retry_delay = parse_retry_delay(message)
+            if is_daily_quota_error(message) and retry_delay is None:
+                raise
+
             wait_sec = max(retry_delay or backoff, get_min_interval(model))
             print(f"      Waiting {wait_sec:.1f}s before retry.")
             time.sleep(wait_sec)
