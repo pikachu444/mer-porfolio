@@ -199,6 +199,126 @@
       "date": "2026-05-28",
       "entry_price": 261.4700012207031,
       "entry_usdkrw": 1494.0999755859375
+    },
+    {
+      "type": "KR",
+      "name": "LS",
+      "code": "006220",
+      "ticker": "006220.KS",
+      "action": "보유",
+      "weight": "8%",
+      "date": "2026-05-29",
+      "entry_price": 9950.0
+    },
+    {
+      "type": "KR",
+      "name": "대한전선",
+      "code": "001440",
+      "ticker": "001440.KS",
+      "action": "보유",
+      "weight": "8%",
+      "date": "2026-05-29",
+      "entry_price": 45450.0
+    },
+    {
+      "type": "KR",
+      "name": "삼성중공업",
+      "code": "010140",
+      "ticker": "010140.KS",
+      "action": "보유",
+      "weight": "15%",
+      "date": "2026-05-29",
+      "entry_price": 27950.0
+    },
+    {
+      "type": "KR",
+      "name": "LG이노텍",
+      "code": "011070",
+      "ticker": "011070.KS",
+      "action": "보유",
+      "weight": "14%",
+      "date": "2026-05-29",
+      "entry_price": 1458000.0
+    },
+    {
+      "type": "US",
+      "name": "NVIDIA",
+      "ticker": "NVDA",
+      "action": "Buy",
+      "weight": "15%",
+      "date": "2026-05-29",
+      "entry_price": 215.60000610351562,
+      "entry_usdkrw": 1505.510009765625
+    },
+    {
+      "type": "US",
+      "name": "Google (Alphabet)",
+      "ticker": "GOOGL",
+      "action": "Buy",
+      "weight": "5%",
+      "date": "2026-05-29",
+      "entry_price": 382.6499938964844,
+      "entry_usdkrw": 1505.510009765625
+    },
+    {
+      "type": "US",
+      "name": "Microsoft",
+      "ticker": "MSFT",
+      "action": "Hold",
+      "weight": "5%",
+      "date": "2026-05-29",
+      "entry_price": 442.3299865722656,
+      "entry_usdkrw": 1505.510009765625
+    },
+    {
+      "type": "US",
+      "name": "Comfort Systems USA",
+      "ticker": "FIX",
+      "action": "Hold",
+      "weight": "4%",
+      "date": "2026-05-29",
+      "entry_price": 1805.469970703125,
+      "entry_usdkrw": 1505.510009765625
+    },
+    {
+      "type": "US",
+      "name": "Alcoa",
+      "ticker": "AA",
+      "action": "Buy",
+      "weight": "8%",
+      "date": "2026-05-29",
+      "entry_price": 77.16999816894531,
+      "entry_usdkrw": 1505.510009765625
+    },
+    {
+      "type": "US",
+      "name": "Recursion Pharmaceuticals",
+      "ticker": "RXRX",
+      "action": "Buy",
+      "weight": "3%",
+      "date": "2026-05-29",
+      "entry_price": 3.565000057220459,
+      "entry_usdkrw": 1505.510009765625
+    },
+    {
+      "type": "US",
+      "name": "Northrop Grumman",
+      "ticker": "NOC",
+      "action": "Buy",
+      "weight": "3%",
+      "date": "2026-05-29",
+      "entry_price": 561.4500122070312,
+      "entry_usdkrw": 1505.510009765625
+    },
+    {
+      "type": "US",
+      "name": "Wabtec",
+      "ticker": "WAB",
+      "action": "Buy",
+      "weight": "2%",
+      "date": "2026-05-29",
+      "entry_price": 260.948486328125,
+      "entry_usdkrw": 1505.510009765625
     }
   ]
 }
