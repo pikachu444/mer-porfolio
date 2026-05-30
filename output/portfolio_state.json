@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
-  "last_updated": "2026-05-29",
-  "last_report_date": "2026-05-29",
+  "last_updated": "2026-05-30",
+  "last_report_date": "2026-05-30",
   "rebalance_count": 3,
   "holdings": [
     {
@@ -12,9 +12,9 @@
       "weight": "8%",
       "thesis": "전력 인프라 투자 확대 수혜 기대 유효함.",
       "entry_date": "2026-05-12",
-      "last_confirmed_date": "2026-05-29",
+      "last_confirmed_date": "2026-05-30",
       "status": "active",
-      "basis_type": "직접언급"
+      "basis_type": "기존보유"
     },
     {
       "name": "대한전선",
@@ -24,7 +24,7 @@
       "weight": "8%",
       "thesis": "전력 인프라 투자 확대 수혜 기대 유효함.",
       "entry_date": "2026-05-12",
-      "last_confirmed_date": "2026-05-29",
+      "last_confirmed_date": "2026-05-30",
       "status": "active",
       "basis_type": "기존보유"
     },
@@ -36,7 +36,7 @@
       "weight": "15%",
       "thesis": "VLCC 수요 증가로 조선업 호황 지속 근거 유효함.",
       "entry_date": "2026-05-12",
-      "last_confirmed_date": "2026-05-29",
+      "last_confirmed_date": "2026-05-30",
       "status": "active",
       "basis_type": "기존보유"
     },
@@ -62,18 +62,20 @@
       "thesis": "디지털 생물학, AI 로봇 등 신규 성장 동력 매우 강력함.",
       "entry_date": "2026-05-12",
       "last_confirmed_date": "2026-05-29",
-      "status": "active",
-      "basis_type": "직접언급"
+      "status": "removed",
+      "basis_type": "직접언급",
+      "removed_date": "2026-05-30",
+      "removed_reason": "매도 시그널 감지 (Avoid 판단 또는 주의종목 섹션)"
     },
     {
       "name": "Google (Alphabet)",
       "code": "GOOGL",
       "market": "US",
-      "action": "Buy",
+      "action": "Hold",
       "weight": "5%",
-      "thesis": "AlphaFold3 등 AI 생물학 기여 지속 기대됨.",
+      "thesis": "AlphaFold3 등 AI 생물학 기여 지속 기대되나, AI 서비스 수익성 우려.",
       "entry_date": "2026-05-12",
-      "last_confirmed_date": "2026-05-29",
+      "last_confirmed_date": "2026-05-30",
       "status": "active",
       "basis_type": "기존보유"
     },
@@ -83,9 +85,9 @@
       "market": "US",
       "action": "Hold",
       "weight": "5%",
-      "thesis": "DNA 데이터 저장, AI 로봇 투자 등 AI 생태계 확장 기대됨.",
+      "thesis": "DNA 데이터 저장, AI 로봇 투자 등 AI 생태계 확장 기대되나, AI 서비스 수익성 우려.",
       "entry_date": "2026-05-12",
-      "last_confirmed_date": "2026-05-29",
+      "last_confirmed_date": "2026-05-30",
       "status": "active",
       "basis_type": "기존보유"
     },
@@ -98,8 +100,10 @@
       "thesis": "AI 데이터센터 확장 지속으로 간접 수혜 유효함.",
       "entry_date": "2026-05-12",
       "last_confirmed_date": "2026-05-29",
-      "status": "active",
-      "basis_type": "기존보유"
+      "status": "removed",
+      "basis_type": "기존보유",
+      "removed_date": "2026-05-30",
+      "removed_reason": "매도 시그널 감지 (Avoid 판단 또는 주의종목 섹션)"
     },
     {
       "name": "GOP ETF",
@@ -122,9 +126,9 @@
       "weight": "8%",
       "thesis": "보크사이트/알루미늄 공급망 불안정 심화로 직접 수혜 기대됨.",
       "entry_date": "2026-05-28",
-      "last_confirmed_date": "2026-05-29",
+      "last_confirmed_date": "2026-05-30",
       "status": "active",
-      "basis_type": "직접매수언급"
+      "basis_type": "기존보유"
     },
     {
       "name": "Recursion Pharmaceuticals",
@@ -134,7 +138,7 @@
       "weight": "3%",
       "thesis": "엔비디아와의 협력 강화 및 디지털 생물학 핵심 수혜 기대됨.",
       "entry_date": "2026-05-28",
-      "last_confirmed_date": "2026-05-29",
+      "last_confirmed_date": "2026-05-30",
       "status": "active",
       "basis_type": "기존보유"
     },
@@ -146,7 +150,7 @@
       "weight": "3%",
       "thesis": "DARPA 달 철도 계획 참여로 우주 인프라 수혜 구체화됨.",
       "entry_date": "2026-05-28",
-      "last_confirmed_date": "2026-05-29",
+      "last_confirmed_date": "2026-05-30",
       "status": "active",
       "basis_type": "기존보유"
     },
@@ -159,7 +163,7 @@
       "basis_type": "기존보유",
       "thesis": "Figure AI 투자 및 휴머노이드 로봇 부품 공급 기대 유효함.",
       "entry_date": "2026-05-28",
-      "last_confirmed_date": "2026-05-29",
+      "last_confirmed_date": "2026-05-30",
       "status": "active"
     },
     {
@@ -171,7 +175,7 @@
       "basis_type": "기존보유",
       "thesis": "기니 시만두 광산 기관차 계약 수주로 직접 매출 증가 기대됨.",
       "entry_date": "2026-05-28",
-      "last_confirmed_date": "2026-05-29",
+      "last_confirmed_date": "2026-05-30",
       "status": "active"
     }
   ]

@@ -1,9 +1,9 @@
 {
-  "updated": "2026-05-29",
+  "updated": "2026-05-30",
   "report_summaries": [
     {
       "date": "2026-05-26",
-      "avg_return_krw": -0.35,
+      "avg_return_krw": -0.87,
       "stock_count": 4,
       "stocks": [
         {
@@ -36,11 +36,11 @@
           "action": "Buy",
           "weight": "25%",
           "entry_price": 215.3300018310547,
-          "current_price": 215.61500549316406,
-          "return_pct": 0.1323566895861476,
-          "return_pct_krw": 0.17427622698266887,
+          "current_price": 211.13999938964844,
+          "return_pct": -1.9458516722131804,
+          "return_pct_krw": -1.7992474027553638,
           "entry_usdkrw": 1504.8800048828125,
-          "current_usdkrw": 1505.510009765625
+          "current_usdkrw": 1507.1300048828125
         },
         {
           "name": "ExxonMobil",
@@ -50,17 +50,17 @@
           "action": "Buy",
           "weight": "10%",
           "entry_price": 154.9199981689453,
-          "current_price": 145.89999389648438,
-          "return_pct": -5.82236275437102,
-          "return_pct_krw": -5.782936108310219,
+          "current_price": 145.25999450683594,
+          "return_pct": -6.2354788124737945,
+          "return_pct_krw": -6.0952881182075345,
           "entry_usdkrw": 1504.8800048828125,
-          "current_usdkrw": 1505.510009765625
+          "current_usdkrw": 1507.1300048828125
         }
       ]
     },
     {
       "date": "2026-05-27",
-      "avg_return_krw": -0.32,
+      "avg_return_krw": -0.85,
       "stock_count": 4,
       "stocks": [
         {
@@ -93,11 +93,11 @@
           "action": "Buy",
           "weight": "25%",
           "entry_price": 215.3300018310547,
-          "current_price": 215.61500549316406,
-          "return_pct": 0.1323566895861476,
-          "return_pct_krw": 0.19691160331531724,
+          "current_price": 211.13999938964844,
+          "return_pct": -1.9458516722131804,
+          "return_pct_krw": -1.7770579637605532,
           "entry_usdkrw": 1504.5400390625,
-          "current_usdkrw": 1505.510009765625
+          "current_usdkrw": 1507.1300048828125
         },
         {
           "name": "ExxonMobil",
@@ -107,17 +107,17 @@
           "action": "Buy",
           "weight": "10%",
           "entry_price": 154.9199981689453,
-          "current_price": 145.89999389648438,
-          "return_pct": -5.82236275437102,
-          "return_pct_krw": -5.761646823491097,
+          "current_price": 145.25999450683594,
+          "return_pct": -6.2354788124737945,
+          "return_pct_krw": -6.0740694124388295,
           "entry_usdkrw": 1504.5400390625,
-          "current_usdkrw": 1505.510009765625
+          "current_usdkrw": 1507.1300048828125
         }
       ]
     },
     {
       "date": "2026-05-28",
-      "avg_return_krw": 3.98,
+      "avg_return_krw": 3.91,
       "stock_count": 12,
       "stocks": [
         {
@@ -172,11 +172,11 @@
           "action": "Buy",
           "weight": "15%",
           "entry_price": 214.36000061035156,
-          "current_price": 215.61500549316406,
-          "return_pct": 0.5854659821044501,
-          "return_pct_krw": 1.353609763370173,
+          "current_price": 211.13999938964844,
+          "return_pct": -1.5021464879337332,
+          "return_pct_krw": -0.6431478011569624,
           "entry_usdkrw": 1494.0999755859375,
-          "current_usdkrw": 1505.510009765625
+          "current_usdkrw": 1507.1300048828125
         },
         {
           "name": "Google (Alphabet)",
@@ -186,11 +186,11 @@
           "action": "Buy",
           "weight": "5%",
           "entry_price": 390.0555114746094,
-          "current_price": 382.67999267578125,
-          "return_pct": -1.890889522607921,
-          "return_pct_krw": -1.1416569932072178,
+          "current_price": 380.3399963378906,
+          "return_pct": -2.4908031936247057,
+          "return_pct_krw": -1.6404265710004042,
           "entry_usdkrw": 1494.0999755859375,
-          "current_usdkrw": 1505.510009765625
+          "current_usdkrw": 1507.1300048828125
         },
         {
           "name": "Microsoft",
@@ -200,11 +200,11 @@
           "action": "Hold",
           "weight": "5%",
           "entry_price": 427.9599914550781,
-          "current_price": 442.39990234375,
-          "return_pct": 3.374126361573123,
-          "return_pct_krw": 4.163566381889248,
+          "current_price": 450.239990234375,
+          "return_pct": 5.20609384618972,
+          "return_pct_krw": 6.123595022433321,
           "entry_usdkrw": 1494.0999755859375,
-          "current_usdkrw": 1505.510009765625
+          "current_usdkrw": 1507.1300048828125
         },
         {
           "name": "Comfort Systems USA",
@@ -214,11 +214,11 @@
           "action": "Hold",
           "weight": "4%",
           "entry_price": 1855.3699951171875,
-          "current_price": 1805.469970703125,
-          "return_pct": -2.689491828874313,
-          "return_pct_krw": -1.9463580075650169,
+          "current_price": 1828.2099609375,
+          "return_pct": -1.4638608068021515,
+          "return_pct_krw": -0.6045282310253494,
           "entry_usdkrw": 1494.0999755859375,
-          "current_usdkrw": 1505.510009765625
+          "current_usdkrw": 1507.1300048828125
         },
         {
           "name": "Alcoa",
@@ -228,11 +228,11 @@
           "action": "Buy",
           "weight": "8%",
           "entry_price": 75.59500122070312,
-          "current_price": 77.16999816894531,
-          "return_pct": 2.0834670584155566,
-          "return_pct_krw": 2.8630506655036547,
+          "current_price": 77.63999938964844,
+          "return_pct": 2.7052029048519293,
+          "return_pct_krw": 3.600893838965554,
           "entry_usdkrw": 1494.0999755859375,
-          "current_usdkrw": 1505.510009765625
+          "current_usdkrw": 1507.1300048828125
         },
         {
           "name": "Recursion Pharmaceuticals",
@@ -242,11 +242,11 @@
           "action": "Buy",
           "weight": "3%",
           "entry_price": 3.2699999809265137,
-          "current_price": 3.565000057220459,
-          "return_pct": 9.021409113597631,
-          "return_pct_krw": 9.85397589268215,
+          "current_price": 3.5899999141693115,
+          "return_pct": 9.785930737287952,
+          "return_pct_krw": 10.743372620205157,
           "entry_usdkrw": 1494.0999755859375,
-          "current_usdkrw": 1505.510009765625
+          "current_usdkrw": 1507.1300048828125
         },
         {
           "name": "Northrop Grumman",
@@ -256,11 +256,11 @@
           "action": "Buy",
           "weight": "3%",
           "entry_price": 557.5250244140625,
-          "current_price": 561.4500122070312,
-          "return_pct": 0.7040020844075586,
-          "return_pct_krw": 1.47305109357028,
+          "current_price": 563.6799926757812,
+          "return_pct": 1.1039806272709258,
+          "return_pct_krw": 1.9857073196814428,
           "entry_usdkrw": 1494.0999755859375,
-          "current_usdkrw": 1505.510009765625
+          "current_usdkrw": 1507.1300048828125
         },
         {
           "name": "Wabtec",
@@ -270,11 +270,174 @@
           "action": "Buy",
           "weight": "2%",
           "entry_price": 261.4700012207031,
-          "current_price": 261.010009765625,
-          "return_pct": -0.17592513593551892,
-          "return_pct_krw": 0.586404108938461,
+          "current_price": 261.1600036621094,
+          "return_pct": -0.11855951242838196,
+          "return_pct_krw": 0.7525054209986769,
           "entry_usdkrw": 1494.0999755859375,
-          "current_usdkrw": 1505.510009765625
+          "current_usdkrw": 1507.1300048828125
+        }
+      ]
+    },
+    {
+      "date": "2026-05-29",
+      "avg_return_krw": -0.07,
+      "stock_count": 12,
+      "stocks": [
+        {
+          "name": "LS",
+          "ticker": "006220.KS",
+          "type": "KR",
+          "date": "2026-05-29",
+          "action": "보유",
+          "weight": "8%",
+          "entry_price": 9950.0,
+          "current_price": 9950.0,
+          "return_pct": 0.0
+        },
+        {
+          "name": "대한전선",
+          "ticker": "001440.KS",
+          "type": "KR",
+          "date": "2026-05-29",
+          "action": "보유",
+          "weight": "8%",
+          "entry_price": 45450.0,
+          "current_price": 45450.0,
+          "return_pct": 0.0
+        },
+        {
+          "name": "삼성중공업",
+          "ticker": "010140.KS",
+          "type": "KR",
+          "date": "2026-05-29",
+          "action": "보유",
+          "weight": "15%",
+          "entry_price": 27950.0,
+          "current_price": 27950.0,
+          "return_pct": 0.0
+        },
+        {
+          "name": "LG이노텍",
+          "ticker": "011070.KS",
+          "type": "KR",
+          "date": "2026-05-29",
+          "action": "보유",
+          "weight": "14%",
+          "entry_price": 1458000.0,
+          "current_price": 1458000.0,
+          "return_pct": 0.0
+        },
+        {
+          "name": "NVIDIA",
+          "ticker": "NVDA",
+          "type": "US",
+          "date": "2026-05-29",
+          "action": "Buy",
+          "weight": "15%",
+          "entry_price": 215.60000610351562,
+          "current_price": 211.13999938964844,
+          "return_pct": -2.068648695550506,
+          "return_pct_krw": -1.9632702457868407,
+          "entry_usdkrw": 1505.510009765625,
+          "current_usdkrw": 1507.1300048828125
+        },
+        {
+          "name": "Google (Alphabet)",
+          "ticker": "GOOGL",
+          "type": "US",
+          "date": "2026-05-29",
+          "action": "Buy",
+          "weight": "5%",
+          "entry_price": 382.6499938964844,
+          "current_price": 380.3399963378906,
+          "return_pct": -0.6036842010818527,
+          "return_pct_krw": -0.4967293849622696,
+          "entry_usdkrw": 1505.510009765625,
+          "current_usdkrw": 1507.1300048828125
+        },
+        {
+          "name": "Microsoft",
+          "ticker": "MSFT",
+          "type": "US",
+          "date": "2026-05-29",
+          "action": "Hold",
+          "weight": "5%",
+          "entry_price": 442.3299865722656,
+          "current_price": 450.239990234375,
+          "return_pct": 1.7882585179011097,
+          "return_pct_krw": 1.8977871697974127,
+          "entry_usdkrw": 1505.510009765625,
+          "current_usdkrw": 1507.1300048828125
+        },
+        {
+          "name": "Comfort Systems USA",
+          "ticker": "FIX",
+          "type": "US",
+          "date": "2026-05-29",
+          "action": "Hold",
+          "weight": "4%",
+          "entry_price": 1805.469970703125,
+          "current_price": 1828.2099609375,
+          "return_pct": 1.259505314592361,
+          "return_pct_krw": 1.3684650047401525,
+          "entry_usdkrw": 1505.510009765625,
+          "current_usdkrw": 1507.1300048828125
+        },
+        {
+          "name": "Alcoa",
+          "ticker": "AA",
+          "type": "US",
+          "date": "2026-05-29",
+          "action": "Buy",
+          "weight": "8%",
+          "entry_price": 77.16999816894531,
+          "current_price": 77.63999938964844,
+          "return_pct": 0.6090465619477785,
+          "return_pct_krw": 0.7173063298125026,
+          "entry_usdkrw": 1505.510009765625,
+          "current_usdkrw": 1507.1300048828125
+        },
+        {
+          "name": "Recursion Pharmaceuticals",
+          "ticker": "RXRX",
+          "type": "US",
+          "date": "2026-05-29",
+          "action": "Buy",
+          "weight": "3%",
+          "entry_price": 3.565000057220459,
+          "current_price": 3.5899999141693115,
+          "return_pct": 0.7012582481792244,
+          "return_pct_krw": 0.8096172398820325,
+          "entry_usdkrw": 1505.510009765625,
+          "current_usdkrw": 1507.1300048828125
+        },
+        {
+          "name": "Northrop Grumman",
+          "ticker": "NOC",
+          "type": "US",
+          "date": "2026-05-29",
+          "action": "Buy",
+          "weight": "3%",
+          "entry_price": 561.4500122070312,
+          "current_price": 563.6799926757812,
+          "return_pct": 0.3971823706947767,
+          "return_pct_krw": 0.5052141633530192,
+          "entry_usdkrw": 1505.510009765625,
+          "current_usdkrw": 1507.1300048828125
+        },
+        {
+          "name": "Wabtec",
+          "ticker": "WAB",
+          "type": "US",
+          "date": "2026-05-29",
+          "action": "Buy",
+          "weight": "2%",
+          "entry_price": 260.948486328125,
+          "current_price": 261.1600036621094,
+          "return_pct": 0.08105712240783276,
+          "return_pct_krw": 0.18874875036751945,
+          "entry_usdkrw": 1505.510009765625,
+          "current_usdkrw": 1507.1300048828125
         }
       ]
     }
@@ -310,11 +473,11 @@
       "action": "Buy",
       "weight": "25%",
       "entry_price": 215.3300018310547,
-      "current_price": 215.61500549316406,
-      "return_pct": 0.1323566895861476,
-      "return_pct_krw": 0.17427622698266887,
+      "current_price": 211.13999938964844,
+      "return_pct": -1.9458516722131804,
+      "return_pct_krw": -1.7992474027553638,
       "entry_usdkrw": 1504.8800048828125,
-      "current_usdkrw": 1505.510009765625
+      "current_usdkrw": 1507.1300048828125
     },
     {
       "name": "ExxonMobil",
@@ -324,11 +487,11 @@
       "action": "Buy",
       "weight": "10%",
       "entry_price": 154.9199981689453,
-      "current_price": 145.89999389648438,
-      "return_pct": -5.82236275437102,
-      "return_pct_krw": -5.782936108310219,
+      "current_price": 145.25999450683594,
+      "return_pct": -6.2354788124737945,
+      "return_pct_krw": -6.0952881182075345,
       "entry_usdkrw": 1504.8800048828125,
-      "current_usdkrw": 1505.510009765625
+      "current_usdkrw": 1507.1300048828125
     },
     {
       "name": "삼성전자",
@@ -360,11 +523,11 @@
       "action": "Buy",
       "weight": "25%",
       "entry_price": 215.3300018310547,
-      "current_price": 215.61500549316406,
-      "return_pct": 0.1323566895861476,
-      "return_pct_krw": 0.19691160331531724,
+      "current_price": 211.13999938964844,
+      "return_pct": -1.9458516722131804,
+      "return_pct_krw": -1.7770579637605532,
       "entry_usdkrw": 1504.5400390625,
-      "current_usdkrw": 1505.510009765625
+      "current_usdkrw": 1507.1300048828125
     },
     {
       "name": "ExxonMobil",
@@ -374,11 +537,11 @@
       "action": "Buy",
       "weight": "10%",
       "entry_price": 154.9199981689453,
-      "current_price": 145.89999389648438,
-      "return_pct": -5.82236275437102,
-      "return_pct_krw": -5.761646823491097,
+      "current_price": 145.25999450683594,
+      "return_pct": -6.2354788124737945,
+      "return_pct_krw": -6.0740694124388295,
       "entry_usdkrw": 1504.5400390625,
-      "current_usdkrw": 1505.510009765625
+      "current_usdkrw": 1507.1300048828125
     },
     {
       "name": "LS",
@@ -432,11 +595,11 @@
       "action": "Buy",
       "weight": "15%",
       "entry_price": 214.36000061035156,
-      "current_price": 215.61500549316406,
-      "return_pct": 0.5854659821044501,
-      "return_pct_krw": 1.353609763370173,
+      "current_price": 211.13999938964844,
+      "return_pct": -1.5021464879337332,
+      "return_pct_krw": -0.6431478011569624,
       "entry_usdkrw": 1494.0999755859375,
-      "current_usdkrw": 1505.510009765625
+      "current_usdkrw": 1507.1300048828125
     },
     {
       "name": "Google (Alphabet)",
@@ -446,11 +609,11 @@
       "action": "Buy",
       "weight": "5%",
       "entry_price": 390.0555114746094,
-      "current_price": 382.67999267578125,
-      "return_pct": -1.890889522607921,
-      "return_pct_krw": -1.1416569932072178,
+      "current_price": 380.3399963378906,
+      "return_pct": -2.4908031936247057,
+      "return_pct_krw": -1.6404265710004042,
       "entry_usdkrw": 1494.0999755859375,
-      "current_usdkrw": 1505.510009765625
+      "current_usdkrw": 1507.1300048828125
     },
     {
       "name": "Microsoft",
@@ -460,11 +623,11 @@
       "action": "Hold",
       "weight": "5%",
       "entry_price": 427.9599914550781,
-      "current_price": 442.39990234375,
-      "return_pct": 3.374126361573123,
-      "return_pct_krw": 4.163566381889248,
+      "current_price": 450.239990234375,
+      "return_pct": 5.20609384618972,
+      "return_pct_krw": 6.123595022433321,
       "entry_usdkrw": 1494.0999755859375,
-      "current_usdkrw": 1505.510009765625
+      "current_usdkrw": 1507.1300048828125
     },
     {
       "name": "Comfort Systems USA",
@@ -474,11 +637,11 @@
       "action": "Hold",
       "weight": "4%",
       "entry_price": 1855.3699951171875,
-      "current_price": 1805.469970703125,
-      "return_pct": -2.689491828874313,
-      "return_pct_krw": -1.9463580075650169,
+      "current_price": 1828.2099609375,
+      "return_pct": -1.4638608068021515,
+      "return_pct_krw": -0.6045282310253494,
       "entry_usdkrw": 1494.0999755859375,
-      "current_usdkrw": 1505.510009765625
+      "current_usdkrw": 1507.1300048828125
     },
     {
       "name": "Alcoa",
@@ -488,11 +651,11 @@
       "action": "Buy",
       "weight": "8%",
       "entry_price": 75.59500122070312,
-      "current_price": 77.16999816894531,
-      "return_pct": 2.0834670584155566,
-      "return_pct_krw": 2.8630506655036547,
+      "current_price": 77.63999938964844,
+      "return_pct": 2.7052029048519293,
+      "return_pct_krw": 3.600893838965554,
       "entry_usdkrw": 1494.0999755859375,
-      "current_usdkrw": 1505.510009765625
+      "current_usdkrw": 1507.1300048828125
     },
     {
       "name": "Recursion Pharmaceuticals",
@@ -502,11 +665,11 @@
       "action": "Buy",
       "weight": "3%",
       "entry_price": 3.2699999809265137,
-      "current_price": 3.565000057220459,
-      "return_pct": 9.021409113597631,
-      "return_pct_krw": 9.85397589268215,
+      "current_price": 3.5899999141693115,
+      "return_pct": 9.785930737287952,
+      "return_pct_krw": 10.743372620205157,
       "entry_usdkrw": 1494.0999755859375,
-      "current_usdkrw": 1505.510009765625
+      "current_usdkrw": 1507.1300048828125
     },
     {
       "name": "Northrop Grumman",
@@ -516,11 +679,11 @@
       "action": "Buy",
       "weight": "3%",
       "entry_price": 557.5250244140625,
-      "current_price": 561.4500122070312,
-      "return_pct": 0.7040020844075586,
-      "return_pct_krw": 1.47305109357028,
+      "current_price": 563.6799926757812,
+      "return_pct": 1.1039806272709258,
+      "return_pct_krw": 1.9857073196814428,
       "entry_usdkrw": 1494.0999755859375,
-      "current_usdkrw": 1505.510009765625
+      "current_usdkrw": 1507.1300048828125
     },
     {
       "name": "Wabtec",
@@ -530,11 +693,167 @@
       "action": "Buy",
       "weight": "2%",
       "entry_price": 261.4700012207031,
-      "current_price": 261.010009765625,
-      "return_pct": -0.17592513593551892,
-      "return_pct_krw": 0.586404108938461,
+      "current_price": 261.1600036621094,
+      "return_pct": -0.11855951242838196,
+      "return_pct_krw": 0.7525054209986769,
       "entry_usdkrw": 1494.0999755859375,
-      "current_usdkrw": 1505.510009765625
+      "current_usdkrw": 1507.1300048828125
+    },
+    {
+      "name": "LS",
+      "ticker": "006220.KS",
+      "type": "KR",
+      "date": "2026-05-29",
+      "action": "보유",
+      "weight": "8%",
+      "entry_price": 9950.0,
+      "current_price": 9950.0,
+      "return_pct": 0.0
+    },
+    {
+      "name": "대한전선",
+      "ticker": "001440.KS",
+      "type": "KR",
+      "date": "2026-05-29",
+      "action": "보유",
+      "weight": "8%",
+      "entry_price": 45450.0,
+      "current_price": 45450.0,
+      "return_pct": 0.0
+    },
+    {
+      "name": "삼성중공업",
+      "ticker": "010140.KS",
+      "type": "KR",
+      "date": "2026-05-29",
+      "action": "보유",
+      "weight": "15%",
+      "entry_price": 27950.0,
+      "current_price": 27950.0,
+      "return_pct": 0.0
+    },
+    {
+      "name": "LG이노텍",
+      "ticker": "011070.KS",
+      "type": "KR",
+      "date": "2026-05-29",
+      "action": "보유",
+      "weight": "14%",
+      "entry_price": 1458000.0,
+      "current_price": 1458000.0,
+      "return_pct": 0.0
+    },
+    {
+      "name": "NVIDIA",
+      "ticker": "NVDA",
+      "type": "US",
+      "date": "2026-05-29",
+      "action": "Buy",
+      "weight": "15%",
+      "entry_price": 215.60000610351562,
+      "current_price": 211.13999938964844,
+      "return_pct": -2.068648695550506,
+      "return_pct_krw": -1.9632702457868407,
+      "entry_usdkrw": 1505.510009765625,
+      "current_usdkrw": 1507.1300048828125
+    },
+    {
+      "name": "Google (Alphabet)",
+      "ticker": "GOOGL",
+      "type": "US",
+      "date": "2026-05-29",
+      "action": "Buy",
+      "weight": "5%",
+      "entry_price": 382.6499938964844,
+      "current_price": 380.3399963378906,
+      "return_pct": -0.6036842010818527,
+      "return_pct_krw": -0.4967293849622696,
+      "entry_usdkrw": 1505.510009765625,
+      "current_usdkrw": 1507.1300048828125
+    },
+    {
+      "name": "Microsoft",
+      "ticker": "MSFT",
+      "type": "US",
+      "date": "2026-05-29",
+      "action": "Hold",
+      "weight": "5%",
+      "entry_price": 442.3299865722656,
+      "current_price": 450.239990234375,
+      "return_pct": 1.7882585179011097,
+      "return_pct_krw": 1.8977871697974127,
+      "entry_usdkrw": 1505.510009765625,
+      "current_usdkrw": 1507.1300048828125
+    },
+    {
+      "name": "Comfort Systems USA",
+      "ticker": "FIX",
+      "type": "US",
+      "date": "2026-05-29",
+      "action": "Hold",
+      "weight": "4%",
+      "entry_price": 1805.469970703125,
+      "current_price": 1828.2099609375,
+      "return_pct": 1.259505314592361,
+      "return_pct_krw": 1.3684650047401525,
+      "entry_usdkrw": 1505.510009765625,
+      "current_usdkrw": 1507.1300048828125
+    },
+    {
+      "name": "Alcoa",
+      "ticker": "AA",
+      "type": "US",
+      "date": "2026-05-29",
+      "action": "Buy",
+      "weight": "8%",
+      "entry_price": 77.16999816894531,
+      "current_price": 77.63999938964844,
+      "return_pct": 0.6090465619477785,
+      "return_pct_krw": 0.7173063298125026,
+      "entry_usdkrw": 1505.510009765625,
+      "current_usdkrw": 1507.1300048828125
+    },
+    {
+      "name": "Recursion Pharmaceuticals",
+      "ticker": "RXRX",
+      "type": "US",
+      "date": "2026-05-29",
+      "action": "Buy",
+      "weight": "3%",
+      "entry_price": 3.565000057220459,
+      "current_price": 3.5899999141693115,
+      "return_pct": 0.7012582481792244,
+      "return_pct_krw": 0.8096172398820325,
+      "entry_usdkrw": 1505.510009765625,
+      "current_usdkrw": 1507.1300048828125
+    },
+    {
+      "name": "Northrop Grumman",
+      "ticker": "NOC",
+      "type": "US",
+      "date": "2026-05-29",
+      "action": "Buy",
+      "weight": "3%",
+      "entry_price": 561.4500122070312,
+      "current_price": 563.6799926757812,
+      "return_pct": 0.3971823706947767,
+      "return_pct_krw": 0.5052141633530192,
+      "entry_usdkrw": 1505.510009765625,
+      "current_usdkrw": 1507.1300048828125
+    },
+    {
+      "name": "Wabtec",
+      "ticker": "WAB",
+      "type": "US",
+      "date": "2026-05-29",
+      "action": "Buy",
+      "weight": "2%",
+      "entry_price": 260.948486328125,
+      "current_price": 261.1600036621094,
+      "return_pct": 0.08105712240783276,
+      "return_pct_krw": 0.18874875036751945,
+      "entry_usdkrw": 1505.510009765625,
+      "current_usdkrw": 1507.1300048828125
     }
   ]
 }
