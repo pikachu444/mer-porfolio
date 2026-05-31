@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "last_updated": "2026-05-31",
   "last_report_date": "2026-05-31",
-  "rebalance_count": 3,
+  "rebalance_count": 4,
   "holdings": [
     {
       "name": "LS",
@@ -14,7 +14,7 @@
       "entry_date": "2026-05-12",
       "last_confirmed_date": "2026-05-31",
       "status": "active",
-      "basis_type": "기존보유"
+      "basis_type": "직접언급"
     },
     {
       "name": "대한전선",
@@ -32,9 +32,9 @@
       "name": "삼성중공업",
       "code": "010140",
       "market": "KR",
-      "action": "보유",
+      "action": "매수",
       "weight": "15%",
-      "thesis": "VLCC 수요 증가로 조선업 호황 지속 근거 유효함.",
+      "thesis": "VLCC 수요 급증으로 조선업 호황 지속 근거 강화.",
       "entry_date": "2026-05-12",
       "last_confirmed_date": "2026-05-31",
       "status": "active",
@@ -73,7 +73,7 @@
       "market": "US",
       "action": "Hold",
       "weight": "5%",
-      "thesis": "AI 서비스 수익성 우려가 재확인됨.",
+      "thesis": "AI 서비스 수익성 우려 재확인.",
       "entry_date": "2026-05-12",
       "last_confirmed_date": "2026-05-31",
       "status": "active",
@@ -85,7 +85,7 @@
       "market": "US",
       "action": "Hold",
       "weight": "5%",
-      "thesis": "AI 서비스 수익성 우려가 재확인됨.",
+      "thesis": "AI 서비스 수익성 우려 재확인.",
       "entry_date": "2026-05-12",
       "last_confirmed_date": "2026-05-31",
       "status": "active",
@@ -123,20 +123,20 @@
       "code": "AA",
       "market": "US",
       "action": "Buy",
-      "weight": "8%",
-      "thesis": "보크사이트/알루미늄 공급망 불안정 심화 수혜 기대 유효함.",
+      "weight": "12%",
+      "thesis": "보크사이트/알루미늄 공급망 불안정 심화 수혜 강화.",
       "entry_date": "2026-05-28",
       "last_confirmed_date": "2026-05-31",
       "status": "active",
-      "basis_type": "기존보유"
+      "basis_type": "직접매수언급"
     },
     {
       "name": "Recursion Pharmaceuticals",
       "code": "RXRX",
       "market": "US",
-      "action": "Hold",
-      "weight": "3%",
-      "thesis": "AI 서비스 수익성 우려가 간접적으로 영향을 미칠 수 있음.",
+      "action": "Buy",
+      "weight": "5%",
+      "thesis": "디지털 생물학 테마 강화, 엔비디아 협력 언급.",
       "entry_date": "2026-05-28",
       "last_confirmed_date": "2026-05-31",
       "status": "active",
@@ -147,8 +147,8 @@
       "code": "NOC",
       "market": "US",
       "action": "Buy",
-      "weight": "3%",
-      "thesis": "DARPA 달 철도 계획 참여로 우주 인프라 수혜 구체화됨.",
+      "weight": "7%",
+      "thesis": "DARPA 달 철도 계획 직접 언급, 우주 인프라 수혜 구체화.",
       "entry_date": "2026-05-28",
       "last_confirmed_date": "2026-05-31",
       "status": "active",
@@ -171,12 +171,74 @@
       "code": "WAB",
       "market": "US",
       "action": "Buy",
-      "weight": "2%",
-      "basis_type": "기존보유",
-      "thesis": "기니 시만두 광산 기관차 계약 수주로 직접 매출 증가 기대됨.",
+      "weight": "5%",
+      "basis_type": "직접언급",
+      "thesis": "기니 시만두 광산 기관차 계약 수주로 직접 매출 증가 기대.",
       "entry_date": "2026-05-28",
       "last_confirmed_date": "2026-05-31",
       "status": "active"
     }
-  ]
+  ],
+  "last_changes": {
+    "date": "2026-05-31",
+    "buys": [],
+    "changes": [
+      {
+        "name": "삼성중공업",
+        "code": "010140",
+        "market": "KR",
+        "action": "매수",
+        "weight": "15%",
+        "basis_type": "기존보유",
+        "thesis": "VLCC 수요 급증으로 조선업 호황 지속 근거 강화.",
+        "change_type": "판단 강화",
+        "reason": ""
+      },
+      {
+        "name": "Alcoa",
+        "code": "AA",
+        "market": "US",
+        "action": "Buy",
+        "weight": "12%",
+        "basis_type": "직접매수언급",
+        "thesis": "보크사이트/알루미늄 공급망 불안정 심화 수혜 강화.",
+        "change_type": "비중 증가",
+        "reason": ""
+      },
+      {
+        "name": "Recursion Pharmaceuticals",
+        "code": "RXRX",
+        "market": "US",
+        "action": "Buy",
+        "weight": "5%",
+        "basis_type": "기존보유",
+        "thesis": "디지털 생물학 테마 강화, 엔비디아 협력 언급.",
+        "change_type": "판단 강화",
+        "reason": ""
+      },
+      {
+        "name": "Northrop Grumman",
+        "code": "NOC",
+        "market": "US",
+        "action": "Buy",
+        "weight": "7%",
+        "basis_type": "기존보유",
+        "thesis": "DARPA 달 철도 계획 직접 언급, 우주 인프라 수혜 구체화.",
+        "change_type": "비중 증가",
+        "reason": ""
+      },
+      {
+        "name": "Wabtec",
+        "code": "WAB",
+        "market": "US",
+        "action": "Buy",
+        "weight": "5%",
+        "basis_type": "직접언급",
+        "thesis": "기니 시만두 광산 기관차 계약 수주로 직접 매출 증가 기대.",
+        "change_type": "비중 증가",
+        "reason": ""
+      }
+    ],
+    "sells": []
+  }
 }
