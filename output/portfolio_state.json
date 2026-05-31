@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
-  "last_updated": "2026-05-30",
-  "last_report_date": "2026-05-30",
+  "last_updated": "2026-05-31",
+  "last_report_date": "2026-05-31",
   "rebalance_count": 3,
   "holdings": [
     {
@@ -12,7 +12,7 @@
       "weight": "8%",
       "thesis": "전력 인프라 투자 확대 수혜 기대 유효함.",
       "entry_date": "2026-05-12",
-      "last_confirmed_date": "2026-05-30",
+      "last_confirmed_date": "2026-05-31",
       "status": "active",
       "basis_type": "기존보유"
     },
@@ -24,7 +24,7 @@
       "weight": "8%",
       "thesis": "전력 인프라 투자 확대 수혜 기대 유효함.",
       "entry_date": "2026-05-12",
-      "last_confirmed_date": "2026-05-30",
+      "last_confirmed_date": "2026-05-31",
       "status": "active",
       "basis_type": "기존보유"
     },
@@ -36,7 +36,7 @@
       "weight": "15%",
       "thesis": "VLCC 수요 증가로 조선업 호황 지속 근거 유효함.",
       "entry_date": "2026-05-12",
-      "last_confirmed_date": "2026-05-30",
+      "last_confirmed_date": "2026-05-31",
       "status": "active",
       "basis_type": "기존보유"
     },
@@ -73,9 +73,9 @@
       "market": "US",
       "action": "Hold",
       "weight": "5%",
-      "thesis": "AlphaFold3 등 AI 생물학 기여 지속 기대되나, AI 서비스 수익성 우려.",
+      "thesis": "AI 서비스 수익성 우려가 재확인됨.",
       "entry_date": "2026-05-12",
-      "last_confirmed_date": "2026-05-30",
+      "last_confirmed_date": "2026-05-31",
       "status": "active",
       "basis_type": "기존보유"
     },
@@ -85,9 +85,9 @@
       "market": "US",
       "action": "Hold",
       "weight": "5%",
-      "thesis": "DNA 데이터 저장, AI 로봇 투자 등 AI 생태계 확장 기대되나, AI 서비스 수익성 우려.",
+      "thesis": "AI 서비스 수익성 우려가 재확인됨.",
       "entry_date": "2026-05-12",
-      "last_confirmed_date": "2026-05-30",
+      "last_confirmed_date": "2026-05-31",
       "status": "active",
       "basis_type": "기존보유"
     },
@@ -124,9 +124,9 @@
       "market": "US",
       "action": "Buy",
       "weight": "8%",
-      "thesis": "보크사이트/알루미늄 공급망 불안정 심화로 직접 수혜 기대됨.",
+      "thesis": "보크사이트/알루미늄 공급망 불안정 심화 수혜 기대 유효함.",
       "entry_date": "2026-05-28",
-      "last_confirmed_date": "2026-05-30",
+      "last_confirmed_date": "2026-05-31",
       "status": "active",
       "basis_type": "기존보유"
     },
@@ -134,11 +134,11 @@
       "name": "Recursion Pharmaceuticals",
       "code": "RXRX",
       "market": "US",
-      "action": "Buy",
+      "action": "Hold",
       "weight": "3%",
-      "thesis": "엔비디아와의 협력 강화 및 디지털 생물학 핵심 수혜 기대됨.",
+      "thesis": "AI 서비스 수익성 우려가 간접적으로 영향을 미칠 수 있음.",
       "entry_date": "2026-05-28",
-      "last_confirmed_date": "2026-05-30",
+      "last_confirmed_date": "2026-05-31",
       "status": "active",
       "basis_type": "기존보유"
     },
@@ -150,7 +150,7 @@
       "weight": "3%",
       "thesis": "DARPA 달 철도 계획 참여로 우주 인프라 수혜 구체화됨.",
       "entry_date": "2026-05-28",
-      "last_confirmed_date": "2026-05-30",
+      "last_confirmed_date": "2026-05-31",
       "status": "active",
       "basis_type": "기존보유"
     },
@@ -163,7 +163,7 @@
       "basis_type": "기존보유",
       "thesis": "Figure AI 투자 및 휴머노이드 로봇 부품 공급 기대 유효함.",
       "entry_date": "2026-05-28",
-      "last_confirmed_date": "2026-05-30",
+      "last_confirmed_date": "2026-05-31",
       "status": "active"
     },
     {
@@ -175,7 +175,7 @@
       "basis_type": "기존보유",
       "thesis": "기니 시만두 광산 기관차 계약 수주로 직접 매출 증가 기대됨.",
       "entry_date": "2026-05-28",
-      "last_confirmed_date": "2026-05-30",
+      "last_confirmed_date": "2026-05-31",
       "status": "active"
     }
   ]
