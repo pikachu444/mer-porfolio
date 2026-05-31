@@ -304,6 +304,12 @@ def generate_html(cache: dict, report_text: str, today_str: str) -> Path:
     summaries = cache.get("report_summaries", []) if cache else []
     report_dates = [s["date"][5:] for s in summaries]
     report_avgs = [round(s["avg_return_krw"], 2) for s in summaries]
+    active_positions = cache.get("active_positions", []) if cache else []
+    changes = cache.get("changes", {}) if cache else {}
+    buy_changes = (changes.get("buys", []) if isinstance(changes, dict) else [])
+    update_changes = (changes.get("changes", []) if isinstance(changes, dict) else [])
+    sell_changes = (changes.get("sells", []) if isinstance(changes, dict) else [])
+    closed_positions = cache.get("closed_positions", []) if cache else []
     latest_weights = _parse_weights_from_report(report_text)
     latest_names = [s["name"] for s in latest_weights]
     latest_weight_values = [round(s["weight"], 2) for s in latest_weights]
@@ -344,6 +350,16 @@ def generate_html(cache: dict, report_text: str, today_str: str) -> Path:
   #report-content strong{color:var(--text);}
   #report-content code{background:#0f172a;padding:2px 6px;border-radius:4px;font-size:.82rem;color:var(--green);}
   #report-content ul,#report-content ol{padding-left:20px;font-size:.88rem;color:#cbd5e1;line-height:1.7;}
+  .section-grid{display:grid;grid-template-columns:1fr;gap:20px;margin-bottom:24px;}
+  .data-table{width:100%;border-collapse:collapse;font-size:.82rem;}
+  .data-table th{background:#0f172a;color:var(--muted);padding:8px 10px;text-align:left;border:1px solid var(--border);white-space:nowrap;}
+  .data-table td{padding:7px 10px;border:1px solid var(--border);color:#cbd5e1;vertical-align:top;}
+  .data-table tr:hover td{background:#0f172a44;}
+  .pill{display:inline-block;padding:2px 7px;border-radius:999px;font-size:.72rem;font-weight:700;background:#0f172a;color:#cbd5e1;border:1px solid var(--border);}
+  .pill.buy{color:#86efac;border-color:#166534;}
+  .pill.sell{color:#fca5a5;border-color:#7f1d1d;}
+  .pill.change{color:#93c5fd;border-color:#1d4ed8;}
+  .empty-inline{color:var(--muted);font-size:.85rem;padding:12px 0;}
 </style>
 </head>
 <body>
@@ -368,6 +384,20 @@ def generate_html(cache: dict, report_text: str, today_str: str) -> Path:
       </div>
     </div>
   </div>
+  <div class="section-grid">
+    <div class="card">
+      <h2>현재 포트폴리오</h2>
+      <div id="currentPortfolio"></div>
+    </div>
+    <div class="card">
+      <h2>추천 매수/변경 리스트</h2>
+      <div id="changeList"></div>
+    </div>
+    <div class="card">
+      <h2>매도/제외 리스트</h2>
+      <div id="sellList"></div>
+    </div>
+  </div>
   <div id="report-section">
     <h2>📄 최신 리포트 전문</h2>
     <div id="report-content"></div>
@@ -379,11 +409,47 @@ def generate_html(cache: dict, report_text: str, today_str: str) -> Path:
         "const reportAvgs=" + json.dumps(report_avgs) + ";\n"
         "const latestNames=" + json.dumps(latest_names, ensure_ascii=False) + ";\n"
         "const latestWeights=" + json.dumps(latest_weight_values) + ";\n"
+        "const activePositions=" + json.dumps(active_positions, ensure_ascii=False) + ";\n"
+        "const buyChanges=" + json.dumps(buy_changes, ensure_ascii=False) + ";\n"
+        "const updateChanges=" + json.dumps(update_changes, ensure_ascii=False) + ";\n"
+        "const sellChanges=" + json.dumps(sell_changes, ensure_ascii=False) + ";\n"
+        "const closedPositions=" + json.dumps(closed_positions, ensure_ascii=False) + ";\n"
         "const reportText=`" + report_escaped + "`;\n"
         "const updatedAt=" + json.dumps(today_str) + ";\n"
     ) + """
 document.getElementById('updatedAt').textContent=updatedAt;
 function barColor(v){return v>=0?'#22c55e':'#ef4444';}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function retText(row){
+  const v = row.return_pct_krw ?? row.return_pct;
+  if(v===undefined || v===null || Number.isNaN(Number(v))) return '-';
+  const n=Number(v), sign=n>=0?'▲':'▼', cls=n>=0?'buy':'sell';
+  return `<span class="pill ${cls}">${sign}${Math.abs(n).toFixed(1)}%</span>`;
+}
+function renderCurrent(){
+  const el=document.getElementById('currentPortfolio');
+  if(!activePositions.length){el.innerHTML='<div class="empty-inline">active 포지션 없음</div>';return;}
+  el.innerHTML='<table class="data-table"><thead><tr><th>종목</th><th>시장</th><th>판단</th><th>목표비중</th><th>편입일</th><th>수익률</th><th>근거</th></tr></thead><tbody>'+
+    activePositions.map(r=>`<tr><td>${esc(r.name)}<br><span style="color:#94a3b8">${esc(r.code||r.ticker)}</span></td><td>${esc(r.market||r.type)}</td><td>${esc(r.action)}</td><td>${esc(r.weight)}</td><td>${esc(r.entry_date)}</td><td>${retText(r)}</td><td>${esc(r.basis_type||'기존보유')}</td></tr>`).join('')+
+    '</tbody></table>';
+}
+function renderChanges(){
+  const rows=[...buyChanges, ...updateChanges];
+  const el=document.getElementById('changeList');
+  if(!rows.length){el.innerHTML='<div class="empty-inline">오늘 신규 매수/변경 없음</div>';return;}
+  el.innerHTML='<table class="data-table"><thead><tr><th>구분</th><th>종목</th><th>시장</th><th>판단</th><th>목표비중</th><th>근거</th></tr></thead><tbody>'+
+    rows.map(r=>`<tr><td><span class="pill ${r.change_type==='신규 편입'?'buy':'change'}">${esc(r.change_type)}</span></td><td>${esc(r.name)}<br><span style="color:#94a3b8">${esc(r.code)}</span></td><td>${esc(r.market)}</td><td>${esc(r.action)}</td><td>${esc(r.weight)}</td><td>${esc(r.basis_type||'')}</td></tr>`).join('')+
+    '</tbody></table>';
+}
+function renderSells(){
+  const rows=sellChanges.length?sellChanges:closedPositions;
+  const el=document.getElementById('sellList');
+  if(!rows.length){el.innerHTML='<div class="empty-inline">오늘 매도/제외 없음</div>';return;}
+  el.innerHTML='<table class="data-table"><thead><tr><th>종목</th><th>시장</th><th>종료일</th><th>사유</th></tr></thead><tbody>'+
+    rows.map(r=>`<tr><td>${esc(r.name)}<br><span style="color:#94a3b8">${esc(r.code||r.ticker)}</span></td><td>${esc(r.market||r.type)}</td><td>${esc(r.closed_date||r.removed_date||updatedAt)}</td><td><span class="pill sell">${esc(r.reason||r.close_reason||r.removed_reason||'매도/제외')}</span></td></tr>`).join('')+
+    '</tbody></table>';
+}
+renderCurrent();renderChanges();renderSells();
 Chart.defaults.color='#94a3b8';
 Chart.defaults.borderColor='#334155';
 if(latestNames.length>0){

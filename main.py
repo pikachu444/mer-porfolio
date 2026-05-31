@@ -41,6 +41,7 @@ from portfolio_state import (
     update_state_from_report,
     create_initial_state,
     get_active_holdings,
+    sync_report_with_state,
 )
 
 
@@ -203,31 +204,32 @@ def main():
 
     # -- 4단계: portfolio_state 업데이트 ---------------------------------------
     print("\n[4/7] 포트폴리오 상태 업데이트 중...")
-    if RUN_MODE != "test":
-        try:
-            if is_first_run:
-                state = create_initial_state(report, today_date_str, parsed_portfolio=parsed_portfolio)
-                print("  -> 초기 상태 생성: " + str(len(state["holdings"])) + "개 종목")
-            else:
-                state = update_state_from_report(
-                    state,
-                    report,
-                    today_date_str,
-                    parsed_portfolio=parsed_portfolio,
-                    replace_active=is_rebalance,
-                )
-                if is_rebalance:
-                    state["rebalance_count"] = state.get("rebalance_count", 0) + 1
+    try:
+        if is_first_run:
+            state = create_initial_state(report, today_date_str, parsed_portfolio=parsed_portfolio)
+            print("  -> 초기 상태 생성: " + str(len(state["holdings"])) + "개 종목")
+        else:
+            state = update_state_from_report(
+                state,
+                report,
+                today_date_str,
+                parsed_portfolio=parsed_portfolio,
+                replace_active=is_rebalance,
+            )
+            if is_rebalance:
+                state["rebalance_count"] = state.get("rebalance_count", 0) + 1
+        report = sync_report_with_state(report, state)
+        if RUN_MODE != "test":
             save_state(state, STATE_PATH)
-        except Exception as e:
-            print("  !! portfolio_state 업데이트 실패 (건너뜀): " + str(e))
-    else:
-        print("  -> TEST 모드: portfolio_state 저장 스킵")
+        else:
+            print("  -> TEST 모드: portfolio_state 저장 스킵")
+    except Exception as e:
+        print("  !! portfolio_state 업데이트 실패 (건너뜀): " + str(e))
 
     # -- 5단계: 수익률 추적 ---------------------------------------------------
     print("\n[5/7] 누적 수익률 계산 중...")
     try:
-        performance_section = update_and_get_performance(report, today)
+        performance_section = update_and_get_performance(report, today, state=state)
         report = report + performance_section
     except Exception as e:
         print("  !! 수익률 추적 실패 (건너뜀): " + str(e))
