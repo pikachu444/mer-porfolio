@@ -63,7 +63,7 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          DASHBOARD_URL: https://pikachu444.github.io/mer-porfolio/output/dashboard.html
+          DASHBOARD_URL: https://pikachu444.github.io/mer-portfolio/output/dashboard.html
           OUTPUT_DIR: output
           RUN_MODE: ${{ github.event_name == 'schedule' && 'scheduled' || github.event.inputs.run_mode || 'adhoc' }}
           FETCH_DAYS: ${{ github.event.inputs.fetch_days || '' }}
