@@ -336,7 +336,7 @@ def analyze_posts_structured(
 
 
 def _validate_markdown_report(report: str) -> str:
-    required_headers = ["포트폴리오", "인사이트"]
+    required_headers = ["포트폴리오"]
     missing_headers = [header for header in required_headers if header not in report]
     if missing_headers:
         raise ValueError("필수 보고서 섹션 누락: " + ", ".join(missing_headers))

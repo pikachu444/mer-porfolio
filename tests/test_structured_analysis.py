@@ -47,6 +47,11 @@ POSTS = [
 
 
 class StructuredAnalysisTest(unittest.TestCase):
+    def test_report_validation_does_not_require_exact_insight_heading(self):
+        report = "# 메르AI 보고서\n\n## 현재 모델 포트폴리오\n\n내용"
+
+        self.assertEqual(analyze._validate_markdown_report(report), report)
+
     def test_generates_decision_before_markdown_report(self):
         responses = [
             json.dumps(DECISION_RESPONSE, ensure_ascii=False),
