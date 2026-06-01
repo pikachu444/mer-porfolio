@@ -1,290 +1,226 @@
-"""
-main.py
-메르AI 포트폴리오 자동 분석 - 메인 실행 스크립트
+"""메르AI 모델 포트폴리오 운영 진입점."""
 
-실행 모드:
-  scheduled  : 자동 스케줄 (새 글 없으면 조기 종료, FETCH_DAYS=2)
-  adhoc      : 강제 실행  (새 글 없어도 분석, FETCH_DAYS=14, 리밸런싱)
-  test       : 로컬 테스트 (API 호출 O, 텔레그램/portfolio_state 저장 X, FETCH_DAYS=3)
+from __future__ import annotations
 
-환경변수:
-  RUN_MODE      : scheduled | adhoc | test  (기본: scheduled)
-  FETCH_DAYS    : 수집 기간(일)  -- 비워두면 모드 기본값 사용
-  GEMINI_MODEL  : 모델 오버라이드 (기본: gemini-2.5-pro)
-  OUTPUT_DIR    : 출력 디렉터리  (기본: output)
-  GEMINI_API_KEY, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, DASHBOARD_URL
-"""
-
+import json
 import os
+import shutil
 import sys
 from datetime import datetime
 from pathlib import Path
 
-# .env 파일 로드 (로컬 실행용 - GitHub Actions에서는 환경변수 직접 주입)
 try:
     from dotenv import load_dotenv
     load_dotenv()
 except ImportError:
-    pass  # python-dotenv 미설치 환경에서도 동작
+    pass
 
-from fetch_mer import fetch_recent_posts
-from analyze import analyze_posts
-from track_returns import update_and_get_performance
+from runtime_modes import get_run_policy, should_rebalance
+
+
+RUN_MODE = os.environ.get("RUN_MODE", "scheduled").lower()
+RUN_POLICY = get_run_policy(RUN_MODE)
+OPERATING_OUTPUT_DIR = Path(os.environ.get("OUTPUT_DIR", "output"))
+OUTPUT_DIR = OPERATING_OUTPUT_DIR
+if RUN_MODE == "verify":
+    OUTPUT_DIR = OPERATING_OUTPUT_DIR / "verify"
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    for filename in (
+        "portfolio_state.json",
+        "model_portfolio_ledger.json",
+        "performance_cache.json",
+        "posts_db.json",
+        "latest.md",
+    ):
+        source = OPERATING_OUTPUT_DIR / filename
+        target = OUTPUT_DIR / filename
+        if source.exists():
+            shutil.copy2(source, target)
+    os.environ["OUTPUT_DIR"] = str(OUTPUT_DIR)
+
+if RUN_MODE == "test" and __name__ == "__main__":
+    print("test 모드는 python -m unittest discover -s tests -v 로 실행합니다.")
+    sys.exit(0)
+
+from analyze import analyze_posts_structured
+from fetch_mer import fetch_recent_posts, get_last_fetch_new_post_count
 from generate_dashboard import generate_all
-from telegram_notify import send_report, send_photo, send_status
-from portfolio_validation import validate_recommendations
-from gemini_utils import is_daily_quota_error
-from portfolio_state import (
-    load_state,
-    save_state,
-    format_holdings_for_prompt,
-    update_state_from_report,
-    create_initial_state,
-    get_active_holdings,
-    sync_report_with_state,
+from portfolio_schema import (
+    apply_analysis_decision,
+    load_portfolio_state_file,
+    parse_portfolio_state,
+    save_analysis_decision_file,
+    save_portfolio_state_file,
+)
+from telegram_notify import send_photo, send_status, send_structured_summary
+from track_returns import (
+    MODEL_LEDGER_FILE,
+    apply_structured_transactions,
+    get_structured_prices,
+    load_model_ledger,
+    refresh_structured_performance,
+    save_model_ledger,
+    transaction_decisions_for_run,
 )
 
 
-# --- 설정 --------------------------------------------------------------------
-
-OUTPUT_DIR = Path(os.environ.get("OUTPUT_DIR", "output"))
 STATE_PATH = OUTPUT_DIR / "portfolio_state.json"
-
-RUN_MODE = os.environ.get("RUN_MODE", "scheduled").lower()
-
-# FETCH_DAYS: 환경변수 > 모드 기본값
-_FETCH_DAYS_DEFAULT = {"scheduled": 2, "adhoc": 14, "test": 3}
+DECISION_PATH = OUTPUT_DIR / "decision_latest.json"
 _fetch_days_env = os.environ.get("FETCH_DAYS", "").strip()
-FETCH_DAYS = int(_fetch_days_env) if _fetch_days_env else _FETCH_DAYS_DEFAULT.get(RUN_MODE, 2)
+FETCH_DAYS = int(_fetch_days_env) if _fetch_days_env else RUN_POLICY.fetch_days
 
 
-# --- 파일 저장 헬퍼 -----------------------------------------------------------
+def _empty_state():
+    return parse_portfolio_state({
+        "schema_version": "2.0",
+        "portfolio": [],
+        "watchlist": [],
+        "closed_positions": [],
+        "decision_history": [],
+        "last_rebalanced_date": None,
+    })
 
-def save_report(report, today):
+
+def _load_state():
+    if not STATE_PATH.exists():
+        return _empty_state()
+    return load_portfolio_state_file(STATE_PATH)
+
+
+def _save_report(report: str, today: datetime) -> Path:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    filename = OUTPUT_DIR / ("report_" + today.strftime("%Y%m%d") + ".md")
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write(report)
-    latest_path = OUTPUT_DIR / "latest.md"
-    with open(latest_path, "w", encoding="utf-8") as f:
-        f.write(report)
-    return filename
+    path = OUTPUT_DIR / f"report_{today:%Y%m%d}.md"
+    path.write_text(report, encoding="utf-8")
+    (OUTPUT_DIR / "latest.md").write_text(report, encoding="utf-8")
+    return path
 
 
-def save_error_log(error, today):
+def _load_latest_report() -> str:
+    path = OUTPUT_DIR / "latest.md"
+    return path.read_text(encoding="utf-8") if path.exists() else ""
+
+
+def _save_error_log(message: str, today: datetime) -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    log_path = OUTPUT_DIR / ("error_" + today.strftime("%Y%m%d_%H%M%S") + ".log")
-    with open(log_path, "w", encoding="utf-8") as f:
-        f.write("오류 발생 시각: " + today.isoformat() + "\n\n" + error)
-    print("  오류 로그: " + str(log_path))
+    path = OUTPUT_DIR / f"error_{today:%Y%m%d_%H%M%S}.log"
+    path.write_text(message, encoding="utf-8")
+    print(f"  오류 로그: {path}")
 
 
-def load_latest_report() -> str:
-    latest_path = OUTPUT_DIR / "latest.md"
-    if not latest_path.exists():
-        return ""
-    with open(latest_path, encoding="utf-8") as f:
-        return f.read()
+def _notify_status(title: str, body: str) -> None:
+    if RUN_POLICY.send_telegram:
+        send_status(title, body)
 
 
-# --- 메인 --------------------------------------------------------------------
+def _prices_for_ledger(ledger: dict) -> dict[str, float]:
+    return get_structured_prices(ledger.get("positions", []))
 
-def notify_status(title: str, body: str = "") -> bool:
+
+def _run_no_change_update(state, today: datetime) -> int:
+    print("  신규 글 없음: 판단과 목표 비중을 유지하고 성과만 갱신합니다.")
+    ledger = load_model_ledger()
+    if ledger.get("positions"):
+        prices = _prices_for_ledger(ledger)
+        cache = refresh_structured_performance(ledger, prices, today.strftime("%Y-%m-%d"))
+        save_model_ledger(ledger)
+    else:
+        cache_path = OUTPUT_DIR / "performance_cache.json"
+        cache = json.loads(cache_path.read_text(encoding="utf-8")) if cache_path.exists() else {}
+    report = _load_latest_report()
+    _, png_path = generate_all(report, today, state=state.to_dict())
+    if RUN_POLICY.send_telegram:
+        if png_path and png_path.exists():
+            send_photo(str(png_path), f"모델 포트폴리오 성과 | {today:%Y년 %m월 %d일}")
+        if not send_structured_summary(
+            state.to_dict(),
+            today.strftime("%Y년 %m월 %d일"),
+            cache,
+            no_changes=True,
+        ):
+            return 1
+    return 0
+
+
+def _collect_posts(is_rebalance: bool) -> list[dict]:
+    posts = fetch_recent_posts(days=FETCH_DAYS)
+    if posts or not is_rebalance:
+        return posts
+    print("  리밸런싱 입력 글이 없어 최근 30일 범위로 한 번 확장합니다.")
+    return fetch_recent_posts(days=30)
+
+
+def main() -> int:
     if RUN_MODE == "test":
-        return True
-    try:
-        ok = send_status(title, body)
-        print("  Telegram status notification: " + ("success" if ok else "failed"))
-        return ok
-    except Exception as e:
-        print("  !! Telegram status notification failed: " + str(e))
-        return False
+        print("test 모드는 python -m unittest discover -s tests -v 로 실행합니다.")
+        return 0
 
-
-def main():
     today = datetime.now()
-    today_str = today.strftime("%Y년 %m월 %d일")
-    today_date_str = today.strftime("%Y-%m-%d")
-
+    today_date = today.strftime("%Y-%m-%d")
     print("=" * 60)
-    print("  메르AI 포트폴리오 분석 시작")
-    print("  실행 일시: " + today.strftime("%Y-%m-%d %H:%M:%S"))
-    print("  실행 모드: " + RUN_MODE.upper())
-    print("  수집 기간: 최근 " + str(FETCH_DAYS) + "일")
-    if RUN_MODE == "test":
-        print("  !! TEST 모드 -- 텔레그램/portfolio_state 저장 스킵")
+    print("  메르AI 모델 포트폴리오 실행")
+    print(f"  모드: {RUN_MODE} | 출력: {OUTPUT_DIR}")
     print("=" * 60)
 
-    # -- 1단계: portfolio_state 로드 -------------------------------------------
-    print("\n[1/7] 포트폴리오 상태 로드 중...")
-    state = load_state(STATE_PATH)
-    is_first_run = state is None
-    is_rebalance = (RUN_MODE in ("adhoc", "test")) or is_first_run
-
-    if is_first_run:
-        print("  -> 최초 실행: portfolio_state.json 없음")
-    else:
-        active = get_active_holdings(state)
-        print("  -> 기존 포트폴리오 로드: " + str(len(active)) + "개 종목")
-        print("  -> 모드: " + ("리밸런싱" if is_rebalance else "모니터링"))
-
-    current_holdings_text = format_holdings_for_prompt(state)
-
-    # -- 2단계: 블로그 글 수집 -------------------------------------------------
-    print("\n[2/7] 메르 블로그 글 수집 중... (최근 " + str(FETCH_DAYS) + "일)")
     try:
-        posts = fetch_recent_posts(days=FETCH_DAYS)
-    except Exception as e:
-        msg = "블로그 수집 실패: " + str(e)
-        print("X " + msg)
-        save_error_log(msg, today)
-        notify_status("MerAI run failed", msg)
-        return 1
+        state = _load_state()
+        is_rebalance = should_rebalance(
+            RUN_MODE,
+            state.last_rebalanced_date,
+            today.date(),
+        )
+        posts = _collect_posts(is_rebalance)
+        new_post_count = get_last_fetch_new_post_count()
+        if not posts and is_rebalance:
+            raise RuntimeError("리밸런싱에 사용할 블로그 글이 없습니다.")
+        if RUN_MODE == "scheduled" and new_post_count == 0 and not is_rebalance:
+            return _run_no_change_update(state, today)
 
-    if not posts:
-        if RUN_MODE == "scheduled":
-            print("!! 최근 " + str(FETCH_DAYS) + "일간 새 글 없음 -- scheduled 모드: 정상 종료")
-            notify_status("MerAI run finished", "No new posts in the scheduled collection window.")
-            return 0
-        else:
-            print("!! 최근 " + str(FETCH_DAYS) + "일간 새 글 없음 -- " + RUN_MODE + " 모드: 30일로 재수집")
-            try:
-                posts = fetch_recent_posts(days=30)
-                if not posts:
-                    print("X 30일간 글도 없음 -- 종료")
-                    notify_status("MerAI run failed", "No posts found even after expanding the collection window to 30 days.")
-                    return 1
-                print("  -> 30일 범위로 재수집: " + str(len(posts)) + "편")
-            except Exception as e:
-                msg = "재수집 실패: " + str(e)
-                print("X " + msg)
-                save_error_log(msg, today)
-                notify_status("MerAI run failed", msg)
-                return 1
-    else:
-        print("  -> " + str(len(posts)) + "편 수집 완료")
-        for p in posts[:3]:
-            print("     · [" + p["date"] + "] " + p["title"][:50])
-        if len(posts) > 3:
-            print("     · ... 외 " + str(len(posts) - 3) + "편")
-
-    # -- 3단계: AI 분석 --------------------------------------------------------
-    print("\n[3/7] 메르AI 분석 중... (수 분 소요)")
-    try:
-        report = analyze_posts(
+        result = analyze_posts_structured(
             posts,
-            today_str,
-            run_mode=RUN_MODE,
-            current_holdings_text=current_holdings_text,
+            today_date,
+            state.to_dict(),
             is_rebalance=is_rebalance,
         )
-    except Exception as e:
-        msg = "AI 분석 실패: " + str(e)
-        print("X " + msg)
-        if is_daily_quota_error(msg) and load_latest_report():
-            notify_status(
-                "MerAI run skipped",
-                "Gemini daily quota exceeded. Previous report was retained; no new portfolio was generated.",
-            )
-            print("  -> Gemini 일일 quota 초과: 기존 latest.md 유지 후 정상 종료")
-            return 0
-        save_error_log(msg, today)
-        notify_status("MerAI run failed", msg[:1500])
-        return 1
+        updated_state = apply_analysis_decision(state, result.decision)
+        ledger = load_model_ledger()
+        transaction_decisions = transaction_decisions_for_run(
+            ledger,
+            updated_state.portfolio,
+            result.decision.portfolio_decisions,
+        )
+        pricing_items = transaction_decisions + ledger.get("positions", [])
+        prices = get_structured_prices(pricing_items)
+        ledger = apply_structured_transactions(
+            ledger,
+            transaction_decisions,
+            prices,
+            today_date,
+        )
+        cache = refresh_structured_performance(ledger, prices, today_date)
 
-    # -- 3.5단계: 추천 검증 -----------------------------------------------------
-    print("\n[3.5/7] 추천 종목 근거 검증 중...")
-    try:
-        validation = validate_recommendations(report, posts, state)
-        report = validation.report_text
-        parsed_portfolio = validation.parsed_portfolio
-    except Exception as e:
-        print("  !! 추천 검증 실패 (원본 리포트 유지): " + str(e))
-        parsed_portfolio = None
+        _save_report(result.report, today)
+        save_analysis_decision_file(result.decision, DECISION_PATH)
+        save_portfolio_state_file(updated_state, STATE_PATH)
+        save_model_ledger(ledger, MODEL_LEDGER_FILE)
+        _, png_path = generate_all(result.report, today, state=updated_state.to_dict())
 
-    # -- 4단계: portfolio_state 업데이트 ---------------------------------------
-    print("\n[4/7] 포트폴리오 상태 업데이트 중...")
-    try:
-        if is_first_run:
-            state = create_initial_state(report, today_date_str, parsed_portfolio=parsed_portfolio)
-            print("  -> 초기 상태 생성: " + str(len(state["holdings"])) + "개 종목")
-        else:
-            state = update_state_from_report(
-                state,
-                report,
-                today_date_str,
-                parsed_portfolio=parsed_portfolio,
-                replace_active=is_rebalance,
-            )
-            if is_rebalance:
-                state["rebalance_count"] = state.get("rebalance_count", 0) + 1
-        report = sync_report_with_state(report, state)
-        if RUN_MODE != "test":
-            save_state(state, STATE_PATH)
-        else:
-            print("  -> TEST 모드: portfolio_state 저장 스킵")
-    except Exception as e:
-        print("  !! portfolio_state 업데이트 실패 (건너뜀): " + str(e))
-
-    # -- 5단계: 수익률 추적 ---------------------------------------------------
-    print("\n[5/7] 누적 수익률 계산 중...")
-    try:
-        performance_section = update_and_get_performance(report, today, state=state)
-        report = report + performance_section
-    except Exception as e:
-        print("  !! 수익률 추적 실패 (건너뜀): " + str(e))
-
-    # -- 6단계: 저장 + 대시보드 -----------------------------------------------
-    print("\n[6/7] 리포트 저장 및 대시보드 생성 중...")
-    try:
-        saved_path = save_report(report, today)
-        print("  -> 저장 완료: " + str(saved_path))
-    except Exception as e:
-        print("X 파일 저장 실패: " + str(e))
-        notify_status("MerAI run failed", "Failed to save report: " + str(e))
-        return 1
-
-    png_path = None
-    try:
-        _, png_path = generate_all(report, today)
-    except Exception as e:
-        print("  !! 대시보드 생성 실패 (건너뜀): " + str(e))
-
-    # -- 7단계: 텔레그램 알림 -------------------------------------------------
-    print("\n[7/7] 텔레그램 알림 전송 중...")
-    if RUN_MODE != "test":
-        try:
-            report_sent = False
+        if RUN_POLICY.send_telegram:
             if png_path and png_path.exists():
-                send_photo(str(png_path), "포트폴리오 성과 | " + today_str)
-            report_sent = send_report(report, today_str)
-            if not report_sent:
+                send_photo(str(png_path), f"모델 포트폴리오 성과 | {today:%Y년 %m월 %d일}")
+            if not send_structured_summary(
+                updated_state.to_dict(),
+                today.strftime("%Y년 %m월 %d일"),
+                cache,
+            ):
                 return 1
-        except Exception as e:
-            print("  !! 텔레그램 전송 실패 (건너뜀): " + str(e))
-            return 1
-    else:
-        print("  -> TEST 모드: 텔레그램 전송 스킵")
-
-    # -- 완료 -----------------------------------------------------------------
-    print("\n" + "=" * 60)
-    print("분석 완료!")
-    print("  실행 모드: " + RUN_MODE.upper())
-    print("  분석 글 수: " + str(len(posts)) + "편")
-    print("  리포트 크기: " + str(len(report)) + "자")
-    print("  저장 경로: " + str(saved_path))
-    if RUN_MODE != "test" and state:
-        active = get_active_holdings(state)
-        print("  포트폴리오: " + str(len(active)) + "개 종목 active")
-    print("=" * 60)
-
-    preview_lines = report.split("\n")[:20]
-    print("\n--- 리포트 미리보기 ---")
-    print("\n".join(preview_lines))
-    if len(report.split("\n")) > 20:
-        print("... (이하 파일 참조)")
-
-    return 0
+        print(f"  완료: 포트폴리오 {len(updated_state.portfolio)}종목")
+        return 0
+    except Exception as exc:
+        message = f"{type(exc).__name__}: {exc}"
+        print(f"  실행 실패: {message}")
+        _save_error_log(message, today)
+        _notify_status("MerAI run failed", message[:1500])
+        return 1
 
 
 if __name__ == "__main__":

@@ -13,6 +13,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
+from portfolio_schema import load_portfolio_state_file
 from portfolio_validation import parse_portfolio_items
 
 OUTPUT_DIR = Path(os.environ.get("OUTPUT_DIR", "output"))
@@ -61,18 +62,15 @@ def _parse_weights_from_report(report_text: str) -> list:
     return result
 
 
-def _load_portfolio_state() -> list:
-    """portfolio_state.json에서 active 종목 로드."""
-    import json as _json
+def _load_portfolio_state() -> dict:
+    """portfolio_state.json을 v2 구조로 읽는다. 기존 파일은 메모리에서 변환한다."""
     state_path = OUTPUT_DIR / "portfolio_state.json"
     if not state_path.exists():
-        return []
+        return {}
     try:
-        with open(state_path, encoding="utf-8") as f:
-            state = _json.load(f)
-        return [h for h in state.get("holdings", []) if h.get("status") == "active"]
+        return load_portfolio_state_file(state_path).to_dict()
     except Exception:
-        return []
+        return {}
 
 
 def _donut_color(idx: int) -> str:
@@ -299,185 +297,114 @@ def generate_png(cache: dict, report_text: str = "", today_str: str = "") -> Opt
 
 
 
-def generate_html(cache: dict, report_text: str, today_str: str) -> Path:
-    """Chart.js 기반 인터랙티브 HTML 대시보드 생성."""
+def generate_html(
+    cache: dict,
+    report_text: str,
+    today_str: str,
+    state: Optional[dict] = None,
+) -> Path:
+    """검증된 포트폴리오 상태를 중심으로 HTML 대시보드를 생성한다."""
+    state = state or _load_portfolio_state()
+    portfolio = state.get("portfolio", [])
+    watchlist = state.get("watchlist", [])
+    closed_positions = state.get("closed_positions", [])
+    history = state.get("decision_history", [])
+    latest_changes = [item for item in history if item.get("decision_date") == today_str]
     summaries = cache.get("report_summaries", []) if cache else []
-    report_dates = [s["date"][5:] for s in summaries]
-    report_avgs = [round(s["avg_return_krw"], 2) for s in summaries]
-    active_positions = cache.get("active_positions", []) if cache else []
-    changes = cache.get("changes", {}) if cache else {}
-    buy_changes = (changes.get("buys", []) if isinstance(changes, dict) else [])
-    update_changes = (changes.get("changes", []) if isinstance(changes, dict) else [])
-    sell_changes = (changes.get("sells", []) if isinstance(changes, dict) else [])
-    closed_positions = cache.get("closed_positions", []) if cache else []
-    latest_weights = _parse_weights_from_report(report_text)
-    latest_names = [s["name"] for s in latest_weights]
-    latest_weight_values = [round(s["weight"], 2) for s in latest_weights]
-    report_escaped = report_text.replace("\\", "\\\\").replace("`", "\\`").replace("${", "\\${")
+    performance = {
+        str(item.get("code") or item.get("ticker") or "").upper(): item
+        for item in cache.get("active_positions", [])
+    } if cache else {}
+    portfolio_rows = []
+    for item in portfolio:
+        row = dict(item)
+        row.update({
+            key: value for key, value in performance.get(
+                str(item.get("code", "")).upper(),
+                {},
+            ).items()
+            if key in {"return_pct", "return_pct_krw", "entry_date"}
+        })
+        portfolio_rows.append(row)
 
+    chart_rows = [
+        {
+            "name": item.get("name", ""),
+            "code": item.get("code", ""),
+            "weight": item.get("proposed_weight", 0),
+            "actor": item.get("decision_actor", ""),
+            "action": item.get("action", ""),
+            "reason": item.get("change_reason", ""),
+        }
+        for item in portfolio
+        if item.get("proposed_weight", 0) > 0
+    ]
+    cash_weight = max(0.0, 100.0 - sum(item["weight"] for item in chart_rows))
+    if cash_weight:
+        chart_rows.append({
+            "name": "현금",
+            "code": "",
+            "weight": cash_weight,
+            "actor": "",
+            "action": "보유",
+            "reason": "",
+        })
+
+    report_escaped = report_text.replace("\\", "\\\\").replace("`", "\\`").replace("${", "\\${")
     html = """<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<title>메르AI 포트폴리오 대시보드</title>
+<html lang="ko"><head><meta charset="UTF-8">
+<title>메르AI 모델 포트폴리오</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
 <style>
-  :root{--bg:#0f172a;--card:#1e293b;--border:#334155;--text:#f1f5f9;--muted:#94a3b8;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--yellow:#eab308;}
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;min-height:100vh;}
-  header{background:var(--card);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;}
-  header h1{font-size:1.2rem;font-weight:700;}
-  header span{font-size:.8rem;color:var(--muted);}
-  .container{max-width:1100px;margin:0 auto;padding:24px 16px;}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(480px,1fr));gap:20px;margin-bottom:24px;}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;}
-  .card h2{font-size:.95rem;color:var(--muted);margin-bottom:16px;font-weight:600;}
-  .chart-wrap{position:relative;height:280px;}
-  .empty-msg{color:var(--muted);font-size:.85rem;text-align:center;padding:60px 0;}
-  #report-section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px 32px;}
-  #report-section h2{font-size:.95rem;color:var(--muted);margin-bottom:20px;font-weight:600;}
-  #report-content h1{font-size:1.4rem;margin:20px 0 10px;color:var(--text);}
-  #report-content h2{font-size:1.1rem;margin:20px 0 8px;color:var(--blue);border-bottom:1px solid var(--border);padding-bottom:6px;}
-  #report-content h3{font-size:.95rem;margin:14px 0 6px;color:var(--yellow);}
-  #report-content p{font-size:.88rem;line-height:1.7;color:#cbd5e1;margin:6px 0;}
-  #report-content table{width:100%;border-collapse:collapse;font-size:.82rem;margin:12px 0;}
-  #report-content th{background:#0f172a;color:var(--muted);padding:8px 10px;text-align:left;border:1px solid var(--border);}
-  #report-content td{padding:7px 10px;border:1px solid var(--border);color:#cbd5e1;}
-  #report-content tr:hover td{background:#0f172a44;}
-  #report-content blockquote{border-left:3px solid var(--blue);padding-left:12px;color:var(--muted);font-size:.85rem;margin:10px 0;}
-  #report-content hr{border:none;border-top:1px solid var(--border);margin:20px 0;}
-  #report-content strong{color:var(--text);}
-  #report-content code{background:#0f172a;padding:2px 6px;border-radius:4px;font-size:.82rem;color:var(--green);}
-  #report-content ul,#report-content ol{padding-left:20px;font-size:.88rem;color:#cbd5e1;line-height:1.7;}
-  .section-grid{display:grid;grid-template-columns:1fr;gap:20px;margin-bottom:24px;}
-  .data-table{width:100%;border-collapse:collapse;font-size:.82rem;}
-  .data-table th{background:#0f172a;color:var(--muted);padding:8px 10px;text-align:left;border:1px solid var(--border);white-space:nowrap;}
-  .data-table td{padding:7px 10px;border:1px solid var(--border);color:#cbd5e1;vertical-align:top;}
-  .data-table tr:hover td{background:#0f172a44;}
-  .pill{display:inline-block;padding:2px 7px;border-radius:999px;font-size:.72rem;font-weight:700;background:#0f172a;color:#cbd5e1;border:1px solid var(--border);}
-  .pill.buy{color:#86efac;border-color:#166534;}
-  .pill.sell{color:#fca5a5;border-color:#7f1d1d;}
-  .pill.change{color:#93c5fd;border-color:#1d4ed8;}
-  .empty-inline{color:var(--muted);font-size:.85rem;padding:12px 0;}
-</style>
-</head>
-<body>
-<header>
-  <h1>📊 메르AI 포트폴리오 대시보드</h1>
-  <span>마지막 업데이트: <strong id="updatedAt"></strong></span>
-</header>
-<div class="container">
-  <div class="grid">
-    <div class="card">
-      <h2>📊 최신 추천 포트폴리오 비중</h2>
-      <div class="chart-wrap">
-        <canvas id="stocksChart"></canvas>
-        <div id="stocksEmpty" class="empty-msg" style="display:none">최신 추천 비중 없음 — 리포트 표를 확인하세요</div>
-      </div>
-    </div>
-    <div class="card">
-      <h2>📈 리포트 회차별 평균 수익률</h2>
-      <div class="chart-wrap">
-        <canvas id="reportChart"></canvas>
-        <div id="reportEmpty" class="empty-msg" style="display:none">데이터 2회 이상 누적 후 표시됩니다</div>
-      </div>
-    </div>
-  </div>
-  <div class="section-grid">
-    <div class="card">
-      <h2>현재 포트폴리오</h2>
-      <div id="currentPortfolio"></div>
-    </div>
-    <div class="card">
-      <h2>추천 매수/변경 리스트</h2>
-      <div id="changeList"></div>
-    </div>
-    <div class="card">
-      <h2>매도/제외 리스트</h2>
-      <div id="sellList"></div>
-    </div>
-  </div>
-  <div id="report-section">
-    <h2>📄 최신 리포트 전문</h2>
-    <div id="report-content"></div>
-  </div>
-</div>
-<script>
+:root{--bg:#0f172a;--card:#1e293b;--border:#334155;--text:#f1f5f9;--muted:#94a3b8;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--yellow:#eab308}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif}header{padding:18px 24px;background:var(--card);border-bottom:1px solid var(--border)}h1{font-size:1.25rem;margin:0 0 6px}.notice,.muted{color:var(--muted);font-size:.82rem}.container{max-width:1120px;margin:auto;padding:20px 14px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px}.card h2{font-size:1rem;margin:0 0 14px}.chart{height:280px}.table-wrap{overflow-x:auto}.data-table{width:100%;border-collapse:collapse;font-size:.82rem}.data-table th,.data-table td{padding:8px;border:1px solid var(--border);text-align:left;vertical-align:top}.data-table th{color:var(--muted);background:#0f172a}.pill{display:inline-block;padding:2px 7px;border-radius:999px;font-size:.72rem;font-weight:700;border:1px solid var(--border)}.actor-mer{color:#fcd34d;border-color:#a16207}.actor-ai{color:#93c5fd;border-color:#1d4ed8}.actor-unknown{color:#cbd5e1}.buy{color:#86efac}.sell{color:#fca5a5}.detail{display:none;background:#0f172a}.detail.open{display:table-row}.detail td{line-height:1.7}.changed td{background:#172554}.toolbar{display:flex;gap:6px;margin-bottom:8px}button{background:#0f172a;color:#cbd5e1;border:1px solid var(--border);border-radius:5px;padding:4px 7px;cursor:pointer}.empty{color:var(--muted);font-size:.85rem;padding:8px 0}a{color:#93c5fd}#report-content{font-size:.88rem;line-height:1.65}#report-content table{width:100%;border-collapse:collapse}#report-content th,#report-content td{padding:7px;border:1px solid var(--border)}
+@media(max-width:640px){.container{padding:12px 8px}.card{padding:13px}.desktop{display:none}.data-table{font-size:.76rem}}
+</style></head><body>
+<header><h1>메르AI 모델 포트폴리오</h1><div class="notice">메르 블로거의 실제 보유 내역이 아닙니다. 블로그 판단과 AI 해석을 구분하여 만든 모델 포트폴리오입니다.</div><div class="muted">업데이트: <span id="updated"></span></div></header>
+<main class="container">
+<section class="card"><h2>최근 분석 요약</h2><div id="summary"></div></section>
+<div class="grid"><section class="card"><h2>현재 모델 포트폴리오 목표 비중</h2><div class="chart"><canvas id="donut"></canvas></div></section><section class="card"><h2>포트폴리오 수익률 흐름</h2><div class="chart"><canvas id="returns"></canvas></div></section></div>
+<section class="card"><h2>현재 모델 포트폴리오</h2><div id="portfolio"></div></section>
+<section class="card"><h2>이번 분석 변경사항</h2><div id="changes"></div></section>
+<section class="card"><h2>Watchlist</h2><div id="watchlist"></div></section>
+<section class="card"><h2>종료 포지션</h2><div id="closed"></div></section>
+<section class="card"><h2>전체 보고서</h2><div id="report-content"></div></section>
+</main><script>
 """ + (
-        "const reportDates=" + json.dumps(report_dates, ensure_ascii=False) + ";\n"
-        "const reportAvgs=" + json.dumps(report_avgs) + ";\n"
-        "const latestNames=" + json.dumps(latest_names, ensure_ascii=False) + ";\n"
-        "const latestWeights=" + json.dumps(latest_weight_values) + ";\n"
-        "const activePositions=" + json.dumps(active_positions, ensure_ascii=False) + ";\n"
-        "const buyChanges=" + json.dumps(buy_changes, ensure_ascii=False) + ";\n"
-        "const updateChanges=" + json.dumps(update_changes, ensure_ascii=False) + ";\n"
-        "const sellChanges=" + json.dumps(sell_changes, ensure_ascii=False) + ";\n"
-        "const closedPositions=" + json.dumps(closed_positions, ensure_ascii=False) + ";\n"
+        "const updated=" + json.dumps(today_str) + ";\n"
+        "const portfolio=" + json.dumps(portfolio_rows, ensure_ascii=False) + ";\n"
+        "const changes=" + json.dumps(latest_changes, ensure_ascii=False) + ";\n"
+        "const watchlist=" + json.dumps(watchlist, ensure_ascii=False) + ";\n"
+        "const closed=" + json.dumps(closed_positions, ensure_ascii=False) + ";\n"
+        "const chartRows=" + json.dumps(chart_rows, ensure_ascii=False) + ";\n"
+        "const summaries=" + json.dumps(summaries, ensure_ascii=False) + ";\n"
         "const reportText=`" + report_escaped + "`;\n"
-        "const updatedAt=" + json.dumps(today_str) + ";\n"
     ) + """
-document.getElementById('updatedAt').textContent=updatedAt;
-function barColor(v){return v>=0?'#22c55e':'#ef4444';}
-function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
-function retText(row){
-  const v = row.return_pct_krw ?? row.return_pct;
-  if(v===undefined || v===null || Number.isNaN(Number(v))) return '-';
-  const n=Number(v), sign=n>=0?'▲':'▼', cls=n>=0?'buy':'sell';
-  return `<span class="pill ${cls}">${sign}${Math.abs(n).toFixed(1)}%</span>`;
+document.getElementById('updated').textContent=updated;
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const actor=r=>`<span class="pill ${r.decision_actor==='메르'?'actor-mer':r.decision_actor==='AI'?'actor-ai':'actor-unknown'}">${esc(r.decision_actor||'미분류')} · ${esc(r.action||'')}</span>`;
+const evidence=r=>(r.evidence_posts||[]).map(p=>`<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a> · ${esc(p.published_date)}`).join('<br>')||'근거 글 없음';
+const returns=r=>{const v=r.return_pct_krw??r.return_pct;if(v===undefined||v===null)return '-';return `${Number(v)>=0?'▲':'▼'}${Math.abs(Number(v)).toFixed(1)}%`};
+const buttons=id=>`<div class="toolbar"><button onclick="toggleAll('${id}',true)">모두 펼치기</button><button onclick="toggleAll('${id}',false)">모두 접기</button></div>`;
+function toggle(id){document.getElementById(id).classList.toggle('open')}
+function toggleAll(id,open){document.querySelectorAll(`#${id} .detail`).forEach(el=>el.classList.toggle('open',open))}
+function table(id,rows,kind){
+ if(!rows.length)return '<div class="empty">표시할 항목이 없습니다.</div>';
+ const body=rows.map((r,i)=>{const key=`${id}-${i}`;const detail=`판단일: ${esc(r.decision_date||r.closed_date||'-')}<br>비중 출처: ${esc(r.weight_source||'-')}<br>변경 이유: ${esc(r.change_reason||r.close_reason||'-')}<br>근거: ${evidence(r)}<br>원문 종목 등장: ${r.source_mentioned===true?'있음':r.source_mentioned===false?'없음':'-'}`;
+ return `<tr class="${kind==='changes'?'changed':''}"><td>${esc(r.name)}<br><span class="muted">${esc(r.code)}</span></td><td>${actor(r)}</td><td>${r.proposed_weight===undefined?'-':esc(r.proposed_weight)+'%'}</td><td class="desktop">${esc(r.decision_date||r.closed_date||r.watchlist_entry_date||'-')}</td><td>${kind==='portfolio'?returns(r):esc(r.status||r.close_reason||'')}</td><td><button onclick="toggle('${key}')">펼치기</button></td></tr><tr id="${key}" class="detail"><td colspan="6">${detail}</td></tr>`}).join('');
+ return buttons(id)+`<div class="table-wrap"><table class="data-table" id="${id}"><thead><tr><th>종목</th><th>판단</th><th>비중</th><th class="desktop">판단일</th><th>상태/수익률</th><th>상세</th></tr></thead><tbody>${body}</tbody></table></div>`;
 }
-function renderCurrent(){
-  const el=document.getElementById('currentPortfolio');
-  if(!activePositions.length){el.innerHTML='<div class="empty-inline">active 포지션 없음</div>';return;}
-  el.innerHTML='<table class="data-table"><thead><tr><th>종목</th><th>시장</th><th>판단</th><th>목표비중</th><th>편입일</th><th>수익률</th><th>근거</th></tr></thead><tbody>'+
-    activePositions.map(r=>`<tr><td>${esc(r.name)}<br><span style="color:#94a3b8">${esc(r.code||r.ticker)}</span></td><td>${esc(r.market||r.type)}</td><td>${esc(r.action)}</td><td>${esc(r.weight)}</td><td>${esc(r.entry_date)}</td><td>${retText(r)}</td><td>${esc(r.basis_type||'기존보유')}</td></tr>`).join('')+
-    '</tbody></table>';
-}
-function renderChanges(){
-  const rows=[...buyChanges, ...updateChanges];
-  const el=document.getElementById('changeList');
-  if(!rows.length){el.innerHTML='<div class="empty-inline">오늘 신규 매수/변경 없음</div>';return;}
-  el.innerHTML='<table class="data-table"><thead><tr><th>구분</th><th>종목</th><th>시장</th><th>판단</th><th>목표비중</th><th>근거</th></tr></thead><tbody>'+
-    rows.map(r=>`<tr><td><span class="pill ${r.change_type==='신규 편입'?'buy':'change'}">${esc(r.change_type)}</span></td><td>${esc(r.name)}<br><span style="color:#94a3b8">${esc(r.code)}</span></td><td>${esc(r.market)}</td><td>${esc(r.action)}</td><td>${esc(r.weight)}</td><td>${esc(r.basis_type||'')}</td></tr>`).join('')+
-    '</tbody></table>';
-}
-function renderSells(){
-  const rows=sellChanges.length?sellChanges:closedPositions;
-  const el=document.getElementById('sellList');
-  if(!rows.length){el.innerHTML='<div class="empty-inline">오늘 매도/제외 없음</div>';return;}
-  el.innerHTML='<table class="data-table"><thead><tr><th>종목</th><th>시장</th><th>종료일</th><th>사유</th></tr></thead><tbody>'+
-    rows.map(r=>`<tr><td>${esc(r.name)}<br><span style="color:#94a3b8">${esc(r.code||r.ticker)}</span></td><td>${esc(r.market||r.type)}</td><td>${esc(r.closed_date||r.removed_date||updatedAt)}</td><td><span class="pill sell">${esc(r.reason||r.close_reason||r.removed_reason||'매도/제외')}</span></td></tr>`).join('')+
-    '</tbody></table>';
-}
-renderCurrent();renderChanges();renderSells();
-Chart.defaults.color='#94a3b8';
-Chart.defaults.borderColor='#334155';
-if(latestNames.length>0){
-  new Chart(document.getElementById('stocksChart'),{
-    type:'bar',
-    data:{labels:latestNames,datasets:[{label:'목표비중(%)',data:latestWeights,backgroundColor:'#3b82f6',borderRadius:6,borderSkipped:false}]},
-    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.raw.toFixed(1)}%`}}},
-      scales:{x:{grid:{color:'#334155'},ticks:{callback:v=>v+'%'},beginAtZero:true},y:{grid:{display:false}}}}
-  });
-}else{document.getElementById('stocksChart').style.display='none';document.getElementById('stocksEmpty').style.display='block';}
-if(reportDates.length>=2){
-  new Chart(document.getElementById('reportChart'),{
-    type:'bar',
-    data:{labels:reportDates,datasets:[
-      {type:'bar',label:'회차 평균',data:reportAvgs,backgroundColor:reportAvgs.map(barColor),borderRadius:6,yAxisID:'y'},
-      {type:'line',label:'추세',data:reportAvgs,borderColor:'#3b82f6',backgroundColor:'transparent',borderWidth:2,pointRadius:4,pointBackgroundColor:'#3b82f6',tension:0.3,yAxisID:'y'}
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{boxWidth:12,font:{size:11}}},tooltip:{callbacks:{label:ctx=>` ${ctx.raw>=0?'+':''}${ctx.raw.toFixed(1)}%`}}},
-      scales:{y:{grid:{color:'#334155'},ticks:{callback:v=>(v>=0?'+':'')+v+'%'}},x:{grid:{display:false}}}}
-  });
-}else{document.getElementById('reportChart').style.display='none';document.getElementById('reportEmpty').style.display='block';}
-if(reportText.trim()){document.getElementById('report-content').innerHTML=marked.parse(reportText);}
-else{document.getElementById('report-content').innerHTML='<p style="color:#94a3b8">리포트가 없습니다.</p>';}
-</script>
-</body>
-</html>"""
+document.getElementById('summary').innerHTML=`현재 ${portfolio.length}종목 · Watchlist ${watchlist.length}건 · 이번 변경 ${changes.length}건 · 종료 ${closed.length}건`;
+document.getElementById('portfolio').innerHTML=table('portfolio-table',portfolio,'portfolio');
+document.getElementById('changes').innerHTML=table('changes-table',changes,'changes');
+document.getElementById('watchlist').innerHTML=table('watchlist-table',watchlist,'watchlist');
+document.getElementById('closed').innerHTML=table('closed-table',closed,'closed');
+const colors=['#ef4444','#3b82f6','#22c55e','#f97316','#a855f7','#06b6d4','#eab308','#ec4899','#14b8a6','#f59e0b','#6366f1','#84cc16','#64748b'];
+new Chart(document.getElementById('donut'),{type:'doughnut',data:{labels:chartRows.map(r=>`${r.name} ${r.weight}% ${r.actor?`(${r.actor})`:''}`),datasets:[{data:chartRows.map(r=>r.weight),backgroundColor:chartRows.map((_,i)=>colors[i%colors.length])}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:12}}}}});
+if(summaries.length){new Chart(document.getElementById('returns'),{type:'line',data:{labels:summaries.map(r=>r.date),datasets:[{label:'모델 포트폴리오 수익률',data:summaries.map(r=>r.avg_return_krw),borderColor:'#3b82f6',tension:.25}]},options:{responsive:true,maintainAspectRatio:false}})}else{document.getElementById('returns').replaceWith(Object.assign(document.createElement('div'),{className:'empty',textContent:'성과 데이터가 아직 없습니다.'}))}
+document.getElementById('report-content').innerHTML=reportText.trim()?marked.parse(reportText):'<div class="empty">보고서가 없습니다.</div>';
+</script></body></html>"""
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     with open(DASHBOARD_FILE, "w", encoding="utf-8") as f:
@@ -486,7 +413,7 @@ else{document.getElementById('report-content').innerHTML='<p style="color:#94a3b
     return DASHBOARD_FILE
 
 
-def generate_all(report_text: str, today: datetime) -> tuple:
+def generate_all(report_text: str, today: datetime, state: Optional[dict] = None) -> tuple:
     """HTML 대시보드 + PNG 차트 모두 생성. Returns: (html_path, png_path)"""
     today_str = today.strftime("%Y-%m-%d")
     cache = _load_cache()
@@ -495,7 +422,7 @@ def generate_all(report_text: str, today: datetime) -> tuple:
     html_path = None
     png_path = None
     try:
-        html_path = generate_html(cache or {}, report_content, today_str)
+        html_path = generate_html(cache or {}, report_content, today_str, state=state)
     except Exception as e:
         print(f"  ⚠ HTML 대시보드 생성 실패: {e}")
     try:

@@ -1,0 +1,46 @@
+import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
+
+import generate_dashboard
+from test_portfolio_schema import state_payload
+
+
+class GenerateDashboardTest(unittest.TestCase):
+    def test_html_distinguishes_model_portfolio_and_decision_actor(self):
+        cache = {
+            "active_positions": [
+                {
+                    "code": "AA",
+                    "return_pct_krw": 3.6,
+                    "entry_date": "2026-05-28",
+                }
+            ],
+            "report_summaries": [
+                {"date": "2026-05-28", "avg_return_krw": 3.6},
+            ],
+        }
+
+        with TemporaryDirectory() as tmp:
+            previous = generate_dashboard.DASHBOARD_FILE
+            generate_dashboard.DASHBOARD_FILE = Path(tmp) / "dashboard.html"
+            try:
+                path = generate_dashboard.generate_html(
+                    cache,
+                    "# 메르AI 포트폴리오 분석\n\n테스트 보고서",
+                    "2026-06-01",
+                    state=state_payload(),
+                )
+                html = path.read_text(encoding="utf-8")
+            finally:
+                generate_dashboard.DASHBOARD_FILE = previous
+
+        self.assertIn("메르 블로거의 실제 보유 내역이 아닙니다", html)
+        self.assertIn('"decision_actor": "AI"', html)
+        self.assertIn("Watchlist", html)
+        self.assertIn("https://blog.naver.com/ranto28/123", html)
+        self.assertIn("모두 펼치기", html)
+
+
+if __name__ == "__main__":
+    unittest.main()

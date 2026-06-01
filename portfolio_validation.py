@@ -13,6 +13,8 @@ import re
 from dataclasses import dataclass
 from typing import Iterable, Optional
 
+from portfolio_schema import AnalysisDecisionV2, parse_analysis_decision
+
 
 @dataclass
 class PortfolioItem:
@@ -34,6 +36,16 @@ class ValidationResult:
     parsed_portfolio: list[dict]
     removed_items: list[dict]
     moved_cash_weight: float
+
+
+def validate_structured_decisions(payload: dict) -> AnalysisDecisionV2:
+    """
+    Validate the new structured Gemini result.
+
+    Investment meaning is decided by the LLM. This function only applies the
+    structural rules agreed for the v2 path.
+    """
+    return parse_analysis_decision(payload)
 
 
 BUY_HINTS = (

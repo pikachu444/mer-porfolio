@@ -25,7 +25,7 @@ BLOG_ID = "ranto28"
 RSS_URL = f"https://rss.blog.naver.com/{BLOG_ID}.xml"
 MOBILE_BASE = "https://m.blog.naver.com"
 STATE_FILE = "last_processed.json"
-DB_FILE = "output/posts_db.json"  # 증분 누적 데이터베이스 경로
+DB_FILE = str(Path(os.environ.get("OUTPUT_DIR", "output")) / "posts_db.json")
 _fetch_days_env = os.environ.get("FETCH_DAYS", "").strip()
 DEFAULT_DAYS = int(_fetch_days_env) if _fetch_days_env else 14  # 빈 문자열 방어
 _summary_env = os.environ.get("ENABLE_POST_SUMMARIES", "true").strip().lower()
@@ -56,6 +56,7 @@ HEADERS = {
 
 # 포스트 1개당 최대 글자 수 (토큰 오버플로우 방지)
 MAX_CHARS_PER_POST = 4000
+LAST_FETCH_NEW_POST_COUNT = 0
 
 
 # ─── 상태 관리 ───────────────────────────────────────────────────────────────
@@ -206,6 +207,8 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
     """
     신규 작성된 글만 수집해 posts_db.json에 누적하고 최신 30개를 반환한다.
     """
+    global LAST_FETCH_NEW_POST_COUNT
+
     # 1. 기존 누적 데이터베이스 로드
     db_posts = []
     db_path = Path(DB_FILE)
@@ -297,6 +300,7 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
         print(f"신규 {new_posts_count}편을 posts_db.json에 저장했습니다.")
     else:
         print("신규 글이 없습니다.")
+    LAST_FETCH_NEW_POST_COUNT = new_posts_count
 
     # 4. 요청 기간에 해당하는 글만 분석 대상으로 반환한다.
     # 무료 API에서는 입력 크기도 quota에 영향을 주므로 오래된 글을 매번 다시 넣지 않는다.
@@ -311,6 +315,10 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
 
     print(f"수집 기간 내 {len(final_posts)}편을 분석 대상으로 반환합니다.")
     return final_posts
+
+
+def get_last_fetch_new_post_count() -> int:
+    return LAST_FETCH_NEW_POST_COUNT
 
 
 def posts_to_context(posts: List[Dict]) -> str:

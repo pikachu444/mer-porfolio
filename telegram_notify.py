@@ -264,6 +264,69 @@ def send_report(report: str, today_str: str) -> bool:
     return ok
 
 
+def build_structured_summary(
+    state: dict,
+    today_str: str,
+    performance: dict | None = None,
+    *,
+    no_changes: bool = False,
+) -> str:
+    """Build a user-facing summary from validated structured state."""
+    portfolio = state.get("portfolio", [])
+    watchlist = state.get("watchlist", [])
+    closed = state.get("closed_positions", [])
+    performance = performance or {}
+    lines = [
+        "📊 *메르AI 모델 포트폴리오*",
+        f"📅 {today_str}",
+        "※ 메르 블로거의 실제 보유 내역이 아닙니다.",
+        "※ 블로그 직접 판단과 AI 해석을 구분해 표시합니다.",
+    ]
+    if no_changes:
+        value = performance.get("portfolio_return_krw")
+        rendered = f"{float(value):+.1f}%" if value is not None else "집계 전"
+        lines += ["", "*오늘의 성과 요약*", f"• 모델 포트폴리오 수익률: {rendered}", "• 포트폴리오 변경 없음"]
+    else:
+        lines += ["", "*현재 모델 포트폴리오*"]
+        if portfolio:
+            for item in portfolio:
+                lines.append(
+                    f"• [{item.get('decision_actor', '미분류')}] "
+                    f"{item.get('name', '')} ({item.get('code', '')}) "
+                    f"— {item.get('action', '')} {item.get('proposed_weight', 0):g}%"
+                )
+        else:
+            lines.append("• 편입 종목 없음")
+        lines += ["", f"• Watchlist: {len(watchlist)}건", f"• 종료 포지션: {len(closed)}건"]
+    lines += ["", f"🌐 [대시보드 전체 보기]({_get_dashboard_url()})"]
+    return "\n".join(lines)
+
+
+def send_structured_summary(
+    state: dict,
+    today_str: str,
+    performance: dict | None = None,
+    *,
+    no_changes: bool = False,
+) -> bool:
+    token, chat_id = _get_credentials()
+    if not token or not chat_id:
+        print("  !! TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID 미설정 -> 텔레그램 알림 스킵")
+        return False
+    ok = _send_message(
+        token,
+        chat_id,
+        build_structured_summary(
+            state,
+            today_str,
+            performance,
+            no_changes=no_changes,
+        ),
+    )
+    print(f"  텔레그램 구조화 요약 전송: {'성공' if ok else '실패'}")
+    return ok
+
+
 # ─── 직접 실행 테스트 ─────────────────────────────────────────────────────────
 
 if __name__ == "__main__":

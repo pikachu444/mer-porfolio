@@ -12,13 +12,22 @@ API 키 발급: https://aistudio.google.com/app/apikey
 
 import os
 import re
+from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Dict, Tuple
+from typing import Callable, List, Dict, Tuple
 
 from google import genai
 from google.genai import types
 
-from system_prompt import SYSTEM_PROMPT, build_user_message
+from portfolio_schema import AnalysisDecisionV2, parse_analysis_decision_json
+from system_prompt import (
+    DECISION_SYSTEM_PROMPT,
+    REPORT_SYSTEM_PROMPT,
+    SYSTEM_PROMPT,
+    build_decision_user_message,
+    build_report_user_message,
+    build_user_message,
+)
 from gemini_utils import generate_content_with_retry, is_daily_quota_error
 
 
@@ -50,6 +59,12 @@ SAFETY_SETTINGS = [
         threshold=types.HarmBlockThreshold.BLOCK_NONE,
     ),
 ]
+
+
+@dataclass(frozen=True)
+class StructuredAnalysisResult:
+    decision: AnalysisDecisionV2
+    report: str
 
 
 # ─── API 클라이언트 초기화 ────────────────────────────────────────────────────
@@ -160,6 +175,58 @@ def _try_model(
         return False, err
 
 
+def _call_model_text(
+    client: genai.Client,
+    model_name: str,
+    user_message: str,
+    system_instruction: str,
+) -> str:
+    """Call one Gemini model and require a non-empty text response."""
+    config = types.GenerateContentConfig(
+        system_instruction=system_instruction,
+        temperature=0.2,
+        top_p=0.85,
+        max_output_tokens=16384,
+        safety_settings=SAFETY_SETTINGS,
+    )
+    response = call_gemini_with_retry(
+        client=client,
+        model=model_name,
+        contents=user_message,
+        config=config,
+        max_retries=_retry_count_for_model(model_name),
+    )
+    text = response.text
+    if not text or not text.strip():
+        raise RuntimeError("응답이 완전히 비어 있음")
+    return text
+
+
+def _call_stage_with_fallback(
+    client: genai.Client,
+    user_message: str,
+    system_instruction: str,
+    validator: Callable[[str], object],
+    stage_name: str,
+) -> object:
+    """Run one structured-analysis stage with the configured model fallback."""
+    errors: list[str] = []
+    for model_name in _model_sequence():
+        try:
+            print(f"  {stage_name} 모델 시도: {model_name}")
+            text = _call_model_text(
+                client,
+                model_name,
+                user_message,
+                system_instruction,
+            )
+            return validator(text)
+        except Exception as exc:
+            errors.append(f"{model_name}: {exc}")
+            print(f"    {stage_name} 실패: {model_name} — {str(exc)[:180]}")
+    raise RuntimeError(f"{stage_name} 실패. " + " | ".join(errors))
+
+
 # ─── 입력 구성 헬퍼 ──────────────────────────────────────────────────────────
 
 def _analysis_text_for_post(post: Dict) -> tuple[str, str]:
@@ -205,6 +272,75 @@ def _normalize_report_metadata(
             normalized = re.sub(pattern, replacement, normalized, count=1)
 
     return normalized
+
+
+def _structured_context(posts: List[Dict]) -> str:
+    """Build the shared blog context for both structured-analysis calls."""
+    blocks = []
+    for index, post in enumerate(posts, 1):
+        label, text = _analysis_text_for_post(post)
+        blocks.append(
+            f"[{index}/{len(posts)}] 제목: {post['title']}\n"
+            f"날짜: {post['date']}\n"
+            f"URL: {post.get('url', '')}\n"
+            f"{label}:\n{text}\n"
+            f"{'─' * 50}"
+        )
+    return "\n\n".join(blocks)
+
+
+def analyze_posts_structured(
+    posts: List[Dict],
+    analysis_date: str,
+    current_state: dict | None,
+    *,
+    is_rebalance: bool = False,
+) -> StructuredAnalysisResult:
+    """Generate validated decision JSON first, then a Markdown report."""
+    if not posts:
+        raise ValueError("분석할 포스트가 없습니다.")
+
+    context = _structured_context(posts)
+    run_type = "rebalance" if is_rebalance else "regular"
+    client = _get_client()
+
+    decision_message = build_decision_user_message(
+        context=context,
+        analysis_date=analysis_date,
+        run_type=run_type,
+        current_state=current_state,
+    )
+    decision = _call_stage_with_fallback(
+        client,
+        decision_message,
+        DECISION_SYSTEM_PROMPT,
+        parse_analysis_decision_json,
+        "1차 포트폴리오 판단",
+    )
+    assert isinstance(decision, AnalysisDecisionV2)
+
+    report_message = build_report_user_message(
+        context=context,
+        decision_payload=decision.to_dict(),
+        analysis_date=analysis_date,
+    )
+    report = _call_stage_with_fallback(
+        client,
+        report_message,
+        REPORT_SYSTEM_PROMPT,
+        _validate_markdown_report,
+        "2차 사용자용 보고서",
+    )
+    assert isinstance(report, str)
+    return StructuredAnalysisResult(decision=decision, report=report)
+
+
+def _validate_markdown_report(report: str) -> str:
+    required_headers = ["포트폴리오", "인사이트"]
+    missing_headers = [header for header in required_headers if header not in report]
+    if missing_headers:
+        raise ValueError("필수 보고서 섹션 누락: " + ", ".join(missing_headers))
+    return report
 
 
 # ─── 메인 분석 함수 ───────────────────────────────────────────────────────────
