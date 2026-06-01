@@ -320,6 +320,7 @@ def analyze_posts_structured(
     current_state: dict | None,
     *,
     is_rebalance: bool = False,
+    decision_validator: Callable[[AnalysisDecisionV2], object] | None = None,
 ) -> StructuredAnalysisResult:
     """Generate validated decision JSON first, then a Markdown report."""
     if not posts:
@@ -339,7 +340,11 @@ def analyze_posts_structured(
         client,
         decision_message,
         DECISION_SYSTEM_PROMPT,
-        lambda text: _parse_and_validate_model_decision_json(text, current_state),
+        lambda text: _parse_and_validate_model_decision_json(
+            text,
+            current_state,
+            decision_validator,
+        ),
         "1차 포트폴리오 판단",
     )
     assert isinstance(decision, AnalysisDecisionV2)
@@ -398,12 +403,15 @@ def _parse_model_decision_json(text: str) -> AnalysisDecisionV2:
 def _parse_and_validate_model_decision_json(
     text: str,
     current_state: dict | None,
+    decision_validator: Callable[[AnalysisDecisionV2], object] | None = None,
 ) -> AnalysisDecisionV2:
     """Require the model decision to produce an applicable target portfolio."""
     decision = _parse_model_decision_json(text)
     if current_state and "schema_version" in current_state:
         state = parse_portfolio_state(current_state)
         apply_analysis_decision(state, decision)
+    if decision_validator is not None:
+        decision_validator(decision)
     return decision
 
 

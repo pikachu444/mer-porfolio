@@ -77,7 +77,7 @@ jobs:
         run: python main.py
 
       - name: verify 결과물 업로드
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_mode == 'verify' }}
+        if: ${{ always() && github.event_name == 'workflow_dispatch' && github.event.inputs.run_mode == 'verify' }}
         uses: actions/upload-artifact@v4
         with:
           name: mer-ai-verify-${{ github.run_id }}

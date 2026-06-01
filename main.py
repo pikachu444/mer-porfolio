@@ -180,6 +180,9 @@ def main() -> int:
             today_date,
             state.to_dict(),
             is_rebalance=is_rebalance,
+            decision_validator=lambda decision: get_structured_prices(
+                decision.portfolio_decisions
+            ),
         )
         updated_state = apply_analysis_decision(state, result.decision)
         ledger = load_model_ledger()

@@ -135,6 +135,29 @@ class StructuredAnalysisTest(unittest.TestCase):
         self.assertEqual(result.decision.portfolio_decisions[0]["proposed_weight"], 5.0)
         self.assertEqual(call.call_count, 3)
 
+    def test_repairs_decision_when_listing_code_has_no_price(self):
+        responses = [
+            json.dumps(DECISION_RESPONSE, ensure_ascii=False),
+            json.dumps(DECISION_RESPONSE, ensure_ascii=False),
+            "# 메르AI 보고서\n\n## 현재 모델 포트폴리오\n\n내용",
+        ]
+        validator = unittest.mock.Mock(
+            side_effect=[ValueError("현재 가격을 가져오지 못했습니다: Alcoa"), None]
+        )
+
+        with patch.object(analyze, "_get_client", return_value=object()), \
+             patch.object(analyze, "_call_model_text", side_effect=responses) as call:
+            result = analyze.analyze_posts_structured(
+                POSTS,
+                "2026-06-01",
+                {"last_rebalanced_date": "2026-05-14"},
+                decision_validator=validator,
+            )
+
+        self.assertEqual(result.decision.portfolio_decisions[0]["name"], "Alcoa")
+        self.assertEqual(validator.call_count, 2)
+        self.assertEqual(call.call_count, 3)
+
     def test_does_not_return_partial_result_when_report_fails(self):
         responses = [
             json.dumps(DECISION_RESPONSE, ensure_ascii=False),
