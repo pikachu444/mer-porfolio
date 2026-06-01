@@ -3,6 +3,7 @@ import unittest
 from unittest.mock import patch
 
 import analyze
+from portfolio_schema import parse_analysis_decision
 
 
 DECISION_RESPONSE = {
@@ -157,6 +158,28 @@ class StructuredAnalysisTest(unittest.TestCase):
         self.assertEqual(result.decision.portfolio_decisions[0]["name"], "Alcoa")
         self.assertEqual(validator.call_count, 2)
         self.assertEqual(call.call_count, 3)
+
+    def test_report_uses_postprocessed_decision(self):
+        responses = [
+            json.dumps(DECISION_RESPONSE, ensure_ascii=False),
+            "# 메르AI 보고서\n\n## 현재 모델 포트폴리오\n\n내용",
+        ]
+        sanitized = parse_analysis_decision({
+            **DECISION_RESPONSE,
+            "portfolio_decisions": [],
+        })
+
+        with patch.object(analyze, "_get_client", return_value=object()), \
+             patch.object(analyze, "_call_model_text", side_effect=responses) as call:
+            result = analyze.analyze_posts_structured(
+                POSTS,
+                "2026-06-01",
+                {"last_rebalanced_date": "2026-05-14"},
+                decision_validator=lambda decision: sanitized,
+            )
+
+        self.assertEqual(result.decision.portfolio_decisions, [])
+        self.assertNotIn('"name": "Alcoa"', call.call_args_list[1].args[2])
 
     def test_does_not_return_partial_result_when_report_fails(self):
         responses = [

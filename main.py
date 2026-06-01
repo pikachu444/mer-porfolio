@@ -46,8 +46,10 @@ from analyze import analyze_posts_structured
 from fetch_mer import fetch_recent_posts, get_last_fetch_new_post_count
 from generate_dashboard import generate_all
 from portfolio_schema import (
+    AnalysisDecisionV2,
     apply_analysis_decision,
     load_portfolio_state_file,
+    parse_analysis_decision,
     parse_portfolio_state,
     save_analysis_decision_file,
     save_portfolio_state_file,
@@ -149,6 +151,39 @@ def _collect_posts(is_rebalance: bool) -> list[dict]:
     return fetch_recent_posts(days=30)
 
 
+def _portfolio_identity(item: dict) -> tuple[str, str, str]:
+    return (
+        str(item.get("asset_type", "")).strip().lower(),
+        str(item.get("market", "")).strip().upper(),
+        str(item.get("code", "")).strip().upper(),
+    )
+
+
+def _exclude_unpriceable_new_suggestions(
+    decision: AnalysisDecisionV2,
+    state,
+) -> AnalysisDecisionV2:
+    """Keep existing holdings strict while dropping unverifiable new suggestions."""
+    existing = {_portfolio_identity(item) for item in state.portfolio}
+    accepted = []
+    for item in decision.portfolio_decisions:
+        try:
+            get_structured_prices([item])
+        except ValueError:
+            if _portfolio_identity(item) in existing:
+                raise
+            print(
+                "    가격 검증 불가 신규 포트폴리오 제안 제외: "
+                + str(item.get("name") or "이름 없음")
+            )
+            continue
+        accepted.append(item)
+    return parse_analysis_decision({
+        **decision.to_dict(),
+        "portfolio_decisions": accepted,
+    })
+
+
 def main() -> int:
     if RUN_MODE == "test":
         print("test 모드는 python -m unittest discover -s tests -v 로 실행합니다.")
@@ -180,8 +215,9 @@ def main() -> int:
             today_date,
             state.to_dict(),
             is_rebalance=is_rebalance,
-            decision_validator=lambda decision: get_structured_prices(
-                decision.portfolio_decisions
+            decision_validator=lambda decision: _exclude_unpriceable_new_suggestions(
+                decision,
+                state,
             ),
         )
         updated_state = apply_analysis_decision(state, result.decision)

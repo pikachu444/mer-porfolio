@@ -407,11 +407,13 @@ def _parse_and_validate_model_decision_json(
 ) -> AnalysisDecisionV2:
     """Require the model decision to produce an applicable target portfolio."""
     decision = _parse_model_decision_json(text)
+    if decision_validator is not None:
+        validated = decision_validator(decision)
+        if isinstance(validated, AnalysisDecisionV2):
+            decision = validated
     if current_state and "schema_version" in current_state:
         state = parse_portfolio_state(current_state)
         apply_analysis_decision(state, decision)
-    if decision_validator is not None:
-        decision_validator(decision)
     return decision
 
 
