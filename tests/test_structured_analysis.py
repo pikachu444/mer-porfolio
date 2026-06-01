@@ -72,6 +72,26 @@ class StructuredAnalysisTest(unittest.TestCase):
         report_request = call.call_args_list[1].args[2]
         self.assertIn("구조화 판단 JSON", report_request)
 
+    def test_repairs_invalid_structured_decision_once(self):
+        invalid = json.loads(json.dumps(DECISION_RESPONSE, ensure_ascii=False))
+        invalid["portfolio_decisions"][0]["evidence_posts"] = []
+        responses = [
+            json.dumps(invalid, ensure_ascii=False),
+            json.dumps(DECISION_RESPONSE, ensure_ascii=False),
+            "# 메르AI 보고서\n\n## 현재 모델 포트폴리오\n\n내용",
+        ]
+
+        with patch.object(analyze, "_get_client", return_value=object()), \
+             patch.object(analyze, "_call_model_text", side_effect=responses) as call:
+            result = analyze.analyze_posts_structured(
+                POSTS,
+                "2026-06-01",
+                {"last_rebalanced_date": "2026-05-14"},
+            )
+
+        self.assertEqual(result.decision.portfolio_decisions[0]["name"], "Alcoa")
+        self.assertEqual(call.call_count, 3)
+
     def test_does_not_return_partial_result_when_report_fails(self):
         responses = [
             json.dumps(DECISION_RESPONSE, ensure_ascii=False),

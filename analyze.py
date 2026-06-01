@@ -220,7 +220,23 @@ def _call_stage_with_fallback(
                 user_message,
                 system_instruction,
             )
-            return validator(text)
+            try:
+                return validator(text)
+            except Exception as validation_error:
+                print(
+                    f"    {stage_name} 형식 교정 재시도: {model_name} — "
+                    f"{str(validation_error)[:180]}"
+                )
+                corrected_text = _call_model_text(
+                    client,
+                    model_name,
+                    user_message
+                    + "\n\n직전 응답은 다음 검증 오류가 있었습니다:\n"
+                    + str(validation_error)
+                    + "\n누락된 근거와 필수 필드를 보완하여 요구 형식의 전체 응답을 다시 출력하십시오.",
+                    system_instruction,
+                )
+                return validator(corrected_text)
         except Exception as exc:
             errors.append(f"{model_name}: {exc}")
             print(f"    {stage_name} 실패: {model_name} — {str(exc)[:180]}")
