@@ -363,6 +363,10 @@ def _validate_decision(
     allow_legacy_closed: bool = False,
 ) -> None:
     _validate_identity(item, path)
+    if item["asset_type"] in {"stock", "etf"} and not item["code"].strip():
+        raise PortfolioSchemaError(
+            f"{path}.code must not be empty for stock or etf portfolio decisions"
+        )
     actors = STATE_DECISION_ACTORS if allow_unclassified else DECISION_ACTORS
     decision_actor = _require_allowed(item, "decision_actor", actors, path)
     _require_allowed(item, "action", ACTIONS, path)

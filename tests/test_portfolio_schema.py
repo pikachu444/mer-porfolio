@@ -169,6 +169,16 @@ class PortfolioSchemaTest(unittest.TestCase):
         ):
             parse_portfolio_state_json(json.dumps(payload, ensure_ascii=False))
 
+    def test_rejects_stock_portfolio_decision_without_listing_code(self):
+        payload = state_payload()
+        payload["portfolio"][0]["code"] = ""
+
+        with self.assertRaisesRegex(
+            PortfolioSchemaError,
+            r"state\.portfolio\[0\]\.code must not be empty",
+        ):
+            parse_portfolio_state_json(json.dumps(payload, ensure_ascii=False))
+
     def test_rejects_missing_change_reason(self):
         payload = state_payload()
         del payload["portfolio"][0]["change_reason"]
