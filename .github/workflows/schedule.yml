@@ -73,6 +73,7 @@ jobs:
           RUN_MODE: ${{ github.event_name == 'schedule' && 'scheduled' || github.event.inputs.run_mode || 'verify' }}
           FETCH_DAYS: ${{ github.event.inputs.fetch_days || '' }}
           GEMINI_MODEL: ${{ github.event.inputs.gemini_model || '' }}
+          ENABLE_POST_SUMMARIES: "false"
         run: python main.py
 
       - name: verify 결과물 업로드
