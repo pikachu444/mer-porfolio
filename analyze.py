@@ -10,6 +10,7 @@ API 키 발급: https://aistudio.google.com/app/apikey
 환경변수: GEMINI_API_KEY
 """
 
+import json
 import os
 import re
 from dataclasses import dataclass
@@ -19,7 +20,7 @@ from typing import Callable, List, Dict, Tuple
 from google import genai
 from google.genai import types
 
-from portfolio_schema import AnalysisDecisionV2, parse_analysis_decision_json
+from portfolio_schema import AnalysisDecisionV2, parse_analysis_decision
 from system_prompt import (
     DECISION_SYSTEM_PROMPT,
     REPORT_SYSTEM_PROMPT,
@@ -333,7 +334,7 @@ def analyze_posts_structured(
         client,
         decision_message,
         DECISION_SYSTEM_PROMPT,
-        parse_analysis_decision_json,
+        _parse_model_decision_json,
         "1차 포트폴리오 판단",
     )
     assert isinstance(decision, AnalysisDecisionV2)
@@ -360,6 +361,33 @@ def _validate_markdown_report(report: str) -> str:
     if missing_headers:
         raise ValueError("필수 보고서 섹션 누락: " + ", ".join(missing_headers))
     return report
+
+
+def _parse_model_decision_json(text: str) -> AnalysisDecisionV2:
+    """Exclude untradeable portfolio suggestions before strict schema validation."""
+    stripped = text.strip()
+    if stripped.startswith("```"):
+        stripped = re.sub(r"^```(?:json)?\s*", "", stripped)
+        stripped = re.sub(r"\s*```$", "", stripped)
+    payload = json.loads(stripped)
+    decisions = payload.get("portfolio_decisions", [])
+    if not isinstance(decisions, list):
+        return parse_analysis_decision(payload)
+    tradeable = []
+    for item in decisions:
+        if (
+            isinstance(item, dict)
+            and item.get("asset_type") in {"stock", "etf"}
+            and (not isinstance(item.get("code"), str) or not item["code"].strip())
+        ):
+            print(
+                "    거래 불가능 포트폴리오 제안 제외: "
+                + str(item.get("name") or "이름 없음")
+            )
+            continue
+        tradeable.append(item)
+    payload["portfolio_decisions"] = tradeable
+    return parse_analysis_decision(payload)
 
 
 # ─── 메인 분석 함수 ───────────────────────────────────────────────────────────

@@ -52,6 +52,16 @@ class StructuredAnalysisTest(unittest.TestCase):
 
         self.assertEqual(analyze._validate_markdown_report(report), report)
 
+    def test_excludes_unlisted_stock_suggestion_from_model_output(self):
+        invalid = json.loads(json.dumps(DECISION_RESPONSE, ensure_ascii=False))
+        invalid["portfolio_decisions"][0]["code"] = None
+
+        parsed = analyze._parse_model_decision_json(
+            json.dumps(invalid, ensure_ascii=False)
+        )
+
+        self.assertEqual(parsed.portfolio_decisions, [])
+
     def test_generates_decision_before_markdown_report(self):
         responses = [
             json.dumps(DECISION_RESPONSE, ensure_ascii=False),
