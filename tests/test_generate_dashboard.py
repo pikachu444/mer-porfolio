@@ -7,6 +7,18 @@ from test_portfolio_schema import state_payload
 
 
 class GenerateDashboardTest(unittest.TestCase):
+    def test_png_weights_use_structured_state_and_include_cash(self):
+        weights = generate_dashboard._weights_from_state(state_payload())
+
+        self.assertEqual(weights[0]["name"], "Alcoa")
+        self.assertEqual(weights[0]["weight"], 8.0)
+        self.assertEqual(weights[-1], {
+            "name": "현금",
+            "weight": 92.0,
+            "action": "보유",
+            "market": "ETF",
+        })
+
     def test_html_distinguishes_model_portfolio_and_decision_actor(self):
         cache = {
             "active_positions": [

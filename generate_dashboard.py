@@ -62,6 +62,29 @@ def _parse_weights_from_report(report_text: str) -> list:
     return result
 
 
+def _weights_from_state(state: dict) -> list:
+    """구조화 상태에서 PNG 도넛 차트용 목표 비중을 만든다."""
+    result = [
+        {
+            "name": item.get("name", ""),
+            "weight": float(item.get("proposed_weight", 0)),
+            "action": item.get("action", ""),
+            "market": item.get("market", ""),
+        }
+        for item in state.get("portfolio", [])
+        if item.get("proposed_weight", 0) > 0
+    ]
+    cash_weight = max(0.0, 100.0 - sum(item["weight"] for item in result))
+    if cash_weight:
+        result.append({
+            "name": "현금",
+            "weight": cash_weight,
+            "action": "보유",
+            "market": "ETF",
+        })
+    return result
+
+
 def _load_portfolio_state() -> dict:
     """portfolio_state.json을 v2 구조로 읽는다. 기존 파일은 메모리에서 변환한다."""
     state_path = OUTPUT_DIR / "portfolio_state.json"
@@ -103,7 +126,12 @@ def _market_border_color(market: str) -> str:
         return "#fbbf24"
 
 
-def generate_png(cache: dict, report_text: str = "", today_str: str = "") -> Optional[Path]:
+def generate_png(
+    cache: dict,
+    report_text: str = "",
+    today_str: str = "",
+    state: Optional[dict] = None,
+) -> Optional[Path]:
     """
     PNG 차트 생성 (텔레그램 전송용).
 
@@ -147,7 +175,9 @@ def generate_png(cache: dict, report_text: str = "", today_str: str = "") -> Opt
 
     # ── 도넓 데이터 준비 ───────────────────────────────────────────────
     donut_items = []
-    if report_text:
+    if state:
+        donut_items = _weights_from_state(state)
+    elif report_text:
         for item in _parse_weights_from_report(report_text):
             donut_items.append({
                 "name": item.get("name", "?"),
@@ -273,10 +303,17 @@ def generate_png(cache: dict, report_text: str = "", today_str: str = "") -> Opt
         for i, avg in enumerate(avgs):
             sign  = "+" if avg >= 0 else ""
             color = "#22c55e" if avg >= 0 else "#ef4444"
-            ax2.text(i, avg + (0.4 if avg >= 0 else -0.4),
-                     f"{sign}{avg:.1f}%", ha="center",
-                     va="bottom" if avg >= 0 else "top",
-                     color=color, fontsize=8.5, fontweight="bold")
+            ax2.annotate(
+                f"{sign}{avg:.1f}%",
+                xy=(i, avg),
+                xytext=(0, 8 if avg >= 0 else -12),
+                textcoords="offset points",
+                ha="center",
+                va="bottom" if avg >= 0 else "top",
+                color=color,
+                fontsize=8.5,
+                fontweight="bold",
+            )
         ax2.set_title("\ub9ac\ud3ec\ud2b8 \ud68c\ucc28\ubcc4 \ud3c9\uade0 \uc218\uc775\ub960 (\uc6d0\ud654 \uae30\uc900)",
                       color="#f1f5f9", fontsize=12, pad=10)
         ax2.set_ylabel("\ud3c9\uade0 \uc218\uc775\ub960 (%)", color="#94a3b8", fontsize=9)
@@ -427,7 +464,7 @@ def generate_all(report_text: str, today: datetime, state: Optional[dict] = None
         print(f"  ⚠ HTML 대시보드 생성 실패: {e}")
     try:
         # 수익률 데이터 없어도 항상 PNG 생성 (첫 실행 시 목표비중 표시)
-        png_path = generate_png(cache or {}, report_content, today_str)
+        png_path = generate_png(cache or {}, report_content, today_str, state=state)
     except Exception as e:
         print(f"  !! PNG 차트 생성 실패: {e}")
     return html_path, png_path
