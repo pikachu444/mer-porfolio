@@ -46,12 +46,31 @@ POSTS = [
     }
 ]
 
+VALID_REPORT = (
+    "# 메르AI 보고서\n\n"
+    "## 핵심 인사이트\n\n내용\n\n"
+    "## 현재 모델 포트폴리오\n\n내용\n\n"
+    "## Watchlist\n\n내용\n\n"
+    "## 변경 및 종료 포지션\n\n내용"
+)
+
 
 class StructuredAnalysisTest(unittest.TestCase):
     def test_report_validation_does_not_require_exact_insight_heading(self):
-        report = "# 메르AI 보고서\n\n## 현재 모델 포트폴리오\n\n내용"
+        report = VALID_REPORT
 
         self.assertEqual(analyze._validate_markdown_report(report), report)
+
+    def test_report_validation_rejects_truncated_oversized_table(self):
+        report = (
+            "# 메르AI 보고서\n\n"
+            "## 핵심 인사이트\n\n내용\n\n"
+            "## 현재 모델 포트폴리오\n\n"
+            "| 종목 | 판단 근거" + (" " * 25_000)
+        )
+
+        with self.assertRaisesRegex(ValueError, r"필수 보고서 섹션 누락"):
+            analyze._validate_markdown_report(report)
 
     def test_excludes_unlisted_stock_suggestion_from_model_output(self):
         invalid = json.loads(json.dumps(DECISION_RESPONSE, ensure_ascii=False))
@@ -66,7 +85,7 @@ class StructuredAnalysisTest(unittest.TestCase):
     def test_generates_decision_before_markdown_report(self):
         responses = [
             json.dumps(DECISION_RESPONSE, ensure_ascii=False),
-            "# 메르AI 포트폴리오 분석\n\n## 인사이트\n\n내용\n\n## 포트폴리오\n\n내용",
+            VALID_REPORT,
         ]
 
         with patch.object(analyze, "_get_client", return_value=object()), \
@@ -89,7 +108,7 @@ class StructuredAnalysisTest(unittest.TestCase):
         responses = [
             json.dumps(invalid, ensure_ascii=False),
             json.dumps(DECISION_RESPONSE, ensure_ascii=False),
-            "# 메르AI 보고서\n\n## 현재 모델 포트폴리오\n\n내용",
+            VALID_REPORT,
         ]
 
         with patch.object(analyze, "_get_client", return_value=object()), \
@@ -122,7 +141,7 @@ class StructuredAnalysisTest(unittest.TestCase):
         responses = [
             json.dumps(additional, ensure_ascii=False),
             json.dumps(repaired, ensure_ascii=False),
-            "# 메르AI 보고서\n\n## 현재 모델 포트폴리오\n\n내용",
+            VALID_REPORT,
         ]
 
         with patch.object(analyze, "_get_client", return_value=object()), \
@@ -140,7 +159,7 @@ class StructuredAnalysisTest(unittest.TestCase):
         responses = [
             json.dumps(DECISION_RESPONSE, ensure_ascii=False),
             json.dumps(DECISION_RESPONSE, ensure_ascii=False),
-            "# 메르AI 보고서\n\n## 현재 모델 포트폴리오\n\n내용",
+            VALID_REPORT,
         ]
         validator = unittest.mock.Mock(
             side_effect=[ValueError("현재 가격을 가져오지 못했습니다: Alcoa"), None]
@@ -162,7 +181,7 @@ class StructuredAnalysisTest(unittest.TestCase):
     def test_report_uses_postprocessed_decision(self):
         responses = [
             json.dumps(DECISION_RESPONSE, ensure_ascii=False),
-            "# 메르AI 보고서\n\n## 현재 모델 포트폴리오\n\n내용",
+            VALID_REPORT,
         ]
         sanitized = parse_analysis_decision({
             **DECISION_RESPONSE,

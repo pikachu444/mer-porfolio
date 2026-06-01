@@ -366,10 +366,20 @@ def analyze_posts_structured(
 
 
 def _validate_markdown_report(report: str) -> str:
-    required_headers = ["포트폴리오"]
+    required_headers = [
+        "핵심 인사이트",
+        "현재 모델 포트폴리오",
+        "Watchlist",
+        "변경 및 종료 포지션",
+    ]
     missing_headers = [header for header in required_headers if header not in report]
     if missing_headers:
         raise ValueError("필수 보고서 섹션 누락: " + ", ".join(missing_headers))
+    if len(report) > 20_000:
+        raise ValueError(f"보고서가 비정상적으로 깁니다: {len(report)}자")
+    longest_line = max((len(line) for line in report.splitlines()), default=0)
+    if longest_line > 3_000:
+        raise ValueError(f"보고서 한 줄이 비정상적으로 깁니다: {longest_line}자")
     return report
 
 
