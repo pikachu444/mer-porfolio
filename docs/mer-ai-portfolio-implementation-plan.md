@@ -886,6 +886,75 @@ HTML에는 다음 내용을 표시한다.
   `429 RESOURCE_EXHAUSTED`가 발생했다. Google 공식 문서상 일일 요청 한도는 태평양 시간
   자정에 갱신되므로, 실제 HTML 보고서 재검증은 다음 갱신 이후 이어서 수행한다.
 
+### 13. Gemini 모델 역할 정책 복원
+
+**목적:** 투자 판단 품질에 직접 영향을 주는 Gemini 모델 역할을 기존 운영 의도에 맞게
+복원하고, 구조화된 2단계 호출에서 각 모델의 책임을 명확히 한다.
+
+**기존 운영 문서에서 확인한 정책**
+
+| 작업 | 모델 |
+|---|---|
+| 글별 1차 요약 | `gemini-2.5-flash` |
+| 최종 투자 분석 | `gemini-2.5-pro` 우선 |
+| 최종 투자 분석 fallback | `gemini-2.5-flash` |
+| `flash-lite` | 품질 저하 우려로 기본 경로에서 사용하지 않음 |
+
+**폐기 예정인 미합의 변경**
+
+- 통합 검증 중 quota 대응을 이유로 최종 분석 기본 모델을 `gemini-2.5-flash`, fallback을
+  `gemini-2.5-flash-lite`로 바꾼 변경은 사용자와 합의하지 않은 정책 변경이다.
+- 글별 1차 요약 모델을 `gemini-2.5-flash-lite`로 바꾼 변경도 사용자와 합의하지 않았다.
+- Actions에서 글별 1차 요약을 항상 끈 변경은 검증 실행의 호출 수를 줄이기 위한 임시
+  조정이었다. 정상 운영 정책으로 확정하지 않는다.
+
+**합의됨**
+
+| 작업 | 모델 |
+|---|---|
+| 글별 1차 요약 | `gemini-2.5-flash` |
+| 1차 포트폴리오 판단 JSON | `gemini-2.5-pro` 우선 |
+| 2차 사용자용 Markdown 보고서 | `gemini-2.5-pro` 우선 |
+| 두 분석 단계의 fallback | `gemini-2.5-flash` |
+| `gemini-2.5-flash-lite` | 정상 경로에서 사용하지 않음 |
+
+- 2차 사용자용 보고서는 단순 JSON 포맷 변환이 아니다. 블로그 글과 검증된 판단 JSON을
+  바탕으로 사람이 읽는 핵심 인사이트를 작성하므로 기존 보고서 품질을 유지하기 위해
+  `gemini-2.5-pro`를 사용한다.
+- 정상 분석 경로는 `pro` 호출 `2회`다. HTML, PNG, Telegram은 추가 LLM 호출 없이 검증된
+  판단 JSON과 Markdown 보고서로 생성한다.
+- `pro` 호출 실패 시 기존 운영 정책처럼 `flash`로 fallback한다. `flash`도 실패하면 이전
+  상태와 보고서를 유지하고 실행을 실패 처리한다.
+- 글별 1차 요약은 기존 정책대로 `flash`를 사용한다. 이미 생성된 요약 캐시는 재사용한다.
+- Actions의 정상 `scheduled`와 `rebalance`에서는 글별 Flash 요약을 활성화한다. 반복 실행되는
+  개발 검증용 `verify`에서는 요약 호출을 끄고 원문을 사용하여 최종 투자 판단과 보고서 생성
+  경로를 확인할 quota를 보존한다.
+- 무료 할당량을 실제 회귀 테스트처럼 반복 소진하지 않는다. 코드 및 문서 정합성 확인과
+  로컬 mock 테스트를 먼저 끝낸 뒤 실제 `verify`는 최종 확인 목적으로 `1회`만 실행한다.
+
+**논의 필요**
+
+- 없음.
+
+**구현 진행**
+
+- `analyze.py`의 기본 분석 순서를 `gemini-2.5-pro`, `gemini-2.5-flash`로 복원했다.
+- `fetch_mer.py`의 글별 1차 요약 모델을 `gemini-2.5-flash`로 복원했다.
+- Actions의 `scheduled`, `rebalance`에서는 글별 Flash 요약을 켜고, `verify`에서는 끄도록
+  모드별 환경변수를 분리했다.
+- `README.md`, `docs/project-operation.md`에 같은 모델 역할과 Actions 요약 정책을 반영했다.
+- 로컬 검증 결과: `PYTHONUTF8=1 python -m unittest discover -s tests -v` 전체 `62`개 테스트가
+  통과했고, `python -m py_compile ...`, `RUN_MODE=test python main.py`, `git diff --check`도
+  정상 종료했다.
+- 실제 `verify`는 무료 quota를 반복 소진하지 않도록 최종 확인 시점에 `1회`만 실행한다.
+
+**완료 조건**
+
+- 사용자와 모델 역할 정책을 합의한다.
+- `analyze.py`, `fetch_mer.py`, Actions 설명, `README.md`, `docs/project-operation.md`가
+  같은 정책을 설명한다.
+- 로컬 테스트와 실제 `verify`에서 선택된 모델 순서를 확인한다.
+
 ## 기존 완료 작업
 
 - [x] 동일 종목의 추천일별 중복 성과 행 제거

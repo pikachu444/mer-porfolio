@@ -56,6 +56,14 @@ VALID_REPORT = (
 
 
 class StructuredAnalysisTest(unittest.TestCase):
+    def test_default_analysis_models_preserve_quality_order(self):
+        self.assertEqual(analyze.PRIMARY_MODEL, "gemini-2.5-pro")
+        self.assertEqual(analyze.FALLBACK_MODEL, "gemini-2.5-flash")
+        self.assertEqual(
+            analyze._model_sequence(),
+            ["gemini-2.5-pro", "gemini-2.5-flash"],
+        )
+
     def test_report_validation_does_not_require_exact_insight_heading(self):
         report = VALID_REPORT
 

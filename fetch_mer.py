@@ -180,7 +180,7 @@ def _clean_text(text: str) -> str:
 # ─── 메인 수집 함수 ───────────────────────────────────────────────────────────
 
 def summarize_single_post(content: str) -> str:
-    """gemini-2.5-flash-lite 모델을 사용하여 글 1편을 요약한다."""
+    """gemini-2.5-flash 모델을 사용하여 글 1편을 요약한다."""
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         print("    [Info] GEMINI_API_KEY 미설정: 1차 요약 없이 원문을 최종 분석에 사용합니다.")
@@ -189,7 +189,7 @@ def summarize_single_post(content: str) -> str:
         client = genai.Client(api_key=api_key)
         response = generate_content_with_retry(
             client=client,
-            model="gemini-2.5-flash-lite",
+            model="gemini-2.5-flash",
             contents=f"블로그 글:\n{content}\n\n{MAP_SUMMARY_PROMPT}",
             config=types.GenerateContentConfig(
                 temperature=0.2,

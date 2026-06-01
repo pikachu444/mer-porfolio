@@ -3,8 +3,8 @@ analyze.py
 Google AI Studio (Gemini) 무료 API를 이용한 메르AI 분석 모듈
 
 무료 티어 한도 (2026년 기준):
-  - gemini-2.5-flash:      기본 분석 모델
-  - gemini-2.5-flash-lite: 고처리량 fallback 모델
+  - gemini-2.5-pro:   최종 분석 우선 모델
+  - gemini-2.5-flash: Pro 실패 시 fallback 모델
 
 API 키 발급: https://aistudio.google.com/app/apikey
 환경변수: GEMINI_API_KEY
@@ -39,12 +39,12 @@ from gemini_utils import generate_content_with_retry, is_daily_quota_error
 
 # ─── 모델 설정 ────────────────────────────────────────────────────────────────
 #
-# 최종 분석은 Flash를 먼저 시도하고, quota/지원 오류가 나면 Flash-Lite로 fallback한다.
+# 최종 분석은 Pro를 먼저 시도하고, quota/지원 오류가 나면 Flash로 fallback한다.
 # GEMINI_MODEL을 지정하면 해당 모델을 우선 시도한다.
 
 _gemini_model_env = os.environ.get("GEMINI_MODEL", "").strip()
-PRIMARY_MODEL = _gemini_model_env if _gemini_model_env else "gemini-2.5-flash"
-FALLBACK_MODEL = os.environ.get("GEMINI_FALLBACK_MODEL", "gemini-2.5-flash-lite").strip()
+PRIMARY_MODEL = _gemini_model_env if _gemini_model_env else "gemini-2.5-pro"
+FALLBACK_MODEL = os.environ.get("GEMINI_FALLBACK_MODEL", "gemini-2.5-flash").strip()
 
 # 투자 분석 특성상 안전 필터 완화 (주식 분석 용어 오탐 방지)
 SAFETY_SETTINGS = [

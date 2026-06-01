@@ -23,7 +23,7 @@ on:
         default: ""
         type: string
       gemini_model:
-        description: "Gemini 모델명 (비워두면 기본값 gemini-2.5-pro)"
+        description: "Gemini 분석 우선 모델명 (비워두면 기본값 gemini-2.5-pro)"
         required: false
         default: ""
         type: string
@@ -73,7 +73,7 @@ jobs:
           RUN_MODE: ${{ github.event_name == 'schedule' && 'scheduled' || github.event.inputs.run_mode || 'verify' }}
           FETCH_DAYS: ${{ github.event.inputs.fetch_days || '' }}
           GEMINI_MODEL: ${{ github.event.inputs.gemini_model || '' }}
-          ENABLE_POST_SUMMARIES: "false"
+          ENABLE_POST_SUMMARIES: ${{ (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && 'true' || 'false' }}
         run: python main.py
 
       - name: verify 결과물 업로드

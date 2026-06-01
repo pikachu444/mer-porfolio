@@ -18,11 +18,12 @@
 | 2 | 상태 로드 | `portfolio_state.py` | 이전 active 보유 종목을 읽어 Gemini 프롬프트에 전달 |
 | 3 | 블로그 수집 | `fetch_mer.py` | RSS에서 최근 글을 찾고 모바일 본문을 스크래핑 |
 | 4 | 글별 요약 캐시 | `fetch_mer.py` | 신규 글만 Flash로 1차 요약, 실패하면 원문 사용 |
-| 5 | 최종 분석 | `analyze.py` | Pro 우선으로 리포트 생성, 실패/quota 시 Flash fallback |
-| 6 | 추천 검증 | `portfolio_validation.py` | 블로그 직접 언급/기존 보유 근거 없는 신규 종목 제거 |
-| 7 | 상태 업데이트 | `portfolio_state.py` | 검증된 리포트 기준으로 다음 실행 참고 상태 저장 |
-| 8 | 성과 추적 | `track_returns.py` | 추천 종목 진입가/현재가 기반 성과 캐시 생성 |
-| 9 | 출력 생성 | `generate_dashboard.py`, `telegram_notify.py` | HTML, PNG, Telegram 메시지 생성 |
+| 5 | 구조화 판단 | `analyze.py` | Pro 우선으로 포트폴리오 판단 JSON 생성, 실패/quota 시 Flash fallback |
+| 6 | 사용자용 보고서 | `analyze.py` | Pro 우선으로 Markdown 보고서 생성, 실패/quota 시 Flash fallback |
+| 7 | 추천 검증 | `portfolio_validation.py` | 블로그 직접 언급/기존 보유 근거 없는 신규 종목 제거 |
+| 8 | 상태 업데이트 | `portfolio_state.py` | 검증된 리포트 기준으로 다음 실행 참고 상태 저장 |
+| 9 | 성과 추적 | `track_returns.py` | 추천 종목 진입가/현재가 기반 성과 캐시 생성 |
+| 10 | 출력 생성 | `generate_dashboard.py`, `telegram_notify.py` | HTML, PNG, Telegram 메시지 생성 |
 
 ## 주요 입력
 
@@ -40,11 +41,14 @@
 | 호출 | 모델 | 호출 조건 | 실패 처리 |
 |------|------|-----------|-----------|
 | 글별 1차 요약 | `gemini-2.5-flash` | 신규 글이고 `ENABLE_POST_SUMMARIES`가 꺼져 있지 않을 때 | 요약 없이 원문을 최종 분석에 사용 |
-| 최종 분석 | `gemini-2.5-pro` 우선 | 수집 기간의 요약/원문을 합쳐 리포트 생성 | quota, rate limit, 미지원 등 실패 시 Flash fallback |
-| 최종 fallback | `gemini-2.5-flash` | Pro 실패 후 | Flash도 실패하면 실행 실패 처리 |
-| 추천 검증 | API 호출 없음 | 리포트 생성 후 코드 후처리 | 근거 없는 종목 제거, 현금/대기자금으로 이동 |
+| 1차 포트폴리오 판단 JSON | `gemini-2.5-pro` 우선 | 수집 기간의 요약/원문과 현재 상태로 투자 판단 생성 | quota, rate limit, 미지원 등 실패 시 Flash fallback |
+| 2차 사용자용 Markdown 보고서 | `gemini-2.5-pro` 우선 | 검증된 판단 JSON과 글로 사람이 읽는 보고서 생성 | quota, rate limit, 미지원 등 실패 시 Flash fallback |
+| 분석 fallback | `gemini-2.5-flash` | 각 분석 단계에서 Pro 실패 후 | Flash도 실패하면 실행 실패 처리 |
+| 추천 검증 | API 호출 없음 | 판단 JSON 생성 후 코드 검증 | 구조 오류 차단, 검증 불가 신규 제안 제외 |
 
-요약 캐시는 `posts_db.json`의 `summary` 필드입니다. 이미 요약된 글은 다시 요약하지 않고 재사용합니다. 요약 캐시가 없으면 “요약 캐시 없음, 원문 사용” 로그가 나올 수 있으며, 이는 해당 글이 과거에 요약 없이 저장되었거나 요약 실패 후 원문 fallback 된 경우입니다. 백필/adhoc 실행에서 신규 글이 많을 때 API 호출이 폭증하지 않도록 `MAX_POST_SUMMARIES_PER_RUN` 기본값 3회까지만 요약하고 나머지는 원문을 사용합니다.
+요약 캐시는 `posts_db.json`의 `summary` 필드입니다. 이미 요약된 글은 다시 요약하지 않고 재사용합니다. 요약 캐시가 없으면 “요약 캐시 없음, 원문 사용” 로그가 나올 수 있으며, 이는 해당 글이 과거에 요약 없이 저장되었거나 요약 실패 후 원문 fallback 된 경우입니다. 백필/리밸런싱 실행에서 신규 글이 많을 때 API 호출이 폭증하지 않도록 `MAX_POST_SUMMARIES_PER_RUN` 기본값 3회까지만 요약하고 나머지는 원문을 사용합니다.
+
+Actions의 정상 `scheduled`와 `rebalance`에서는 글별 Flash 요약을 활성화합니다. 반복 실행되는 개발 검증용 `verify`에서는 요약 호출을 끄고 원문을 사용하여, 최종 투자 판단과 보고서 생성 경로를 확인할 quota를 보존합니다.
 
 ## 포트폴리오 구성 원칙
 
@@ -76,7 +80,7 @@
 | 개선 항목 | 현재 방향 |
 |-----------|-----------|
 | API 과다 호출 방지 | 신규 글만 1차 요약하고 캐시 재사용, 실행당 요약 호출 상한 적용, 추천 검증은 API 재호출 없이 처리 |
-| 모델 품질 | 최종 분석은 Pro 우선, Pro 실패 시 Flash fallback |
+| 모델 품질 | 구조화 판단과 사용자용 보고서는 모두 Pro 우선, Pro 실패 시 Flash fallback |
 | 요약 로그 | 요약 캐시 생성/원문 fallback/캐시 없음 로그를 구분 |
 | 종목 창작 방지 | 코드 후처리로 직접 언급/기존 보유 외 신규 KR/US 종목 제거 |
 | HTML/Telegram 괴리 방지 | 사용자 출력은 모두 검증 완료 리포트를 기준으로 생성 |

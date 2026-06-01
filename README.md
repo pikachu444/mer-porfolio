@@ -6,7 +6,7 @@
 
 | 방식 | 위치 | 자동화 | 필요한 것 |
 |------|------|--------|---------|
-| **GitHub Actions 자동화** | 이 폴더 | ✅ 매일 자동 실행 | Gemini API 키 (무료) |
+| **GitHub Actions 자동화** | 이 폴더 | ✅ 매일 자동 실행 | Gemini API 키 |
 | **ChatGPT GPTs 페르소나** | `personas/chatgpt-gpt/` | 수동 트리거 | ChatGPT Plus (이미 있음) |
 | **Gemini Gems 페르소나** | `personas/gemini-gem/` | 수동 트리거 | Gemini Advanced (이미 있음) |
 
@@ -18,7 +18,7 @@ Gemini AI가 메르 스타일로 한국·미국 주식 포트폴리오를 분석
 
 prophit_(blog.naver.com/prophit_)이 수동으로 하던 "메르ai포트"를 완전 자동화한 버전.
 
-**비용: $0** (Gemini API 무료 티어 + GitHub Actions 무료)
+**비용:** GitHub Actions와 Gemini API 무료 tier 범위에서는 $0. Pro 호출을 안정적으로 운영하려면 Google Cloud Billing 연결이 필요할 수 있습니다.
 
 ---
 
@@ -29,7 +29,7 @@ prophit_(blog.naver.com/prophit_)이 수동으로 하던 "메르ai포트"를 완
         ↓
 [메르 블로그 RSS 파싱 + 전문 스크래핑]
         ↓
-[원문/요약 캐시 구성 + Gemini 2.5 Flash 최종 분석]
+[원문/Flash 요약 캐시 구성 + Gemini 2.5 Pro 우선 판단 및 보고서]
         ↓
 [output/report_YYYYMMDD.md 로 자동 저장 + 커밋]
 ```
@@ -98,7 +98,7 @@ prophit_(blog.naver.com/prophit_)이 수동으로 하던 "메르ai포트"를 완
 | 매일 자정 (KST) | 직전 2일 |
 
 수동 실행은 Actions → Run workflow에서 가능합니다.
-`adhoc` 모드는 기본 14일 수집과 리밸런싱을 수행하고, `test` 모드는 저장/텔레그램 전송을 제한합니다.
+`rebalance` 모드는 기본 14일 수집과 리밸런싱을 수행하고, `verify` 모드는 운영 상태를 변경하지 않는 실제 출력 검증을 수행합니다. `test` 모드는 API 호출 없이 mock 테스트만 실행합니다.
 
 ---
 
@@ -138,11 +138,11 @@ output/
 | 변수명 | 기본값 | 설명 |
 |--------|--------|------|
 | `GEMINI_API_KEY` | (필수) | Google AI Studio API 키 |
-| `RUN_MODE` | `scheduled` | `scheduled`, `adhoc`, `test` |
-| `FETCH_DAYS` | 모드별 기본값 | 수집할 최근 일수 (`scheduled` 2일, `adhoc` 14일, `test` 3일) |
+| `RUN_MODE` | `scheduled` | `scheduled`, `rebalance`, `verify`, `test` |
+| `FETCH_DAYS` | 모드별 기본값 | 수집할 최근 일수 (`scheduled` 2일, `rebalance`/`verify` 14일) |
 | `GEMINI_MODEL` | `gemini-2.5-pro` | 최종 리포트 생성 우선 모델 |
 | `GEMINI_FALLBACK_MODEL` | `gemini-2.5-flash` | Pro 실패/quota 시 fallback 모델 |
-| `ENABLE_POST_SUMMARIES` | 켜짐 | 신규 글별 1차 요약 API 호출 여부 |
+| `ENABLE_POST_SUMMARIES` | 켜짐 | 신규 글별 1차 요약 API 호출 여부. Actions의 `verify`에서는 꺼짐 |
 | `MAX_POST_SUMMARIES_PER_RUN` | `3` | 실행 1회당 신규 글 요약 최대 호출 수 |
 | `OUTPUT_DIR` | `output` | 리포트 저장 경로 |
 
@@ -153,7 +153,7 @@ export GEMINI_API_KEY="AIza..."
 python main.py
 
 # 최근 14일 수집, 리밸런싱 모드
-RUN_MODE=adhoc FETCH_DAYS=14 python main.py
+RUN_MODE=rebalance FETCH_DAYS=14 python main.py
 ```
 
 ---
@@ -161,15 +161,16 @@ RUN_MODE=adhoc FETCH_DAYS=14 python main.py
 ## 모델 및 한도 운영 정책
 
 - 무료 API 운영에서는 신규 글만 1차 요약하고, 기존 요약 캐시는 재사용해 호출 수를 줄입니다.
-- 백필/adhoc 실행에서 신규 글이 많아도 `MAX_POST_SUMMARIES_PER_RUN` 상한까지만 요약하고 나머지는 원문 fallback합니다.
-- 최종 리포트 생성은 `gemini-2.5-pro`를 먼저 시도하고 실패/quota 시 `gemini-2.5-flash`로 fallback합니다.
+- Actions의 정상 `scheduled`와 `rebalance`에서는 글별 Flash 요약을 켜고, 반복 검증용 `verify`에서는 끕니다.
+- 백필/리밸런싱 실행에서 신규 글이 많아도 `MAX_POST_SUMMARIES_PER_RUN` 상한까지만 요약하고 나머지는 원문 fallback합니다.
+- 구조화 판단 JSON과 사용자용 Markdown 보고서는 각각 `gemini-2.5-pro`를 먼저 시도하고 실패/quota 시 `gemini-2.5-flash`로 fallback합니다.
 - 신규 블로그 글은 원문을 저장하고, 기본값에서는 Flash로 글별 1차 요약 캐시를 생성합니다.
 - 기존 글의 요약 캐시가 있으면 사용하고, 비어 있으면 원문을 최종 분석 입력에 포함합니다.
 - 분석 입력은 `FETCH_DAYS` 기간 안의 글로 제한해 무료 API의 입력 토큰 한도를 아낍니다.
 - `gemini-2.5-pro` 한도가 낮거나 지원되지 않으면 자동으로 Flash fallback을 사용합니다.
 - `flash-lite` 계열은 품질 저하 우려가 있어 기본 경로에서 사용하지 않습니다.
 - rate limit 또는 quota 오류가 나면 모델별 호출 간격을 두고 재시도합니다.
-- 최종 분석 모델이 계속 실패하면 낮은 모델로 조용히 대체하지 않고, 기존 `latest.md`를 유지한 채 GitHub Actions를 실패 처리합니다.
+- Pro와 Flash가 모두 실패하면 기존 `latest.md`와 운영 상태를 유지한 채 GitHub Actions를 실패 처리합니다.
 
 기본 호출 간격:
 
