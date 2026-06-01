@@ -137,6 +137,11 @@ def parse_portfolio_state(payload: Any) -> PortfolioStateV2:
             f"state.portfolio[{index}]",
             allow_unclassified=True,
         )
+    total_weight = sum(item["proposed_weight"] for item in portfolio)
+    if total_weight > 100:
+        raise PortfolioSchemaError(
+            f"state.portfolio proposed_weight total must not exceed 100, got {total_weight}"
+        )
     for index, item in enumerate(watchlist):
         _validate_watchlist_item(item, f"state.watchlist[{index}]")
     for index, item in enumerate(closed_positions):

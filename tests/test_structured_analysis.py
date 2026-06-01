@@ -102,6 +102,39 @@ class StructuredAnalysisTest(unittest.TestCase):
         self.assertEqual(result.decision.portfolio_decisions[0]["name"], "Alcoa")
         self.assertEqual(call.call_count, 3)
 
+    def test_repairs_decision_when_applied_portfolio_exceeds_one_hundred(self):
+        retained = json.loads(json.dumps(DECISION_RESPONSE["portfolio_decisions"][0]))
+        retained["proposed_weight"] = 95.0
+        current_state = {
+            "schema_version": "2.0",
+            "portfolio": [retained],
+            "watchlist": [],
+            "closed_positions": [],
+            "decision_history": [],
+            "last_rebalanced_date": "2026-05-14",
+        }
+        additional = json.loads(json.dumps(DECISION_RESPONSE, ensure_ascii=False))
+        additional["portfolio_decisions"][0]["name"] = "Microsoft"
+        additional["portfolio_decisions"][0]["code"] = "MSFT"
+        repaired = json.loads(json.dumps(additional, ensure_ascii=False))
+        repaired["portfolio_decisions"][0]["proposed_weight"] = 5.0
+        responses = [
+            json.dumps(additional, ensure_ascii=False),
+            json.dumps(repaired, ensure_ascii=False),
+            "# 메르AI 보고서\n\n## 현재 모델 포트폴리오\n\n내용",
+        ]
+
+        with patch.object(analyze, "_get_client", return_value=object()), \
+             patch.object(analyze, "_call_model_text", side_effect=responses) as call:
+            result = analyze.analyze_posts_structured(
+                POSTS,
+                "2026-06-01",
+                current_state,
+            )
+
+        self.assertEqual(result.decision.portfolio_decisions[0]["proposed_weight"], 5.0)
+        self.assertEqual(call.call_count, 3)
+
     def test_does_not_return_partial_result_when_report_fails(self):
         responses = [
             json.dumps(DECISION_RESPONSE, ensure_ascii=False),

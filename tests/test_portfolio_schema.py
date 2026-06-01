@@ -122,6 +122,15 @@ class PortfolioSchemaTest(unittest.TestCase):
         with self.assertRaisesRegex(PortfolioSchemaError, r"analysis\.run_type"):
             parse_analysis_decision_json(json.dumps(payload, ensure_ascii=False))
 
+    def test_rejects_portfolio_weight_total_over_one_hundred(self):
+        payload = state_payload()
+        payload["portfolio"].append(
+            decision(name="Microsoft", code="MSFT", proposed_weight=93.0)
+        )
+
+        with self.assertRaisesRegex(PortfolioSchemaError, r"total must not exceed 100"):
+            parse_portfolio_state_json(json.dumps(payload, ensure_ascii=False))
+
     def test_decision_prompt_requests_structured_contract(self):
         message = build_decision_user_message(
             context="블로그 본문",

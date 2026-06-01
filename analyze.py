@@ -20,7 +20,12 @@ from typing import Callable, List, Dict, Tuple
 from google import genai
 from google.genai import types
 
-from portfolio_schema import AnalysisDecisionV2, parse_analysis_decision
+from portfolio_schema import (
+    AnalysisDecisionV2,
+    apply_analysis_decision,
+    parse_analysis_decision,
+    parse_portfolio_state,
+)
 from system_prompt import (
     DECISION_SYSTEM_PROMPT,
     REPORT_SYSTEM_PROMPT,
@@ -334,7 +339,7 @@ def analyze_posts_structured(
         client,
         decision_message,
         DECISION_SYSTEM_PROMPT,
-        _parse_model_decision_json,
+        lambda text: _parse_and_validate_model_decision_json(text, current_state),
         "1차 포트폴리오 판단",
     )
     assert isinstance(decision, AnalysisDecisionV2)
@@ -388,6 +393,18 @@ def _parse_model_decision_json(text: str) -> AnalysisDecisionV2:
         tradeable.append(item)
     payload["portfolio_decisions"] = tradeable
     return parse_analysis_decision(payload)
+
+
+def _parse_and_validate_model_decision_json(
+    text: str,
+    current_state: dict | None,
+) -> AnalysisDecisionV2:
+    """Require the model decision to produce an applicable target portfolio."""
+    decision = _parse_model_decision_json(text)
+    if current_state and "schema_version" in current_state:
+        state = parse_portfolio_state(current_state)
+        apply_analysis_decision(state, decision)
+    return decision
 
 
 # ─── 메인 분석 함수 ───────────────────────────────────────────────────────────
