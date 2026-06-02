@@ -188,6 +188,7 @@ def _call_model_text(
     model_name: str,
     user_message: str,
     system_instruction: str,
+    response_mime_type: str | None = None,
 ) -> str:
     """Call one Gemini model and require a non-empty text response."""
     config = types.GenerateContentConfig(
@@ -196,6 +197,7 @@ def _call_model_text(
         top_p=0.85,
         max_output_tokens=16384,
         safety_settings=SAFETY_SETTINGS,
+        response_mime_type=response_mime_type,
     )
     response = call_gemini_with_retry(
         client=client,
@@ -216,6 +218,7 @@ def _call_stage_with_fallback(
     system_instruction: str,
     validator: Callable[[str], object],
     stage_name: str,
+    response_mime_type: str | None = None,
 ) -> object:
     """Run one structured-analysis stage with the configured model fallback."""
     errors: list[str] = []
@@ -227,6 +230,7 @@ def _call_stage_with_fallback(
                 model_name,
                 user_message,
                 system_instruction,
+                response_mime_type,
             )
             for correction_attempt in range(3):
                 try:
@@ -247,6 +251,7 @@ def _call_stage_with_fallback(
                         + str(validation_error)
                         + "\n누락된 근거와 필수 필드를 보완하여 요구 형식의 전체 응답을 다시 출력하십시오.",
                         system_instruction,
+                        response_mime_type,
                     )
         except Exception as exc:
             errors.append(f"{model_name}: {exc}")
@@ -385,12 +390,21 @@ def analyze_posts_structured(
             decision_validator,
         ),
         "1차 포트폴리오 판단",
+        response_mime_type="application/json",
     )
     assert isinstance(decision, AnalysisDecisionV2)
+
+    projected_state = current_state or {}
+    if current_state and current_state.get("schema_version") == "2.0":
+        projected_state = apply_analysis_decision(
+            parse_portfolio_state(current_state),
+            decision,
+        ).to_dict()
 
     report_builder = lambda request_context: build_report_user_message(
         context=request_context,
         decision_payload=decision.to_dict(),
+        projected_state=projected_state,
         analysis_date=analysis_date,
     )
     report_context = _fit_context_to_budget(client, context, report_builder)

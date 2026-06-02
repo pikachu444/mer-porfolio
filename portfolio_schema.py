@@ -271,9 +271,31 @@ def apply_analysis_decision(
             else None
         ),
     ).to_dict()
-    updated["watchlist"] = deepcopy(analysis.watchlist)
+    updated["watchlist"] = _apply_watchlist_updates(
+        updated["watchlist"],
+        analysis.watchlist,
+    )
     updated["insights"] = deepcopy(analysis.insights)
     return parse_portfolio_state(updated)
+
+
+def _apply_watchlist_updates(
+    watchlist: list[dict[str, Any]],
+    updates: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Merge changed Watchlist items while preserving omitted entries."""
+    merged = deepcopy(watchlist)
+    by_key = {_item_key(item): item for item in merged}
+    for update in updates:
+        candidate = deepcopy(update)
+        key = _item_key(candidate)
+        current = by_key.get(key)
+        if current is None:
+            merged.append(candidate)
+            by_key[key] = candidate
+        else:
+            current.update(candidate)
+    return merged
 
 
 def _migrate_legacy_holding(holding: dict[str, Any], index: int) -> dict[str, Any]:

@@ -146,7 +146,38 @@ class StructuredAnalysisTest(unittest.TestCase):
         self.assertIn("포트폴리오", result.report)
         self.assertEqual(call.call_count, 2)
         report_request = call.call_args_list[1].args[2]
-        self.assertIn("구조화 판단 JSON", report_request)
+        self.assertIn("구조화 변경분 JSON", report_request)
+
+    def test_report_receives_full_state_after_empty_delta(self):
+        current = {
+            "schema_version": "2.0",
+            "portfolio": [DECISION_RESPONSE["portfolio_decisions"][0]],
+            "watchlist": [],
+            "closed_positions": [],
+            "decision_history": [],
+            "insights": [],
+            "last_rebalanced_date": "2026-05-14",
+        }
+        no_change = {
+            **DECISION_RESPONSE,
+            "portfolio_decisions": [],
+        }
+        responses = [
+            json.dumps(no_change, ensure_ascii=False),
+            VALID_REPORT,
+        ]
+
+        with patch.object(analyze, "_get_client", return_value=object()), \
+             patch.object(analyze, "_call_model_text", side_effect=responses) as call:
+            analyze.analyze_posts_structured(
+                POSTS,
+                "2026-06-01",
+                current,
+            )
+
+        report_request = call.call_args_list[1].args[2]
+        self.assertIn("변경 반영 후 전체 모델 포트폴리오 상태", report_request)
+        self.assertIn('"name": "Alcoa"', report_request)
 
     def test_repairs_invalid_structured_decision_once(self):
         invalid = json.loads(json.dumps(DECISION_RESPONSE, ensure_ascii=False))

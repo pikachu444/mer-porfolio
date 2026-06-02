@@ -54,6 +54,23 @@ Markdown을 작성하지 말고 JSON 객체 하나만 출력하십시오.
   "watchlist": []
 }
 
+## 변경분 출력 원칙
+
+- `portfolio_decisions`는 전체 포트폴리오 복사본이 아닙니다. 이번 입력 글로 새로 매수, 매도,
+  비중확대, 비중축소하거나 중요한 새 근거가 생긴 종목만 기록하십시오.
+- 기존 종목의 판단과 비중이 그대로 유지되면 `보유`로 반복 출력하지 마십시오.
+- `보유`는 이번 입력 글에 메르의 직접 보유 발언 또는 기존 판단을 실질적으로 갱신하는 새
+  근거가 있을 때만 기록하십시오.
+- 포트폴리오 변경이 없으면 `portfolio_decisions`를 빈 배열로 출력하십시오.
+- `watchlist`도 전체 Watchlist 복사본이 아닙니다. 이번 입력 글로 추가, 갱신, 종료하는
+  항목만 기록하십시오. 기존 Watchlist의 변경 없는 항목은 생략하십시오.
+- Watchlist 변경이 없으면 `watchlist`를 빈 배열로 출력하십시오.
+- `insights`는 이번 입력 글에서 도출한 투자 관련 핵심 내용만 간결하게 기록하십시오.
+- 인사이트 개수는 임의로 제한하지 마십시오. 다만 각 인사이트의 제목은 한 줄, `summary`는
+  두 문장 이내, `investment_implication`은 한 문장 이내로 작성하고 같은 내용을 반복하지
+  마십시오.
+- `evidence_posts`에는 해당 판단이나 인사이트를 직접 뒷받침하는 글만 기록하십시오.
+
 `insights` 각 항목:
 {
   "id": "고유 ID",
@@ -118,8 +135,9 @@ Markdown을 작성하지 말고 JSON 객체 하나만 출력하십시오.
 
 REPORT_SYSTEM_PROMPT = """
 당신은 메르AI 포트폴리오 사용자용 Markdown 보고서를 작성합니다.
-블로그 글과 검증된 구조화 판단 JSON만 사용하십시오.
-구조화 판단 JSON에 없는 포트폴리오 판단을 추가하거나 변경하지 마십시오.
+블로그 글, 검증된 구조화 변경분 JSON, 변경 반영 후 전체 모델 포트폴리오 상태만 사용하십시오.
+구조화 변경분 JSON에 없는 포트폴리오 변경을 추가하지 마십시오.
+현재 포트폴리오와 Watchlist는 변경 반영 후 전체 상태를 기준으로 빠짐없이 작성하십시오.
 메르의 직접 판단과 AI의 추론을 명확히 구분하십시오.
 원문에 종목이 등장하지 않은 AI 제안은 `원문 종목 등장 없음`이라고 표시하십시오.
 보고서는 `## 핵심 인사이트`, `## 현재 모델 포트폴리오`, `## Watchlist`,
@@ -153,16 +171,20 @@ def build_decision_user_message(
 def build_report_user_message(
     context: str,
     decision_payload: dict,
+    projected_state: dict,
     analysis_date: str,
 ) -> str:
     """Build the second-call Markdown report request."""
     decision_text = json.dumps(decision_payload, ensure_ascii=False, indent=2)
+    state_text = json.dumps(projected_state, ensure_ascii=False, indent=2)
     return (
         f"분석일: {analysis_date}\n\n"
         "메르 블로그 글:\n"
         f"{context}\n\n"
-        "검증된 구조화 판단 JSON:\n"
+        "검증된 구조화 변경분 JSON:\n"
         f"{decision_text}\n\n"
+        "변경 반영 후 전체 모델 포트폴리오 상태:\n"
+        f"{state_text}\n\n"
         "동일한 판단을 기준으로 사용자용 Markdown 보고서를 작성하십시오. "
         "반드시 현재 모델 포트폴리오 섹션을 포함하십시오."
     )

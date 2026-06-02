@@ -12,6 +12,7 @@ from portfolio_schema import (
     migrate_legacy_state,
     parse_analysis_decision,
     parse_analysis_decision_json,
+    parse_portfolio_state,
     parse_portfolio_state_json,
     save_analysis_decision_file,
     save_portfolio_state_file,
@@ -173,10 +174,12 @@ class PortfolioSchemaTest(unittest.TestCase):
                 "portfolio_decisions": [decision()],
                 "watchlist": [],
             },
+            projected_state=state_payload(),
             analysis_date="2026-06-01",
         )
 
-        self.assertIn("검증된 구조화 판단 JSON", message)
+        self.assertIn("검증된 구조화 변경분 JSON", message)
+        self.assertIn("변경 반영 후 전체 모델 포트폴리오 상태", message)
         self.assertIn('"portfolio_decisions"', message)
 
     def test_parses_structured_state(self):
@@ -600,7 +603,7 @@ class PortfolioSchemaTest(unittest.TestCase):
         self.assertEqual(saved["schema_version"], "2.0")
         self.assertEqual(saved["portfolio"][0]["decision_actor"], "미분류")
 
-    def test_applies_first_reevaluation_and_replaces_watchlist(self):
+    def test_applies_first_reevaluation_and_adds_watchlist_update(self):
         legacy = {
             "schema_version": "1.0",
             "last_report_date": "2026-05-31",
@@ -640,6 +643,49 @@ class PortfolioSchemaTest(unittest.TestCase):
         self.assertEqual(updated.portfolio[0]["decision_actor"], "AI")
         self.assertEqual(updated.watchlist[0]["name"], "우주 데이터센터")
         self.assertEqual(updated.last_rebalanced_date, "2026-06-01")
+
+    def test_empty_delta_preserves_portfolio_and_watchlist(self):
+        state = parse_portfolio_state(state_payload())
+        analysis = parse_analysis_decision(
+            {
+                "analysis_date": "2026-06-01",
+                "run_type": "regular",
+                "insights": [],
+                "portfolio_decisions": [],
+                "watchlist": [],
+            }
+        )
+
+        updated = apply_analysis_decision(state, analysis)
+
+        self.assertEqual(updated.portfolio, state.portfolio)
+        self.assertEqual(updated.watchlist, state.watchlist)
+
+    def test_watchlist_delta_updates_one_item_without_dropping_others(self):
+        payload = state_payload()
+        second = dict(payload["watchlist"][0])
+        second["name"] = "헬륨"
+        second["code"] = ""
+        payload["watchlist"].append(second)
+        state = parse_portfolio_state(payload)
+        update = dict(payload["watchlist"][0])
+        update["status"] = "재검토 필요"
+        update["observation_reason"] = "새 글에서 추가 확인이 필요해짐"
+        analysis = parse_analysis_decision(
+            {
+                "analysis_date": "2026-06-01",
+                "run_type": "regular",
+                "insights": [],
+                "portfolio_decisions": [],
+                "watchlist": [update],
+            }
+        )
+
+        updated = apply_analysis_decision(state, analysis)
+
+        self.assertEqual(len(updated.watchlist), 2)
+        self.assertEqual(updated.watchlist[0]["status"], "재검토 필요")
+        self.assertEqual(updated.watchlist[1]["name"], "헬륨")
 
     def test_saves_validated_analysis_decision_file(self):
         analysis = parse_analysis_decision(
