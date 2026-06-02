@@ -1118,4 +1118,14 @@ HTML에는 다음 내용을 표시한다.
   생성을 확인했다.
 - 로컬 검증 결과: `PYTHONUTF8=1 python -m unittest discover -s tests -v` 전체 `75`개 테스트,
   `python -m py_compile ...`, `git diff --check`가 통과했다.
-- 실제 API 호출과 결과 품질 비교는 API 키가 준비된 이후 이어서 수행한다.
+- OpenCode Zen 무료 모델은 API 키 없이 외부 `chat/completions` 호출이 가능함을 확인했다.
+- `deepseek-v4-flash-free`는 최근 글 `4`편으로 판단 JSON과 Markdown 보고서를 생성하고
+  구조 검증을 통과했다. 다만 사용자용 보고서가 블로그 분석을 `(메르 판단)`으로 표시하여
+  메르의 직접 투자 판단과 AI 해석을 오해하게 만들 수 있으므로 운영 채택하지 않는다.
+- `mimo-v2.5-free`는 판단 JSON에서 신규 판단에 허용되지 않는 `미분류` 주체를 반환하여
+  구조 검증에 실패했다.
+- `minimax-m3-free`는 실제 입력에서 서버 `500`, `nemotron-3-super-free`는 `180초` 응답
+  지연으로 실패했다. `qwen3.6-plus-free`는 무료 목록에는 있지만 익명 호출은 `401`로
+  차단됐다.
+- Cerebras 실제 호출과 Gemini 결과 직접 비교는 API 키 또는 Gemini quota가 준비된 이후
+  이어서 수행한다.

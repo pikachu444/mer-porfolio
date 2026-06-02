@@ -191,6 +191,12 @@ API 키가 준비되면 명시적으로 `--execute`를 추가합니다.
 export CEREBRAS_API_KEY="..."
 python scripts/evaluate_llm_provider.py --provider cerebras --execute
 ```
+
+OpenCode Zen의 무료 모델은 현재 API 키 없이도 비교 실행할 수 있습니다.
+
+```bash
+python scripts/evaluate_llm_provider.py --provider opencode-zen --execute
+```
 - Pro와 Flash가 모두 실패하면 기존 `latest.md`와 운영 상태를 유지한 채 GitHub Actions를 실패 처리합니다.
 
 기본 호출 간격:

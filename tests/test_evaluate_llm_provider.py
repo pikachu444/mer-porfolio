@@ -16,6 +16,8 @@ class EvaluateLlmProviderTests(unittest.TestCase):
     def test_provider_defaults_are_explicit(self):
         self.assertEqual(PROVIDERS["cerebras"].api_key_env, "CEREBRAS_API_KEY")
         self.assertEqual(PROVIDERS["opencode-zen"].api_key_env, "OPENCODE_API_KEY")
+        self.assertTrue(PROVIDERS["cerebras"].api_key_required)
+        self.assertFalse(PROVIDERS["opencode-zen"].api_key_required)
 
     def test_selects_recent_posts_and_excludes_known_unrelated_posts(self):
         posts = [

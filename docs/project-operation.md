@@ -115,3 +115,4 @@ python scripts/evaluate_llm_provider.py --provider opencode-zen
 ```
 
 실제 외부 호출은 공급자별 API 키를 준비한 뒤 `--execute`를 명시한 경우에만 수행한다.
+OpenCode Zen의 무료 모델은 현재 API 키 없이도 `--execute` 비교 실행이 가능하다.

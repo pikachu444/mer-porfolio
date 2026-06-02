@@ -38,6 +38,7 @@ class ProviderConfig:
     endpoint: str
     api_key_env: str
     default_model: str
+    api_key_required: bool = True
 
 
 PROVIDERS = {
@@ -50,6 +51,7 @@ PROVIDERS = {
         endpoint="https://opencode.ai/zen/v1/chat/completions",
         api_key_env="OPENCODE_API_KEY",
         default_model="deepseek-v4-flash-free",
+        api_key_required=False,
     ),
 }
 
@@ -92,12 +94,12 @@ def build_chat_payload(model: str, system_instruction: str, user_message: str) -
 
 
 def call_openai_compatible(endpoint: str, api_key: str, payload: dict[str, Any]) -> str:
+    headers = {"Content-Type": "application/json"}
+    if api_key:
+        headers["Authorization"] = f"Bearer {api_key}"
     response = requests.post(
         endpoint,
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-        },
+        headers=headers,
         json=payload,
         timeout=180,
     )
@@ -162,6 +164,7 @@ def run(args: argparse.Namespace) -> Path:
             "model": model,
             "endpoint": provider.endpoint,
             "executed": bool(args.execute),
+            "status": "prepared",
         }
     )
     _write_json(output_dir / "metadata.json", metadata)
@@ -171,27 +174,41 @@ def run(args: argparse.Namespace) -> Path:
         return output_dir
 
     api_key = os.environ.get(provider.api_key_env, "").strip()
-    if not api_key:
+    if provider.api_key_required and not api_key:
         raise ValueError(f"{provider.api_key_env} 환경변수를 설정한 뒤 다시 실행하십시오.")
 
-    decision_text = call_openai_compatible(provider.endpoint, api_key, decision_payload)
-    (output_dir / "02-decision-raw.txt").write_text(decision_text, encoding="utf-8")
+    try:
+        decision_text = call_openai_compatible(provider.endpoint, api_key, decision_payload)
+        (output_dir / "02-decision-raw.txt").write_text(decision_text, encoding="utf-8")
 
-    state = load_or_migrate_portfolio_state(_read_json(args.state)).to_dict()
-    decision = _parse_and_validate_model_decision_json(decision_text, state)
-    _write_json(output_dir / "03-decision-validated.json", decision.to_dict())
+        state = load_or_migrate_portfolio_state(_read_json(args.state)).to_dict()
+        decision = _parse_and_validate_model_decision_json(decision_text, state)
+        _write_json(output_dir / "03-decision-validated.json", decision.to_dict())
 
-    report_message = build_report_user_message(
-        context=context,
-        decision_payload=decision.to_dict(),
-        analysis_date=args.analysis_date,
-    )
-    report_payload = build_chat_payload(model, REPORT_SYSTEM_PROMPT, report_message)
-    _write_json(output_dir / "04-report-request.json", report_payload)
+        report_message = build_report_user_message(
+            context=context,
+            decision_payload=decision.to_dict(),
+            analysis_date=args.analysis_date,
+        )
+        report_payload = build_chat_payload(model, REPORT_SYSTEM_PROMPT, report_message)
+        _write_json(output_dir / "04-report-request.json", report_payload)
 
-    report = call_openai_compatible(provider.endpoint, api_key, report_payload)
-    _validate_markdown_report(report)
-    (output_dir / "05-report-validated.md").write_text(report, encoding="utf-8")
+        report = call_openai_compatible(provider.endpoint, api_key, report_payload)
+        _validate_markdown_report(report)
+        (output_dir / "05-report-validated.md").write_text(report, encoding="utf-8")
+    except Exception as exc:
+        metadata.update(
+            {
+                "status": "failed",
+                "error_type": type(exc).__name__,
+                "error": str(exc)[:1000],
+            }
+        )
+        _write_json(output_dir / "metadata.json", metadata)
+        raise
+
+    metadata["status"] = "completed"
+    _write_json(output_dir / "metadata.json", metadata)
     return output_dir
 
 
