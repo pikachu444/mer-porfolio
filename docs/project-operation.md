@@ -103,3 +103,15 @@ Actions의 정상 `scheduled`와 `rebalance`에서는 글별 Flash 요약을 활
 | HTML/Telegram 출력 불일치 수정 | 출력 기준이 `latest.md`인지 `portfolio_state.json`인지 확인하기 위해 |
 | `portfolio_state.json` 수정 | 내부 상태와 사용자 표시 포트폴리오를 혼동하지 않기 위해 |
 | `performance_cache.json` 수정 | 성과 추적 그래프가 추천 비중 그래프와 다른 데이터라는 점을 유지하기 위해 |
+
+## 무료 LLM API 비교 평가
+
+운영 공급자를 바꾸기 전에는 `scripts/evaluate_llm_provider.py`로 별도 비교 평가를 수행한다.
+기본 실행은 API 키 없이 요청 JSON만 만들며, 운영 상태와 Telegram을 변경하지 않는다.
+
+```bash
+python scripts/evaluate_llm_provider.py --provider cerebras
+python scripts/evaluate_llm_provider.py --provider opencode-zen
+```
+
+실제 외부 호출은 공급자별 API 키를 준비한 뒤 `--execute`를 명시한 경우에만 수행한다.

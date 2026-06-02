@@ -174,6 +174,23 @@ RUN_MODE=rebalance FETCH_DAYS=14 python main.py
 - `gemini-2.5-pro` 한도가 낮거나 지원되지 않으면 자동으로 Flash fallback을 사용합니다.
 - `flash-lite` 계열은 품질 저하 우려가 있어 기본 경로에서 사용하지 않습니다.
 - rate limit 또는 quota 오류가 나면 모델별 호출 간격을 두고 재시도합니다.
+
+### 무료 LLM API 비교 평가
+
+운영 상태와 Telegram 전송을 건드리지 않고 OpenAI 호환 API의 요청 묶음을 만들 수 있습니다.
+기본 실행은 외부 API를 호출하지 않습니다.
+
+```bash
+python scripts/evaluate_llm_provider.py --provider cerebras
+python scripts/evaluate_llm_provider.py --provider opencode-zen
+```
+
+API 키가 준비되면 명시적으로 `--execute`를 추가합니다.
+
+```bash
+export CEREBRAS_API_KEY="..."
+python scripts/evaluate_llm_provider.py --provider cerebras --execute
+```
 - Pro와 Flash가 모두 실패하면 기존 `latest.md`와 운영 상태를 유지한 채 GitHub Actions를 실패 처리합니다.
 
 기본 호출 간격:

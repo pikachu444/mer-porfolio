@@ -21,3 +21,6 @@ Thumbs.db
 # 로컬 테스트 출력 (output/ 폴더는 GitHub Actions가 커밋)
 # output/ 주석처리 — Actions에서 커밋 필요
 output/error_*.log
+
+# 로컬 LLM 공급자 비교 결과
+evaluation_runs/
