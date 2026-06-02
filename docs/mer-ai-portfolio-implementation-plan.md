@@ -1056,7 +1056,13 @@ HTML에는 다음 내용을 표시한다.
   표시한다. 자동화 프롬프트와 수동 페르소나의 섹터 온도계는 제거했다.
 - 로컬 검증 결과: `PYTHONUTF8=1 python -m unittest discover -s tests -v` 전체 `71`개 테스트,
   `python -m py_compile ...`, `RUN_MODE=test python main.py`, `git diff --check`가 통과했다.
-- 실제 `verify`는 개발 브랜치 push 후 최종 확인 목적으로 `1회` 실행한다.
+- 개발 브랜치 `codex/mer-ai-portfolio-v2`의 커밋 `213b0c8`에서 실제 `verify`를 `1회`
+  실행했다. Actions 자동 테스트와 임시 artifact 업로드는 정상 동작했다.
+- 실제 분석은 1차 판단 호출 전에 quota로 차단됐다. `gemini-2.5-pro` 무료 한도는 `0`,
+  fallback `gemini-2.5-flash`는 일일 요청 한도 `20`회를 이미 소진한 상태였다.
+- 실패 artifact `mer-ai-verify-26789845470`에 오류 로그와 임시 상태가 남았다. `verify`는
+  운영 상태를 커밋하지 않았고 HTML, PNG, Telegram 결과 검증은 quota 갱신 이후 이어서
+  수행해야 한다.
 
 ## 기존 완료 작업
 
