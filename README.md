@@ -197,6 +197,13 @@ OpenCode Zen의 무료 모델은 현재 API 키 없이도 비교 실행할 수 �
 ```bash
 python scripts/evaluate_llm_provider.py --provider opencode-zen --execute
 ```
+
+글별 요약과 투자 관련 여부 분류만 비교할 수도 있습니다. 이 실행도 운영 요약 캐시는
+변경하지 않습니다.
+
+```bash
+python scripts/evaluate_llm_provider.py --provider opencode-zen --task summary --execute
+```
 - Pro와 Flash가 모두 실패하면 기존 `latest.md`와 운영 상태를 유지한 채 GitHub Actions를 실패 처리합니다.
 
 기본 호출 간격:

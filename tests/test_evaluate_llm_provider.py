@@ -7,8 +7,10 @@ from pathlib import Path
 from scripts.evaluate_llm_provider import (
     PROVIDERS,
     build_chat_payload,
+    build_summary_payload,
     prepare_evaluation,
     select_evaluation_posts,
+    select_summary_evaluation_posts,
 )
 
 
@@ -33,6 +35,20 @@ class EvaluateLlmProviderTests(unittest.TestCase):
         self.assertEqual(payload["model"], "model-id")
         self.assertEqual(payload["messages"][0], {"role": "system", "content": "system"})
         self.assertEqual(payload["messages"][1], {"role": "user", "content": "user"})
+
+    def test_builds_summary_request_with_operational_prompt(self):
+        payload = build_summary_payload("model-id", "본문")
+        self.assertEqual(payload["model"], "model-id")
+        self.assertIn("블로그 글:\n본문", payload["messages"][0]["content"])
+        self.assertIn("investment_relevant", payload["messages"][0]["content"])
+
+    def test_summary_selection_keeps_known_unrelated_posts(self):
+        posts = [
+            {"date": "2999-01-02", "title": "관련", "investment_relevant": True},
+            {"date": "2999-01-01", "title": "무관", "investment_relevant": False},
+        ]
+        selected = select_summary_evaluation_posts(posts, days=365000, limit=None)
+        self.assertEqual([post["title"] for post in selected], ["관련", "무관"])
 
     def test_prepares_decision_request_without_api_key(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -116,3 +116,9 @@ python scripts/evaluate_llm_provider.py --provider opencode-zen
 
 실제 외부 호출은 공급자별 API 키를 준비한 뒤 `--execute`를 명시한 경우에만 수행한다.
 OpenCode Zen의 무료 모델은 현재 API 키 없이도 `--execute` 비교 실행이 가능하다.
+글별 요약만 비교할 때는 `--task summary`를 사용한다. 이 모드도 운영 요약 캐시를 변경하지
+않는다.
+
+```bash
+python scripts/evaluate_llm_provider.py --provider opencode-zen --model mimo-v2.5-free --task summary --execute
+```
