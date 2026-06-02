@@ -47,6 +47,7 @@ PRIMARY_MODEL = _gemini_model_env if _gemini_model_env else "gemini-2.5-pro"
 FALLBACK_MODEL = os.environ.get("GEMINI_FALLBACK_MODEL", "gemini-2.5-flash").strip()
 MODEL_INPUT_TOKEN_LIMIT = 1_048_576
 MODEL_INPUT_SAFE_RATIO = 0.8
+MODEL_OUTPUT_TOKEN_LIMIT = 65_536
 
 # 투자 분석 특성상 안전 필터 완화 (주식 분석 용어 오탐 방지)
 SAFETY_SETTINGS = [
@@ -133,7 +134,7 @@ def _try_model(
             system_instruction=SYSTEM_PROMPT,
             temperature=0.3,
             top_p=0.85,
-            max_output_tokens=16384,
+            max_output_tokens=MODEL_OUTPUT_TOKEN_LIMIT,
             safety_settings=SAFETY_SETTINGS,
         )
 
@@ -195,7 +196,7 @@ def _call_model_text(
         system_instruction=system_instruction,
         temperature=0.2,
         top_p=0.85,
-        max_output_tokens=16384,
+        max_output_tokens=MODEL_OUTPUT_TOKEN_LIMIT,
         safety_settings=SAFETY_SETTINGS,
         response_mime_type=response_mime_type,
     )
