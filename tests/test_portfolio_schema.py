@@ -32,7 +32,7 @@ def decision(**overrides):
         "asset_type": "stock",
         "decision_actor": "AI",
         "action": "매수",
-        "basis": "섹터 분석",
+        "basis": "종목 분석",
         "decision_date": "2026-05-28",
         "evidence_posts": [
             {
@@ -41,11 +41,29 @@ def decision(**overrides):
                 "published_date": "2026-05-27",
             }
         ],
-        "source_mentioned": False,
+        "source_mentioned": True,
         "previous_weight": None,
         "proposed_weight": 8.0,
         "weight_source": "AI 제안",
         "change_reason": "알루미늄 공급 제한에 따른 수혜 추론",
+        "source_scope": "source_named_security",
+        "investment_rationale": "원문에 등장한 Alcoa가 알루미늄 공급 제한의 수혜를 받을 수 있음",
+        "current_entry_reason": "공급 제한 발표로 투자 논리가 구체화됨",
+        "key_risks": ["알루미늄 가격 변동성"],
+        "linked_insight_ids": ["aluminum-supply"],
+    }
+    value.update(overrides)
+    return value
+
+
+def insight(**overrides):
+    value = {
+        "id": "aluminum-supply",
+        "title": "알루미늄 공급 제한",
+        "summary": "기니의 보크사이트 수출 제한으로 알루미늄 공급 불안이 커짐",
+        "investment_implication": "원문에 등장한 관련 종목의 수혜 가능성을 검토",
+        "evidence_posts": decision()["evidence_posts"],
+        "related_decision_codes": ["AA"],
     }
     value.update(overrides)
     return value
@@ -91,6 +109,7 @@ def state_payload():
             )
         ],
         "decision_history": [decision()],
+        "insights": [insight()],
         "last_rebalanced_date": "2026-05-14",
     }
 
@@ -100,6 +119,7 @@ class PortfolioSchemaTest(unittest.TestCase):
         payload = {
             "analysis_date": "2026-06-01",
             "run_type": "regular",
+            "insights": [insight()],
             "portfolio_decisions": [decision()],
             "watchlist": state_payload()["watchlist"],
         }
@@ -115,6 +135,7 @@ class PortfolioSchemaTest(unittest.TestCase):
         payload = {
             "analysis_date": "2026-06-01",
             "run_type": "adhoc",
+            "insights": [insight()],
             "portfolio_decisions": [decision()],
             "watchlist": [],
         }
@@ -257,25 +278,67 @@ class PortfolioSchemaTest(unittest.TestCase):
         ):
             parse_portfolio_state_json(json.dumps(payload, ensure_ascii=False))
 
-    def test_rejects_unmentioned_ai_buy_without_sector_basis(self):
+    def test_rejects_unmentioned_ai_stock_buy(self):
         payload = state_payload()
-        payload["portfolio"][0]["basis"] = "종목 분석"
+        payload["portfolio"][0].update(
+            {
+                "basis": "섹터 분석",
+                "source_mentioned": False,
+                "source_scope": "sector_only",
+            }
+        )
 
         with self.assertRaisesRegex(
             PortfolioSchemaError,
-            r"state\.portfolio\[0\]\.basis",
+            r"must stay on the Watchlist",
         ):
             parse_portfolio_state_json(json.dumps(payload, ensure_ascii=False))
 
-    def test_rejects_unmentioned_ai_buy_without_evidence_post(self):
-        payload = state_payload()
-        payload["portfolio"][0]["evidence_posts"] = []
+    def test_allows_unmentioned_sector_etf_buy_with_required_details(self):
+        payload = {
+            "analysis_date": "2026-06-01",
+            "run_type": "regular",
+            "insights": [insight(related_decision_codes=["XME"])],
+            "portfolio_decisions": [
+                decision(
+                    name="금속 ETF",
+                    code="XME",
+                    asset_type="etf",
+                    basis="섹터 분석",
+                    source_mentioned=False,
+                    source_scope="sector_only",
+                )
+            ],
+            "watchlist": [],
+        }
 
-        with self.assertRaisesRegex(
-            PortfolioSchemaError,
-            r"state\.portfolio\[0\]\.evidence_posts",
-        ):
-            parse_portfolio_state_json(json.dumps(payload, ensure_ascii=False))
+        parsed = parse_analysis_decision(payload)
+
+        self.assertEqual(parsed.portfolio_decisions[0]["asset_type"], "etf")
+
+    def test_rejects_changed_decision_without_linked_insight(self):
+        payload = {
+            "analysis_date": "2026-06-01",
+            "run_type": "regular",
+            "insights": [insight()],
+            "portfolio_decisions": [decision(linked_insight_ids=[])],
+            "watchlist": [],
+        }
+
+        with self.assertRaisesRegex(PortfolioSchemaError, r"linked_insight_ids must not be empty"):
+            parse_analysis_decision(payload)
+
+    def test_rejects_ai_buy_without_key_risk(self):
+        payload = {
+            "analysis_date": "2026-06-01",
+            "run_type": "regular",
+            "insights": [insight()],
+            "portfolio_decisions": [decision(key_risks=[])],
+            "watchlist": [],
+        }
+
+        with self.assertRaisesRegex(PortfolioSchemaError, r"key_risks must not be empty"):
+            parse_analysis_decision(payload)
 
     def test_allows_unmentioned_ai_hold_with_previous_decision_basis(self):
         payload = state_payload()
@@ -419,6 +482,7 @@ class PortfolioSchemaTest(unittest.TestCase):
         payload = {
             "analysis_date": "2026-06-01",
             "run_type": "regular",
+            "insights": [insight()],
             "portfolio_decisions": [decision()],
             "watchlist": [],
         }
@@ -492,6 +556,7 @@ class PortfolioSchemaTest(unittest.TestCase):
         payload = {
             "analysis_date": "2026-06-01",
             "run_type": "regular",
+            "insights": [insight()],
             "portfolio_decisions": [
                 decision(
                     decision_actor="미분류",
@@ -556,6 +621,7 @@ class PortfolioSchemaTest(unittest.TestCase):
             {
                 "analysis_date": "2026-06-01",
                 "run_type": "rebalance",
+                "insights": [insight()],
                 "portfolio_decisions": [
                     decision(
                         action="보유",
@@ -580,6 +646,7 @@ class PortfolioSchemaTest(unittest.TestCase):
             {
                 "analysis_date": "2026-06-01",
                 "run_type": "regular",
+                "insights": [insight()],
                 "portfolio_decisions": [decision()],
                 "watchlist": [],
             }

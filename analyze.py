@@ -45,6 +45,8 @@ from gemini_utils import generate_content_with_retry, is_daily_quota_error
 _gemini_model_env = os.environ.get("GEMINI_MODEL", "").strip()
 PRIMARY_MODEL = _gemini_model_env if _gemini_model_env else "gemini-2.5-pro"
 FALLBACK_MODEL = os.environ.get("GEMINI_FALLBACK_MODEL", "gemini-2.5-flash").strip()
+MODEL_INPUT_TOKEN_LIMIT = 1_048_576
+MODEL_INPUT_SAFE_RATIO = 0.8
 
 # 투자 분석 특성상 안전 필터 완화 (주식 분석 용어 오탐 방지)
 SAFETY_SETTINGS = [
@@ -155,7 +157,7 @@ def _try_model(
             return False, f"응답 길이가 너무 짧아 분석 중단으로 의심됨 ({len(text)}자)"
             
         # 2. 필수 마크다운 세션 검증 (정규식 파싱 안전성 보증)
-        required_headers = ["포트폴리오 추천", "섹터별 온도계"]
+        required_headers = ["포트폴리오 추천"]
         missing_headers = [h for h in required_headers if h not in text]
         if missing_headers:
             return False, f"필수 세션 누락: {', '.join(missing_headers)} (Gemini 답변 중간 끊김 발생)"
@@ -314,6 +316,41 @@ def _structured_context(posts: List[Dict]) -> str:
     return "\n\n".join(blocks)
 
 
+def _count_tokens(client: genai.Client, model: str, contents: str) -> int | None:
+    """Return request tokens when the live client supports token counting."""
+    models = getattr(client, "models", None)
+    if models is None or not hasattr(models, "count_tokens"):
+        return None
+    response = models.count_tokens(model=model, contents=contents)
+    return int(response.total_tokens)
+
+
+def _fit_context_to_budget(
+    client: genai.Client,
+    context: str,
+    message_builder: Callable[[str], str],
+) -> str:
+    """Keep stored inputs intact and trim only an abnormal transmitted context tail."""
+    model = PRIMARY_MODEL
+    safe_limit = int(MODEL_INPUT_TOKEN_LIMIT * MODEL_INPUT_SAFE_RATIO)
+    message = message_builder(context)
+    tokens = _count_tokens(client, model, message)
+    if tokens is None or tokens <= safe_limit:
+        return context
+
+    low, high = 0, len(context)
+    suffix = "\n...(전송용 분석 문맥 끝부분 생략)"
+    while low < high:
+        middle = (low + high + 1) // 2
+        candidate = context[:middle] + suffix
+        candidate_tokens = _count_tokens(client, model, message_builder(candidate))
+        if candidate_tokens is not None and candidate_tokens <= safe_limit:
+            low = middle
+        else:
+            high = middle - 1
+    return context[:low] + suffix
+
+
 def analyze_posts_structured(
     posts: List[Dict],
     analysis_date: str,
@@ -330,12 +367,14 @@ def analyze_posts_structured(
     run_type = "rebalance" if is_rebalance else "regular"
     client = _get_client()
 
-    decision_message = build_decision_user_message(
-        context=context,
+    decision_builder = lambda request_context: build_decision_user_message(
+        context=request_context,
         analysis_date=analysis_date,
         run_type=run_type,
         current_state=current_state,
     )
+    context = _fit_context_to_budget(client, context, decision_builder)
+    decision_message = decision_builder(context)
     decision = _call_stage_with_fallback(
         client,
         decision_message,
@@ -349,11 +388,13 @@ def analyze_posts_structured(
     )
     assert isinstance(decision, AnalysisDecisionV2)
 
-    report_message = build_report_user_message(
-        context=context,
+    report_builder = lambda request_context: build_report_user_message(
+        context=request_context,
         decision_payload=decision.to_dict(),
         analysis_date=analysis_date,
     )
+    report_context = _fit_context_to_budget(client, context, report_builder)
+    report_message = report_builder(report_context)
     report = _call_stage_with_fallback(
         client,
         report_message,
@@ -501,7 +542,7 @@ def analyze_posts(
                 user_message
                 + "\n\n중요: 출력은 반드시 '# 메르AI 포트폴리오 리포트'로 시작하고, "
                 + "'## 📌 시장 분석 핵심 인사이트', '## 📊 포트폴리오 추천', "
-                + "'## 🔍 섹터별 온도계', '## 💬 한 줄 코멘트' 섹션을 모두 포함해야 합니다. "
+                + "'## 💬 한 줄 코멘트' 섹션을 모두 포함해야 합니다. "
                 + "토큰이 부족하면 각 항목을 짧게 줄이더라도 섹션을 생략하지 마세요."
             )
             success, result = _try_model(client, model_name, retry_message, max_retries=1)

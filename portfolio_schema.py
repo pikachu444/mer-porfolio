@@ -27,6 +27,12 @@ ASSET_TYPES = {"stock", "etf", "sector", "cash"}
 WEIGHT_SOURCES = {"메르 직접 발언 기반", "AI 제안"}
 WATCHLIST_STATUSES = {"관심", "재검토 필요", "포트폴리오 편입", "종료"}
 RUN_TYPES = {"regular", "rebalance"}
+SOURCE_SCOPES = {
+    "blogger_trade_disclosure",
+    "source_named_security",
+    "sector_only",
+    "previous_decision",
+}
 
 
 class PortfolioSchemaError(ValueError):
@@ -39,6 +45,7 @@ class PortfolioStateV2:
     watchlist: list[dict[str, Any]]
     closed_positions: list[dict[str, Any]]
     decision_history: list[dict[str, Any]]
+    insights: list[dict[str, Any]]
     last_rebalanced_date: str | None
     schema_version: str = SCHEMA_VERSION
 
@@ -49,6 +56,7 @@ class PortfolioStateV2:
             "watchlist": self.watchlist,
             "closed_positions": self.closed_positions,
             "decision_history": self.decision_history,
+            "insights": self.insights,
             "last_rebalanced_date": self.last_rebalanced_date,
         }
 
@@ -57,6 +65,7 @@ class PortfolioStateV2:
 class AnalysisDecisionV2:
     analysis_date: str
     run_type: str
+    insights: list[dict[str, Any]]
     portfolio_decisions: list[dict[str, Any]]
     watchlist: list[dict[str, Any]]
 
@@ -64,6 +73,7 @@ class AnalysisDecisionV2:
         return {
             "analysis_date": self.analysis_date,
             "run_type": self.run_type,
+            "insights": self.insights,
             "portfolio_decisions": self.portfolio_decisions,
             "watchlist": self.watchlist,
         }
@@ -92,6 +102,7 @@ def parse_analysis_decision(payload: Any) -> AnalysisDecisionV2:
     root = _require_object(payload, "analysis")
     analysis_date = _require_date(root, "analysis_date", "analysis")
     run_type = _require_allowed(root, "run_type", RUN_TYPES, "analysis")
+    insights = _require_object_list(root, "insights", "analysis")
     portfolio_decisions = _require_object_list(
         root,
         "portfolio_decisions",
@@ -99,14 +110,36 @@ def parse_analysis_decision(payload: Any) -> AnalysisDecisionV2:
     )
     watchlist = _require_object_list(root, "watchlist", "analysis")
 
+    insight_ids = set()
+    for index, item in enumerate(insights):
+        insight_id = _validate_insight(item, f"analysis.insights[{index}]")
+        if insight_id in insight_ids:
+            raise PortfolioSchemaError(f"analysis.insights contains duplicate id: {insight_id}")
+        insight_ids.add(insight_id)
     for index, item in enumerate(portfolio_decisions):
-        _validate_decision(item, f"analysis.portfolio_decisions[{index}]")
+        _validate_decision(
+            item,
+            f"analysis.portfolio_decisions[{index}]",
+            strict_candidate_details=True,
+        )
+        if _requires_linked_insight(item):
+            linked = _require_string_list(item, "linked_insight_ids", f"analysis.portfolio_decisions[{index}]")
+            if not linked:
+                raise PortfolioSchemaError(
+                    f"analysis.portfolio_decisions[{index}].linked_insight_ids must not be empty for a changed decision"
+                )
+            unknown = sorted(set(linked) - insight_ids)
+            if unknown:
+                raise PortfolioSchemaError(
+                    f"analysis.portfolio_decisions[{index}].linked_insight_ids contains unknown ids: {', '.join(unknown)}"
+                )
     for index, item in enumerate(watchlist):
         _validate_watchlist_item(item, f"analysis.watchlist[{index}]")
 
     return AnalysisDecisionV2(
         analysis_date=analysis_date,
         run_type=run_type,
+        insights=insights,
         portfolio_decisions=portfolio_decisions,
         watchlist=watchlist,
     )
@@ -125,6 +158,9 @@ def parse_portfolio_state(payload: Any) -> PortfolioStateV2:
     watchlist = _require_object_list(root, "watchlist", "state")
     closed_positions = _require_object_list(root, "closed_positions", "state")
     decision_history = _require_object_list(root, "decision_history", "state")
+    insights = root.get("insights", [])
+    if not isinstance(insights, list) or any(not isinstance(item, dict) for item in insights):
+        raise PortfolioSchemaError("state.insights must be a list of objects")
     last_rebalanced_date = _require_optional_date(
         root,
         "last_rebalanced_date",
@@ -148,6 +184,8 @@ def parse_portfolio_state(payload: Any) -> PortfolioStateV2:
         _validate_closed_position(item, f"state.closed_positions[{index}]")
     for index, item in enumerate(decision_history):
         _validate_decision(item, f"state.decision_history[{index}]")
+    for index, item in enumerate(insights):
+        _validate_insight(item, f"state.insights[{index}]")
 
     return PortfolioStateV2(
         schema_version=schema_version,
@@ -155,6 +193,7 @@ def parse_portfolio_state(payload: Any) -> PortfolioStateV2:
         watchlist=watchlist,
         closed_positions=closed_positions,
         decision_history=decision_history,
+        insights=insights,
         last_rebalanced_date=last_rebalanced_date,
     )
 
@@ -183,6 +222,7 @@ def migrate_legacy_state(payload: Any) -> PortfolioStateV2:
             "watchlist": [],
             "closed_positions": closed_positions,
             "decision_history": [],
+            "insights": [],
             "last_rebalanced_date": None,
         }
     )
@@ -232,6 +272,7 @@ def apply_analysis_decision(
         ),
     ).to_dict()
     updated["watchlist"] = deepcopy(analysis.watchlist)
+    updated["insights"] = deepcopy(analysis.insights)
     return parse_portfolio_state(updated)
 
 
@@ -351,6 +392,18 @@ def _validate_watchlist_item(item: dict[str, Any], path: str) -> None:
     _require_optional_string(item, "portfolio_entry_date", path)
     _require_optional_string(item, "watchlist_closed_date", path)
     _require_allowed(item, "status", WATCHLIST_STATUSES, path)
+    _require_optional_allowed(item, "source_scope", SOURCE_SCOPES, path)
+    _require_optional_string(item, "observation_reason", path)
+
+
+def _validate_insight(item: dict[str, Any], path: str) -> str:
+    insight_id = _require_string(item, "id", path)
+    _require_string(item, "title", path)
+    _require_string(item, "summary", path)
+    _require_string(item, "investment_implication", path)
+    _validate_evidence_posts(item, path)
+    _require_string_list(item, "related_decision_codes", path)
+    return insight_id
 
 
 def _validate_identity(item: dict[str, Any], path: str) -> None:
@@ -366,6 +419,7 @@ def _validate_decision(
     *,
     allow_unclassified: bool = False,
     allow_legacy_closed: bool = False,
+    strict_candidate_details: bool = False,
 ) -> None:
     _validate_identity(item, path)
     if item["asset_type"] in {"stock", "etf"} and not item["code"].strip():
@@ -383,6 +437,11 @@ def _validate_decision(
     _require_number(item, "proposed_weight", path)
     _require_allowed(item, "weight_source", WEIGHT_SOURCES, path)
     _require_string(item, "change_reason", path)
+    source_scope = _require_optional_allowed(item, "source_scope", SOURCE_SCOPES, path)
+    _require_optional_string(item, "investment_rationale", path)
+    _require_optional_string(item, "current_entry_reason", path)
+    _require_optional_string_list(item, "key_risks", path)
+    _require_optional_string_list(item, "linked_insight_ids", path)
     if _weight_changed(item) and not evidence_posts and not allow_legacy_closed:
         raise PortfolioSchemaError(
             f"{path}.evidence_posts must not be empty when weight changes"
@@ -400,6 +459,10 @@ def _validate_decision(
             raise PortfolioSchemaError(
                 f"{path}.source_mentioned must be true when decision_actor is '메르'"
             )
+        if strict_candidate_details and source_scope != "blogger_trade_disclosure":
+            raise PortfolioSchemaError(
+                f"{path}.source_scope must be 'blogger_trade_disclosure' when decision_actor is '메르'"
+            )
     if decision_actor == "미분류":
         if basis != "이전 판단 유지":
             raise PortfolioSchemaError(
@@ -412,16 +475,34 @@ def _validate_decision(
     if (
         decision_actor == "AI"
         and item["action"] == "매수"
+        and item["asset_type"] == "stock"
         and not source_mentioned
     ):
-        if basis != "섹터 분석":
-            raise PortfolioSchemaError(
-                f"{path}.basis must be '섹터 분석' for an AI buy not mentioned in source"
-            )
+        raise PortfolioSchemaError(
+            f"{path}: an AI stock buy not mentioned in source must stay on the Watchlist"
+        )
+    if decision_actor == "AI" and item["action"] == "매수" and strict_candidate_details:
+        _require_string(item, "investment_rationale", path)
+        _require_string(item, "current_entry_reason", path)
+        risks = _require_string_list(item, "key_risks", path)
+        if not risks:
+            raise PortfolioSchemaError(f"{path}.key_risks must not be empty for an AI buy")
         if not evidence_posts:
-            raise PortfolioSchemaError(
-                f"{path}.evidence_posts must not be empty for an AI buy not mentioned in source"
-            )
+            raise PortfolioSchemaError(f"{path}.evidence_posts must not be empty for an AI buy")
+        if item["asset_type"] == "stock":
+            if not source_mentioned:
+                raise PortfolioSchemaError(
+                    f"{path}: an AI stock buy not mentioned in source must stay on the Watchlist"
+                )
+            if source_scope != "source_named_security":
+                raise PortfolioSchemaError(
+                    f"{path}.source_scope must be 'source_named_security' for an AI stock buy"
+                )
+        elif item["asset_type"] == "etf" and not source_mentioned:
+            if basis != "섹터 분석" or source_scope != "sector_only":
+                raise PortfolioSchemaError(
+                    f"{path}: an AI sector ETF buy not mentioned in source requires sector_only scope and sector basis"
+                )
 
 
 def apply_portfolio_decisions(
@@ -446,7 +527,11 @@ def apply_portfolio_decisions(
 
     for index, raw_decision in enumerate(decisions):
         decision = deepcopy(raw_decision)
-        _validate_decision(decision, f"decisions[{index}]")
+        _validate_decision(
+            decision,
+            f"decisions[{index}]",
+            strict_candidate_details=True,
+        )
         key = _item_key(decision)
         current = by_key.get(key)
 
@@ -539,6 +624,25 @@ def _require_optional_string(item: dict[str, Any], key: str, path: str) -> str |
     return value
 
 
+def _require_string_list(item: dict[str, Any], key: str, path: str) -> list[str]:
+    value = item.get(key)
+    if not isinstance(value, list) or any(
+        not isinstance(entry, str) or not entry.strip() for entry in value
+    ):
+        raise PortfolioSchemaError(f"{path}.{key} must be a list of non-empty strings")
+    return value
+
+
+def _require_optional_string_list(
+    item: dict[str, Any],
+    key: str,
+    path: str,
+) -> list[str] | None:
+    if key not in item:
+        return None
+    return _require_string_list(item, key, path)
+
+
 def _require_date(item: dict[str, Any], key: str, path: str) -> str:
     value = _require_string(item, key, path)
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
@@ -612,6 +716,17 @@ def _require_allowed(
     return value
 
 
+def _require_optional_allowed(
+    item: dict[str, Any],
+    key: str,
+    allowed: set[str],
+    path: str,
+) -> str | None:
+    if key not in item or item[key] is None:
+        return None
+    return _require_allowed(item, key, allowed, path)
+
+
 def _reject_keys(item: dict[str, Any], keys: set[str], path: str) -> None:
     for key in sorted(keys):
         if key in item:
@@ -622,6 +737,10 @@ def _weight_changed(item: dict[str, Any]) -> bool:
     previous = item.get("previous_weight")
     proposed = item.get("proposed_weight")
     return previous is not None and previous != proposed
+
+
+def _requires_linked_insight(item: dict[str, Any]) -> bool:
+    return item.get("action") in {"매수", "매도", "비중확대", "비중축소"} or _weight_changed(item)
 
 
 def _strip_json_fence(text: str) -> str:

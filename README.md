@@ -95,10 +95,13 @@ prophit_(blog.naver.com/prophit_)이 수동으로 하던 "메르ai포트"를 완
 
 | 실행 시점 | 수집 기간 |
 |-----------|-----------|
-| 매일 자정 (KST) | 직전 2일 |
+| 매일 자정 (KST) | 신규 글 |
 
 수동 실행은 Actions → Run workflow에서 가능합니다.
-`rebalance` 모드는 기본 14일 수집과 리밸런싱을 수행하고, `verify` 모드는 운영 상태를 변경하지 않는 실제 출력 검증을 수행합니다. `test` 모드는 API 호출 없이 mock 테스트만 실행합니다.
+`scheduled`는 신규 글만 분석합니다. 마지막 실제 리밸런싱 후 `14일`이 지났으면 그 이후
+누적된 투자 관련 글로 리밸런싱합니다. 신규 근거가 없으면 리밸런싱 날짜를 갱신하지 않고
+다음 관련 글까지 연기합니다. `verify`는 운영 상태를 변경하지 않는 실제 출력 검증이며,
+`test`는 API 호출 없이 mock 테스트만 실행합니다.
 
 ---
 
@@ -139,11 +142,10 @@ output/
 |--------|--------|------|
 | `GEMINI_API_KEY` | (필수) | Google AI Studio API 키 |
 | `RUN_MODE` | `scheduled` | `scheduled`, `rebalance`, `verify`, `test` |
-| `FETCH_DAYS` | 모드별 기본값 | 수집할 최근 일수 (`scheduled` 2일, `rebalance`/`verify` 14일) |
+| `FETCH_DAYS` | 모드별 기본값 | RSS 조회 범위를 임시 조정할 때만 사용하는 일수 |
 | `GEMINI_MODEL` | `gemini-2.5-pro` | 최종 리포트 생성 우선 모델 |
 | `GEMINI_FALLBACK_MODEL` | `gemini-2.5-flash` | Pro 실패/quota 시 fallback 모델 |
 | `ENABLE_POST_SUMMARIES` | 켜짐 | 신규 글별 1차 요약 API 호출 여부. Actions의 `verify`에서는 꺼짐 |
-| `MAX_POST_SUMMARIES_PER_RUN` | `3` | 실행 1회당 신규 글 요약 최대 호출 수 |
 | `OUTPUT_DIR` | `output` | 리포트 저장 경로 |
 
 로컬 실행 예:
@@ -160,13 +162,15 @@ RUN_MODE=rebalance FETCH_DAYS=14 python main.py
 
 ## 모델 및 한도 운영 정책
 
-- 무료 API 운영에서는 신규 글만 1차 요약하고, 기존 요약 캐시는 재사용해 호출 수를 줄입니다.
+- 신규 글 원문은 고정 글자 수로 자르지 않고 저장합니다.
+- 신규 글은 모두 Flash로 1차 요약하고, 투자 관련 여부와 분류 이유를 함께 기록합니다.
+- 투자와 무관한 글은 DB에 저장하지만 Pro 투자 판단 입력에서는 제외합니다.
+- 저장 원문은 유지하며, 모델 입력 한도의 `80%`를 넘는 비정상 요청에만 전송용 본문 끝부분을 줄입니다.
 - Actions의 정상 `scheduled`와 `rebalance`에서는 글별 Flash 요약을 켜고, 반복 검증용 `verify`에서는 끕니다.
-- 백필/리밸런싱 실행에서 신규 글이 많아도 `MAX_POST_SUMMARIES_PER_RUN` 상한까지만 요약하고 나머지는 원문 fallback합니다.
 - 구조화 판단 JSON과 사용자용 Markdown 보고서는 각각 `gemini-2.5-pro`를 먼저 시도하고 실패/quota 시 `gemini-2.5-flash`로 fallback합니다.
-- 신규 블로그 글은 원문을 저장하고, 기본값에서는 Flash로 글별 1차 요약 캐시를 생성합니다.
-- 기존 글의 요약 캐시가 있으면 사용하고, 비어 있으면 원문을 최종 분석 입력에 포함합니다.
-- 분석 입력은 `FETCH_DAYS` 기간 안의 글로 제한해 무료 API의 입력 토큰 한도를 아낍니다.
+- 일별 분석은 관련 신규 글만, `14일` 리밸런싱은 마지막 실제 리밸런싱 이후 누적 관련 글만 사용합니다.
+- 관련 신규 글이 없으면 LLM을 호출하지 않고 가격, 성과, 출력만 갱신합니다.
+- HTML, PNG, Telegram은 추가 LLM 호출 없이 구조화 판단과 핵심 인사이트로 생성합니다.
 - `gemini-2.5-pro` 한도가 낮거나 지원되지 않으면 자동으로 Flash fallback을 사용합니다.
 - `flash-lite` 계열은 품질 저하 우려가 있어 기본 경로에서 사용하지 않습니다.
 - rate limit 또는 quota 오류가 나면 모델별 호출 간격을 두고 재시도합니다.

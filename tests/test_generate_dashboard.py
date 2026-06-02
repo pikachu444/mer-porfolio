@@ -50,6 +50,9 @@ class GenerateDashboardTest(unittest.TestCase):
         self.assertIn("메르 블로거의 실제 보유 내역이 아닙니다", html)
         self.assertIn('"decision_actor": "AI"', html)
         self.assertIn("Watchlist", html)
+        self.assertIn("알루미늄 공급 제한", html)
+        self.assertIn("메르 직접 발언", html)
+        self.assertIn("AI 제안", html)
         self.assertIn("https://blog.naver.com/ranto28/123", html)
         self.assertIn("모두 펼치기", html)
 

@@ -9,6 +9,22 @@ from portfolio_schema import parse_analysis_decision
 DECISION_RESPONSE = {
     "analysis_date": "2026-06-01",
     "run_type": "regular",
+    "insights": [
+        {
+            "id": "aluminum-supply",
+            "title": "알루미늄 공급 제한",
+            "summary": "기니의 보크사이트 수출 제한으로 공급 불안이 커짐",
+            "investment_implication": "원문에 등장한 관련 종목의 수혜 가능성을 검토",
+            "evidence_posts": [
+                {
+                    "title": "기니, 중국을 건드리나?",
+                    "url": "https://blog.naver.com/ranto28/123",
+                    "published_date": "2026-05-27",
+                }
+            ],
+            "related_decision_codes": ["AA"],
+        }
+    ],
     "portfolio_decisions": [
         {
             "name": "Alcoa",
@@ -17,7 +33,7 @@ DECISION_RESPONSE = {
             "asset_type": "stock",
             "decision_actor": "AI",
             "action": "매수",
-            "basis": "섹터 분석",
+            "basis": "종목 분석",
             "decision_date": "2026-06-01",
             "evidence_posts": [
                 {
@@ -26,11 +42,16 @@ DECISION_RESPONSE = {
                     "published_date": "2026-05-27",
                 }
             ],
-            "source_mentioned": False,
+            "source_mentioned": True,
             "previous_weight": None,
             "proposed_weight": 8.0,
             "weight_source": "AI 제안",
             "change_reason": "알루미늄 공급 제한에 따른 수혜 추론",
+            "source_scope": "source_named_security",
+            "investment_rationale": "원문에 등장한 Alcoa가 알루미늄 공급 제한의 수혜를 받을 수 있음",
+            "current_entry_reason": "공급 제한 발표로 투자 논리가 구체화됨",
+            "key_risks": ["알루미늄 가격 변동성"],
+            "linked_insight_ids": ["aluminum-supply"],
         }
     ],
     "watchlist": [],
@@ -63,6 +84,23 @@ class StructuredAnalysisTest(unittest.TestCase):
             analyze._model_sequence(),
             ["gemini-2.5-pro", "gemini-2.5-flash"],
         )
+
+    def test_pro_context_trims_only_transmitted_tail_over_safe_limit(self):
+        client = unittest.mock.Mock()
+        client.models.count_tokens.side_effect = lambda model, contents: unittest.mock.Mock(
+            total_tokens=len(contents)
+        )
+        original = "x" * 120
+
+        with patch.object(analyze, "MODEL_INPUT_TOKEN_LIMIT", 100):
+            fitted = analyze._fit_context_to_budget(
+                client,
+                original,
+                lambda context: "prefix:" + context,
+            )
+
+        self.assertIn("전송용 분석 문맥 끝부분 생략", fitted)
+        self.assertEqual(original, "x" * 120)
 
     def test_report_validation_does_not_require_exact_insight_heading(self):
         report = VALID_REPORT

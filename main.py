@@ -43,7 +43,13 @@ if RUN_MODE == "test" and __name__ == "__main__":
     sys.exit(0)
 
 from analyze import analyze_posts_structured
-from fetch_mer import fetch_recent_posts, get_last_fetch_new_post_count
+from fetch_mer import (
+    fetch_recent_posts,
+    get_last_fetch_new_post_urls,
+    load_cached_posts,
+    select_new_relevant_posts,
+    select_rebalance_posts,
+)
 from generate_dashboard import generate_all
 from portfolio_schema import (
     AnalysisDecisionV2,
@@ -79,6 +85,7 @@ def _empty_state():
         "watchlist": [],
         "closed_positions": [],
         "decision_history": [],
+        "insights": [],
         "last_rebalanced_date": None,
     })
 
@@ -143,12 +150,9 @@ def _run_no_change_update(state, today: datetime) -> int:
     return 0
 
 
-def _collect_posts(is_rebalance: bool) -> list[dict]:
-    posts = fetch_recent_posts(days=FETCH_DAYS)
-    if posts or not is_rebalance:
-        return posts
-    print("  리밸런싱 입력 글이 없어 최근 30일 범위로 한 번 확장합니다.")
-    return fetch_recent_posts(days=30)
+def _collect_posts() -> list[dict]:
+    fetch_recent_posts(days=FETCH_DAYS)
+    return load_cached_posts()
 
 
 def _portfolio_identity(item: dict) -> tuple[str, str, str]:
@@ -203,11 +207,21 @@ def main() -> int:
             state.last_rebalanced_date,
             today.date(),
         )
-        posts = _collect_posts(is_rebalance)
-        new_post_count = get_last_fetch_new_post_count()
-        if not posts and is_rebalance:
-            raise RuntimeError("리밸런싱에 사용할 블로그 글이 없습니다.")
-        if RUN_MODE == "scheduled" and new_post_count == 0 and not is_rebalance:
+        cached_posts = _collect_posts()
+        if is_rebalance:
+            posts = select_rebalance_posts(
+                cached_posts,
+                state.last_rebalanced_date,
+                today,
+            )
+        else:
+            posts = select_new_relevant_posts(
+                cached_posts,
+                get_last_fetch_new_post_urls(),
+            )
+        if not posts:
+            if is_rebalance:
+                print("  리밸런싱 연기: 마지막 리밸런싱 이후 투자 관련 신규 글이 없습니다.")
             return _run_no_change_update(state, today)
 
         result = analyze_posts_structured(
