@@ -265,10 +265,11 @@ def build_structured_summary(
         "※ 메르 블로거의 실제 보유 내역이 아닙니다.",
         "※ 블로그 직접 판단과 AI 해석을 구분해 표시합니다.",
     ]
+    value = performance.get("portfolio_return_krw")
+    rendered = f"{float(value):+.1f}%" if value is not None else "집계 전"
+    lines += ["", "*오늘의 성과 요약*", f"• 모델 포트폴리오 수익률: {rendered}"]
     if no_changes:
-        value = performance.get("portfolio_return_krw")
-        rendered = f"{float(value):+.1f}%" if value is not None else "집계 전"
-        lines += ["", "*오늘의 성과 요약*", f"• 모델 포트폴리오 수익률: {rendered}", "• 포트폴리오 변경 없음"]
+        lines += ["• 포트폴리오 변경 없음"]
     else:
         lines += ["", "📌 *핵심 인사이트*"]
         if insights:

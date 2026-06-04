@@ -55,6 +55,8 @@ class GenerateDashboardTest(unittest.TestCase):
         self.assertIn("AI 제안", html)
         self.assertIn("https://blog.naver.com/ranto28/123", html)
         self.assertIn("모두 펼치기", html)
+        self.assertIn("type:'doughnut'", html)
+        self.assertNotIn("type:'bar'", html)
 
 
 if __name__ == "__main__":
