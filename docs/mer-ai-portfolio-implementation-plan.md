@@ -1127,6 +1127,24 @@ HTML에는 다음 내용을 표시한다.
 - main `verify` 실행 `26982469403`은 2차 보고서 실패를 결정적 보고서로 넘긴 뒤 가격 조회에서
   legacy 상태의 대한전선 코드 `011440` 때문에 실패했다. 대한전선의 실제 상장 코드는
   `001440`이므로 legacy 상태 마이그레이션에서 해당 코드를 정정한다.
+- main `verify` 실행 `26982879272`는 성공했다. 실행 로그에서 HTML 대시보드 생성, PNG 차트
+  생성, 차트 이미지 전송, Telegram 구조화 요약 전송이 모두 완료됐다.
+- 같은 실행의 artifact `mer-ai-verify-26982879272`에서 `portfolio_state.json`,
+  `dashboard.html`, `performance_cache.json`, `chart_latest.png`, `latest.md`를 확인했다.
+  상태 포트폴리오 14종목, HTML 포트폴리오 14종목, HTML 그래프의 비현금 14종목, 성과 캐시의
+  active position 14종목이 같은 코드 집합이다.
+- HTML과 Telegram PNG는 모두 상태 기반 도넛 그래프를 사용한다. HTML에 `type:'bar'`는 없고
+  `type:'doughnut'`만 있다. 그래프에는 14개 포트폴리오 종목과 잔여 현금 11%가 표시된다.
+- Telegram 구조화 요약 생성 결과에는 `모델 포트폴리오 수익률: +0.0%`가 포함된다.
+- 이후 사용자 확인에서 HTML은 핵심 인사이트에 번호가 보이지만 Telegram 메시지는 번호가
+  없어 같은 목록인지 직접 세어야 하는 문제가 확인됐다. Telegram과 HTML 모두 같은
+  `state.insights` 순서를 사용해 `1.`, `2.` 형식의 번호를 표시하도록 수정했다. 기존
+  `26982879272` artifact 상태로 재생성한 결과 state 인사이트 8개, Telegram 번호 인사이트
+  8개, HTML 번호 렌더링 템플릿이 일치한다.
+- 해당 실행에서 `gemini-2.5-pro`와 `gemini-2.5-flash`는 모두 HTTP `429 RESOURCE_EXHAUSTED`
+  응답을 냈다. 이는 요청 가능 횟수가 429개라는 뜻이 아니라 API 한도 초과 오류 코드다.
+  1차 판단은 fallback 응답으로 완료됐고, 2차 사용자용 보고서는 LLM 실패 후 구조화 판단 기반
+  결정적 Markdown 보고서로 생성되어 HTML, PNG, Telegram 발송 경로가 계속 진행됐다.
 
 ## 기존 완료 작업
 

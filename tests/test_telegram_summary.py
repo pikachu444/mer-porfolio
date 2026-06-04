@@ -37,6 +37,23 @@ class TelegramSummaryTest(unittest.TestCase):
         self.assertIn("모델 포트폴리오 수익률: +1.9%", summary)
         self.assertIn("핵심 인사이트", summary)
 
+    def test_insights_are_numbered_without_dropping_items(self):
+        state = state_payload()
+        state["insights"].append({
+            "id": "robotics",
+            "title": "피지컬 AI 확산",
+            "summary": "로봇과 AI 결합이 산업 자동화 수요를 키움",
+            "investment_implication": "원문에 등장한 로봇 관련 기업을 추적",
+            "evidence_posts": [],
+            "related_decision_codes": [],
+        })
+
+        summary = build_structured_summary(state, "2026년 06월 01일")
+
+        self.assertIn("1. *알루미늄 공급 제한*", summary)
+        self.assertIn("2. *피지컬 AI 확산*", summary)
+        self.assertEqual(summary.count("시사점:"), len(state["insights"]))
+
     def test_long_summary_is_split_without_dropping_tail(self):
         text = "\n".join(f"인사이트 {index}: " + ("x" * 40) for index in range(10))
 

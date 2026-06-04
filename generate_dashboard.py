@@ -437,7 +437,7 @@ function table(id,rows,kind){
  return buttons(id)+`<div class="table-wrap"><table class="data-table" id="${id}"><thead><tr><th>종목</th><th>판단</th><th>비중</th><th class="desktop">판단일</th><th>상태/수익률</th><th>상세</th></tr></thead><tbody>${body}</tbody></table></div>`;
 }
 document.getElementById('summary').innerHTML=`현재 ${portfolio.length}종목 · Watchlist ${watchlist.length}건 · 이번 변경 ${changes.length}건 · 종료 ${closed.length}건`;
-document.getElementById('insights').innerHTML=insights.length?insights.map(r=>`<article><h3>${esc(r.title)}</h3><p>${esc(r.summary)}</p><p><strong>투자 시사점:</strong> ${esc(r.investment_implication)}</p><p class="muted">${evidence(r)}</p></article>`).join(''):'<div class="empty">표시할 인사이트가 없습니다.</div>';
+document.getElementById('insights').innerHTML=insights.length?insights.map((r,i)=>`<article><h3>${i+1}. ${esc(r.title)}</h3><p>${esc(r.summary)}</p><p><strong>투자 시사점:</strong> ${esc(r.investment_implication)}</p><p class="muted">${evidence(r)}</p></article>`).join(''):'<div class="empty">표시할 인사이트가 없습니다.</div>';
 document.getElementById('portfolio').innerHTML=table('portfolio-table',portfolio,'portfolio');
 document.getElementById('changes').innerHTML=table('changes-table',changes,'changes');
 document.getElementById('watchlist').innerHTML=table('watchlist-table',watchlist,'watchlist');

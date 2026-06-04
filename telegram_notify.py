@@ -273,8 +273,8 @@ def build_structured_summary(
     else:
         lines += ["", "📌 *핵심 인사이트*"]
         if insights:
-            for item in insights:
-                lines.append(f"• *{item.get('title', '')}*")
+            for index, item in enumerate(insights, start=1):
+                lines.append(f"{index}. *{item.get('title', '')}*")
                 lines.append(f"  └ {item.get('summary', '')}")
                 lines.append(f"  └ 시사점: {item.get('investment_implication', '')}")
         else:
