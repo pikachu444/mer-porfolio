@@ -17,7 +17,7 @@ from typing import List, Dict, Optional
 from pathlib import Path
 from google import genai
 from google.genai import types
-from gemini_utils import generate_content_with_retry
+from gemini_utils import DEFAULT_HTTP_TIMEOUT_MS, generate_content_with_retry
 
 # ─── 설정 ───────────────────────────────────────────────────────────────────
 
@@ -249,7 +249,10 @@ def summarize_single_post(content: str) -> dict:
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         raise ValueError("GEMINI_API_KEY 미설정: 글별 Flash 요약을 생성할 수 없습니다.")
-    client = genai.Client(api_key=api_key)
+    client = genai.Client(
+        api_key=api_key,
+        http_options=types.HttpOptions(timeout=DEFAULT_HTTP_TIMEOUT_MS),
+    )
     response = generate_content_with_retry(
         client=client,
         model="gemini-2.5-flash",

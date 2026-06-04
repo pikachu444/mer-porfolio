@@ -6,10 +6,13 @@ Gemini API 호출 보조 유틸리티.
 대기만 담당한다.
 """
 
+import os
 import re
 import time
 from collections import defaultdict
 
+
+DEFAULT_HTTP_TIMEOUT_MS = int(os.environ.get("GEMINI_HTTP_TIMEOUT_MS", "180000"))
 
 MODEL_MIN_INTERVALS = {
     "gemini-2.5-pro": 15.0,
@@ -34,7 +37,18 @@ def is_rate_limit_error(message: str) -> bool:
 def is_transient_error(message: str) -> bool:
     msg = message.lower()
     return is_rate_limit_error(message) or any(
-        token in msg for token in ("503", "unavailable", "high demand", "try again later")
+        token in msg
+        for token in (
+            "503",
+            "unavailable",
+            "high demand",
+            "try again later",
+            "timeout",
+            "timed out",
+            "read timeout",
+            "server disconnected",
+            "disconnected without sending a response",
+        )
     )
 
 

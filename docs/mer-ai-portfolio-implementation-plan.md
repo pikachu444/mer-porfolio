@@ -1114,6 +1114,10 @@ HTML에는 다음 내용을 표시한다.
   대시보드는 상태 기반 도넛 그래프로 통일하고, 회귀 방지 테스트를 둔다.
 - 변경이 있는 날의 Telegram 구조화 메시지에는 수익률이 표시되지 않았다. 변경 여부와
   관계없이 `portfolio_return_krw`를 표시하도록 수정한다.
+- `2026-06-05`에 병합 후 main `verify` 실행 `26980958127`이 분석 단계에서 장시간
+  대기했다. Gemini SDK 호출에 명시적 HTTP timeout이 없어 외부 응답 지연 시 Actions가
+  멈춰 있을 수 있으므로 `GEMINI_HTTP_TIMEOUT_MS` 기본 `180000ms`를 적용하고,
+  timeout/disconnect 오류를 재시도 가능 오류로 분류한다.
 
 ## 기존 완료 작업
 

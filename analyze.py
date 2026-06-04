@@ -34,7 +34,7 @@ from system_prompt import (
     build_report_user_message,
     build_user_message,
 )
-from gemini_utils import generate_content_with_retry, is_daily_quota_error
+from gemini_utils import DEFAULT_HTTP_TIMEOUT_MS, generate_content_with_retry, is_daily_quota_error
 
 
 # ─── 모델 설정 ────────────────────────────────────────────────────────────────
@@ -86,7 +86,10 @@ def _get_client() -> genai.Client:
             "발급 방법: https://aistudio.google.com/app/apikey\n"
             "설정 방법: export GEMINI_API_KEY='your-key-here'"
         )
-    return genai.Client(api_key=api_key)
+    return genai.Client(
+        api_key=api_key,
+        http_options=types.HttpOptions(timeout=DEFAULT_HTTP_TIMEOUT_MS),
+    )
 
 
 # ─── API 호출 재시도 헬퍼 ────────────────────────────────────────────────────
