@@ -130,6 +130,7 @@ def _run_no_change_update(state, today: datetime, status_note: str = "") -> int:
         print(f"  {status_note}: 판단과 목표 비중을 유지하고 성과만 갱신합니다.")
     else:
         print("  신규 글 없음: 판단과 목표 비중을 유지하고 성과만 갱신합니다.")
+    save_portfolio_state_file(state, STATE_PATH)
     ledger = load_model_ledger()
     if ledger.get("positions"):
         prices = _prices_for_ledger(ledger)
