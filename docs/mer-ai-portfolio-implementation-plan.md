@@ -1020,6 +1020,9 @@ HTML에는 다음 내용을 표시한다.
   원천으로 사용하고, 같은 도넛 그래프 형식으로 표시한다.
 - Telegram 텍스트 메시지는 포트폴리오 변경 여부와 관계없이 모델 포트폴리오 수익률을
   표시한다.
+- 2차 사용자용 Markdown 보고서 LLM 호출이 quota, timeout, 서버 오류로 실패하더라도
+  검증된 1차 판단 JSON과 변경 반영 후 전체 상태로 결정적 Markdown 보고서를 생성해
+  HTML, PNG, Telegram 발송 경로를 계속 진행한다.
 
 **합의됨: 구조화 판단 응답 크기 관리**
 
@@ -1118,6 +1121,9 @@ HTML에는 다음 내용을 표시한다.
   대기했다. Gemini SDK 호출에 명시적 HTTP timeout이 없어 외부 응답 지연 시 Actions가
   멈춰 있을 수 있으므로 `GEMINI_HTTP_TIMEOUT_MS` 기본 `180000ms`를 적용하고,
   timeout/disconnect 오류를 재시도 가능 오류로 분류한다.
+- main `verify` 실행 `26981757186`은 1차 판단 이후 2차 사용자용 보고서 단계에서 Flash
+  `504 DEADLINE_EXCEEDED`로 실패했다. HTML/Telegram 발송이 2차 LLM 성공에 종속되지
+  않도록 구조화 판단 기반 결정적 Markdown 보고서 생성을 추가한다.
 
 ## 기존 완료 작업
 

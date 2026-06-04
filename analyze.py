@@ -413,15 +413,138 @@ def analyze_posts_structured(
     )
     report_context = _fit_context_to_budget(client, context, report_builder)
     report_message = report_builder(report_context)
-    report = _call_stage_with_fallback(
-        client,
-        report_message,
-        REPORT_SYSTEM_PROMPT,
-        _validate_markdown_report,
-        "2차 사용자용 보고서",
-    )
+    try:
+        report = _call_stage_with_fallback(
+            client,
+            report_message,
+            REPORT_SYSTEM_PROMPT,
+            _validate_markdown_report,
+            "2차 사용자용 보고서",
+        )
+    except RuntimeError as exc:
+        print(f"  2차 사용자용 보고서 LLM 실패 -> 구조화 판단 기반 보고서 생성: {str(exc)[:180]}")
+        report = _build_deterministic_report(
+            decision,
+            projected_state,
+            analysis_date,
+        )
     assert isinstance(report, str)
     return StructuredAnalysisResult(decision=decision, report=report)
+
+
+def _build_deterministic_report(
+    decision: AnalysisDecisionV2,
+    projected_state: dict,
+    analysis_date: str,
+) -> str:
+    """Build a Markdown report from validated state when the second LLM call fails."""
+    insights = projected_state.get("insights", decision.insights)
+    portfolio = projected_state.get("portfolio", [])
+    watchlist = projected_state.get("watchlist", [])
+    closed = projected_state.get("closed_positions", [])
+    changes = decision.portfolio_decisions
+
+    lines = [
+        f"# 메르AI 포트폴리오 보고서 ({analysis_date})",
+        "",
+        "## 핵심 인사이트",
+        "",
+    ]
+    if insights:
+        for item in insights:
+            lines.append(f"### {item.get('title', '제목 없음')}")
+            lines.append("")
+            lines.append(str(item.get("summary", "")).strip() or "요약 없음")
+            implication = str(item.get("investment_implication", "")).strip()
+            if implication:
+                lines.append("")
+                lines.append(f"**투자 시사점:** {implication}")
+            evidence = item.get("evidence_posts", [])
+            if evidence:
+                lines.append("")
+                lines.append("**근거 글:**")
+                for post in evidence:
+                    lines.append(
+                        f"- [{post.get('title', '제목 없음')}]({post.get('url', '')})"
+                        f" · {post.get('published_date', '')}"
+                    )
+            lines.append("")
+    else:
+        lines.extend(["표시할 핵심 인사이트가 없습니다.", ""])
+
+    lines.extend([
+        "## 현재 모델 포트폴리오",
+        "",
+        "메르 블로거의 실제 보유 내역이 아니라, 블로그 근거와 AI 해석을 구분해 만든 모델 포트폴리오입니다.",
+        "",
+        "| 종목 | 코드 | 판단 주체 | 행동 | 비중 | 근거 |",
+        "|---|---:|---|---|---:|---|",
+    ])
+    if portfolio:
+        for item in portfolio:
+            lines.append(
+                f"| {item.get('name', '')} | {item.get('code', '')} | "
+                f"{item.get('decision_actor', '')} | {item.get('action', '')} | "
+                f"{item.get('proposed_weight', 0):g}% | {item.get('change_reason', '')} |"
+            )
+    else:
+        lines.append("| 편입 종목 없음 |  |  |  |  |  |")
+
+    lines.extend([
+        "",
+        "## Watchlist",
+        "",
+        "| 항목 | 코드 | 상태 | 관찰 이유 |",
+        "|---|---:|---|---|",
+    ])
+    if watchlist:
+        for item in watchlist:
+            lines.append(
+                f"| {item.get('name', '')} | {item.get('code', '')} | "
+                f"{item.get('status', '')} | {item.get('observation_reason', '')} |"
+            )
+    else:
+        lines.append("| 표시할 항목 없음 |  |  |  |")
+
+    lines.extend([
+        "",
+        "## 변경 및 종료 포지션",
+        "",
+        "### 이번 분석 변경",
+        "",
+        "| 종목 | 코드 | 행동 | 이전 비중 | 제안 비중 | 변경 이유 |",
+        "|---|---:|---|---:|---:|---|",
+    ])
+    if changes:
+        for item in changes:
+            previous = item.get("previous_weight")
+            previous_text = "-" if previous is None else f"{previous:g}%"
+            lines.append(
+                f"| {item.get('name', '')} | {item.get('code', '')} | "
+                f"{item.get('action', '')} | {previous_text} | "
+                f"{item.get('proposed_weight', 0):g}% | {item.get('change_reason', '')} |"
+            )
+    else:
+        lines.append("| 변경 없음 |  |  |  |  |  |")
+
+    lines.extend([
+        "",
+        "### 종료 포지션",
+        "",
+        "| 종목 | 코드 | 종료일 | 종료 이유 |",
+        "|---|---:|---|---|",
+    ])
+    if closed:
+        for item in closed:
+            lines.append(
+                f"| {item.get('name', '')} | {item.get('code', '')} | "
+                f"{item.get('closed_date', '')} | {item.get('close_reason', '')} |"
+            )
+    else:
+        lines.append("| 종료 포지션 없음 |  |  |  |")
+
+    report = "\n".join(lines)
+    return _validate_markdown_report(report)
 
 
 def _validate_markdown_report(report: str) -> str:

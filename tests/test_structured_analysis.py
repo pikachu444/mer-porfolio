@@ -179,6 +179,35 @@ class StructuredAnalysisTest(unittest.TestCase):
         self.assertIn("변경 반영 후 전체 모델 포트폴리오 상태", report_request)
         self.assertIn('"name": "Alcoa"', report_request)
 
+    def test_builds_deterministic_report_when_second_llm_fails(self):
+        responses = [
+            json.dumps(DECISION_RESPONSE, ensure_ascii=False),
+            RuntimeError("504 DEADLINE_EXCEEDED"),
+            RuntimeError("503 UNAVAILABLE"),
+        ]
+
+        with patch.object(analyze, "_get_client", return_value=object()), \
+             patch.object(analyze, "_call_model_text", side_effect=responses):
+            result = analyze.analyze_posts_structured(
+                POSTS,
+                "2026-06-01",
+                {
+                    "schema_version": "2.0",
+                    "portfolio": [],
+                    "watchlist": [],
+                    "closed_positions": [],
+                    "decision_history": [],
+                    "insights": [],
+                    "last_rebalanced_date": "2026-05-14",
+                },
+            )
+
+        self.assertIn("## 핵심 인사이트", result.report)
+        self.assertIn("## 현재 모델 포트폴리오", result.report)
+        self.assertIn("## Watchlist", result.report)
+        self.assertIn("## 변경 및 종료 포지션", result.report)
+        self.assertIn("Alcoa", result.report)
+
     def test_repairs_invalid_structured_decision_once(self):
         invalid = json.loads(json.dumps(DECISION_RESPONSE, ensure_ascii=False))
         invalid["portfolio_decisions"][0]["evidence_posts"] = []
@@ -277,7 +306,7 @@ class StructuredAnalysisTest(unittest.TestCase):
         self.assertEqual(result.decision.portfolio_decisions, [])
         self.assertNotIn('"name": "Alcoa"', call.call_args_list[1].args[2])
 
-    def test_does_not_return_partial_result_when_report_fails(self):
+    def test_uses_deterministic_report_when_report_validation_fails(self):
         responses = [
             json.dumps(DECISION_RESPONSE, ensure_ascii=False),
             "# 제목만 있음",
@@ -286,12 +315,22 @@ class StructuredAnalysisTest(unittest.TestCase):
 
         with patch.object(analyze, "_get_client", return_value=object()), \
              patch.object(analyze, "_call_model_text", side_effect=responses):
-            with self.assertRaisesRegex(RuntimeError, r"2차 사용자용 보고서 실패"):
-                analyze.analyze_posts_structured(
-                    POSTS,
-                    "2026-06-01",
-                    {"last_rebalanced_date": "2026-05-14"},
-                )
+            result = analyze.analyze_posts_structured(
+                POSTS,
+                "2026-06-01",
+                {
+                    "schema_version": "2.0",
+                    "portfolio": [],
+                    "watchlist": [],
+                    "closed_positions": [],
+                    "decision_history": [],
+                    "insights": [],
+                    "last_rebalanced_date": "2026-05-14",
+                },
+            )
+
+        self.assertIn("## 현재 모델 포트폴리오", result.report)
+        self.assertIn("Alcoa", result.report)
 
 
 if __name__ == "__main__":
