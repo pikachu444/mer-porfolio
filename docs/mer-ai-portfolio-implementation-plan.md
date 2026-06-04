@@ -1158,6 +1158,19 @@ HTML에는 다음 내용을 표시한다.
   표시한다.
 - 로컬 검증 결과: `PYTHONUTF8=1 python -m unittest discover -s tests -q` 전체 `82`개 테스트,
   `python -m py_compile ...`, `git diff --check`가 통과했다.
+- main `verify` 실행 `26983948229`는 위 보완 후 성공했다. 다만 fallback 출력 경로에서
+  마이그레이션된 상태를 `portfolio_state.json`에 다시 저장하지 않아 artifact 내부의 상태
+  파일은 구버전이고 HTML은 마이그레이션된 14종목을 표시하는 불일치가 확인됐다.
+- fallback 및 no-change 출력 경로에서도 마이그레이션된 상태를 저장하도록 수정했다.
+- main `verify` 실행 `26984185743`은 최신 main 커밋 `006934d`에서 성공했다. LLM 1차 판단은
+  Pro와 Flash 모두 HTTP `429 RESOURCE_EXHAUSTED`였지만, 기존 상태 출력 경로로 전환되어
+  HTML 대시보드 생성, PNG 차트 생성, 차트 이미지 전송, Telegram 구조화 요약 전송이 모두
+  완료됐다.
+- `26984185743` artifact 검증 결과: `portfolio_state.json`은 schema `2.0`, 상태 포트폴리오
+  14종목, HTML 포트폴리오 14종목, HTML 그래프의 비현금 14종목이 같은 코드 집합이다.
+  HTML은 도넛 그래프만 사용하고 가로 막대 그래프는 없다. Telegram 요약에는 모델 포트폴리오
+  수익률, `LLM 한도 초과 또는 일시 장애로 신규 글 분석 보류`, `포트폴리오 변경 없음`이
+  포함된다.
 
 ## 기존 완료 작업
 
