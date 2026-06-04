@@ -520,6 +520,27 @@ class PortfolioSchemaTest(unittest.TestCase):
         self.assertEqual(migrated.portfolio[0]["basis"], "이전 판단 유지")
         self.assertEqual(migrated.portfolio[0]["proposed_weight"], 8.0)
 
+    def test_migration_corrects_known_legacy_listing_code(self):
+        legacy = {
+            "schema_version": "1.0",
+            "last_report_date": "2026-06-04",
+            "holdings": [
+                {
+                    "name": "대한전선",
+                    "code": "011440",
+                    "market": "KR",
+                    "weight": "3%",
+                    "entry_date": "2026-05-12",
+                    "last_confirmed_date": "2026-06-04",
+                    "status": "active",
+                }
+            ],
+        }
+
+        migrated = migrate_legacy_state(legacy)
+
+        self.assertEqual(migrated.portfolio[0]["code"], "001440")
+
     def test_migrates_legacy_removed_holding_to_closed_positions(self):
         legacy = {
             "schema_version": "1.0",

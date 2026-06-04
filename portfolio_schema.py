@@ -34,6 +34,10 @@ SOURCE_SCOPES = {
     "previous_decision",
 }
 
+KNOWN_LEGACY_CODE_CORRECTIONS = {
+    ("KR", "대한전선", "011440"): "001440",
+}
+
 
 class PortfolioSchemaError(ValueError):
     """Raised when structured portfolio state does not satisfy the v2 contract."""
@@ -303,6 +307,7 @@ def _migrate_legacy_holding(holding: dict[str, Any], index: int) -> dict[str, An
     name = _require_string(holding, "name", path)
     code = _require_string(holding, "code", path, allow_empty=True)
     market = _require_string(holding, "market", path, allow_empty=True)
+    code = _normalize_legacy_code(name, market, code)
     proposed_weight = _parse_legacy_weight(holding.get("weight"), f"{path}.weight")
     decision_date = (
         holding.get("removed_date")
@@ -350,6 +355,13 @@ def _migrate_legacy_holding(holding: dict[str, Any], index: int) -> dict[str, An
         "close_reason": reason,
         "closed_performance": None,
     }
+
+
+def _normalize_legacy_code(name: str, market: str, code: str) -> str:
+    return KNOWN_LEGACY_CODE_CORRECTIONS.get(
+        (market.strip().upper(), name.strip(), code.strip().upper()),
+        code,
+    )
 
 
 def _parse_legacy_weight(value: Any, path: str) -> float:
