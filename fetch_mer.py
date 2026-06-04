@@ -25,23 +25,39 @@ BLOG_ID = "ranto28"
 RSS_URL = f"https://rss.blog.naver.com/{BLOG_ID}.xml"
 MOBILE_BASE = "https://m.blog.naver.com"
 STATE_FILE = "last_processed.json"
-DB_FILE = "output/posts_db.json"  # 증분 누적 데이터베이스 경로
+DB_FILE = str(Path(os.environ.get("OUTPUT_DIR", "output")) / "posts_db.json")
 _fetch_days_env = os.environ.get("FETCH_DAYS", "").strip()
 DEFAULT_DAYS = int(_fetch_days_env) if _fetch_days_env else 14  # 빈 문자열 방어
 _summary_env = os.environ.get("ENABLE_POST_SUMMARIES", "true").strip().lower()
 ENABLE_POST_SUMMARIES = _summary_env not in ("0", "false", "no", "off")
-_max_summaries_env = os.environ.get("MAX_POST_SUMMARIES_PER_RUN", "3").strip()
-MAX_POST_SUMMARIES_PER_RUN = int(_max_summaries_env) if _max_summaries_env else 3
+SUMMARY_VERSION = 2
+MODEL_INPUT_TOKEN_LIMIT = 1_048_576
+MODEL_INPUT_SAFE_RATIO = 0.8
 
-# 1차 정밀 요약 프롬프트 (나비효과 및 종목 팩트 100% 보존용)
+# 1차 정밀 요약 프롬프트
 MAP_SUMMARY_PROMPT = """
-당신은 거시경제 분석가 메르의 글을 정밀 압축 요약하는 1차 요약 엔진입니다.
-제공된 블로그 전문을 읽고, 다음 세 가지 정보를 100% 보존하여 콤팩트하게 요약하십시오:
-1. **핵심 거시경제/지정학적 사건 팩트**: 날짜, 구체적 수치, 선언 내용 등.
-2. **나비효과 인과관계**: 사건이 유발하는 1차/2차/3차 파급효과와 업종 연결 고리 (예: A로 인해 B가 발생하고 이로 인해 C가 수혜/리스크를 입는다).
-3. **직간접 언급 주식/섹터 명단**: 구체적으로 거론된 종목 이름, 티커, 해당 업종.
+당신은 거시경제 분석가 메르의 글을 정밀 압축하고 투자 관련 여부를 분류하는 1차 요약 엔진입니다.
+제공된 블로그 전문을 읽고 JSON 객체 하나만 출력하십시오.
 
-절대 없는 사실을 창작하거나 지어내지 말고, 나비효과의 정교한 인과 관계 연결 고리를 단순화하여 누락시키지 마십시오.
+출력 구조:
+{
+  "investment_relevant": true,
+  "relevance_reason": "투자 분석 포함 또는 제외 이유",
+  "summary": "정밀 압축 요약"
+}
+
+투자 관련 글에는 거시경제, 정책, 지정학, 산업, 기업, 수급, 리스크처럼 투자 판단에 영향을
+줄 수 있는 내용을 포함합니다. 맛집, 여행, 일상, 일반 건강 글은 투자 가능한 산업, 기업,
+시장 변화와 구체적으로 연결되지 않으면 투자 관련이 아닙니다. 제목 키워드만 보고 판단하지
+말고 본문 전체 문맥을 읽으십시오.
+
+`summary`에는 다음을 보존하십시오:
+1. 날짜, 구체적 수치, 선언 내용 등 핵심 사실.
+2. 사건이 유발하는 1차/2차/3차 파급효과와 업종 연결 고리.
+3. 직접 또는 간접 언급된 종목, 티커, ETF, 섹터.
+4. 메르 본인이 특정 종목의 매수, 보유, 매도 또는 관심을 직접 밝힌 문맥.
+
+없는 사실을 창작하지 마십시오. 투자와 무관한 글도 `summary`에 짧은 내용 요약을 남기십시오.
 """
 
 HEADERS = {
@@ -54,8 +70,8 @@ HEADERS = {
     "Referer": "https://m.blog.naver.com/",
 }
 
-# 포스트 1개당 최대 글자 수 (토큰 오버플로우 방지)
-MAX_CHARS_PER_POST = 4000
+LAST_FETCH_NEW_POST_COUNT = 0
+LAST_FETCH_NEW_POST_URLS: set[str] = set()
 
 
 # ─── 상태 관리 ───────────────────────────────────────────────────────────────
@@ -178,34 +194,129 @@ def _clean_text(text: str) -> str:
 
 # ─── 메인 수집 함수 ───────────────────────────────────────────────────────────
 
-def summarize_single_post(content: str) -> str:
-    """gemini-2.5-flash 모델을 사용하여 글 1편을 요약한다."""
+def _count_tokens(client: genai.Client, model: str, contents: str) -> int:
+    response = client.models.count_tokens(model=model, contents=contents)
+    return int(response.total_tokens)
+
+
+def _fit_summary_request(client: genai.Client, content: str) -> str:
+    """Trim only the transmitted tail when an abnormal article exceeds the safe budget."""
+    prefix = "블로그 글:\n"
+    suffix = "\n\n" + MAP_SUMMARY_PROMPT
+    request = prefix + content + suffix
+    safe_limit = int(MODEL_INPUT_TOKEN_LIMIT * MODEL_INPUT_SAFE_RATIO)
+    if _count_tokens(client, "gemini-2.5-flash", request) <= safe_limit:
+        return request
+
+    low, high = 0, len(content)
+    while low < high:
+        middle = (low + high + 1) // 2
+        candidate = prefix + content[:middle] + "\n...(전송용 본문 끝부분 생략)" + suffix
+        if _count_tokens(client, "gemini-2.5-flash", candidate) <= safe_limit:
+            low = middle
+        else:
+            high = middle - 1
+    return prefix + content[:low] + "\n...(전송용 본문 끝부분 생략)" + suffix
+
+
+def _parse_summary_response(text: str) -> dict:
+    stripped = text.strip()
+    if stripped.startswith("```"):
+        stripped = re.sub(r"^```(?:json)?\s*", "", stripped)
+        stripped = re.sub(r"\s*```$", "", stripped)
+    payload = json.loads(stripped)
+    if not isinstance(payload, dict):
+        raise ValueError("글별 요약 응답은 JSON 객체여야 합니다.")
+    summary = payload.get("summary")
+    relevant = payload.get("investment_relevant")
+    reason = payload.get("relevance_reason")
+    if not isinstance(summary, str) or not summary.strip():
+        raise ValueError("글별 요약에 summary가 없습니다.")
+    if not isinstance(relevant, bool):
+        raise ValueError("글별 요약에 investment_relevant boolean이 없습니다.")
+    if not isinstance(reason, str) or not reason.strip():
+        raise ValueError("글별 요약에 relevance_reason이 없습니다.")
+    return {
+        "summary": summary.strip(),
+        "investment_relevant": relevant,
+        "relevance_reason": reason.strip(),
+        "summary_version": SUMMARY_VERSION,
+    }
+
+
+def summarize_single_post(content: str) -> dict:
+    """Use gemini-2.5-flash to summarize and classify one full article."""
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
-        print("    [Info] GEMINI_API_KEY 미설정: 1차 요약 없이 원문을 최종 분석에 사용합니다.")
-        return ""
-    try:
-        client = genai.Client(api_key=api_key)
-        response = generate_content_with_retry(
-            client=client,
-            model="gemini-2.5-flash",
-            contents=f"블로그 글:\n{content}\n\n{MAP_SUMMARY_PROMPT}",
-            config=types.GenerateContentConfig(
-                temperature=0.2,
-                max_output_tokens=2048,
-            ),
-            max_retries=3,
-        )
-        return response.text if response.text else ""
-    except Exception as e:
-        print(f"    1차 요약 실패 -> 원문 사용: {e}")
-        return ""
+        raise ValueError("GEMINI_API_KEY 미설정: 글별 Flash 요약을 생성할 수 없습니다.")
+    client = genai.Client(api_key=api_key)
+    response = generate_content_with_retry(
+        client=client,
+        model="gemini-2.5-flash",
+        contents=_fit_summary_request(client, content),
+        config=types.GenerateContentConfig(
+            temperature=0.2,
+            max_output_tokens=2048,
+            response_mime_type="application/json",
+        ),
+        max_retries=3,
+    )
+    if not response.text:
+        raise RuntimeError("글별 Flash 요약 응답이 비어 있습니다.")
+    return _parse_summary_response(response.text)
+
+
+def _summary_fields(content: str, title: str) -> dict:
+    if not ENABLE_POST_SUMMARIES:
+        print("      글별 요약 OFF -> 기존 캐시 또는 원문을 사용")
+        return {
+            "summary": "",
+            "investment_relevant": None,
+            "relevance_reason": "",
+            "summary_version": None,
+        }
+    print(f"      1차 요약 캐시 생성(Flash): {title[:30]}...")
+    return summarize_single_post(content)
+
+
+def _write_posts_db(posts: list[dict]) -> None:
+    path = Path(DB_FILE)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(posts, f, ensure_ascii=False, indent=2)
+
+
+def _refresh_recent_summary_cache(posts: list[dict], now: datetime) -> bool:
+    """Upgrade only the recent rebalance window once after the summary policy changes."""
+    if not ENABLE_POST_SUMMARIES:
+        return False
+
+    cutoff = now - timedelta(days=14)
+    changed = False
+    for post in posts:
+        try:
+            post_date = datetime.fromisoformat(post["date"])
+        except Exception:
+            continue
+        if post_date < cutoff or post.get("summary_version") == SUMMARY_VERSION:
+            continue
+        post_id = extract_post_id(post.get("url", ""))
+        if post_id:
+            refreshed = fetch_full_post(post_id, post.get("title", ""))
+            if refreshed:
+                post["content"] = refreshed
+        post.update(_summary_fields(post.get("content", ""), post.get("title", "")))
+        _write_posts_db(posts)
+        changed = True
+    return changed
 
 
 def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
     """
     신규 작성된 글만 수집해 posts_db.json에 누적하고 최신 30개를 반환한다.
     """
+    global LAST_FETCH_NEW_POST_COUNT, LAST_FETCH_NEW_POST_URLS
+
     # 1. 기존 누적 데이터베이스 로드
     db_posts = []
     db_path = Path(DB_FILE)
@@ -229,7 +340,6 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
     print(f"수집 기간: {cutoff.strftime('%Y-%m-%d')} ~ 오늘")
 
     new_posts_count = 0
-    summary_calls = 0
     newly_added = []
 
     for entry in feed.entries:
@@ -257,30 +367,12 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
         if not full_text:
             full_text = entry.get("summary", "")
 
-        if len(full_text) > MAX_CHARS_PER_POST:
-            full_text = full_text[:MAX_CHARS_PER_POST] + "\n...(이하 생략)"
-
-        if ENABLE_POST_SUMMARIES:
-            if summary_calls < MAX_POST_SUMMARIES_PER_RUN:
-                print(f"      1차 요약 캐시 생성(Flash): {title[:30]}...")
-                summary = summarize_single_post(full_text)
-                summary_calls += 1
-            else:
-                print(
-                    "      1차 요약 호출 상한 도달 "
-                    f"({MAX_POST_SUMMARIES_PER_RUN}회) -> 원문 사용"
-                )
-                summary = ""
-        else:
-            print("      글별 요약 OFF -> 원문을 최종 분석에 사용")
-            summary = ""
-
         newly_added.append({
             "title": title,
             "date": pub_date.strftime("%Y-%m-%d"),
             "url": entry.link,
             "content": full_text,
-            "summary": summary,
+            **_summary_fields(full_text, title),
         })
         new_posts_count += 1
 
@@ -289,14 +381,16 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
         db_posts.extend(newly_added)
         # 날짜 최신순 정렬
         db_posts.sort(key=lambda x: x["date"], reverse=True)
-        
-        # output 폴더 확보 후 DB 저장
-        db_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(db_path, "w", encoding="utf-8") as f:
-            json.dump(db_posts, f, ensure_ascii=False, indent=2)
+        _write_posts_db(db_posts)
         print(f"신규 {new_posts_count}편을 posts_db.json에 저장했습니다.")
     else:
         print("신규 글이 없습니다.")
+    if _refresh_recent_summary_cache(db_posts, datetime.now()):
+        print("최근 14일 글의 원문과 Flash 요약 캐시를 새 정책으로 갱신했습니다.")
+    if newly_added or db_posts:
+        _write_posts_db(db_posts)
+    LAST_FETCH_NEW_POST_COUNT = new_posts_count
+    LAST_FETCH_NEW_POST_URLS = {post["url"] for post in newly_added}
 
     # 4. 요청 기간에 해당하는 글만 분석 대상으로 반환한다.
     # 무료 API에서는 입력 크기도 quota에 영향을 주므로 오래된 글을 매번 다시 넣지 않는다.
@@ -311,6 +405,51 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
 
     print(f"수집 기간 내 {len(final_posts)}편을 분석 대상으로 반환합니다.")
     return final_posts
+
+
+def get_last_fetch_new_post_count() -> int:
+    return LAST_FETCH_NEW_POST_COUNT
+
+
+def get_last_fetch_new_post_urls() -> set[str]:
+    return set(LAST_FETCH_NEW_POST_URLS)
+
+
+def load_cached_posts() -> list[dict]:
+    path = Path(DB_FILE)
+    if not path.exists():
+        return []
+    with open(path, encoding="utf-8") as f:
+        posts = json.load(f)
+    return posts if isinstance(posts, list) else []
+
+
+def is_investment_relevant(post: dict) -> bool:
+    """Treat legacy caches as relevant until the recent-window upgrade replaces them."""
+    return post.get("investment_relevant") is not False
+
+
+def select_new_relevant_posts(posts: list[dict], new_urls: set[str]) -> list[dict]:
+    return [
+        post for post in posts
+        if post.get("url") in new_urls and is_investment_relevant(post)
+    ]
+
+
+def select_rebalance_posts(
+    posts: list[dict],
+    last_rebalanced_date: str | None,
+    today: datetime,
+) -> list[dict]:
+    cutoff = (
+        datetime.fromisoformat(last_rebalanced_date)
+        if last_rebalanced_date
+        else today - timedelta(days=14)
+    )
+    return [
+        post for post in posts
+        if datetime.fromisoformat(post["date"]) > cutoff and is_investment_relevant(post)
+    ]
 
 
 def posts_to_context(posts: List[Dict]) -> str:

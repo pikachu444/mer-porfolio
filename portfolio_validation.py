@@ -13,6 +13,8 @@ import re
 from dataclasses import dataclass
 from typing import Iterable, Optional
 
+from portfolio_schema import AnalysisDecisionV2, parse_analysis_decision
+
 
 @dataclass
 class PortfolioItem:
@@ -34,6 +36,16 @@ class ValidationResult:
     parsed_portfolio: list[dict]
     removed_items: list[dict]
     moved_cash_weight: float
+
+
+def validate_structured_decisions(payload: dict) -> AnalysisDecisionV2:
+    """
+    Validate the new structured Gemini result.
+
+    Investment meaning is decided by the LLM. This function only applies the
+    structural rules agreed for the v2 path.
+    """
+    return parse_analysis_decision(payload)
 
 
 BUY_HINTS = (
@@ -328,7 +340,7 @@ def _insert_or_update_cash_table(report_text: str, moved_cash_weight: float) -> 
         "|------|----------|------|----------|------|\n"
         f"| 현금/대기자금 | CASH | 보유 | {_format_weight(moved_cash_weight)} | 검증 제외 종목 비중 대기 |\n"
     )
-    marker = "\n## 🔍 섹터별 온도계"
+    marker = "\n## 💬 한 줄 코멘트"
     if marker in report_text:
         return report_text.replace(marker, cash_section + marker, 1)
     return report_text.rstrip() + cash_section
@@ -359,7 +371,7 @@ def _verification_section(removed_items: list[dict], moved_cash_weight: float) -
 def _replace_verification_section(report_text: str, section: str) -> str:
     pattern = re.compile(r"\n---\n\n## ✅ 추천 검증 결과\n.*?(?=\n---\n\n## |\Z)", re.DOTALL)
     report_text = pattern.sub("", report_text)
-    marker = "\n---\n\n## 🔍 섹터별 온도계"
+    marker = "\n---\n\n## 💬 한 줄 코멘트"
     insert = "\n---\n\n" + section + "\n"
     if marker in report_text:
         return report_text.replace(marker, insert + marker, 1)

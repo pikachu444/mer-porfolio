@@ -52,10 +52,9 @@ def extract_summary(report: str) -> str:
     리포트 전문에서 핵심 내용만 추출해 텔레그램용 요약 메시지 생성.
 
     포함 내용:
-      - 핵심 인사이트 제목 + 한 줄 설명 (최대 3개)
+      - 핵심 인사이트 제목 + 한 줄 설명
       - 국내주식 추천 종목
       - 해외주식 추천 종목
-      - 섹터 온도계
       - 한 줄 코멘트
       - 대시보드 URL
     """
@@ -69,7 +68,7 @@ def extract_summary(report: str) -> str:
 
     if insight_blocks:
         parts.append("📌 *핵심 인사이트*")
-        for title, body in insight_blocks[:3]:
+        for title, body in insight_blocks:
             title = title.strip()
             # 투자판단 줄 우선 추출
             judgment_match = re.search(r"\*\*투자판단[:：]\*\*\s*(.+)", body)
@@ -110,20 +109,7 @@ def extract_summary(report: str) -> str:
                 name, ticker, action, weight = cells[0], cells[1], cells[2], cells[3]
                 parts.append(f"• {name} ({ticker}) — {action} ({weight})")
 
-    # ── 4. 섹터 온도계 ────────────────────────────────────────────────────────
-    sector_match = re.search(
-        r"섹터별 온도계[^\n]*\n\n?\|[^\n]+\|\n\|[-| :]+\|\n((?:\|[^\n]+\|\n?)+)",
-        report,
-    )
-    if sector_match:
-        parts.append("\n\U0001f321 *섹터 온도계*")
-        for row in sector_match.group(1).strip().split("\n"):
-            cells = [c.strip() for c in row.split("|")[1:-1]]
-            if len(cells) >= 3 and cells[0] and not cells[0].startswith("-"):
-                sector, temp, change = cells[0], cells[1], cells[2]
-                parts.append(f"• {sector} {temp} {change}")
-
-    # ── 5. 한 줄 코멘트 ───────────────────────────────────────────────────────
+    # ── 4. 한 줄 코멘트 ───────────────────────────────────────────────────────
     comment_match = re.search(
         r"(?:한 줄 코멘트|\U0001f4ac)[^\n]*\n+>\s*(.+)",
         report,
@@ -132,7 +118,7 @@ def extract_summary(report: str) -> str:
         comment = comment_match.group(1).strip().strip('"').strip("'")
         parts.append(f'\n\U0001f4ac _{comment}_')
 
-    # ── 6. 대시보드 URL ───────────────────────────────────────────────────────
+    # ── 5. 대시보드 URL ───────────────────────────────────────────────────────
     url = _get_dashboard_url()
     parts.append(f"\n\U0001f310 [대시보드 전체 보기]({url})")
     parts.append("\n※ 깃허브 배포 지연으로 인해 대시보드 반영에 1~2분이 소요될 수 있습니다.")
@@ -254,13 +240,118 @@ def send_report(report: str, today_str: str) -> bool:
     summary = extract_summary(report)
     combined = header + summary
 
-    # MAX_MSG_LEN 초과 시 헤더+서두만 잘라서 전송
-    if len(combined) > MAX_MSG_LEN:
-        combined = combined[:MAX_MSG_LEN - 3] + "..."
-
-    ok = _send_message(token, chat_id, combined)
+    ok = all(_send_message(token, chat_id, message) for message in split_telegram_message(combined))
 
     print(f"  텔레그램 요약 전송: {'성공' if ok else '실패'}")
+    return ok
+
+
+def build_structured_summary(
+    state: dict,
+    today_str: str,
+    performance: dict | None = None,
+    *,
+    no_changes: bool = False,
+) -> str:
+    """Build a user-facing summary from validated structured state."""
+    portfolio = state.get("portfolio", [])
+    watchlist = state.get("watchlist", [])
+    closed = state.get("closed_positions", [])
+    insights = state.get("insights", [])
+    performance = performance or {}
+    lines = [
+        "📊 *메르AI 모델 포트폴리오*",
+        f"📅 {today_str}",
+        "※ 메르 블로거의 실제 보유 내역이 아닙니다.",
+        "※ 블로그 직접 판단과 AI 해석을 구분해 표시합니다.",
+    ]
+    value = performance.get("portfolio_return_krw")
+    rendered = f"{float(value):+.1f}%" if value is not None else "집계 전"
+    lines += ["", "*오늘의 성과 요약*", f"• 모델 포트폴리오 수익률: {rendered}"]
+    if no_changes:
+        lines += ["• 포트폴리오 변경 없음"]
+    else:
+        lines += ["", "📌 *핵심 인사이트*"]
+        if insights:
+            for item in insights:
+                lines.append(f"• *{item.get('title', '')}*")
+                lines.append(f"  └ {item.get('summary', '')}")
+                lines.append(f"  └ 시사점: {item.get('investment_implication', '')}")
+        else:
+            lines.append("• 표시할 인사이트 없음")
+        lines += ["", "*현재 모델 포트폴리오*"]
+        if portfolio:
+            for item in portfolio:
+                actor = (
+                    "메르 직접 발언"
+                    if item.get("decision_actor") == "메르"
+                    else "AI 제안"
+                    if item.get("decision_actor") == "AI"
+                    else "미분류"
+                )
+                lines.append(
+                    f"• {item.get('name', '')} ({item.get('code', '')})"
+                    f" | {actor} · {item.get('action', '')}"
+                    f" | {item.get('proposed_weight', 0):g}%"
+                )
+                lines.append(f"  └ {item.get('change_reason', '')}")
+        else:
+            lines.append("• 편입 종목 없음")
+        lines += ["", "*Watchlist*"]
+        if watchlist:
+            for item in watchlist:
+                lines.append(f"• {item.get('name', '')} | {item.get('observation_reason', '')}")
+        else:
+            lines.append("• 표시할 항목 없음")
+        lines += ["", f"• 종료 포지션: {len(closed)}건"]
+    lines += ["", f"🌐 [대시보드 전체 보기]({_get_dashboard_url()})"]
+    return "\n".join(lines)
+
+
+def split_telegram_message(text: str, max_length: int = MAX_MSG_LEN) -> list[str]:
+    """Split a structured summary without dropping insights or truncating the tail."""
+    if len(text) <= max_length:
+        return [text]
+
+    messages: list[str] = []
+    current = ""
+    for line in text.splitlines():
+        candidate = line if not current else current + "\n" + line
+        if len(candidate) <= max_length:
+            current = candidate
+            continue
+        if current:
+            messages.append(current)
+        while len(line) > max_length:
+            messages.append(line[:max_length])
+            line = line[max_length:]
+        current = line
+    if current:
+        messages.append(current)
+    return messages
+
+
+def send_structured_summary(
+    state: dict,
+    today_str: str,
+    performance: dict | None = None,
+    *,
+    no_changes: bool = False,
+) -> bool:
+    token, chat_id = _get_credentials()
+    if not token or not chat_id:
+        print("  !! TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID 미설정 -> 텔레그램 알림 스킵")
+        return False
+    messages = split_telegram_message(
+        build_structured_summary(
+            state,
+            today_str,
+            performance,
+            no_changes=no_changes,
+        )
+    )
+    ok = all(_send_message(token, chat_id, message) for message in messages)
+    print(f"  텔레그램 구조화 요약 전송: {'성공' if ok else '실패'}")
     return ok
 
 
@@ -296,12 +387,6 @@ if __name__ == "__main__":
 | 종목명 | 티커 | 판단 | 목표비중 | 핵심 근거 |
 |--------|------|------|----------|-----------|
 | Nvidia | NVDA | Buy | 25% | AI 인프라 핵심 |
-
-## 🔍 섹터별 온도계
-
-| 섹터 | 온도 | 변화 | 근거 요약 |
-|------|------|------|-----------|
-| 조선/해운 | 🔥🔥🔥 | ▲ | 수주 급증 |
 
 ## 💬 한 줄 코멘트
 

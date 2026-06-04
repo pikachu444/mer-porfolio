@@ -9,12 +9,13 @@ on:
   workflow_dispatch:
     inputs:
       run_mode:
-        description: "실행 모드 (adhoc=강제분석+리밸런싱, test=테스트전송없음)"
+        description: "실행 모드 (verify=임시 검증, rebalance=운영 리밸런싱, test=mock 테스트)"
         required: true
-        default: "adhoc"
+        default: "verify"
         type: choice
         options:
-          - adhoc
+          - verify
+          - rebalance
           - test
       fetch_days:
         description: "수집 기간 (일) — 비워두면 모드 기본값 사용"
@@ -22,7 +23,7 @@ on:
         default: ""
         type: string
       gemini_model:
-        description: "Gemini 모델명 (비워두면 기본값 gemini-2.5-pro)"
+        description: "Gemini 분석 우선 모델명 (비워두면 기본값 gemini-2.5-pro)"
         required: false
         default: ""
         type: string
@@ -57,22 +58,34 @@ jobs:
       - name: 패키지 설치
         run: pip install -r requirements.txt
 
+      - name: 자동 테스트
+        run: python -m unittest discover -s tests -v
+
       # ── 분석 실행 ──────────────────────────────────────────────────────────
       - name: 메르AI 포트폴리오 분석 실행
+        if: ${{ github.event_name == 'schedule' || github.event.inputs.run_mode != 'test' }}
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           DASHBOARD_URL: https://pikachu444.github.io/mer-portfolio/output/dashboard.html
           OUTPUT_DIR: output
-          RUN_MODE: ${{ github.event_name == 'schedule' && 'scheduled' || github.event.inputs.run_mode || 'adhoc' }}
+          RUN_MODE: ${{ github.event_name == 'schedule' && 'scheduled' || github.event.inputs.run_mode || 'verify' }}
           FETCH_DAYS: ${{ github.event.inputs.fetch_days || '' }}
           GEMINI_MODEL: ${{ github.event.inputs.gemini_model || '' }}
+          ENABLE_POST_SUMMARIES: ${{ (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && 'true' || 'false' }}
         run: python main.py
 
-      # ── 리포트 커밋 및 푸시 (test 모드 제외) ────────────────────────────────
+      - name: verify 결과물 업로드
+        if: ${{ always() && github.event_name == 'workflow_dispatch' && github.event.inputs.run_mode == 'verify' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: mer-ai-verify-${{ github.run_id }}
+          path: output/verify
+
+      # ── 운영 결과 커밋 및 푸시 ─────────────────────────────────────────────
       - name: 리포트 커밋 및 푸시
-        if: ${{ github.event_name == 'schedule' || github.event.inputs.run_mode != 'test' }}
+        if: ${{ github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance' }}
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
