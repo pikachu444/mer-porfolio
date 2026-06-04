@@ -85,7 +85,7 @@
       "entry_date": "2026-05-28",
       "entry_price": 10270.0,
       "entry_usdkrw": null,
-      "last_confirmed_date": "2026-06-03",
+      "last_confirmed_date": "2026-06-04",
       "status": "active",
       "basis_type": "기존보유",
       "thesis": "전력 인프라 투자 확대 수혜 기대 유효함."
@@ -122,7 +122,7 @@
       "entry_date": "2026-05-28",
       "entry_price": 28400.0,
       "entry_usdkrw": null,
-      "last_confirmed_date": "2026-06-03",
+      "last_confirmed_date": "2026-06-04",
       "status": "active",
       "basis_type": "기존보유",
       "thesis": "VLCC 수요 급증으로 조선업 호황 지속 근거 유효함."
@@ -139,10 +139,10 @@
       "entry_date": "2026-05-28",
       "entry_price": 1134000.0,
       "entry_usdkrw": null,
-      "last_confirmed_date": "2026-06-03",
+      "last_confirmed_date": "2026-06-04",
       "status": "active",
       "basis_type": "기존보유",
-      "thesis": "Figure AI 투자 및 휴머노이드 로봇 부품 공급 기대 유효함."
+      "thesis": "Figure AI 투자 및 휴머노이드 로봇 부품 공급 기대 강화됨."
     },
     {
       "key": "US:GOOGL",
@@ -156,7 +156,7 @@
       "entry_date": "2026-05-28",
       "entry_price": 390.0555114746094,
       "entry_usdkrw": 1494.0999755859375,
-      "last_confirmed_date": "2026-06-03",
+      "last_confirmed_date": "2026-06-04",
       "status": "active",
       "basis_type": "기존보유",
       "thesis": "AI 로보틱스(제미나이)를 통한 피지컬 AI 시장 진출 강화됨."
@@ -173,7 +173,7 @@
       "entry_date": "2026-05-28",
       "entry_price": 427.9599914550781,
       "entry_usdkrw": 1494.0999755859375,
-      "last_confirmed_date": "2026-06-03",
+      "last_confirmed_date": "2026-06-04",
       "status": "active",
       "basis_type": "기존보유",
       "thesis": "AI 서비스 수익성 우려 재확인됨."
@@ -208,7 +208,7 @@
       "entry_date": "2026-05-28",
       "entry_price": 75.59500122070312,
       "entry_usdkrw": 1494.0999755859375,
-      "last_confirmed_date": "2026-06-03",
+      "last_confirmed_date": "2026-06-04",
       "status": "active",
       "basis_type": "기존보유",
       "thesis": "보크사이트/알루미늄 공급망 불안정 심화 수혜 기대 유효함."
@@ -225,7 +225,7 @@
       "entry_date": "2026-05-28",
       "entry_price": 3.2699999809265137,
       "entry_usdkrw": 1494.0999755859375,
-      "last_confirmed_date": "2026-06-03",
+      "last_confirmed_date": "2026-06-04",
       "status": "active",
       "basis_type": "기존보유",
       "thesis": "디지털 생물학 테마 강화, 엔비디아 협력 언급 유효함."
@@ -242,7 +242,7 @@
       "entry_date": "2026-05-28",
       "entry_price": 557.5250244140625,
       "entry_usdkrw": 1494.0999755859375,
-      "last_confirmed_date": "2026-06-03",
+      "last_confirmed_date": "2026-06-04",
       "status": "active",
       "basis_type": "기존보유",
       "thesis": "DARPA 달 철도 계획 직접 언급, 우주 인프라 수혜 구체화 유효함."
@@ -259,7 +259,7 @@
       "entry_date": "2026-05-28",
       "entry_price": 261.4700012207031,
       "entry_usdkrw": 1494.0999755859375,
-      "last_confirmed_date": "2026-06-03",
+      "last_confirmed_date": "2026-06-04",
       "status": "active",
       "basis_type": "기존보유",
       "thesis": "기니 시만두 광산 기관차 계약 수주로 직접 매출 증가 기대 유효함."
@@ -274,11 +274,11 @@
       "action": "매수",
       "weight": "10%",
       "basis_type": "기존보유",
-      "thesis": "젠슨 황 및 매디슨 황 방문, 엔비디아와 피지컬 AI 협력 논의 강화됨.",
+      "thesis": "젠슨 황 방문 및 엔비디아와 피지컬 AI 협력 논의 강화됨.",
       "entry_date": "2026-06-01",
       "entry_price": 138400.0,
       "entry_usdkrw": null,
-      "last_confirmed_date": "2026-06-03",
+      "last_confirmed_date": "2026-06-04",
       "status": "active"
     },
     {
@@ -290,12 +290,12 @@
       "ticker": "005380.KS",
       "action": "매수",
       "weight": "10%",
-      "basis_type": "직접언급",
-      "thesis": "보스턴 다이내믹스 로봇 생산 및 구글 제미나이 로보틱스 결합 계획 구체화됨.",
+      "basis_type": "기존보유",
+      "thesis": "보스턴 다이내믹스 로봇 생산 및 구글 제미나이 로보틱스 결합 계획 강화됨.",
       "entry_date": "2026-06-01",
       "entry_price": 750000.0,
       "entry_usdkrw": null,
-      "last_confirmed_date": "2026-06-03",
+      "last_confirmed_date": "2026-06-04",
       "status": "active"
     },
     {
@@ -308,11 +308,11 @@
       "action": "매수",
       "weight": "10%",
       "basis_type": "직접언급",
-      "thesis": "젠슨 황 파트너 나이트 언급 및 소버린 AI 테마 핵심 수혜주임.",
+      "thesis": "젠슨 황 파트너 언급 및 소버린 AI 테마 핵심 수혜주임.",
       "entry_date": "2026-06-02",
       "entry_price": 280500.0,
       "entry_usdkrw": null,
-      "last_confirmed_date": "2026-06-03",
+      "last_confirmed_date": "2026-06-04",
       "status": "active"
     },
     {
@@ -329,7 +329,7 @@
       "entry_date": "2026-06-03",
       "entry_price": null,
       "entry_usdkrw": null,
-      "last_confirmed_date": "2026-06-03",
+      "last_confirmed_date": "2026-06-04",
       "status": "active"
     },
     {
@@ -342,11 +342,11 @@
       "action": "Buy",
       "weight": "5%",
       "basis_type": "직접언급",
-      "thesis": "고질라급 비만 신약 '레타트루타이드' 임상 3상 긍정적 결과.",
+      "thesis": "고질라급 비만 신약 '레타트루타이드' 임상 3상 긍정적 결과로 성장 기대 강화됨.",
       "entry_date": "2026-06-03",
       "entry_price": 1089.841796875,
       "entry_usdkrw": 1524.449951171875,
-      "last_confirmed_date": "2026-06-03",
+      "last_confirmed_date": "2026-06-04",
       "status": "active"
     }
   ],

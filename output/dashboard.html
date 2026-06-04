@@ -87,66 +87,78 @@
   </div>
 </div>
 <script>
-const reportDates=["06-03"];
-const reportAvgs=[2.65];
-const latestNames=["LS", "대한전선", "삼성중공업", "LG이노텍", "두산로보틱스", "현대차", "네이버", "Google (Alphabet)", "Microsoft", "Alcoa", "Recursion Pharmaceuticals", "Northrop Grumman", "Wabtec", "일라이 릴리", "현금/대기자금"];
-const latestWeights=[3.0, 3.0, 8.0, 8.0, 10.0, 10.0, 10.0, 10.0, 3.0, 8.0, 3.0, 5.0, 3.0, 5.0, 5.0];
-const activePositions=[{"key": "KR:006220", "type": "KR", "market": "KR", "name": "LS", "code": "006220", "ticker": "006220.KS", "action": "보유", "weight": "3%", "entry_date": "2026-05-28", "entry_price": 10270.0, "entry_usdkrw": null, "last_confirmed_date": "2026-06-03", "status": "active", "basis_type": "기존보유", "thesis": "전력 인프라 투자 확대 수혜 기대 유효함.", "current_price": 9470.0, "return_pct": -7.789678675754626}, {"key": "KR:010140", "type": "KR", "market": "KR", "name": "삼성중공업", "code": "010140", "ticker": "010140.KS", "action": "보유", "weight": "8%", "entry_date": "2026-05-28", "entry_price": 28400.0, "entry_usdkrw": null, "last_confirmed_date": "2026-06-03", "status": "active", "basis_type": "기존보유", "thesis": "VLCC 수요 급증으로 조선업 호황 지속 근거 유효함.", "current_price": 27700.0, "return_pct": -2.464788732394366}, {"key": "KR:011070", "type": "KR", "market": "KR", "name": "LG이노텍", "code": "011070", "ticker": "011070.KS", "action": "보유", "weight": "8%", "entry_date": "2026-05-28", "entry_price": 1134000.0, "entry_usdkrw": null, "last_confirmed_date": "2026-06-03", "status": "active", "basis_type": "기존보유", "thesis": "Figure AI 투자 및 휴머노이드 로봇 부품 공급 기대 유효함.", "current_price": 1252000.0, "return_pct": 10.405643738977071}, {"key": "US:GOOGL", "type": "US", "market": "US", "name": "Google (Alphabet)", "code": "GOOGL", "ticker": "GOOGL", "action": "Buy", "weight": "10%", "entry_date": "2026-05-28", "entry_price": 390.0555114746094, "entry_usdkrw": 1494.0999755859375, "last_confirmed_date": "2026-06-03", "status": "active", "basis_type": "기존보유", "thesis": "AI 로보틱스(제미나이)를 통한 피지컬 AI 시장 진출 강화됨.", "current_price": 360.8299865722656, "return_pct": -7.4926578506367765, "return_pct_krw": -5.613536224487166, "current_usdkrw": 1524.449951171875}, {"key": "US:MSFT", "type": "US", "market": "US", "name": "Microsoft", "code": "MSFT", "ticker": "MSFT", "action": "Hold", "weight": "3%", "entry_date": "2026-05-28", "entry_price": 427.9599914550781, "entry_usdkrw": 1494.0999755859375, "last_confirmed_date": "2026-06-03", "status": "active", "basis_type": "기존보유", "thesis": "AI 서비스 수익성 우려 재확인됨.", "current_price": 428.4800109863281, "return_pct": 0.12151124909642053, "return_pct_krw": 2.155301137116176, "current_usdkrw": 1524.449951171875}, {"key": "US:AA", "type": "US", "market": "US", "name": "Alcoa", "code": "AA", "ticker": "AA", "action": "Hold", "weight": "8%", "entry_date": "2026-05-28", "entry_price": 75.59500122070312, "entry_usdkrw": 1494.0999755859375, "last_confirmed_date": "2026-06-03", "status": "active", "basis_type": "기존보유", "thesis": "보크사이트/알루미늄 공급망 불안정 심화 수혜 기대 유효함.", "current_price": 81.63999938964844, "return_pct": 7.996558067770458, "return_pct_krw": 10.190315483124616, "current_usdkrw": 1524.449951171875}, {"key": "US:RXRX", "type": "US", "market": "US", "name": "Recursion Pharmaceuticals", "code": "RXRX", "ticker": "RXRX", "action": "Hold", "weight": "3%", "entry_date": "2026-05-28", "entry_price": 3.2699999809265137, "entry_usdkrw": 1494.0999755859375, "last_confirmed_date": "2026-06-03", "status": "active", "basis_type": "기존보유", "thesis": "디지털 생물학 테마 강화, 엔비디아 협력 언급 유효함.", "current_price": 3.434999942779541, "return_pct": 5.045870422490848, "return_pct_krw": 7.179689882246791, "current_usdkrw": 1524.449951171875}, {"key": "US:NOC", "type": "US", "market": "US", "name": "Northrop Grumman", "code": "NOC", "ticker": "NOC", "action": "Hold", "weight": "5%", "entry_date": "2026-05-28", "entry_price": 557.5250244140625, "entry_usdkrw": 1494.0999755859375, "last_confirmed_date": "2026-06-03", "status": "active", "basis_type": "기존보유", "thesis": "DARPA 달 철도 계획 직접 언급, 우주 인프라 수혜 구체화 유효함.", "current_price": 529.0401000976562, "return_pct": -5.109174130137534, "return_pct_krw": -3.1816362842511796, "current_usdkrw": 1524.449951171875}, {"key": "US:WAB", "type": "US", "market": "US", "name": "Wabtec", "code": "WAB", "ticker": "WAB", "action": "Hold", "weight": "3%", "entry_date": "2026-05-28", "entry_price": 261.4700012207031, "entry_usdkrw": 1494.0999755859375, "last_confirmed_date": "2026-06-03", "status": "active", "basis_type": "기존보유", "thesis": "기니 시만두 광산 기관차 계약 수주로 직접 매출 증가 기대 유효함.", "current_price": 265.3999938964844, "return_pct": 1.503037693591472, "return_pct_krw": 3.5648908267399935, "current_usdkrw": 1524.449951171875}, {"key": "KR:454910", "type": "KR", "market": "KR", "name": "두산로보틱스", "code": "454910", "ticker": "454910.KS", "action": "매수", "weight": "10%", "basis_type": "기존보유", "thesis": "젠슨 황 및 매디슨 황 방문, 엔비디아와 피지컬 AI 협력 논의 강화됨.", "entry_date": "2026-06-01", "entry_price": 138400.0, "entry_usdkrw": null, "last_confirmed_date": "2026-06-03", "status": "active", "current_price": 166700.0, "return_pct": 20.447976878612717}, {"key": "KR:005380", "type": "KR", "market": "KR", "name": "현대차", "code": "005380", "ticker": "005380.KS", "action": "매수", "weight": "10%", "basis_type": "직접언급", "thesis": "보스턴 다이내믹스 로봇 생산 및 구글 제미나이 로보틱스 결합 계획 구체화됨.", "entry_date": "2026-06-01", "entry_price": 750000.0, "entry_usdkrw": null, "last_confirmed_date": "2026-06-03", "status": "active", "current_price": 729000.0, "return_pct": -2.8000000000000003}, {"key": "KR:035420", "type": "KR", "market": "KR", "name": "네이버", "code": "035420", "ticker": "035420.KS", "action": "매수", "weight": "10%", "basis_type": "직접언급", "thesis": "젠슨 황 파트너 나이트 언급 및 소버린 AI 테마 핵심 수혜주임.", "entry_date": "2026-06-02", "entry_price": 280500.0, "entry_usdkrw": null, "last_confirmed_date": "2026-06-03", "status": "active", "current_price": 280500.0, "return_pct": 0.0}, {"key": "US:LLY", "type": "US", "market": "US", "name": "일라이 릴리", "code": "LLY", "ticker": "LLY", "action": "Buy", "weight": "5%", "basis_type": "직접언급", "thesis": "고질라급 비만 신약 '레타트루타이드' 임상 3상 긍정적 결과.", "entry_date": "2026-06-03", "entry_price": 1089.841796875, "entry_usdkrw": 1524.449951171875, "last_confirmed_date": "2026-06-03", "status": "active", "current_price": 1089.7049560546875, "return_pct": -0.012556026086068255, "return_pct_krw": -0.012556026086068255, "current_usdkrw": 1524.449951171875}];
-const buyChanges=[{"name": "일라이 릴리", "code": "LLY", "market": "US", "action": "Buy", "weight": "5%", "basis_type": "직접언급", "thesis": "고질라급 비만 신약 '레타트루타이드' 임상 3상 긍정적 결과.", "change_type": "신규 편입", "reason": ""}];
+const reportDates=["06-04"];
+const reportAvgs=[1.9];
+const latestNames=["LS", "대한전선", "삼성중공업", "LG이노텍", "두산로보틱스", "현대차", "네이버", "Google (Alphabet)", "Microsoft", "Alcoa", "Recursion Pharmaceuticals", "Northrop Grumman", "Wabtec", "일라이 릴리"];
+const latestWeights=[3.0, 3.0, 8.0, 8.0, 10.0, 10.0, 10.0, 10.0, 3.0, 8.0, 3.0, 5.0, 3.0, 5.0];
+const activePositions=[{"key": "KR:006220", "type": "KR", "market": "KR", "name": "LS", "code": "006220", "ticker": "006220.KS", "action": "보유", "weight": "3%", "entry_date": "2026-05-28", "entry_price": 10270.0, "entry_usdkrw": null, "last_confirmed_date": "2026-06-04", "status": "active", "basis_type": "기존보유", "thesis": "전력 인프라 투자 확대 수혜 기대 유효함.", "current_price": 10000.0, "return_pct": -2.6290165530671863}, {"key": "KR:010140", "type": "KR", "market": "KR", "name": "삼성중공업", "code": "010140", "ticker": "010140.KS", "action": "보유", "weight": "8%", "entry_date": "2026-05-28", "entry_price": 28400.0, "entry_usdkrw": null, "last_confirmed_date": "2026-06-04", "status": "active", "basis_type": "기존보유", "thesis": "VLCC 수요 급증으로 조선업 호황 지속 근거 유효함.", "current_price": 28400.0, "return_pct": 0.0}, {"key": "KR:011070", "type": "KR", "market": "KR", "name": "LG이노텍", "code": "011070", "ticker": "011070.KS", "action": "보유", "weight": "8%", "entry_date": "2026-05-28", "entry_price": 1134000.0, "entry_usdkrw": null, "last_confirmed_date": "2026-06-04", "status": "active", "basis_type": "기존보유", "thesis": "Figure AI 투자 및 휴머노이드 로봇 부품 공급 기대 강화됨.", "current_price": 1173000.0, "return_pct": 3.439153439153439}, {"key": "US:GOOGL", "type": "US", "market": "US", "name": "Google (Alphabet)", "code": "GOOGL", "ticker": "GOOGL", "action": "Buy", "weight": "10%", "entry_date": "2026-05-28", "entry_price": 390.0555114746094, "entry_usdkrw": 1494.0999755859375, "last_confirmed_date": "2026-06-04", "status": "active", "basis_type": "기존보유", "thesis": "AI 로보틱스(제미나이)를 통한 피지컬 AI 시장 진출 강화됨.", "current_price": 372.760009765625, "return_pct": -4.434112889111227, "return_pct_krw": -1.9926737817550628, "current_usdkrw": 1532.27001953125}, {"key": "US:MSFT", "type": "US", "market": "US", "name": "Microsoft", "code": "MSFT", "ticker": "MSFT", "action": "Hold", "weight": "3%", "entry_date": "2026-05-28", "entry_price": 427.9599914550781, "entry_usdkrw": 1494.0999755859375, "last_confirmed_date": "2026-06-04", "status": "active", "basis_type": "기존보유", "thesis": "AI 서비스 수익성 우려 재확인됨.", "current_price": 427.2699890136719, "return_pct": -0.1612305951919054, "return_pct_krw": 2.389368613628076, "current_usdkrw": 1532.27001953125}, {"key": "US:AA", "type": "US", "market": "US", "name": "Alcoa", "code": "AA", "ticker": "AA", "action": "Hold", "weight": "8%", "entry_date": "2026-05-28", "entry_price": 75.59500122070312, "entry_usdkrw": 1494.0999755859375, "last_confirmed_date": "2026-06-04", "status": "active", "basis_type": "기존보유", "thesis": "보크사이트/알루미늄 공급망 불안정 심화 수혜 기대 유효함.", "current_price": 79.72000122070312, "return_pct": 5.456710011759734, "return_pct_krw": 8.150831771515708, "current_usdkrw": 1532.27001953125}, {"key": "US:RXRX", "type": "US", "market": "US", "name": "Recursion Pharmaceuticals", "code": "RXRX", "ticker": "RXRX", "action": "Hold", "weight": "3%", "entry_date": "2026-05-28", "entry_price": 3.2699999809265137, "entry_usdkrw": 1494.0999755859375, "last_confirmed_date": "2026-06-04", "status": "active", "basis_type": "기존보유", "thesis": "디지털 생물학 테마 강화, 엔비디아 협력 언급 유효함.", "current_price": 3.8550000190734863, "return_pct": 17.889909527804345, "return_pct_krw": 20.901664497963225, "current_usdkrw": 1532.27001953125}, {"key": "US:NOC", "type": "US", "market": "US", "name": "Northrop Grumman", "code": "NOC", "ticker": "NOC", "action": "Hold", "weight": "5%", "entry_date": "2026-05-28", "entry_price": 557.5250244140625, "entry_usdkrw": 1494.0999755859375, "last_confirmed_date": "2026-06-04", "status": "active", "basis_type": "기존보유", "thesis": "DARPA 달 철도 계획 직접 언급, 우주 인프라 수혜 구체화 유효함.", "current_price": 539.35498046875, "return_pct": -3.259054419020657, "return_pct_krw": -0.7875958791134152, "current_usdkrw": 1532.27001953125}, {"key": "US:WAB", "type": "US", "market": "US", "name": "Wabtec", "code": "WAB", "ticker": "WAB", "action": "Hold", "weight": "3%", "entry_date": "2026-05-28", "entry_price": 261.4700012207031, "entry_usdkrw": 1494.0999755859375, "last_confirmed_date": "2026-06-04", "status": "active", "basis_type": "기존보유", "thesis": "기니 시만두 광산 기관차 계약 수주로 직접 매출 증가 기대 유효함.", "current_price": 261.70001220703125, "return_pct": 0.0879684037382078, "return_pct_krw": 2.6449339447285385, "current_usdkrw": 1532.27001953125}, {"key": "KR:454910", "type": "KR", "market": "KR", "name": "두산로보틱스", "code": "454910", "ticker": "454910.KS", "action": "매수", "weight": "10%", "basis_type": "기존보유", "thesis": "젠슨 황 방문 및 엔비디아와 피지컬 AI 협력 논의 강화됨.", "entry_date": "2026-06-01", "entry_price": 138400.0, "entry_usdkrw": null, "last_confirmed_date": "2026-06-04", "status": "active", "current_price": 157900.0, "return_pct": 14.089595375722544}, {"key": "KR:005380", "type": "KR", "market": "KR", "name": "현대차", "code": "005380", "ticker": "005380.KS", "action": "매수", "weight": "10%", "basis_type": "기존보유", "thesis": "보스턴 다이내믹스 로봇 생산 및 구글 제미나이 로보틱스 결합 계획 강화됨.", "entry_date": "2026-06-01", "entry_price": 750000.0, "entry_usdkrw": null, "last_confirmed_date": "2026-06-04", "status": "active", "current_price": 700000.0, "return_pct": -6.666666666666667}, {"key": "KR:035420", "type": "KR", "market": "KR", "name": "네이버", "code": "035420", "ticker": "035420.KS", "action": "매수", "weight": "10%", "basis_type": "직접언급", "thesis": "젠슨 황 파트너 언급 및 소버린 AI 테마 핵심 수혜주임.", "entry_date": "2026-06-02", "entry_price": 280500.0, "entry_usdkrw": null, "last_confirmed_date": "2026-06-04", "status": "active", "current_price": 267500.0, "return_pct": -4.634581105169341}, {"key": "US:LLY", "type": "US", "market": "US", "name": "일라이 릴리", "code": "LLY", "ticker": "LLY", "action": "Buy", "weight": "5%", "basis_type": "직접언급", "thesis": "고질라급 비만 신약 '레타트루타이드' 임상 3상 긍정적 결과로 성장 기대 강화됨.", "entry_date": "2026-06-03", "entry_price": 1089.841796875, "entry_usdkrw": 1524.449951171875, "last_confirmed_date": "2026-06-04", "status": "active", "current_price": 1134.8699951171875, "return_pct": 4.131627028005426, "return_pct_krw": 4.66579769140173, "current_usdkrw": 1532.27001953125}];
+const buyChanges=[];
 const updateChanges=[];
 const sellChanges=[];
 const closedPositions=[{"key": "KR:001440", "type": "KR", "market": "KR", "name": "대한전선", "code": "001440", "ticker": "001440.KS", "action": "보유", "weight": "3%", "entry_date": "2026-05-28", "entry_price": 47800.0, "entry_usdkrw": null, "last_confirmed_date": "2026-06-02", "status": "closed", "basis_type": "기존보유", "thesis": "전력 인프라 투자 확대 수혜 기대 유효함.", "closed_date": "2026-06-03", "closed_price": 42500.0, "close_reason": "현재 포트폴리오에서 제외"}, {"key": "KR:005930", "type": "KR", "market": "KR", "name": "삼성전자", "code": "005930", "ticker": "005930.KS", "action": "매수", "weight": "20%", "entry_date": "2026-05-26", "entry_price": 300000.0, "entry_usdkrw": null, "last_confirmed_date": "2026-05-27", "status": "closed", "closed_date": "2026-05-31", "closed_price": 317000.0, "close_reason": "현재 포트폴리오에서 제외"}, {"key": "KR:329180", "type": "KR", "market": "KR", "name": "HD현대중공업", "code": "329180", "ticker": "329180.KS", "action": "매수", "weight": "15%", "entry_date": "2026-05-26", "entry_price": 743000.0, "entry_usdkrw": null, "last_confirmed_date": "2026-05-27", "status": "closed", "closed_date": "2026-05-31", "closed_price": 696000.0, "close_reason": "현재 포트폴리오에서 제외"}, {"key": "US:NVDA", "type": "US", "market": "US", "name": "Nvidia", "code": "NVDA", "ticker": "NVDA", "action": "Buy", "weight": "15%", "entry_date": "2026-05-26", "entry_price": 215.3300018310547, "entry_usdkrw": 1504.8800048828125, "last_confirmed_date": "2026-05-30", "status": "closed", "closed_date": "2026-05-31", "closed_price": 211.13999938964844, "close_reason": "현재 포트폴리오에서 제외"}, {"key": "US:XOM", "type": "US", "market": "US", "name": "ExxonMobil", "code": "XOM", "ticker": "XOM", "action": "Buy", "weight": "10%", "entry_date": "2026-05-26", "entry_price": 154.9199981689453, "entry_usdkrw": 1504.8800048828125, "last_confirmed_date": "2026-05-27", "status": "closed", "closed_date": "2026-05-31", "closed_price": 145.25999450683594, "close_reason": "현재 포트폴리오에서 제외"}, {"key": "US:FIX", "type": "US", "market": "US", "name": "Comfort Systems USA", "code": "FIX", "ticker": "FIX", "action": "Watch", "weight": "4%", "entry_date": "2026-05-28", "entry_price": 1855.3699951171875, "entry_usdkrw": 1494.0999755859375, "last_confirmed_date": "2026-05-30", "status": "closed", "closed_date": "2026-05-31", "closed_price": 1828.2099609375, "close_reason": "현재 포트폴리오에서 제외"}];
 const reportText=`# 메르AI 포트폴리오 리포트
-**분석 기간:** 2026-06-02 ~ 2026-06-03
-**리포트 생성:** 2026-06-03
+**분석 기간:** 2026-06-03 ~ 2026-06-04
+**리포트 생성:** 2026-06-04
 **학습 글 수:** 4편
 
 ---
 
 ## 📌 시장 분석 핵심 인사이트
 
-### 인사이트 1: 비만약 시장의 고질라급 경쟁과 파급효과
+### 인사이트 1: AI/로봇 (피지컬 AI & 소버린 AI)
 
-1.  일라이 릴리의 삼중 작용제 비만 신약 '레타트루타이드'의 3상 결과가 긍정적이었음.
-2.  노보 노디스크의 먹는 비만약 '아미크레틴'의 1상 결과 또한 긍정적이었음.
-3.  두 회사 모두 기존 비만약 대비 뛰어난 체중 감량 효과를 보였음.
+1.  2026년 6월, 엔비디아 젠슨 황 CEO가 한국을 방문함.
+2.  그는 피지컬 AI 및 소버린 AI의 중요성을 강조하며 관련 기업들을 칭찬함.
+3.  두산로보틱스와 네이버가 젠슨 황의 방문 및 협력 논의 대상에 포함됨.
 
 **해석(나비효과):**
-4.  비만약 시장은 단순 체중 감량을 넘어 심혈관 질환, 수면 무호흡증 등 다양한 합병증 개선 효과까지 기대하게 됨.
-5.  이는 제약/바이오 산업 전반에 새로운 성장 동력을 제공하며, 관련 기술 개발 및 투자 확대로 이어질 것임.
-6.  혁신 신약 개발 능력을 갖춘 제약사들의 시장 지배력이 더욱 강화될 것으로 보임.
+4.  엔비디아의 AI 전략이 단순 소프트웨어를 넘어 로봇 등 물리적 세계로 확장되는 것임.
+5.  이는 국내 로봇 및 AI 기술 기업들에게 새로운 성장 동력을 제공하며, 글로벌 AI 생태계의 핵심 파트너로 부상할 기회를 주는 것임.
+6.  관련 국내 기업들은 엔비디아와의 협력을 통해 기술력과 시장 지배력을 강화할 수 있는 것임.
 
-**투자판단:** Buy 강 — 비만약 시장의 폭발적 성장과 합병증 개선 기대감.
+**투자판단:** Buy 강 — 엔비디아의 명확한 전략 방향과 직접적인 협력 언급으로 성장 기대가 높은 것임.
 
 ---
 
-### 인사이트 2: HBM 시장의 경쟁 심화와 수익성 우려
+### 인사이트 2: 비만 치료제 시장의 고성장
 
-1.  삼성전자가 HBM4(6세대 고대역폭메모리)의 세계 최초 양산 출하를 공식 발표했음.
-2.  SK하이닉스 또한 HBM4E 개발을 완료하며 HBM 시장에서의 경쟁이 심화되고 있음.
-3.  HBM4부터는 고객사 맞춤형 설계가 중요해지며, 공급사 간 기술 격차가 줄어들 수 있음.
+1.  2025년 12월, 일라이 릴리의 삼중 작용제 비만 신약 '레타트루타이드'의 임상 3상 첫 번째 결과가 긍정적으로 발표됨.
+2.  이 신약은 '고질라급' 잠재력을 가진 것으로 평가됨.
 
 **해석(나비효과):**
-4.  HBM 시장의 고성장에도 불구하고, 공급사 간의 치열한 경쟁은 장기적으로 수익성 압박으로 이어질 수 있음.
-5.  고객사 요구에 대한 맞춤형 대응 능력이 중요해지면서, 범용적인 생산 방식의 이점이 줄어들 수 있음.
-6.  메모리 반도체 기업들은 기술 리더십 유지와 동시에 수익성 방어 전략을 고심해야 할 시점임.
+3.  일라이 릴리는 비만 치료제 시장에서 강력한 경쟁 우위를 확보하게 되는 것임.
+4.  이는 비만 치료제 시장의 폭발적인 성장을 가속화하며, 관련 제약사들의 경쟁 구도를 재편하는 것임.
+5.  혁신적인 신약 개발 역량을 가진 제약사는 장기적인 성장 동력을 확보하게 되는 것임.
 
-**투자판단:** Watch — HBM 시장의 성장성은 유효하나, 경쟁 심화로 인한 수익성 리스크 존재.
+**투자판단:** Buy 강 — 압도적인 신약 효과로 시장 지배력 강화 및 매출 성장이 기대되는 것임.
 
 ---
 
-### 인사이트 3: 소버린 AI 시대, 엔비디아와 네이버의 전략적 협력
+### 인사이트 3: 국내 증시의 유동성 위축 및 금리 인상 압박
 
-1.  젠슨 황 엔비디아 CEO가 네이버를 방문하며 AI 분야 협력 가능성을 시사했음.
-2.  각국이 자체 AI 인프라를 구축하려는 '소버린 AI' 개념이 부상하고 있음.
-3.  네이버는 '하이퍼클로바X' 등 자체 AI 기술력을 보유하고 있으며, 한국의 소버린 AI 구축에 핵심 역할을 할 수 있음.
+1.  서울을 제외한 주요 선거가 종료되어 단기적인 정책 기대감이 사라짐.
+2.  한국은행이 7월 금리 인상 가능성을 시사하며 통화 정책 전환 가능성이 제기됨.
+3.  국민연금의 국내 주식 투자 한도 상향은 매도를 막는 수준이며, 추가 매수 여력은 제한적임.
 
 **해석(나비효과):**
-4.  엔비디아는 GPU 판매를 넘어 각국의 소버린 AI 인프라 구축 파트너로서 시장을 확장하려 함.
-5.  이는 AI 인프라, 데이터센터, 그리고 피지컬 AI(로봇) 등 관련 산업 전반에 막대한 투자를 유발할 것임.
-6.  국가별 AI 주권 확보 경쟁은 관련 기술 및 서비스 기업들에게 새로운 성장 기회를 제공할 것임.
+4.  국내 증시는 단기적인 호재 부재와 함께 금리 인상이라는 악재에 직면하게 되는 것임.
+5.  이는 시장 전반의 유동성을 위축시키고 투자 심리를 냉각시키는 요인으로 작용하는 것임.
+6.  투자자들은 국내 주식 시장 전반에 대해 보수적인 접근이 필요한 시점인 것임.
 
-**투자판단:** Buy 강 — 소버린 AI 및 피지컬 AI 시장의 개화, 핵심 기술 기업들의 수혜 기대.
+**투자판단:** Watch/Avoid — 국내 거시 환경의 불확실성 증대로 시장 전반의 매력도가 하락한 것임.
+
+---
+
+### 인사이트 4: HBM 시장의 경쟁 심화와 잠재적 리스크
+
+1.  2026년 2월 12일, 삼성전자가 HBM4(6세대 고대역폭메모리)의 세계 최초 양산 출하를 공식 발표함.
+
+**해석(나비효과):**
+2.  삼성전자의 HBM 기술 리더십이 강화되며, 고부가가치 메모리 시장에서의 경쟁이 더욱 치열해지는 것임.
+3.  이는 HBM 시장의 기술 발전 속도를 가속화하지만, 동시에 후발 주자들의 추격과 가격 경쟁 심화 가능성을 내포하는 것임.
+4.  블로그 제목에서 "삼성전자와 SK하이닉스를 조심해야 하는 이유"를 언급하며, 기술 리더십 이면에 숨겨진 잠재적 리스크를 경고하는 것임.
+
+**투자판단:** Watch — HBM 기술 발전은 긍정적이나, 시장 경쟁 심화와 잠재적 리스크에 대한 주의가 필요한 것임.
 
 ---
 
@@ -162,14 +174,15 @@ const reportText=`# 메르AI 포트폴리오 리포트
 | LS | 006220 | 보유 | 3% | 기존보유 | 전력 인프라 투자 확대 수혜 기대 유효함. |
 | 대한전선 | 011440 | 보유 | 3% | 기존보유 | 전력 인프라 투자 확대 수혜 기대 유효함. |
 | 삼성중공업 | 010140 | 보유 | 8% | 기존보유 | VLCC 수요 급증으로 조선업 호황 지속 근거 유효함. |
-| LG이노텍 | 011070 | 보유 | 8% | 기존보유 | Figure AI 투자 및 휴머노이드 로봇 부품 공급 기대 유효함. |
-| 두산로보틱스 | 454910 | 매수 | 10% | 기존보유 | 젠슨 황 및 매디슨 황 방문, 엔비디아와 피지컬 AI 협력 논의 강화됨. |
-| 현대차 | 005380 | 매수 | 10% | 직접언급 | 보스턴 다이내믹스 로봇 생산 및 구글 제미나이 로보틱스 결합 계획 구체화됨. |
-| 네이버 | 035420 | 매수 | 10% | 직접언급 | 젠슨 황 파트너 나이트 언급 및 소버린 AI 테마 핵심 수혜주임. |
+| LG이노텍 | 011070 | 보유 | 8% | 기존보유 | Figure AI 투자 및 휴머노이드 로봇 부품 공급 기대 강화됨. |
+| 두산로보틱스 | 454910 | 매수 | 10% | 기존보유 | 젠슨 황 방문 및 엔비디아와 피지컬 AI 협력 논의 강화됨. |
+| 현대차 | 005380 | 매수 | 10% | 기존보유 | 보스턴 다이내믹스 로봇 생산 및 구글 제미나이 로보틱스 결합 계획 강화됨. |
+| 네이버 | 035420 | 매수 | 10% | 직접언급 | 젠슨 황 파트너 언급 및 소버린 AI 테마 핵심 수혜주임. |
 
 **국내 주의종목 (리스크):**
-- 삼성전자 (005930): HBM 시장 경쟁 심화로 인한 수익성 압박 가능성.
-- SK하이닉스 (000660): HBM 시장 경쟁 심화로 인한 수익성 압박 가능성.
+- 삼성전자 (005930): HBM4 양산은 긍정적이나, 블로그 제목에서 "조심해야 하는 이유"를 언급하며 잠재적 리스크를 시사함.
+- SK하이닉스 (000660): 삼성전자와 함께 HBM 시장 경쟁 심화 및 잠재적 리스크 가능성.
+- 국내 주식 시장 전반: 선거 호재 소멸, 한은 금리 인상 시사, 국민연금 매수세 제한으로 유동성 위축 우려.
 
 ---
 
@@ -183,7 +196,7 @@ const reportText=`# 메르AI 포트폴리오 리포트
 | Recursion Pharmaceuticals | RXRX | Hold | 3% | 기존보유 | 디지털 생물학 테마 강화, 엔비디아 협력 언급 유효함. |
 | Northrop Grumman | NOC | Hold | 5% | 기존보유 | DARPA 달 철도 계획 직접 언급, 우주 인프라 수혜 구체화 유효함. |
 | Wabtec | WAB | Hold | 3% | 기존보유 | 기니 시만두 광산 기관차 계약 수주로 직접 매출 증가 기대 유효함. |
-| 일라이 릴리 | LLY | Buy | 5% | 직접언급 | 고질라급 비만 신약 '레타트루타이드' 임상 3상 긍정적 결과. |
+| 일라이 릴리 | LLY | Buy | 5% | 직접언급 | 고질라급 비만 신약 '레타트루타이드' 임상 3상 긍정적 결과로 성장 기대 강화됨. |
 
 **미국 주의종목 (리스크):**
 - 없음
@@ -194,8 +207,7 @@ const reportText=`# 메르AI 포트폴리오 리포트
 
 | 이름 | 코드/티커 | 판단 | 목표비중 | 용도 |
 |------|----------|------|----------|------|
-| (해당 없음) |  |  |  |  |
-| 현금/대기자금 | CASH | 보유 | 5% | 검증 제외 종목 비중 대기 |
+| 없음 | | | | |
 
 ---
 
@@ -204,11 +216,7 @@ const reportText=`# 메르AI 포트폴리오 리포트
 - 검증 기준: 신규 종목은 블로그 직접 언급 또는 기존 보유 종목일 때만 유지했습니다.
 - 긍정 섹터만으로 생성된 신규 Buy 종목은 허용하지 않았습니다.
 - API 재호출: 없음. 코드 후처리로만 검증했습니다.
-- 제외 비중: 5%를 현금/대기자금으로 이동했습니다.
-
-| 제외 종목 | 시장 | 코드/티커 | 판단 | 목표비중 | 제외 사유 |
-|----------|------|----------|------|----------|-----------|
-| 노보 노디스크 | US | NVO | Buy | 5% | 블로그 직접 언급이나 기존 보유 근거가 없음 |
+- 제외 종목: 없음
 
 ---
 
@@ -216,15 +224,12 @@ const reportText=`# 메르AI 포트폴리오 리포트
 
 | 섹터 | 온도 | 변화 | 근거 요약 |
 |------|------|------|-----------|
-| 조선/해운 | 🌡 | - | 기존 호황 근거 유효. |
-| 에너지/정유 | 🌡 | - | 특이사항 없음. |
-| 방산 | 🌡 | - | 특이사항 없음. |
-| 반도체 | 🌡 | ▼ | HBM 경쟁 심화로 인한 수익성 우려 발생. |
-| 2차전지 | 🌡 | - | 특이사항 없음. |
-| 금/귀금속 | 🌡 | - | 특이사항 없음. |
-| 미국 빅테크 | 🔥🔥 | ▲ | AI 인프라 및 로봇 시장 확장 기대. |
-| 제약/바이오 | 🔥🔥🔥 | ▲ | 비만약 시장의 폭발적 성장 및 합병증 개선 기대. |
-| AI 인프라/로봇 | 🔥🔥🔥 | ▲ | 소버린 AI 및 피지컬 AI 시장 개화, 엔비디아 협력 강화. |
+| AI/로봇 | 🔥🔥🔥 | ▲ | 젠슨 황의 피지컬 AI 강조 및 관련 기업 언급. |
+| 비만약/제약 | 🔥🔥🔥 | ▲ | 일라이 릴리 신약 '레타트루타이드' 임상 3상 긍정적 결과. |
+| 조선/해운 | 🔥 | - | VLCC 수요 호황 지속 근거 유효. |
+| 전력 인프라 | 🔥 | - | 전력 인프라 투자 확대 수혜 기대 유효. |
+| 반도체 (HBM) | 🔥 | - | 삼성전자 HBM4 양산 소식은 긍정적이나, 블로그 제목에서 주의를 시사함. |
+| 국내 증시 (전반) | 🌡 | ▼ | 선거 호재 소멸, 한은 금리 인상 시사, 국민연금 매수세 제한. |
 
 (온도: 🧊=매우 부정적, 🌡=중립, 🔥=긍정적, 🔥🔥🔥=매우 긍정적)
 
@@ -232,38 +237,36 @@ const reportText=`# 메르AI 포트폴리오 리포트
 
 ## 💬 한 줄 코멘트
 
-> 고질라급 비만약과 소버린 AI의 등장은 새로운 시장을 열지만, HBM 시장의 경쟁 심화는 수익성 리스크를 키우는 것임.
+> 거시 환경의 불확실성이 커지는 가운데, AI와 비만약 등 명확한 성장 동력을 가진 섹터에 집중하는 것이 현명한 것임.
 
 ---
 
 ## ⚠️ 전회 대비 주요 변경사항
 
-- 제약/바이오 섹터 (비만약) 및 AI 인프라/로봇 섹터에 대한 긍정적 전망 강화.
-- HBM 관련 메모리 반도체 섹터에 대한 리스크 인식이 강화되어 주의종목으로 분류.
-- 일라이 릴리(LLY), 노보 노디스크(NVO) 신규 매수 추천.
-- 네이버(035420)의 소버린 AI 테마 핵심 수혜주로서의 위상 재확인 및 매수 유지.
+- 국내 주식 시장 전반에 대한 보수적 관점 강화됨.
+- AI/로봇 및 비만약 섹터의 성장 동력 재확인 및 투자 근거 강화됨.
 
 ---
 
 ## 📈 모델 포트폴리오 성과
-*기준일: 2026-06-03 | 미국 주식은 원화 환산 기준*
+*기준일: 2026-06-04 | 미국 주식은 원화 환산 기준*
 
 | 종목 | 편입일 | 진입가 | 현재가 | 목표비중 | 수익률(KRW) | 판단 |
 |------|--------|--------|--------|----------|-------------|------|
-| LG이노텍 | 2026-05-28 | ₩1,134,000 | ₩1,252,000 | 8% | 🟢 ▲10.4% | 보유 |
-| LS | 2026-05-28 | ₩10,270 | ₩9,470 | 3% | 🔴 ▼7.8% | 보유 |
-| 네이버 | 2026-06-02 | ₩280,500 | ₩280,500 | 10% | 🟡 ▲0.0% | 매수 |
-| 두산로보틱스 | 2026-06-01 | ₩138,400 | ₩166,700 | 10% | 🟢 ▲20.4% | 매수 |
-| 삼성중공업 | 2026-05-28 | ₩28,400 | ₩27,700 | 8% | 🟡 ▼2.5% | 보유 |
-| 현대차 | 2026-06-01 | ₩750,000 | ₩729,000 | 10% | 🟡 ▼2.8% | 매수 |
-| Alcoa | 2026-05-28 | $76 | $82 | 8% | 🟢 ▲10.2% | Hold |
-| Google (Alphabet) | 2026-05-28 | $390 | $361 | 10% | 🔴 ▼5.6% | Buy |
-| Microsoft | 2026-05-28 | $428 | $428 | 3% | 🟡 ▲2.2% | Hold |
-| Northrop Grumman | 2026-05-28 | $558 | $529 | 5% | 🟡 ▼3.2% | Hold |
-| Recursion Pharmaceuticals | 2026-05-28 | $3 | $3 | 3% | 🟢 ▲7.2% | Hold |
-| Wabtec | 2026-05-28 | $261 | $265 | 3% | 🟡 ▲3.6% | Hold |
-| 일라이 릴리 | 2026-06-03 | $1,090 | $1,090 | 5% | 🟡 ▼0.0% | Buy |
-| **현재 포트폴리오 수익률** | — | — | — | — | **▲2.6%** | — |
+| LG이노텍 | 2026-05-28 | ₩1,134,000 | ₩1,173,000 | 8% | 🟡 ▲3.4% | 보유 |
+| LS | 2026-05-28 | ₩10,270 | ₩10,000 | 3% | 🟡 ▼2.6% | 보유 |
+| 네이버 | 2026-06-02 | ₩280,500 | ₩267,500 | 10% | 🟡 ▼4.6% | 매수 |
+| 두산로보틱스 | 2026-06-01 | ₩138,400 | ₩157,900 | 10% | 🟢 ▲14.1% | 매수 |
+| 삼성중공업 | 2026-05-28 | ₩28,400 | ₩28,400 | 8% | 🟡 ▲0.0% | 보유 |
+| 현대차 | 2026-06-01 | ₩750,000 | ₩700,000 | 10% | 🔴 ▼6.7% | 매수 |
+| Alcoa | 2026-05-28 | $76 | $80 | 8% | 🟢 ▲8.2% | Hold |
+| Google (Alphabet) | 2026-05-28 | $390 | $373 | 10% | 🟡 ▼2.0% | Buy |
+| Microsoft | 2026-05-28 | $428 | $427 | 3% | 🟡 ▲2.4% | Hold |
+| Northrop Grumman | 2026-05-28 | $558 | $539 | 5% | 🟡 ▼0.8% | Hold |
+| Recursion Pharmaceuticals | 2026-05-28 | $3 | $4 | 3% | 🟢 ▲20.9% | Hold |
+| Wabtec | 2026-05-28 | $261 | $262 | 3% | 🟡 ▲2.6% | Hold |
+| 일라이 릴리 | 2026-06-03 | $1,090 | $1,135 | 5% | 🟡 ▲4.7% | Buy |
+| **현재 포트폴리오 수익률** | — | — | — | — | **▲1.9%** | — |
 
 > 현재 포트폴리오 표의 active 종목만 반영한 목표비중 가중 수익률입니다.
 > 같은 종목의 반복 추천은 하나의 포지션으로 병합하며, 종료 포지션은 아래 섹션에 별도로 보존합니다.
@@ -278,7 +281,7 @@ const reportText=`# 메르AI 포트폴리오 리포트
 | Nvidia | 2026-05-26 | 2026-05-31 | 현재 포트폴리오에서 제외 |
 | ExxonMobil | 2026-05-26 | 2026-05-31 | 현재 포트폴리오에서 제외 |
 | Comfort Systems USA | 2026-05-28 | 2026-05-31 | 현재 포트폴리오에서 제외 |`;
-const updatedAt="2026-06-03";
+const updatedAt="2026-06-04";
 
 document.getElementById('updatedAt').textContent=updatedAt;
 function barColor(v){return v>=0?'#22c55e':'#ef4444';}
