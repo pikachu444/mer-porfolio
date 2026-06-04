@@ -252,6 +252,7 @@ def build_structured_summary(
     performance: dict | None = None,
     *,
     no_changes: bool = False,
+    status_note: str = "",
 ) -> str:
     """Build a user-facing summary from validated structured state."""
     portfolio = state.get("portfolio", [])
@@ -268,6 +269,8 @@ def build_structured_summary(
     value = performance.get("portfolio_return_krw")
     rendered = f"{float(value):+.1f}%" if value is not None else "집계 전"
     lines += ["", "*오늘의 성과 요약*", f"• 모델 포트폴리오 수익률: {rendered}"]
+    if status_note:
+        lines.append(f"• {status_note}")
     if no_changes:
         lines += ["• 포트폴리오 변경 없음"]
     else:
@@ -337,6 +340,7 @@ def send_structured_summary(
     performance: dict | None = None,
     *,
     no_changes: bool = False,
+    status_note: str = "",
 ) -> bool:
     token, chat_id = _get_credentials()
     if not token or not chat_id:
@@ -348,6 +352,7 @@ def send_structured_summary(
             today_str,
             performance,
             no_changes=no_changes,
+            status_note=status_note,
         )
     )
     ok = all(_send_message(token, chat_id, message) for message in messages)

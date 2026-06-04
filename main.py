@@ -125,8 +125,11 @@ def _prices_for_ledger(ledger: dict) -> dict[str, float]:
     return get_structured_prices(ledger.get("positions", []))
 
 
-def _run_no_change_update(state, today: datetime) -> int:
-    print("  신규 글 없음: 판단과 목표 비중을 유지하고 성과만 갱신합니다.")
+def _run_no_change_update(state, today: datetime, status_note: str = "") -> int:
+    if status_note:
+        print(f"  {status_note}: 판단과 목표 비중을 유지하고 성과만 갱신합니다.")
+    else:
+        print("  신규 글 없음: 판단과 목표 비중을 유지하고 성과만 갱신합니다.")
     ledger = load_model_ledger()
     if ledger.get("positions"):
         prices = _prices_for_ledger(ledger)
@@ -145,9 +148,27 @@ def _run_no_change_update(state, today: datetime) -> int:
             today.strftime("%Y년 %m월 %d일"),
             cache,
             no_changes=True,
+            status_note=status_note,
         ):
             return 1
     return 0
+
+
+def _is_llm_service_unavailable_error(exc: Exception) -> bool:
+    message = str(exc)
+    if "1차 포트폴리오 판단 실패" not in message:
+        return False
+    markers = (
+        "429",
+        "RESOURCE_EXHAUSTED",
+        "503",
+        "UNAVAILABLE",
+        "504",
+        "DEADLINE_EXCEEDED",
+        "timeout",
+        "Server disconnected",
+    )
+    return any(marker in message for marker in markers)
 
 
 def _collect_posts() -> list[dict]:
@@ -224,16 +245,24 @@ def main() -> int:
                 print("  리밸런싱 연기: 마지막 리밸런싱 이후 투자 관련 신규 글이 없습니다.")
             return _run_no_change_update(state, today)
 
-        result = analyze_posts_structured(
-            posts,
-            today_date,
-            state.to_dict(),
-            is_rebalance=is_rebalance,
-            decision_validator=lambda decision: _exclude_unpriceable_new_suggestions(
-                decision,
-                state,
-            ),
-        )
+        try:
+            result = analyze_posts_structured(
+                posts,
+                today_date,
+                state.to_dict(),
+                is_rebalance=is_rebalance,
+                decision_validator=lambda decision: _exclude_unpriceable_new_suggestions(
+                    decision,
+                    state,
+                ),
+            )
+        except RuntimeError as exc:
+            if not _is_llm_service_unavailable_error(exc):
+                raise
+            note = "LLM 한도 초과 또는 일시 장애로 신규 글 분석 보류"
+            print(f"  {note}: 기존 포트폴리오 상태로 출력만 갱신합니다.")
+            _save_error_log(f"{type(exc).__name__}: {exc}", today)
+            return _run_no_change_update(state, today, status_note=note)
         updated_state = apply_analysis_decision(state, result.decision)
         ledger = load_model_ledger()
         transaction_decisions = transaction_decisions_for_run(

@@ -1023,6 +1023,10 @@ HTML에는 다음 내용을 표시한다.
 - 2차 사용자용 Markdown 보고서 LLM 호출이 quota, timeout, 서버 오류로 실패하더라도
   검증된 1차 판단 JSON과 변경 반영 후 전체 상태로 결정적 Markdown 보고서를 생성해
   HTML, PNG, Telegram 발송 경로를 계속 진행한다.
+- 1차 포트폴리오 판단 LLM 호출이 quota, timeout, 서버 오류로 실패하면 새 투자 판단을
+  임의로 만들지 않는다. 기존 포트폴리오 상태와 기존 보고서를 유지하고 성과, HTML, PNG,
+  Telegram을 갱신하되, Telegram에는 `LLM 한도 초과 또는 일시 장애로 신규 글 분석 보류`를
+  표시한다.
 
 **합의됨: 구조화 판단 응답 크기 관리**
 
@@ -1145,6 +1149,15 @@ HTML에는 다음 내용을 표시한다.
   응답을 냈다. 이는 요청 가능 횟수가 429개라는 뜻이 아니라 API 한도 초과 오류 코드다.
   1차 판단은 fallback 응답으로 완료됐고, 2차 사용자용 보고서는 LLM 실패 후 구조화 판단 기반
   결정적 Markdown 보고서로 생성되어 HTML, PNG, Telegram 발송 경로가 계속 진행됐다.
+- main `verify` 실행 `26983735467`은 커밋 `51830b5`의 인사이트 번호 수정 후 재검증으로
+  실행했으나, 1차 포트폴리오 판단에서 `gemini-2.5-pro`와 `gemini-2.5-flash`가 모두
+  HTTP `429 RESOURCE_EXHAUSTED`를 반환하여 실패했다. 이 실행은 HTML, PNG, Telegram 생성
+  단계까지 도달하지 못했다.
+- 이 실패를 반영해 1차 판단 LLM이 한도 초과 또는 일시 장애로 실패할 때 기존 상태로 출력만
+  갱신하는 경로를 추가했다. 새 판단은 생성하지 않고 Telegram에 신규 글 분석 보류 사유를
+  표시한다.
+- 로컬 검증 결과: `PYTHONUTF8=1 python -m unittest discover -s tests -q` 전체 `82`개 테스트,
+  `python -m py_compile ...`, `git diff --check`가 통과했다.
 
 ## 기존 완료 작업
 

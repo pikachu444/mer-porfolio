@@ -1,6 +1,7 @@
 import unittest
 from datetime import date
 
+from main import _is_llm_service_unavailable_error
 from runtime_modes import get_run_policy, should_rebalance
 
 
@@ -32,6 +33,12 @@ class RuntimeModesTest(unittest.TestCase):
     def test_rejects_old_adhoc_mode(self):
         with self.assertRaisesRegex(ValueError, "unknown RUN_MODE"):
             get_run_policy("adhoc")
+
+    def test_identifies_first_stage_llm_service_unavailability(self):
+        exc = RuntimeError("1차 포트폴리오 판단 실패. gemini-2.5-flash: 429 RESOURCE_EXHAUSTED")
+
+        self.assertTrue(_is_llm_service_unavailable_error(exc))
+        self.assertFalse(_is_llm_service_unavailable_error(RuntimeError("검증 오류")))
 
 
 if __name__ == "__main__":
