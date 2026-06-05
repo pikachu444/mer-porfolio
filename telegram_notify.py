@@ -273,6 +273,12 @@ def build_structured_summary(
         lines.append(f"• {status_note}")
     if no_changes:
         lines += ["• 포트폴리오 변경 없음"]
+        if insights:
+            lines += ["", "📌 *핵심 인사이트*"]
+            for index, item in enumerate(insights, start=1):
+                lines.append(f"{index}. *{item.get('title', '')}*")
+                lines.append(f"  └ {item.get('summary', '')}")
+                lines.append(f"  └ 시사점: {item.get('investment_implication', '')}")
     else:
         lines += ["", "📌 *핵심 인사이트*"]
         if insights:

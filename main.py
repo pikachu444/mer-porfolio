@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import sys
 from datetime import datetime
@@ -109,6 +110,57 @@ def _load_latest_report() -> str:
     return path.read_text(encoding="utf-8") if path.exists() else ""
 
 
+def _extract_insights_from_report(report: str) -> list[dict]:
+    section = re.search(
+        r"##\s*(?:📌\s*)?(?:시장 분석\s*)?핵심 인사이트\s*\n(?P<body>.*?)(?=\n##\s|\Z)",
+        report,
+        re.S,
+    )
+    if not section:
+        return []
+    blocks = re.findall(
+        r"###\s*(?:인사이트\s*)?(?P<number>\d+)\s*[:：.]?\s*(?P<title>.+?)\n(?P<body>.*?)(?=\n###\s*(?:인사이트\s*)?\d+\s*[:：.]?|\Z)",
+        section.group("body"),
+        re.S,
+    )
+    insights = []
+    for number, title, body in blocks:
+        summary_lines = []
+        for line in body.splitlines():
+            stripped = line.strip()
+            if not stripped:
+                continue
+            if stripped.startswith("**"):
+                break
+            stripped = re.sub(r"^\d+\.\s*", "", stripped)
+            summary_lines.append(stripped)
+        judgment_match = re.search(r"\*\*투자판단:\*\*\s*(.+)", body)
+        insights.append({
+            "id": f"report-insight-{number}",
+            "title": title.strip(),
+            "summary": " ".join(summary_lines).strip() or title.strip(),
+            "investment_implication": (
+                judgment_match.group(1).strip()
+                if judgment_match
+                else "이전 사용자용 보고서의 핵심 인사이트입니다."
+            ),
+            "evidence_posts": [],
+            "related_decision_codes": [],
+        })
+    return insights
+
+
+def _state_with_report_insights(state, report: str):
+    if state.insights:
+        return state
+    insights = _extract_insights_from_report(report)
+    if not insights:
+        return state
+    payload = state.to_dict()
+    payload["insights"] = insights
+    return parse_portfolio_state(payload)
+
+
 def _save_error_log(message: str, today: datetime) -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     path = OUTPUT_DIR / f"error_{today:%Y%m%d_%H%M%S}.log"
@@ -130,7 +182,6 @@ def _run_no_change_update(state, today: datetime, status_note: str = "") -> int:
         print(f"  {status_note}: 판단과 목표 비중을 유지하고 성과만 갱신합니다.")
     else:
         print("  신규 글 없음: 판단과 목표 비중을 유지하고 성과만 갱신합니다.")
-    save_portfolio_state_file(state, STATE_PATH)
     ledger = load_model_ledger()
     if ledger.get("positions"):
         prices = _prices_for_ledger(ledger)
@@ -140,6 +191,8 @@ def _run_no_change_update(state, today: datetime, status_note: str = "") -> int:
         cache_path = OUTPUT_DIR / "performance_cache.json"
         cache = json.loads(cache_path.read_text(encoding="utf-8")) if cache_path.exists() else {}
     report = _load_latest_report()
+    state = _state_with_report_insights(state, report)
+    save_portfolio_state_file(state, STATE_PATH)
     _, png_path = generate_all(report, today, state=state.to_dict())
     if RUN_POLICY.send_telegram:
         if png_path and png_path.exists():

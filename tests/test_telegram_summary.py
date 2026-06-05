@@ -27,8 +27,17 @@ class TelegramSummaryTest(unittest.TestCase):
         self.assertNotIn("[AI] Alcoa", summary)
 
     def test_no_change_summary_can_explain_deferred_analysis(self):
+        state = state_payload()
+        state["insights"].append({
+            "id": "robotics",
+            "title": "피지컬 AI 확산",
+            "summary": "로봇과 AI 결합이 산업 자동화 수요를 키움",
+            "investment_implication": "원문에 등장한 로봇 관련 기업을 추적",
+            "evidence_posts": [],
+            "related_decision_codes": [],
+        })
         summary = build_structured_summary(
-            state_payload(),
+            state,
             "2026년 06월 01일",
             {"portfolio_return_krw": 3.25},
             no_changes=True,
@@ -37,6 +46,8 @@ class TelegramSummaryTest(unittest.TestCase):
 
         self.assertIn("LLM 한도 초과 또는 일시 장애로 신규 글 분석 보류", summary)
         self.assertIn("포트폴리오 변경 없음", summary)
+        self.assertIn("1. *알루미늄 공급 제한*", summary)
+        self.assertIn("2. *피지컬 AI 확산*", summary)
 
     def test_changed_summary_still_includes_performance(self):
         summary = build_structured_summary(
