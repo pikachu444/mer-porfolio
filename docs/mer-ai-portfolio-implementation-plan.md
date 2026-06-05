@@ -1171,6 +1171,18 @@ HTML에는 다음 내용을 표시한다.
   HTML은 도넛 그래프만 사용하고 가로 막대 그래프는 없다. Telegram 요약에는 모델 포트폴리오
   수익률, `LLM 한도 초과 또는 일시 장애로 신규 글 분석 보류`, `포트폴리오 변경 없음`이
   포함된다.
+- 사용자 확인에서 `26984185743`의 Telegram 메시지는 인사이트가 없지만 HTML의 Markdown
+  보고서 영역에는 기존 `latest.md`의 인사이트가 남아 있는 불일치가 확인됐다. 원인은
+  fallback/no-change 출력 경로가 `state.insights`만 사용하고, legacy Markdown 보고서의
+  `## 핵심 인사이트` 섹션을 상태로 복원하지 않았기 때문이다.
+- fallback/no-change 출력 경로에서 상태 인사이트가 비어 있고 `latest.md`에 번호형 인사이트가
+  있으면 이를 `state.insights`로 복원한다. 또한 `no_changes=True` Telegram 요약도 인사이트가
+  있으면 번호와 함께 표시한다.
+- main `verify` 실행 `26991462561`은 최신 main 커밋 `b2bdf21`에서 성공했다. artifact 검증
+  결과 상태 포트폴리오 14종목, HTML 포트폴리오 14종목, HTML 그래프 비현금 14종목이 같은
+  코드 집합이고, 상태 인사이트 8개, HTML 인사이트 8개, Telegram 번호 인사이트 8개가
+  일치한다. HTML은 도넛 그래프만 사용하고, 실제 로그에서 차트 이미지 전송과 Telegram
+  구조화 요약 전송이 성공했다.
 
 ## 기존 완료 작업
 
