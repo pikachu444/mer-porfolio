@@ -1306,6 +1306,16 @@ HTML에는 다음 내용을 표시한다.
 - 현재 `output/portfolio_state.json`과 `output/performance_cache.json` 기준 점검 결과:
   현재 포트폴리오 14종목, 국내 7종목, 해외 7종목으로 출력 기준 자료가 생성된다. 수익률 계산
   자료에서 빠진 대한전선은 `집계 전`으로 남고 전체 포트폴리오 수익률도 `집계 전`으로 표시된다.
+- GitHub Actions `verify` 실행 `27094203099`가 성공했다. 자동 테스트, HTML 생성, PNG 생성,
+  Telegram 이미지 전송, Telegram 구조화 요약 전송, verify artifact 업로드가 완료됐다.
+- `27094203099` artifact 확인 결과: `latest.md`는 없고 `report_20260607.md`가 생성됐다.
+  `portfolio_state.json` 포트폴리오 14종목, HTML 포트폴리오 14종목, HTML 국내 7종목,
+  HTML 해외 7종목, 목표 비중 차트의 종목 코드 14개가 일치한다. 상태 인사이트 4개와 HTML
+  인사이트 4개도 일치한다. Markdown 보고서에는 핵심 인사이트, 국내주식 추천, 해외주식 추천,
+  Watchlist, 종료 포지션 섹션이 포함된다.
+- 해당 verify 실행에서는 `gemini-2.5-pro`와 `gemini-2.5-flash`가 모두 429 한도 초과를 반환했지만,
+  새 판단을 임의로 만들지 않고 기존 상태 기준으로 오늘 날짜 보고서, HTML, PNG, Telegram을
+  정상 생성했다.
 
 ## 기존 완료 작업
 
