@@ -22,6 +22,8 @@ import time
 
 import requests
 
+from portfolio_output import build_output_model
+
 TELEGRAM_API = "https://api.telegram.org/bot{token}/{method}"
 MAX_MSG_LEN = 4000
 
@@ -255,64 +257,63 @@ def build_structured_summary(
     status_note: str = "",
 ) -> str:
     """Build a user-facing summary from validated structured state."""
-    portfolio = state.get("portfolio", [])
-    watchlist = state.get("watchlist", [])
-    closed = state.get("closed_positions", [])
-    insights = state.get("insights", [])
     performance = performance or {}
+    output = build_output_model(
+        state,
+        performance,
+        today_str=today_str,
+        status_note=status_note,
+    )
+    watchlist = output["watchlist"]
+    closed = output["closed_positions"]
+    insights = output["insights"]
     lines = [
         "📊 *메르AI 모델 포트폴리오*",
         f"📅 {today_str}",
         "※ 메르 블로거의 실제 보유 내역이 아닙니다.",
         "※ 블로그 직접 판단과 AI 해석을 구분해 표시합니다.",
     ]
-    value = performance.get("portfolio_return_krw")
-    rendered = f"{float(value):+.1f}%" if value is not None else "집계 전"
-    lines += ["", "*오늘의 성과 요약*", f"• 모델 포트폴리오 수익률: {rendered}"]
+    lines += ["", "*오늘의 성과 요약*", f"• 모델 포트폴리오 수익률: {output['portfolio_return_label']}"]
     if status_note:
         lines.append(f"• {status_note}")
     if no_changes:
-        lines += ["• 포트폴리오 변경 없음"]
-        if insights:
-            lines += ["", "📌 *핵심 인사이트*"]
-            for index, item in enumerate(insights, start=1):
-                lines.append(f"{index}. *{item.get('title', '')}*")
-                lines.append(f"  └ {item.get('summary', '')}")
-                lines.append(f"  └ 시사점: {item.get('investment_implication', '')}")
+        lines.append("• 포트폴리오 변경 없음")
+
+    lines += ["", "📌 *핵심 인사이트*"]
+    if insights:
+        for index, item in enumerate(insights, start=1):
+            lines.append(f"{index}. *{item.get('title', '')}*")
+            lines.append(f"  └ {item.get('summary', '')}")
+            lines.append(f"  └ 시사점: {item.get('investment_implication', '')}")
     else:
-        lines += ["", "📌 *핵심 인사이트*"]
-        if insights:
-            for index, item in enumerate(insights, start=1):
-                lines.append(f"{index}. *{item.get('title', '')}*")
-                lines.append(f"  └ {item.get('summary', '')}")
-                lines.append(f"  └ 시사점: {item.get('investment_implication', '')}")
-        else:
-            lines.append("• 표시할 인사이트 없음")
-        lines += ["", "*현재 모델 포트폴리오*"]
-        if portfolio:
-            for item in portfolio:
-                actor = (
-                    "메르 직접 발언"
-                    if item.get("decision_actor") == "메르"
-                    else "AI 제안"
-                    if item.get("decision_actor") == "AI"
-                    else "미분류"
-                )
-                lines.append(
-                    f"• {item.get('name', '')} ({item.get('code', '')})"
-                    f" | {actor} · {item.get('action', '')}"
-                    f" | {item.get('proposed_weight', 0):g}%"
-                )
-                lines.append(f"  └ {item.get('change_reason', '')}")
-        else:
-            lines.append("• 편입 종목 없음")
-        lines += ["", "*Watchlist*"]
-        if watchlist:
-            for item in watchlist:
-                lines.append(f"• {item.get('name', '')} | {item.get('observation_reason', '')}")
-        else:
-            lines.append("• 표시할 항목 없음")
-        lines += ["", f"• 종료 포지션: {len(closed)}건"]
+        lines.append("• 표시할 인사이트 없음")
+
+    def append_recommendations(title: str, rows: list[dict]) -> None:
+        lines.extend(["", title])
+        if not rows:
+            lines.append("• 표시할 종목 없음")
+            return
+        for item in rows:
+            lines.append(
+                f"• {item.get('name', '')} ({item.get('code', '')})"
+                f" — {item.get('decision_label', '')}"
+                f" — {item.get('weight', 0):g}%"
+                f" — 수익률 {item.get('return_label', '집계 전')}"
+            )
+            reason = item.get("change_reason", "")
+            if reason:
+                lines.append(f"  └ {reason}")
+
+    append_recommendations("*국내주식 추천*", output["domestic"])
+    append_recommendations("*해외주식 추천*", output["overseas"])
+
+    lines += ["", "*Watchlist*"]
+    if watchlist:
+        for item in watchlist:
+            lines.append(f"• {item.get('name', '')} | {item.get('observation_reason', '')}")
+    else:
+        lines.append("• 표시할 항목 없음")
+    lines += ["", f"• 종료 포지션: {len(closed)}건"]
     lines += ["", f"🌐 [대시보드 전체 보기]({_get_dashboard_url()})"]
     return "\n".join(lines)
 

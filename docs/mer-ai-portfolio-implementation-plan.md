@@ -1246,6 +1246,67 @@ HTML에는 다음 내용을 표시한다.
   로컬 검증 결과 `PYTHONUTF8=1 python -m unittest discover -s tests -q` 전체 90개 테스트 통과,
   `test_runtime_modes.py` 단독 실행도 통과했다.
 
+### 16. 사용자 출력 단일 기준 통합 및 신규 세션 문서화
+
+**목적:** 투자자가 보는 Telegram 메시지, HTML 대시보드, Markdown 보고서, 그래프, 수익률 표가
+서로 다른 자료를 섞어 보여 주지 않게 한다. 새 세션의 에이전트가 같은 문제를 반복하지 않도록
+프로젝트 목적과 코드 구조를 별도 문서로 유지한다.
+
+**합의됨**
+
+- 사용자에게 보이는 출력은 현재 모델 포트폴리오 상태를 기준 자료로 사용한다.
+- Telegram 메시지, HTML 대시보드, Markdown 보고서의 국내/해외 추천, 핵심 인사이트, 목표 비중,
+  Watchlist, 종료 포지션은 같은 기준 자료에서 만든다.
+- 수익률 계산 자료에 빠진 종목이 있더라도 현재 모델 포트폴리오 종목을 화면에서 제외하지 않는다.
+  수익률이 아직 계산되지 않은 종목은 `집계 전`으로 표시한다.
+- `latest.md`를 사용자 출력의 기준으로 사용하지 않는다. 실행일 기준 `report_YYYYMMDD.md`를
+  매번 생성한다.
+- 신규 글 분석이 보류되거나 실패해도 오늘 날짜의 보고서를 생성하고, 보류 사유와 글 제목을
+  Telegram, HTML, Markdown 보고서에 표시한다.
+- Telegram 메시지에는 포트폴리오 변경 여부와 관계없이 국내주식 추천과 해외주식 추천을 표시한다.
+- HTML 목표 비중 그래프와 Telegram PNG 그래프는 같은 현재 모델 포트폴리오 상태와 같은 도넛
+  그래프 형식을 사용한다.
+- `docs/project-overview.md`에는 프로젝트 목적, 투자자에게 보이는 출력 정책, 도메인 원칙을 적는다.
+- `docs/code-structure.md`에는 실행 흐름, 주요 모듈, 상태 파일, GitHub Actions 흐름, 검증 방법을
+  적는다.
+- `AGENTS.md`는 새 세션 시작 시 위 두 문서도 읽도록 갱신한다. 정책이나 코드 구조가 바뀌면 관련
+  문서도 함께 갱신한다.
+
+**완료 조건**
+
+- Telegram, HTML, Markdown 보고서가 같은 현재 모델 포트폴리오 상태에서 국내/해외 추천과 핵심
+  인사이트를 만든다.
+- 수익률 계산 자료에 없는 현재 보유 종목도 출력에 남고 `집계 전`으로 표시된다.
+- no-change/분석 보류 경로에서도 오늘 날짜 `report_YYYYMMDD.md`가 생성된다.
+- HTML과 Telegram PNG의 목표 비중 그래프가 같은 도넛 그래프 기준을 사용한다.
+- `latest.md`는 사용자 출력 기준으로 사용되지 않는다.
+- 프로젝트 개요 문서와 코드 구조 문서가 추가되고, `AGENTS.md`, 작업 목록, 구현 계획,
+  `README.md`, `docs/project-operation.md`가 새 정책과 일치한다.
+- 관련 자동 테스트, 문법 검사, 실제 실행 경로 검증을 통과한다.
+
+**구현 진행**
+
+- `portfolio_output.py`를 추가해 현재 모델 포트폴리오 상태와 수익률 계산 자료를 합친 사용자 출력
+  기준 자료를 만들도록 했다.
+- `main.py`의 분석 성공, 신규 글 없음, 분석 보류 경로가 모두 이 기준 자료로
+  `report_YYYYMMDD.md`를 생성한다. `latest.md` 저장과 읽기 경로는 제거했다.
+- `generate_dashboard.py`는 `latest.md`나 Markdown 표를 파싱하지 않고 현재 상태 기준으로 HTML과
+  PNG를 만든다. HTML 상단에 국내주식 추천과 해외주식 추천 섹션을 추가했다.
+- `telegram_notify.py`는 포트폴리오 변경 여부와 관계없이 핵심 인사이트, 국내주식 추천,
+  해외주식 추천, Watchlist, 종료 포지션을 같은 기준 자료로 표시한다.
+- 수익률 계산 자료에 빠진 현재 종목은 출력에서 제외하지 않고 `집계 전`으로 표시한다. 전체
+  포트폴리오 수익률도 현재 종목 전체가 계산된 경우에만 표시한다.
+- `output/latest.md`는 삭제했다.
+- `docs/project-overview.md`와 `docs/code-structure.md`를 추가했고, `AGENTS.md`, `README.md`,
+  `docs/project-operation.md`를 새 정책에 맞게 갱신했다.
+- 테스트를 추가/수정했다. 로컬 검증 결과:
+  `python -m py_compile main.py generate_dashboard.py telegram_notify.py portfolio_output.py fetch_mer.py analyze.py portfolio_schema.py track_returns.py` 통과,
+  `$env:PYTHONUTF8='1'; python -m unittest discover -s tests -q` 전체 91개 테스트 통과,
+  `git diff --check` 통과.
+- 현재 `output/portfolio_state.json`과 `output/performance_cache.json` 기준 점검 결과:
+  현재 포트폴리오 14종목, 국내 7종목, 해외 7종목으로 출력 기준 자료가 생성된다. 수익률 계산
+  자료에서 빠진 대한전선은 `집계 전`으로 남고 전체 포트폴리오 수익률도 `집계 전`으로 표시된다.
+
 ## 기존 완료 작업
 
 - [x] 동일 종목의 추천일별 중복 성과 행 제거

@@ -10,21 +10,26 @@ class TelegramSummaryTest(unittest.TestCase):
 
         self.assertIn("메르 블로거의 실제 보유 내역이 아닙니다", summary)
         self.assertIn("알루미늄 공급 제한", summary)
-        self.assertIn("Alcoa (AA) | AI 제안 · 매수 | 8%", summary)
+        self.assertIn("*해외주식 추천*", summary)
+        self.assertIn("Alcoa (AA) — AI 제안 · 매수 — 8%", summary)
         self.assertIn("우주 데이터센터", summary)
 
     def test_no_change_summary_is_short_performance_message(self):
         summary = build_structured_summary(
             state_payload(),
             "2026년 06월 01일",
-            {"portfolio_return_krw": 3.25},
+            {
+                "portfolio_return_krw": 3.25,
+                "active_positions": [{"code": "AA", "return_pct_krw": 3.25}],
+            },
             no_changes=True,
         )
 
         self.assertIn("오늘의 성과 요약", summary)
         self.assertIn("모델 포트폴리오 수익률: +3.2%", summary)
         self.assertIn("포트폴리오 변경 없음", summary)
-        self.assertNotIn("[AI] Alcoa", summary)
+        self.assertIn("*해외주식 추천*", summary)
+        self.assertIn("Alcoa (AA) — AI 제안 · 매수 — 8%", summary)
 
     def test_no_change_summary_can_explain_deferred_analysis(self):
         state = state_payload()
@@ -39,7 +44,10 @@ class TelegramSummaryTest(unittest.TestCase):
         summary = build_structured_summary(
             state,
             "2026년 06월 01일",
-            {"portfolio_return_krw": 3.25},
+            {
+                "portfolio_return_krw": 3.25,
+                "active_positions": [{"code": "AA", "return_pct_krw": 3.25}],
+            },
             no_changes=True,
             status_note="LLM 한도 초과 또는 일시 장애로 신규 글 분석 보류",
         )
@@ -53,7 +61,10 @@ class TelegramSummaryTest(unittest.TestCase):
         summary = build_structured_summary(
             state_payload(),
             "2026년 06월 01일",
-            {"portfolio_return_krw": 3.25},
+            {
+                "portfolio_return_krw": 3.25,
+                "active_positions": [{"code": "AA", "return_pct_krw": 3.25}],
+            },
             status_note="새 글 1건 요약 실패로 투자 분석 보류: 코스트코와 이마트 트레이더스",
         )
 
@@ -64,12 +75,16 @@ class TelegramSummaryTest(unittest.TestCase):
         summary = build_structured_summary(
             state_payload(),
             "2026년 06월 01일",
-            {"portfolio_return_krw": 1.94},
+            {
+                "portfolio_return_krw": 1.94,
+                "active_positions": [{"code": "AA", "return_pct_krw": 1.94}],
+            },
         )
 
         self.assertIn("오늘의 성과 요약", summary)
         self.assertIn("모델 포트폴리오 수익률: +1.9%", summary)
         self.assertIn("핵심 인사이트", summary)
+        self.assertIn("*해외주식 추천*", summary)
 
     def test_insights_are_numbered_without_dropping_items(self):
         state = state_payload()

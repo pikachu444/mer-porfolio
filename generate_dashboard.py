@@ -13,8 +13,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
+from portfolio_output import build_output_model
 from portfolio_schema import load_portfolio_state_file
-from portfolio_validation import parse_portfolio_items
 
 OUTPUT_DIR = Path(os.environ.get("OUTPUT_DIR", "output"))
 CACHE_FILE = OUTPUT_DIR / "performance_cache.json"
@@ -30,36 +30,6 @@ def _load_cache() -> Optional[dict]:
         except Exception:
             pass
     return None
-
-
-def _load_report() -> str:
-    latest = OUTPUT_DIR / "latest.md"
-    if latest.exists():
-        with open(latest, encoding="utf-8") as f:
-            content = f.read()
-        # 실제 리포트인지 확인 (최소 길이 & 인사이트 섹션 포함)
-        if len(content) > 500 and ("인사이트" in content or "포트폴리오" in content):
-            return content
-    return ""
-
-
-def _parse_weights_from_report(report_text: str) -> list:
-    """리포트에서 종목명 + 목표비중 파싱 (차트용)."""
-    result = []
-    for item in parse_portfolio_items(report_text, include_etf=True):
-        if item.get("name") == "추천 없음":
-            continue
-        weight_str = item.get("weight", "").replace("%", "").strip()
-        try:
-            result.append({
-                "name": item.get("name", ""),
-                "weight": float(weight_str),
-                "action": item.get("action", ""),
-                "market": item.get("market", ""),
-            })
-        except ValueError:
-            pass
-    return result
 
 
 def _weights_from_state(state: dict) -> list:
@@ -173,17 +143,10 @@ def generate_png(
         plt.rcParams["font.family"] = "DejaVu Sans"
     plt.rcParams["axes.unicode_minus"] = False
 
-    # ── 도넓 데이터 준비 ───────────────────────────────────────────────
+    # ── 도넛 데이터 준비 ───────────────────────────────────────────────
     donut_items = []
     if state:
         donut_items = _weights_from_state(state)
-    elif report_text:
-        for item in _parse_weights_from_report(report_text):
-            donut_items.append({
-                "name": item.get("name", "?"),
-                "weight": item["weight"],
-                "market": item.get("market", "ETF"),
-            })
 
     # ── 수익률 데이터 준비 ─────────────────────────────────────────────
     summaries = cache.get("report_summaries", []) if cache else []
@@ -343,50 +306,20 @@ def generate_html(
     """검증된 포트폴리오 상태를 중심으로 HTML 대시보드를 생성한다."""
     state = state or _load_portfolio_state()
     portfolio = state.get("portfolio", [])
-    watchlist = state.get("watchlist", [])
-    closed_positions = state.get("closed_positions", [])
-    insights = state.get("insights", [])
+    output = build_output_model(
+        state,
+        cache or {},
+        today_str=today_str,
+        status_note=(state or {}).get("status_note", ""),
+    )
+    watchlist = output["watchlist"]
+    closed_positions = output["closed_positions"]
+    insights = output["insights"]
     history = state.get("decision_history", [])
     latest_changes = [item for item in history if item.get("decision_date") == today_str]
     summaries = cache.get("report_summaries", []) if cache else []
-    performance = {
-        str(item.get("code") or item.get("ticker") or "").upper(): item
-        for item in cache.get("active_positions", [])
-    } if cache else {}
-    portfolio_rows = []
-    for item in portfolio:
-        row = dict(item)
-        row.update({
-            key: value for key, value in performance.get(
-                str(item.get("code", "")).upper(),
-                {},
-            ).items()
-            if key in {"return_pct", "return_pct_krw", "entry_date"}
-        })
-        portfolio_rows.append(row)
-
-    chart_rows = [
-        {
-            "name": item.get("name", ""),
-            "code": item.get("code", ""),
-            "weight": item.get("proposed_weight", 0),
-            "actor": item.get("decision_actor", ""),
-            "action": item.get("action", ""),
-            "reason": item.get("change_reason", ""),
-        }
-        for item in portfolio
-        if item.get("proposed_weight", 0) > 0
-    ]
-    cash_weight = max(0.0, 100.0 - sum(item["weight"] for item in chart_rows))
-    if cash_weight:
-        chart_rows.append({
-            "name": "현금",
-            "code": "",
-            "weight": cash_weight,
-            "actor": "",
-            "action": "보유",
-            "reason": "",
-        })
+    portfolio_rows = output["portfolio"]
+    chart_rows = output["chart_rows"]
 
     report_escaped = report_text.replace("\\", "\\\\").replace("`", "\\`").replace("${", "\\${")
     html = """<!DOCTYPE html>
@@ -404,6 +337,7 @@ def generate_html(
 <section class="card"><h2>최근 분석 요약</h2><div id="summary"></div></section>
 <section class="card"><h2>핵심 인사이트</h2><div id="insights"></div></section>
 <div class="grid"><section class="card"><h2>현재 모델 포트폴리오 목표 비중</h2><div class="chart"><canvas id="donut"></canvas></div></section><section class="card"><h2>포트폴리오 수익률 흐름</h2><div class="chart"><canvas id="returns"></canvas></div></section></div>
+<section class="card"><h2>국내/해외 추천</h2><div id="recommendations"></div></section>
 <section class="card"><h2>현재 모델 포트폴리오</h2><div id="portfolio"></div></section>
 <section class="card"><h2>이번 분석 변경사항</h2><div id="changes"></div></section>
 <section class="card"><h2>Watchlist</h2><div id="watchlist"></div></section>
@@ -413,13 +347,15 @@ def generate_html(
 """ + (
         "const updated=" + json.dumps(today_str) + ";\n"
         "const portfolio=" + json.dumps(portfolio_rows, ensure_ascii=False) + ";\n"
+        "const domestic=" + json.dumps(output["domestic"], ensure_ascii=False) + ";\n"
+        "const overseas=" + json.dumps(output["overseas"], ensure_ascii=False) + ";\n"
         "const changes=" + json.dumps(latest_changes, ensure_ascii=False) + ";\n"
         "const watchlist=" + json.dumps(watchlist, ensure_ascii=False) + ";\n"
         "const closed=" + json.dumps(closed_positions, ensure_ascii=False) + ";\n"
         "const insights=" + json.dumps(insights, ensure_ascii=False) + ";\n"
         "const chartRows=" + json.dumps(chart_rows, ensure_ascii=False) + ";\n"
         "const summaries=" + json.dumps(summaries, ensure_ascii=False) + ";\n"
-        "const statusNote=" + json.dumps((state or {}).get("status_note", ""), ensure_ascii=False) + ";\n"
+        "const statusNote=" + json.dumps(output.get("status_note", ""), ensure_ascii=False) + ";\n"
         "const reportText=`" + report_escaped + "`;\n"
     ) + """
 document.getElementById('updated').textContent=updated;
@@ -427,7 +363,7 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&
 const actorLabel=r=>r.decision_actor==='메르'?'메르 직접 발언':r.decision_actor==='AI'?'AI 제안':'미분류';
 const actor=r=>`<span class="pill ${r.decision_actor==='메르'?'actor-mer':r.decision_actor==='AI'?'actor-ai':'actor-unknown'}">${actorLabel(r)} · ${esc(r.action||'')}</span>`;
 const evidence=r=>(r.evidence_posts||[]).map(p=>`<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a> · ${esc(p.published_date)}`).join('<br>')||'근거 글 없음';
-const returns=r=>{const v=r.return_pct_krw??r.return_pct;if(v===undefined||v===null)return '-';return `${Number(v)>=0?'▲':'▼'}${Math.abs(Number(v)).toFixed(1)}%`};
+const returns=r=>{if(r.return_label)return esc(r.return_label);const v=r.return_pct_krw??r.return_pct;if(v===undefined||v===null)return '집계 전';return `${Number(v)>=0?'▲':'▼'}${Math.abs(Number(v)).toFixed(1)}%`};
 const buttons=id=>`<div class="toolbar"><button onclick="toggleAll('${id}',true)">모두 펼치기</button><button onclick="toggleAll('${id}',false)">모두 접기</button></div>`;
 function toggle(id){document.getElementById(id).classList.toggle('open')}
 function toggleAll(id,open){document.querySelectorAll(`#${id} .detail`).forEach(el=>el.classList.toggle('open',open))}
@@ -439,6 +375,7 @@ function table(id,rows,kind){
 }
 document.getElementById('summary').innerHTML=`현재 ${portfolio.length}종목 · Watchlist ${watchlist.length}건 · 이번 변경 ${changes.length}건 · 종료 ${closed.length}건${statusNote?`<br><strong>분석 보류:</strong> ${esc(statusNote)}`:''}`;
 document.getElementById('insights').innerHTML=insights.length?insights.map((r,i)=>`<article><h3>${i+1}. ${esc(r.title)}</h3><p>${esc(r.summary)}</p><p><strong>투자 시사점:</strong> ${esc(r.investment_implication)}</p><p class="muted">${evidence(r)}</p></article>`).join(''):'<div class="empty">표시할 인사이트가 없습니다.</div>';
+document.getElementById('recommendations').innerHTML=`<h3>국내주식 추천</h3>${table('domestic-table',domestic,'portfolio')}<h3>해외주식 추천</h3>${table('overseas-table',overseas,'portfolio')}`;
 document.getElementById('portfolio').innerHTML=table('portfolio-table',portfolio,'portfolio');
 document.getElementById('changes').innerHTML=table('changes-table',changes,'changes');
 document.getElementById('watchlist').innerHTML=table('watchlist-table',watchlist,'watchlist');
@@ -460,7 +397,7 @@ def generate_all(report_text: str, today: datetime, state: Optional[dict] = None
     """HTML 대시보드 + PNG 차트 모두 생성. Returns: (html_path, png_path)"""
     today_str = today.strftime("%Y-%m-%d")
     cache = _load_cache()
-    report_content = report_text if report_text else _load_report()
+    report_content = report_text or ""
 
     html_path = None
     png_path = None

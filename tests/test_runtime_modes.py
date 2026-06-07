@@ -10,7 +10,7 @@ except ModuleNotFoundError:
     sys.modules["feedparser"] = Mock()
 
 import main
-from main import _extract_insights_from_report, _is_llm_service_unavailable_error
+from main import _is_llm_service_unavailable_error
 from runtime_modes import get_run_policy, should_rebalance
 
 
@@ -49,44 +49,13 @@ class RuntimeModesTest(unittest.TestCase):
         self.assertTrue(_is_llm_service_unavailable_error(exc))
         self.assertFalse(_is_llm_service_unavailable_error(RuntimeError("검증 오류")))
 
-    def test_extracts_numbered_insights_from_legacy_markdown_report(self):
-        report = """# 메르AI 포트폴리오 리포트
-
-## 📌 시장 분석 핵심 인사이트
-
-### 인사이트 1: AI/로봇
-
-1. 엔비디아가 피지컬 AI를 강조함.
-2. 두산로보틱스와 네이버가 협력 대상으로 언급됨.
-
-**해석(나비효과):**
-3. 관련 기업의 성장 동력이 커짐.
-
-**투자판단:** Buy 강 — 협력 기대가 높음.
-
-### 인사이트 2: 비만 치료제
-
-1. 일라이 릴리 신약 결과가 긍정적임.
-
-**투자판단:** Buy — 시장 확대 기대.
-
-## 📊 포트폴리오 추천
-"""
-
-        insights = _extract_insights_from_report(report)
-
-        self.assertEqual(len(insights), 2)
-        self.assertEqual(insights[0]["title"], "AI/로봇")
-        self.assertIn("엔비디아", insights[0]["summary"])
-        self.assertIn("Buy 강", insights[0]["investment_implication"])
-
-    def test_no_change_update_passes_status_note_to_dashboard(self):
+    def test_no_change_update_creates_today_report_and_passes_status_note_to_dashboard(self):
         note = "새 글 1건 요약 실패로 투자 분석 보류: 코스트코와 이마트"
         state = main._empty_state()
 
         with patch.object(main, "load_model_ledger", return_value={}), \
-             patch.object(main, "_load_latest_report", return_value="# 보고서\n\n테스트"), \
              patch.object(main, "save_portfolio_state_file"), \
+             patch.object(main, "_save_report") as save_report, \
              patch.object(main, "generate_all", return_value=(None, None)) as generate_all, \
              patch.object(main, "RUN_POLICY", Mock(send_telegram=False)):
             result = main._run_no_change_update(
@@ -96,6 +65,9 @@ class RuntimeModesTest(unittest.TestCase):
             )
 
         self.assertEqual(result, 0)
+        saved_report = save_report.call_args.args[0]
+        self.assertIn("기준일: 2026-06-07", saved_report)
+        self.assertIn(note, saved_report)
         generated_state = generate_all.call_args.kwargs["state"]
         self.assertEqual(generated_state["status_note"], note)
 

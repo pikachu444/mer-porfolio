@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import os
-import re
 import shutil
 import sys
 from datetime import datetime, timedelta
@@ -31,7 +30,6 @@ if RUN_MODE == "verify":
         "model_portfolio_ledger.json",
         "performance_cache.json",
         "posts_db.json",
-        "latest.md",
     ):
         source = OPERATING_OUTPUT_DIR / filename
         target = OUTPUT_DIR / filename
@@ -52,6 +50,7 @@ from fetch_mer import (
     select_rebalance_posts,
 )
 from generate_dashboard import generate_all
+from portfolio_output import build_markdown_report, build_output_model
 from portfolio_schema import (
     AnalysisDecisionV2,
     apply_analysis_decision,
@@ -101,64 +100,7 @@ def _save_report(report: str, today: datetime) -> Path:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     path = OUTPUT_DIR / f"report_{today:%Y%m%d}.md"
     path.write_text(report, encoding="utf-8")
-    (OUTPUT_DIR / "latest.md").write_text(report, encoding="utf-8")
     return path
-
-
-def _load_latest_report() -> str:
-    path = OUTPUT_DIR / "latest.md"
-    return path.read_text(encoding="utf-8") if path.exists() else ""
-
-
-def _extract_insights_from_report(report: str) -> list[dict]:
-    section = re.search(
-        r"##\s*(?:📌\s*)?(?:시장 분석\s*)?핵심 인사이트\s*\n(?P<body>.*?)(?=\n##\s|\Z)",
-        report,
-        re.S,
-    )
-    if not section:
-        return []
-    blocks = re.findall(
-        r"###\s*(?:인사이트\s*)?(?P<number>\d+)\s*[:：.]?\s*(?P<title>.+?)\n(?P<body>.*?)(?=\n###\s*(?:인사이트\s*)?\d+\s*[:：.]?|\Z)",
-        section.group("body"),
-        re.S,
-    )
-    insights = []
-    for number, title, body in blocks:
-        summary_lines = []
-        for line in body.splitlines():
-            stripped = line.strip()
-            if not stripped:
-                continue
-            if stripped.startswith("**"):
-                break
-            stripped = re.sub(r"^\d+\.\s*", "", stripped)
-            summary_lines.append(stripped)
-        judgment_match = re.search(r"\*\*투자판단:\*\*\s*(.+)", body)
-        insights.append({
-            "id": f"report-insight-{number}",
-            "title": title.strip(),
-            "summary": " ".join(summary_lines).strip() or title.strip(),
-            "investment_implication": (
-                judgment_match.group(1).strip()
-                if judgment_match
-                else "이전 사용자용 보고서의 핵심 인사이트입니다."
-            ),
-            "evidence_posts": [],
-            "related_decision_codes": [],
-        })
-    return insights
-
-
-def _state_with_report_insights(state, report: str):
-    if state.insights:
-        return state
-    insights = _extract_insights_from_report(report)
-    if not insights:
-        return state
-    payload = state.to_dict()
-    payload["insights"] = insights
-    return parse_portfolio_state(payload)
 
 
 def _save_error_log(message: str, today: datetime) -> None:
@@ -230,18 +172,24 @@ def _run_no_change_update(state, today: datetime, status_note: str = "") -> int:
     else:
         cache_path = OUTPUT_DIR / "performance_cache.json"
         cache = json.loads(cache_path.read_text(encoding="utf-8")) if cache_path.exists() else {}
-    report = _load_latest_report()
-    state = _state_with_report_insights(state, report)
     save_portfolio_state_file(state, STATE_PATH)
     output_state = state.to_dict()
     if status_note:
         output_state["status_note"] = status_note
+    output = build_output_model(
+        output_state,
+        cache,
+        today_str=today.strftime("%Y-%m-%d"),
+        status_note=status_note,
+    )
+    report = build_markdown_report(output)
+    _save_report(report, today)
     _, png_path = generate_all(report, today, state=output_state)
     if RUN_POLICY.send_telegram:
         if png_path and png_path.exists():
             send_photo(str(png_path), f"모델 포트폴리오 성과 | {today:%Y년 %m월 %d일}")
         if not send_structured_summary(
-            state.to_dict(),
+            output_state,
             today.strftime("%Y년 %m월 %d일"),
             cache,
             no_changes=True,
@@ -386,14 +334,21 @@ def main() -> int:
         )
         cache = refresh_structured_performance(ledger, prices, today_date)
 
-        _save_report(result.report, today)
         save_analysis_decision_file(result.decision, DECISION_PATH)
         save_portfolio_state_file(updated_state, STATE_PATH)
         save_model_ledger(ledger, MODEL_LEDGER_FILE)
         output_state = updated_state.to_dict()
         if deferred_note:
             output_state["status_note"] = deferred_note
-        _, png_path = generate_all(result.report, today, state=output_state)
+        output = build_output_model(
+            output_state,
+            cache,
+            today_str=today_date,
+            status_note=deferred_note,
+        )
+        report = build_markdown_report(output)
+        _save_report(report, today)
+        _, png_path = generate_all(report, today, state=output_state)
 
         if RUN_POLICY.send_telegram:
             if png_path and png_path.exists():

@@ -39,6 +39,13 @@ class GenerateDashboardTest(unittest.TestCase):
             try:
                 state = state_payload()
                 state["status_note"] = "새 글 1건 요약 실패로 투자 분석 보류: 코스트코와 이마트"
+                state["portfolio"].append({
+                    **state["portfolio"][0],
+                    "name": "대한전선",
+                    "code": "001440",
+                    "market": "KR",
+                    "proposed_weight": 3.0,
+                })
                 path = generate_dashboard.generate_html(
                     cache,
                     "# 메르AI 포트폴리오 분석\n\n테스트 보고서",
@@ -52,11 +59,17 @@ class GenerateDashboardTest(unittest.TestCase):
         self.assertIn("메르 블로거의 실제 보유 내역이 아닙니다", html)
         self.assertIn('"decision_actor": "AI"', html)
         self.assertIn("Watchlist", html)
+        self.assertIn("국내주식 추천", html)
+        self.assertIn("해외주식 추천", html)
+        self.assertIn("const domestic=", html)
+        self.assertIn("const overseas=", html)
         self.assertIn("${i+1}. ${esc(r.title)}", html)
         self.assertIn("알루미늄 공급 제한", html)
         self.assertIn("메르 직접 발언", html)
         self.assertIn("AI 제안", html)
         self.assertIn("https://blog.naver.com/ranto28/123", html)
+        self.assertIn('"return_label": "집계 전"', html)
+        self.assertIn("대한전선", html)
         self.assertIn("새 글 1건 요약 실패로 투자 분석 보류", html)
         self.assertIn("코스트코와 이마트", html)
         self.assertIn("모두 펼치기", html)
