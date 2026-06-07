@@ -1361,6 +1361,14 @@ Telegram 추천 목록은 세부 분석이 아니라 빠른 확인용 요약으�
   `$env:PYTHONUTF8='1'; python -m unittest discover -s tests -q` 전체 92개 테스트 통과.
 - 현재 출력 자료 기준 샘플 확인 결과: 대한전선은 현재 포트폴리오에 남아 있고 종료 포지션 출력에서는
   제외된다. Telegram 추천 목록은 간결한 형식으로 생성된다.
+- GitHub Actions `verify` 실행 `27095212545`가 성공했다. 자동 테스트, HTML 생성, PNG 생성,
+  Telegram 이미지 전송, Telegram 구조화 요약 전송, verify artifact 업로드가 완료됐다.
+- `27095212545` artifact 확인 결과: HTML 현재 포트폴리오 14종목, 종료 포지션 7종목, 국내 추천
+  7종목, 해외 추천 7종목이다. 대한전선(`001440`)은 현재 포트폴리오에는 있고 종료 포지션과
+  Markdown 보고서의 종료 포지션에는 없다.
+- 같은 artifact에서 생성한 Telegram 메시지 확인 결과: 추천 목록에는 `AI 제안 · ...`, 수익률,
+  변경 이유가 붙지 않는다. 국내주식은 `LS — 보유 (3%)`, 해외주식은
+  `Google (Alphabet) (GOOGL) — Hold (10%)` 형식으로 표시된다.
 
 ## 기존 완료 작업
 
