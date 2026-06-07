@@ -40,7 +40,7 @@
 
 | 호출 | 모델 | 호출 조건 | 실패 처리 |
 |------|------|-----------|-----------|
-| 글별 1차 요약 | `gemini-2.5-flash` | 신규 글이고 `ENABLE_POST_SUMMARIES`가 꺼져 있지 않을 때 | 실행 실패 처리 |
+| 글별 1차 요약 | `gemini-2.5-flash` | 신규 글이고 `ENABLE_POST_SUMMARIES`가 꺼져 있지 않을 때 | JSON/빈 응답/일시 오류는 해당 글 보류 후 다음 실행 재시도. API 키 미설정 등 구성 오류는 실행 실패 |
 | 1차 포트폴리오 판단 JSON | `gemini-2.5-pro` 우선 | 일별 관련 신규 글 또는 리밸런싱 누적 관련 글과 현재 상태로 투자 판단 생성 | quota, rate limit, 미지원 등 실패 시 Flash fallback |
 | 2차 사용자용 Markdown 보고서 | `gemini-2.5-pro` 우선 | 검증된 판단 JSON과 글로 사람이 읽는 보고서 생성 | quota, rate limit, 미지원 등 실패 시 Flash fallback |
 | 분석 fallback | `gemini-2.5-flash` | 각 분석 단계에서 Pro 실패 후 | Flash도 실패하면 실행 실패 처리 |
@@ -49,6 +49,11 @@
 요약 캐시는 `posts_db.json`의 `summary` 필드입니다. 신규 글 원문은 고정 글자 수로 자르지 않고
 저장합니다. 신규 글은 모두 Flash로 요약하며 투자 관련 여부와 분류 이유를 함께 기록합니다.
 투자와 무관한 글도 DB에는 보존하지만 Pro 입력에서는 제외합니다.
+
+글별 Flash 요약 응답이 깨졌거나 비어 있으면 해당 글은 `summary_status: deferred`,
+`investment_relevant: false`, `summary_version: null`로 저장합니다. 이 상태의 글은 Pro
+투자 판단 입력에서 제외되며, 최근 14일 범위 안에서는 다음 scheduled/rebalance 실행 때 다시
+요약을 시도합니다.
 
 API 요청은 토큰 수를 확인합니다. 저장 원문은 유지하고, 모델 입력 한도의 `80%`를 넘는
 비정상적인 요청에만 전송용 본문의 끝부분을 줄입니다.
@@ -89,7 +94,7 @@ Actions의 정상 `scheduled`와 `rebalance`에서는 글별 Flash 요약을 활
 |-----------|-----------|
 | API 호출 관리 | 신규 글만 Flash 요약하고 캐시 재사용, 판단 JSON과 보고서에 Pro를 각각 1회 사용 |
 | 모델 품질 | 구조화 판단과 사용자용 보고서는 모두 Pro 우선, Pro 실패 시 Flash fallback |
-| 요약 로그 | 요약 캐시 생성, 투자 관련 여부, 토큰 보호 적용 여부를 구분 |
+| 요약 로그 | 요약 캐시 생성, 투자 관련 여부, 토큰 보호 적용 여부, 보류 사유를 구분 |
 | 종목 창작 방지 | 원문 미등장 개별 종목은 Watchlist만 허용하고, AI 편입 후보는 필수 근거를 검증 |
 | HTML/Telegram 괴리 방지 | 사용자 출력은 모두 검증 완료 구조화 상태와 핵심 인사이트를 기준으로 생성 |
 | 성과 그래프 | 추천 비중과 성과 추적을 별도 개념으로 분리 |

@@ -83,6 +83,16 @@ jobs:
           name: mer-ai-verify-${{ github.run_id }}
           path: output/verify
 
+      - name: scheduled 실패 진단 업로드
+        if: ${{ failure() && github.event_name == 'schedule' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: mer-ai-scheduled-failure-${{ github.run_id }}
+          path: |
+            output/error_*.log
+            output/posts_db.json
+          if-no-files-found: ignore
+
       # ── 운영 결과 커밋 및 푸시 ─────────────────────────────────────────────
       - name: 리포트 커밋 및 푸시
         if: ${{ github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance' }}

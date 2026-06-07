@@ -17,7 +17,11 @@ from typing import List, Dict, Optional
 from pathlib import Path
 from google import genai
 from google.genai import types
-from gemini_utils import DEFAULT_HTTP_TIMEOUT_MS, generate_content_with_retry
+from gemini_utils import (
+    DEFAULT_HTTP_TIMEOUT_MS,
+    generate_content_with_retry,
+    is_transient_error,
+)
 
 # ─── 설정 ───────────────────────────────────────────────────────────────────
 
@@ -33,6 +37,16 @@ ENABLE_POST_SUMMARIES = _summary_env not in ("0", "false", "no", "off")
 SUMMARY_VERSION = 2
 MODEL_INPUT_TOKEN_LIMIT = 1_048_576
 MODEL_INPUT_SAFE_RATIO = 0.8
+SUMMARY_DEFERRED_TEXT = "글별 Flash 요약 실패로 투자 분석 보류"
+SUMMARY_RESPONSE_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "investment_relevant": {"type": "boolean"},
+        "relevance_reason": {"type": "string"},
+        "summary": {"type": "string"},
+    },
+    "required": ["investment_relevant", "relevance_reason", "summary"],
+}
 
 # 1차 정밀 요약 프롬프트
 MAP_SUMMARY_PROMPT = """
@@ -58,6 +72,8 @@ MAP_SUMMARY_PROMPT = """
 4. 메르 본인이 특정 종목의 매수, 보유, 매도 또는 관심을 직접 밝힌 문맥.
 
 없는 사실을 창작하지 마십시오. 투자와 무관한 글도 `summary`에 짧은 내용 요약을 남기십시오.
+`summary`는 1200자 이하, `relevance_reason`은 200자 이하로 작성하십시오.
+출력은 반드시 지정된 JSON 스키마를 만족해야 하며, 마크다운 코드블록을 쓰지 마십시오.
 """
 
 HEADERS = {
@@ -72,6 +88,10 @@ HEADERS = {
 
 LAST_FETCH_NEW_POST_COUNT = 0
 LAST_FETCH_NEW_POST_URLS: set[str] = set()
+
+
+class SummaryResponseError(ValueError):
+    """Raised when the per-post Gemini summary response cannot be used."""
 
 
 # ─── 상태 관리 ───────────────────────────────────────────────────────────────
@@ -224,18 +244,21 @@ def _parse_summary_response(text: str) -> dict:
     if stripped.startswith("```"):
         stripped = re.sub(r"^```(?:json)?\s*", "", stripped)
         stripped = re.sub(r"\s*```$", "", stripped)
-    payload = json.loads(stripped)
+    try:
+        payload = json.loads(stripped)
+    except json.JSONDecodeError as exc:
+        raise SummaryResponseError(f"글별 요약 JSON 파싱 실패: {exc.msg}") from exc
     if not isinstance(payload, dict):
-        raise ValueError("글별 요약 응답은 JSON 객체여야 합니다.")
+        raise SummaryResponseError("글별 요약 응답은 JSON 객체여야 합니다.")
     summary = payload.get("summary")
     relevant = payload.get("investment_relevant")
     reason = payload.get("relevance_reason")
     if not isinstance(summary, str) or not summary.strip():
-        raise ValueError("글별 요약에 summary가 없습니다.")
+        raise SummaryResponseError("글별 요약에 summary가 없습니다.")
     if not isinstance(relevant, bool):
-        raise ValueError("글별 요약에 investment_relevant boolean이 없습니다.")
+        raise SummaryResponseError("글별 요약에 investment_relevant boolean이 없습니다.")
     if not isinstance(reason, str) or not reason.strip():
-        raise ValueError("글별 요약에 relevance_reason이 없습니다.")
+        raise SummaryResponseError("글별 요약에 relevance_reason이 없습니다.")
     return {
         "summary": summary.strip(),
         "investment_relevant": relevant,
@@ -259,14 +282,28 @@ def summarize_single_post(content: str) -> dict:
         contents=_fit_summary_request(client, content),
         config=types.GenerateContentConfig(
             temperature=0.2,
-            max_output_tokens=2048,
+            max_output_tokens=4096,
             response_mime_type="application/json",
+            response_schema=SUMMARY_RESPONSE_SCHEMA,
         ),
         max_retries=3,
     )
     if not response.text:
-        raise RuntimeError("글별 Flash 요약 응답이 비어 있습니다.")
+        raise SummaryResponseError("글별 Flash 요약 응답이 비어 있습니다.")
     return _parse_summary_response(response.text)
+
+
+def _deferred_summary_fields(error: Exception) -> dict:
+    message = f"{type(error).__name__}: {error}"
+    return {
+        "summary": SUMMARY_DEFERRED_TEXT,
+        "investment_relevant": False,
+        "relevance_reason": SUMMARY_DEFERRED_TEXT,
+        "summary_version": None,
+        "summary_status": "deferred",
+        "summary_error": message[:500],
+        "summary_failed_at": datetime.now().isoformat(timespec="seconds"),
+    }
 
 
 def _summary_fields(content: str, title: str) -> dict:
@@ -279,7 +316,21 @@ def _summary_fields(content: str, title: str) -> dict:
             "summary_version": None,
         }
     print(f"      1차 요약 캐시 생성(Flash): {title[:30]}...")
-    return summarize_single_post(content)
+    try:
+        result = summarize_single_post(content)
+    except SummaryResponseError as exc:
+        print(f"      ⚠ 글별 요약 보류: {type(exc).__name__}: {exc}")
+        return _deferred_summary_fields(exc)
+    except Exception as exc:
+        if not is_transient_error(str(exc)):
+            raise
+        print(f"      ⚠ 글별 요약 일시 실패, 보류: {type(exc).__name__}: {exc}")
+        return _deferred_summary_fields(exc)
+    return {
+        **result,
+        "summary_status": "ok",
+        "summary_error": "",
+    }
 
 
 def _write_posts_db(posts: list[dict]) -> None:

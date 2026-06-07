@@ -37,11 +37,13 @@ class GenerateDashboardTest(unittest.TestCase):
             previous = generate_dashboard.DASHBOARD_FILE
             generate_dashboard.DASHBOARD_FILE = Path(tmp) / "dashboard.html"
             try:
+                state = state_payload()
+                state["status_note"] = "새 글 1건 요약 실패로 투자 분석 보류: 코스트코와 이마트"
                 path = generate_dashboard.generate_html(
                     cache,
                     "# 메르AI 포트폴리오 분석\n\n테스트 보고서",
                     "2026-06-01",
-                    state=state_payload(),
+                    state=state,
                 )
                 html = path.read_text(encoding="utf-8")
             finally:
@@ -55,6 +57,8 @@ class GenerateDashboardTest(unittest.TestCase):
         self.assertIn("메르 직접 발언", html)
         self.assertIn("AI 제안", html)
         self.assertIn("https://blog.naver.com/ranto28/123", html)
+        self.assertIn("새 글 1건 요약 실패로 투자 분석 보류", html)
+        self.assertIn("코스트코와 이마트", html)
         self.assertIn("모두 펼치기", html)
         self.assertIn("type:'doughnut'", html)
         self.assertNotIn("type:'bar'", html)

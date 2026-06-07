@@ -7,7 +7,7 @@ import os
 import re
 import shutil
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 try:
@@ -173,6 +173,46 @@ def _notify_status(title: str, body: str) -> None:
         send_status(title, body)
 
 
+def _short_title(title: str, limit: int = 34) -> str:
+    title = " ".join(str(title or "").split())
+    if len(title) <= limit:
+        return title
+    return title[: limit - 1] + "…"
+
+
+def _deferred_posts_for_run(
+    posts: list[dict],
+    *,
+    is_rebalance: bool,
+    state,
+    today: datetime,
+) -> list[dict]:
+    deferred = [
+        post for post in posts
+        if post.get("summary_status") == "deferred"
+    ]
+    if is_rebalance:
+        try:
+            cutoff = datetime.fromisoformat(state.last_rebalanced_date)
+        except Exception:
+            cutoff = today - timedelta(days=FETCH_DAYS)
+        return [
+            post for post in deferred
+            if datetime.fromisoformat(post["date"]) > cutoff
+        ]
+    new_urls = get_last_fetch_new_post_urls()
+    return [post for post in deferred if post.get("url") in new_urls]
+
+
+def _deferred_status_note(posts: list[dict]) -> str:
+    if not posts:
+        return ""
+    titles = ", ".join(_short_title(post.get("title", "")) for post in posts[:2])
+    if len(posts) > 2:
+        titles += f" 외 {len(posts) - 2}건"
+    return f"새 글 {len(posts)}건 요약 실패로 투자 분석 보류: {titles}"
+
+
 def _prices_for_ledger(ledger: dict) -> dict[str, float]:
     return get_structured_prices(ledger.get("positions", []))
 
@@ -294,10 +334,17 @@ def main() -> int:
                 cached_posts,
                 get_last_fetch_new_post_urls(),
             )
+        deferred_posts = _deferred_posts_for_run(
+            cached_posts,
+            is_rebalance=is_rebalance,
+            state=state,
+            today=today,
+        )
+        deferred_note = _deferred_status_note(deferred_posts)
         if not posts:
             if is_rebalance:
                 print("  리밸런싱 연기: 마지막 리밸런싱 이후 투자 관련 신규 글이 없습니다.")
-            return _run_no_change_update(state, today)
+            return _run_no_change_update(state, today, status_note=deferred_note)
 
         try:
             result = analyze_posts_structured(
@@ -314,6 +361,8 @@ def main() -> int:
             if not _is_llm_service_unavailable_error(exc):
                 raise
             note = "LLM 한도 초과 또는 일시 장애로 신규 글 분석 보류"
+            if deferred_note:
+                note += f" / {deferred_note}"
             print(f"  {note}: 기존 포트폴리오 상태로 출력만 갱신합니다.")
             _save_error_log(f"{type(exc).__name__}: {exc}", today)
             return _run_no_change_update(state, today, status_note=note)
@@ -338,15 +387,19 @@ def main() -> int:
         save_analysis_decision_file(result.decision, DECISION_PATH)
         save_portfolio_state_file(updated_state, STATE_PATH)
         save_model_ledger(ledger, MODEL_LEDGER_FILE)
-        _, png_path = generate_all(result.report, today, state=updated_state.to_dict())
+        output_state = updated_state.to_dict()
+        if deferred_note:
+            output_state["status_note"] = deferred_note
+        _, png_path = generate_all(result.report, today, state=output_state)
 
         if RUN_POLICY.send_telegram:
             if png_path and png_path.exists():
                 send_photo(str(png_path), f"모델 포트폴리오 성과 | {today:%Y년 %m월 %d일}")
             if not send_structured_summary(
-                updated_state.to_dict(),
+                output_state,
                 today.strftime("%Y년 %m월 %d일"),
                 cache,
+                status_note=deferred_note,
             ):
                 return 1
         print(f"  완료: 포트폴리오 {len(updated_state.portfolio)}종목")

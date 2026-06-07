@@ -49,6 +49,17 @@ class TelegramSummaryTest(unittest.TestCase):
         self.assertIn("1. *알루미늄 공급 제한*", summary)
         self.assertIn("2. *피지컬 AI 확산*", summary)
 
+    def test_status_note_can_name_deferred_post(self):
+        summary = build_structured_summary(
+            state_payload(),
+            "2026년 06월 01일",
+            {"portfolio_return_krw": 3.25},
+            status_note="새 글 1건 요약 실패로 투자 분석 보류: 코스트코와 이마트 트레이더스",
+        )
+
+        self.assertIn("새 글 1건 요약 실패", summary)
+        self.assertIn("코스트코와 이마트 트레이더스", summary)
+
     def test_changed_summary_still_includes_performance(self):
         summary = build_structured_summary(
             state_payload(),

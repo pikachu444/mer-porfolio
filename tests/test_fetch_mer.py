@@ -1,7 +1,9 @@
 import json
 import sys
+import tempfile
 import unittest
 from datetime import datetime
+from pathlib import Path
 from unittest.mock import Mock, patch
 
 try:
@@ -11,6 +13,14 @@ except ModuleNotFoundError:
 
 import fetch_mer
 import main
+
+
+class FeedEntry(dict):
+    def __getattr__(self, name):
+        try:
+            return self[name]
+        except KeyError as exc:
+            raise AttributeError(name) from exc
 
 
 def post(date: str, url: str, relevant=True) -> dict:
@@ -41,6 +51,25 @@ class FetchMerTest(unittest.TestCase):
 
         self.assertFalse(parsed["investment_relevant"])
         self.assertEqual(parsed["summary_version"], fetch_mer.SUMMARY_VERSION)
+
+    def test_parse_summary_response_reports_truncated_json(self):
+        with self.assertRaises(fetch_mer.SummaryResponseError) as ctx:
+            fetch_mer._parse_summary_response('{"investment_relevant": true, "summary": "abc')
+
+        self.assertIn("JSON 파싱 실패", str(ctx.exception))
+
+    def test_summary_fields_defers_unusable_flash_response(self):
+        with patch.object(
+            fetch_mer,
+            "summarize_single_post",
+            side_effect=fetch_mer.SummaryResponseError("잘린 JSON"),
+        ):
+            fields = fetch_mer._summary_fields("본문", "테스트 글")
+
+        self.assertFalse(fields["investment_relevant"])
+        self.assertIsNone(fields["summary_version"])
+        self.assertEqual(fields["summary_status"], "deferred")
+        self.assertIn("잘린 JSON", fields["summary_error"])
 
     def test_summary_request_trims_only_transmitted_tail_over_safe_limit(self):
         client = Mock()
@@ -92,6 +121,67 @@ class FetchMerTest(unittest.TestCase):
 
         fetch.assert_called_once_with(days=main.FETCH_DAYS)
         self.assertEqual(selected, cached)
+
+    def test_deferred_status_note_names_post_for_user_outputs(self):
+        note = main._deferred_status_note([
+            {"title": "코스트코와 이마트 트레이더스의 비밀(feat 97헌터)"}
+        ])
+
+        self.assertIn("새 글 1건 요약 실패", note)
+        self.assertIn("코스트코와 이마트", note)
+
+    def test_fetch_recent_posts_persists_deferred_summary(self):
+        entry = FeedEntry(
+            title="신규 글",
+            link="https://blog.naver.com/ranto28/223456789012",
+            published_parsed=(2026, 6, 1, 0, 0, 0, 0, 0, 0),
+            summary="RSS 요약",
+        )
+        feed = Mock(bozo=False, entries=[entry])
+
+        with tempfile.TemporaryDirectory() as tmpdir, \
+             patch.object(fetch_mer, "DB_FILE", str(Path(tmpdir) / "posts_db.json")), \
+             patch.object(fetch_mer, "RSS_URL", "https://example.test/rss"), \
+             patch.object(fetch_mer.feedparser, "parse", return_value=feed), \
+             patch.object(fetch_mer, "fetch_full_post", return_value="전문"), \
+             patch.object(fetch_mer, "summarize_single_post", side_effect=fetch_mer.SummaryResponseError("잘린 JSON")), \
+             patch.object(fetch_mer, "_refresh_recent_summary_cache", return_value=False):
+            result = fetch_mer.fetch_recent_posts(days=9999)
+
+            db_path = Path(fetch_mer.DB_FILE)
+            saved = json.loads(db_path.read_text(encoding="utf-8"))
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(saved[0]["summary_status"], "deferred")
+        self.assertIsNone(saved[0]["summary_version"])
+        self.assertFalse(saved[0]["investment_relevant"])
+
+    def test_refresh_recent_summary_cache_retries_deferred_summary(self):
+        posts = [post("2026-06-01", "https://blog.naver.com/ranto28/223456789012")]
+        posts[0]["summary_version"] = None
+        posts[0]["summary_status"] = "deferred"
+
+        with tempfile.TemporaryDirectory() as tmpdir, \
+             patch.object(fetch_mer, "DB_FILE", str(Path(tmpdir) / "posts_db.json")), \
+             patch.object(fetch_mer, "fetch_full_post", return_value="새 전문"), \
+             patch.object(
+                 fetch_mer,
+                 "_summary_fields",
+                 return_value={
+                     "summary": "새 요약",
+                     "investment_relevant": True,
+                     "relevance_reason": "투자 관련",
+                     "summary_version": fetch_mer.SUMMARY_VERSION,
+                     "summary_status": "ok",
+                     "summary_error": "",
+                 },
+             ) as summary_fields:
+            changed = fetch_mer._refresh_recent_summary_cache(posts, datetime(2026, 6, 2))
+
+        self.assertTrue(changed)
+        summary_fields.assert_called_once_with("새 전문", posts[0]["title"])
+        self.assertEqual(posts[0]["summary"], "새 요약")
+        self.assertEqual(posts[0]["summary_version"], fetch_mer.SUMMARY_VERSION)
 
 
 if __name__ == "__main__":

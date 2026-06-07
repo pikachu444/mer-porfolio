@@ -1184,6 +1184,62 @@ HTML에는 다음 내용을 표시한다.
   일치한다. HTML은 도넛 그래프만 사용하고, 실제 로그에서 차트 이미지 전송과 Telegram
   구조화 요약 전송이 성공했다.
 
+### 15. scheduled 글별 Flash 요약 JSON 실패 보류 처리 및 진단 개선
+
+**목적:** scheduled 실행에서 신규 글별 Flash 요약 응답이 잘리거나 깨졌을 때 전체 Actions를
+중단하지 않고, 해당 글만 투자 분석 대상에서 보류한 뒤 다음 실행에서 재시도한다.
+
+**확인된 원인**
+
+- scheduled 실행 `27067157733`은 main 커밋 `3e25c8c`에서 실행됐다.
+- 신규 글 `코스트코와 이마트 트레이더스의 비밀(feat 97헌터)` 수집 후 글별 Flash 요약 단계에서
+  `JSONDecodeError: Unterminated string`이 발생했다.
+- 기존 `_parse_summary_response`는 Gemini 응답을 그대로 `json.loads`했고, `_summary_fields`와
+  `_refresh_recent_summary_cache`가 예외를 처리하지 않아 신규 글 저장 전 전체 수집이 중단됐다.
+- 이 실패는 포트폴리오 Pro 판단이나 HTML/Telegram 출력 단계가 아니라 글별 1차 요약 캐시 단계의
+  응답 형식 실패다.
+
+**합의됨**
+
+- 정상 경로를 먼저 강화한다. 글별 요약 요청은 JSON 스키마, JSON 전용 응답, 요약 길이 제한,
+  충분한 출력 토큰을 사용한다.
+- 그래도 응답이 비거나 JSON이 깨진 경우 해당 글은 `summary_status: deferred`로 저장한다.
+- 보류 글은 `investment_relevant: false`, `summary_version: null`로 저장해 Pro 투자 판단 입력에서
+  제외하고 다음 scheduled/rebalance 실행에서 다시 요약한다.
+- 보류 글이 있으면 Telegram과 HTML의 사용자 출력에 보류 건수와 글 제목을 표시한다. 중요한 글이
+  조용히 빠진 것처럼 보이면 안 된다.
+- API 키 미설정 같은 구성 오류는 보류로 숨기지 않고 실행 실패로 둔다.
+- scheduled 실패 시에는 최소 진단 artifact를 업로드해 Telegram 실패 알림만 보고 원인을 추정하지
+  않게 한다.
+
+**완료 조건**
+
+- 글별 요약 JSON 파싱 실패가 명확한 오류 메시지로 분류된다.
+- 신규 글 요약 실패 시 `posts_db.json`에 보류 상태가 저장되고 전체 수집은 계속된다.
+- `summary_version`이 현재 버전과 다르거나 비어 있는 최근 글은 다음 실행에서 다시 요약된다.
+- scheduled 실패 시 `output/error_*.log`와 `output/posts_db.json`이 있으면 artifact로 남는다.
+- 관련 자동 테스트와 문법 검사가 통과한다.
+
+**구현 완료**
+
+- `fetch_mer.py`의 글별 Flash 요약에 `response_schema`, JSON 전용 응답, `summary` 1200자 이하
+  프롬프트, 출력 토큰 `4096`을 적용했다.
+- 깨진 JSON, 빈 응답, 필수 필드 누락은 `SummaryResponseError`로 분류하고 해당 글을 보류 상태로
+  저장하도록 했다.
+- 429, 503, timeout, disconnect 등 재시도 후에도 남은 일시 오류는 해당 글 보류로 처리한다.
+  `GEMINI_API_KEY` 미설정 같은 구성 오류는 기존처럼 실패시킨다.
+- `.github/workflows/schedule.yml`에 scheduled 실패 진단 artifact 업로드를 추가했다.
+- 새 글 요약 보류가 발생하면 Telegram 성과 요약과 HTML 최근 분석 요약에 보류 건수와 글 제목을
+  표시하도록 했다.
+- 테스트를 추가했다. 로컬 검증 결과:
+  `PYTHONUTF8=1 python -m unittest discover -s tests -q` 전체 89개 테스트 통과,
+  `python -m py_compile main.py fetch_mer.py telegram_notify.py generate_dashboard.py ...` 통과,
+  `git diff --check` 통과.
+- 샘플 생성으로 Telegram 요약과 HTML 대시보드에
+  `새 글 1건 요약 실패로 투자 분석 보류: 코스트코와 이마트 트레이더스의 비밀` 문구가 포함되는
+  것을 확인했다.
+- `RUN_MODE=test python main.py` 진입점이 정상 동작하는 것을 확인했다.
+
 ## 기존 완료 작업
 
 - [x] 동일 종목의 추천일별 중복 성과 행 제거
