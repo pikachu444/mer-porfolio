@@ -13,6 +13,7 @@
 <section class="card"><h2>최근 분석 요약</h2><div id="summary"></div></section>
 <section class="card"><h2>핵심 인사이트</h2><div id="insights"></div></section>
 <div class="grid"><section class="card"><h2>현재 모델 포트폴리오 목표 비중</h2><div class="chart"><canvas id="donut"></canvas></div></section><section class="card"><h2>포트폴리오 수익률 흐름</h2><div class="chart"><canvas id="returns"></canvas></div></section></div>
+<section class="card"><h2>국내/해외 추천</h2><div id="recommendations"></div></section>
 <section class="card"><h2>현재 모델 포트폴리오</h2><div id="portfolio"></div></section>
 <section class="card"><h2>이번 분석 변경사항</h2><div id="changes"></div></section>
 <section class="card"><h2>Watchlist</h2><div id="watchlist"></div></section>
@@ -20,206 +21,100 @@
 <section class="card"><h2>전체 보고서</h2><div id="report-content"></div></section>
 </main><script>
 const updated="2026-06-07";
-const portfolio=[{"name": "LS", "code": "006220", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 3.0, "proposed_weight": 3.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "entry_date": "2026-05-28", "return_pct": -2.6290165530671863}, {"name": "대한전선", "code": "001440", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 3.0, "proposed_weight": 3.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"}, {"name": "삼성중공업", "code": "010140", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 8.0, "proposed_weight": 8.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "entry_date": "2026-05-28", "return_pct": 0.0}, {"name": "Google (Alphabet)", "code": "GOOGL", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 10.0, "proposed_weight": 10.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "entry_date": "2026-05-28", "return_pct": -4.434112889111227, "return_pct_krw": -1.9926737817550628}, {"name": "Microsoft", "code": "MSFT", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 3.0, "proposed_weight": 3.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "entry_date": "2026-05-28", "return_pct": -0.1612305951919054, "return_pct_krw": 2.389368613628076}, {"name": "Alcoa", "code": "AA", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 8.0, "proposed_weight": 8.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "entry_date": "2026-05-28", "return_pct": 5.456710011759734, "return_pct_krw": 8.150831771515708}, {"name": "Recursion Pharmaceuticals", "code": "RXRX", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 3.0, "proposed_weight": 3.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "entry_date": "2026-05-28", "return_pct": 17.889909527804345, "return_pct_krw": 20.901664497963225}, {"name": "Northrop Grumman", "code": "NOC", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 5.0, "proposed_weight": 5.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "entry_date": "2026-05-28", "return_pct": -3.259054419020657, "return_pct_krw": -0.7875958791134152}, {"name": "LG이노텍", "code": "011070", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 8.0, "proposed_weight": 8.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "entry_date": "2026-05-28", "return_pct": 3.439153439153439}, {"name": "Wabtec", "code": "WAB", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 3.0, "proposed_weight": 3.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "entry_date": "2026-05-28", "return_pct": 0.0879684037382078, "return_pct_krw": 2.6449339447285385}, {"name": "두산로보틱스", "code": "454910", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 10.0, "proposed_weight": 10.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "entry_date": "2026-06-01", "return_pct": 14.089595375722544}, {"name": "현대차", "code": "005380", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 10.0, "proposed_weight": 10.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "entry_date": "2026-06-01", "return_pct": -6.666666666666667}, {"name": "네이버", "code": "035420", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 10.0, "proposed_weight": 10.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "entry_date": "2026-06-02", "return_pct": -4.634581105169341}, {"name": "일라이 릴리", "code": "LLY", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 5.0, "proposed_weight": 5.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "entry_date": "2026-06-03", "return_pct": 4.131627028005426, "return_pct_krw": 4.66579769140173}];
+const portfolio=[{"name": "LS", "code": "006220", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 3.0, "proposed_weight": 3.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": -2.6290165530671863, "entry_date": "2026-05-28", "current_price": 10000.0, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": -2.6290165530671863, "return_label": "-2.6%", "weight": 3.0}, {"name": "대한전선", "code": "001440", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 3.0, "proposed_weight": 3.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": null, "return_label": "집계 전", "weight": 3.0}, {"name": "삼성중공업", "code": "010140", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 8.0, "proposed_weight": 8.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": 0.0, "entry_date": "2026-05-28", "current_price": 28400.0, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": 0.0, "return_label": "+0.0%", "weight": 8.0}, {"name": "Google (Alphabet)", "code": "GOOGL", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 10.0, "proposed_weight": 10.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": -4.434112889111227, "return_pct_krw": -1.9926737817550628, "entry_date": "2026-05-28", "current_price": 372.760009765625, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": -1.9926737817550628, "return_label": "-2.0%", "weight": 10.0}, {"name": "Microsoft", "code": "MSFT", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 3.0, "proposed_weight": 3.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": -0.1612305951919054, "return_pct_krw": 2.389368613628076, "entry_date": "2026-05-28", "current_price": 427.2699890136719, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": 2.389368613628076, "return_label": "+2.4%", "weight": 3.0}, {"name": "Alcoa", "code": "AA", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 8.0, "proposed_weight": 8.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": 5.456710011759734, "return_pct_krw": 8.150831771515708, "entry_date": "2026-05-28", "current_price": 79.72000122070312, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": 8.150831771515708, "return_label": "+8.2%", "weight": 8.0}, {"name": "Recursion Pharmaceuticals", "code": "RXRX", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 3.0, "proposed_weight": 3.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": 17.889909527804345, "return_pct_krw": 20.901664497963225, "entry_date": "2026-05-28", "current_price": 3.8550000190734863, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": 20.901664497963225, "return_label": "+20.9%", "weight": 3.0}, {"name": "Northrop Grumman", "code": "NOC", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 5.0, "proposed_weight": 5.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": -3.259054419020657, "return_pct_krw": -0.7875958791134152, "entry_date": "2026-05-28", "current_price": 539.35498046875, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": -0.7875958791134152, "return_label": "-0.8%", "weight": 5.0}, {"name": "LG이노텍", "code": "011070", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 8.0, "proposed_weight": 8.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": 3.439153439153439, "entry_date": "2026-05-28", "current_price": 1173000.0, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": 3.439153439153439, "return_label": "+3.4%", "weight": 8.0}, {"name": "Wabtec", "code": "WAB", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 3.0, "proposed_weight": 3.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": 0.0879684037382078, "return_pct_krw": 2.6449339447285385, "entry_date": "2026-05-28", "current_price": 261.70001220703125, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": 2.6449339447285385, "return_label": "+2.6%", "weight": 3.0}, {"name": "두산로보틱스", "code": "454910", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 10.0, "proposed_weight": 10.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": 14.089595375722544, "entry_date": "2026-06-01", "current_price": 157900.0, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": 14.089595375722544, "return_label": "+14.1%", "weight": 10.0}, {"name": "현대차", "code": "005380", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 10.0, "proposed_weight": 10.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": -6.666666666666667, "entry_date": "2026-06-01", "current_price": 700000.0, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": -6.666666666666667, "return_label": "-6.7%", "weight": 10.0}, {"name": "네이버", "code": "035420", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 10.0, "proposed_weight": 10.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": -4.634581105169341, "entry_date": "2026-06-02", "current_price": 267500.0, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": -4.634581105169341, "return_label": "-4.6%", "weight": 10.0}, {"name": "일라이 릴리", "code": "LLY", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 5.0, "proposed_weight": 5.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": 4.131627028005426, "return_pct_krw": 4.66579769140173, "entry_date": "2026-06-03", "current_price": 1134.8699951171875, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": 4.66579769140173, "return_label": "+4.7%", "weight": 5.0}];
+const domestic=[{"name": "LS", "code": "006220", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 3.0, "proposed_weight": 3.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": -2.6290165530671863, "entry_date": "2026-05-28", "current_price": 10000.0, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": -2.6290165530671863, "return_label": "-2.6%", "weight": 3.0}, {"name": "대한전선", "code": "001440", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 3.0, "proposed_weight": 3.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": null, "return_label": "집계 전", "weight": 3.0}, {"name": "삼성중공업", "code": "010140", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 8.0, "proposed_weight": 8.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": 0.0, "entry_date": "2026-05-28", "current_price": 28400.0, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": 0.0, "return_label": "+0.0%", "weight": 8.0}, {"name": "LG이노텍", "code": "011070", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 8.0, "proposed_weight": 8.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": 3.439153439153439, "entry_date": "2026-05-28", "current_price": 1173000.0, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": 3.439153439153439, "return_label": "+3.4%", "weight": 8.0}, {"name": "두산로보틱스", "code": "454910", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 10.0, "proposed_weight": 10.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": 14.089595375722544, "entry_date": "2026-06-01", "current_price": 157900.0, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": 14.089595375722544, "return_label": "+14.1%", "weight": 10.0}, {"name": "현대차", "code": "005380", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 10.0, "proposed_weight": 10.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": -6.666666666666667, "entry_date": "2026-06-01", "current_price": 700000.0, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": -6.666666666666667, "return_label": "-6.7%", "weight": 10.0}, {"name": "네이버", "code": "035420", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 10.0, "proposed_weight": 10.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": -4.634581105169341, "entry_date": "2026-06-02", "current_price": 267500.0, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": -4.634581105169341, "return_label": "-4.6%", "weight": 10.0}];
+const overseas=[{"name": "Google (Alphabet)", "code": "GOOGL", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 10.0, "proposed_weight": 10.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": -4.434112889111227, "return_pct_krw": -1.9926737817550628, "entry_date": "2026-05-28", "current_price": 372.760009765625, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": -1.9926737817550628, "return_label": "-2.0%", "weight": 10.0}, {"name": "Microsoft", "code": "MSFT", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 3.0, "proposed_weight": 3.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": -0.1612305951919054, "return_pct_krw": 2.389368613628076, "entry_date": "2026-05-28", "current_price": 427.2699890136719, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": 2.389368613628076, "return_label": "+2.4%", "weight": 3.0}, {"name": "Alcoa", "code": "AA", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 8.0, "proposed_weight": 8.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": 5.456710011759734, "return_pct_krw": 8.150831771515708, "entry_date": "2026-05-28", "current_price": 79.72000122070312, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": 8.150831771515708, "return_label": "+8.2%", "weight": 8.0}, {"name": "Recursion Pharmaceuticals", "code": "RXRX", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 3.0, "proposed_weight": 3.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": 17.889909527804345, "return_pct_krw": 20.901664497963225, "entry_date": "2026-05-28", "current_price": 3.8550000190734863, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": 20.901664497963225, "return_label": "+20.9%", "weight": 3.0}, {"name": "Northrop Grumman", "code": "NOC", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 5.0, "proposed_weight": 5.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": -3.259054419020657, "return_pct_krw": -0.7875958791134152, "entry_date": "2026-05-28", "current_price": 539.35498046875, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": -0.7875958791134152, "return_label": "-0.8%", "weight": 5.0}, {"name": "Wabtec", "code": "WAB", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 3.0, "proposed_weight": 3.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": 0.0879684037382078, "return_pct_krw": 2.6449339447285385, "entry_date": "2026-05-28", "current_price": 261.70001220703125, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": 2.6449339447285385, "return_label": "+2.6%", "weight": 3.0}, {"name": "일라이 릴리", "code": "LLY", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "보유", "basis": "이전 판단 유지", "decision_date": "2026-06-04", "evidence_posts": [], "source_mentioned": false, "previous_weight": 5.0, "proposed_weight": 5.0, "weight_source": "AI 제안", "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "return_pct": 4.131627028005426, "return_pct_krw": 4.66579769140173, "entry_date": "2026-06-03", "current_price": 1134.8699951171875, "actor_label": "미분류", "action_label": "보유", "decision_label": "미분류 · 보유", "return_value": 4.66579769140173, "return_label": "+4.7%", "weight": 5.0}];
 const changes=[];
 const watchlist=[];
-const closed=[{"name": "HMM", "code": "011200", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "매도", "basis": "이전 판단 유지", "decision_date": "2026-05-12", "evidence_posts": [], "source_mentioned": false, "previous_weight": 5.0, "proposed_weight": 0, "weight_source": "AI 제안", "change_reason": "초기 생성 시 매도 시그널 감지", "closed_date": "2026-05-12", "close_reason": "초기 생성 시 매도 시그널 감지", "closed_performance": null}, {"name": "NVIDIA", "code": "NVDA", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "매도", "basis": "이전 판단 유지", "decision_date": "2026-05-30", "evidence_posts": [], "source_mentioned": false, "previous_weight": 15.0, "proposed_weight": 0, "weight_source": "AI 제안", "change_reason": "매도 시그널 감지 (Avoid 판단 또는 주의종목 섹션)", "closed_date": "2026-05-30", "close_reason": "매도 시그널 감지 (Avoid 판단 또는 주의종목 섹션)", "closed_performance": null}, {"name": "Comfort Systems USA", "code": "FIX", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "매도", "basis": "이전 판단 유지", "decision_date": "2026-05-30", "evidence_posts": [], "source_mentioned": false, "previous_weight": 4.0, "proposed_weight": 0, "weight_source": "AI 제안", "change_reason": "매도 시그널 감지 (Avoid 판단 또는 주의종목 섹션)", "closed_date": "2026-05-30", "close_reason": "매도 시그널 감지 (Avoid 판단 또는 주의종목 섹션)", "closed_performance": null}, {"name": "GOP ETF", "code": "GOP", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "매도", "basis": "이전 판단 유지", "decision_date": "2026-05-28", "evidence_posts": [], "source_mentioned": false, "previous_weight": 10.0, "proposed_weight": 0, "weight_source": "AI 제안", "change_reason": "리밸런싱 결과 최신 검증 리포트에서 제외", "closed_date": "2026-05-28", "close_reason": "리밸런싱 결과 최신 검증 리포트에서 제외", "closed_performance": null}];
+const closed=[{"name": "HMM", "code": "011200", "market": "KR", "asset_type": "stock", "decision_actor": "미분류", "action": "매도", "basis": "이전 판단 유지", "decision_date": "2026-05-12", "evidence_posts": [], "source_mentioned": false, "previous_weight": 5.0, "proposed_weight": 0, "weight_source": "AI 제안", "change_reason": "초기 생성 시 매도 시그널 감지", "closed_date": "2026-05-12", "close_reason": "초기 생성 시 매도 시그널 감지", "closed_performance": null}, {"name": "NVIDIA", "code": "NVDA", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "매도", "basis": "이전 판단 유지", "decision_date": "2026-05-30", "evidence_posts": [], "source_mentioned": false, "previous_weight": 15.0, "proposed_weight": 0, "weight_source": "AI 제안", "change_reason": "매도 시그널 감지 (Avoid 판단 또는 주의종목 섹션)", "closed_date": "2026-05-30", "close_reason": "매도 시그널 감지 (Avoid 판단 또는 주의종목 섹션)", "closed_performance": null}, {"name": "Comfort Systems USA", "code": "FIX", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "매도", "basis": "이전 판단 유지", "decision_date": "2026-05-30", "evidence_posts": [], "source_mentioned": false, "previous_weight": 4.0, "proposed_weight": 0, "weight_source": "AI 제안", "change_reason": "매도 시그널 감지 (Avoid 판단 또는 주의종목 섹션)", "closed_date": "2026-05-30", "close_reason": "매도 시그널 감지 (Avoid 판단 또는 주의종목 섹션)", "closed_performance": null}, {"name": "GOP ETF", "code": "GOP", "market": "US", "asset_type": "stock", "decision_actor": "미분류", "action": "매도", "basis": "이전 판단 유지", "decision_date": "2026-05-28", "evidence_posts": [], "source_mentioned": false, "previous_weight": 10.0, "proposed_weight": 0, "weight_source": "AI 제안", "change_reason": "리밸런싱 결과 최신 검증 리포트에서 제외", "closed_date": "2026-05-28", "close_reason": "리밸런싱 결과 최신 검증 리포트에서 제외", "closed_performance": null}, {"key": "KR:005930", "type": "KR", "market": "KR", "name": "삼성전자", "code": "005930", "ticker": "005930.KS", "action": "매수", "weight": "20%", "entry_date": "2026-05-26", "entry_price": 300000.0, "entry_usdkrw": null, "last_confirmed_date": "2026-05-27", "status": "closed", "closed_date": "2026-05-31", "closed_price": 317000.0, "close_reason": "현재 포트폴리오에서 제외"}, {"key": "KR:329180", "type": "KR", "market": "KR", "name": "HD현대중공업", "code": "329180", "ticker": "329180.KS", "action": "매수", "weight": "15%", "entry_date": "2026-05-26", "entry_price": 743000.0, "entry_usdkrw": null, "last_confirmed_date": "2026-05-27", "status": "closed", "closed_date": "2026-05-31", "closed_price": 696000.0, "close_reason": "현재 포트폴리오에서 제외"}, {"key": "US:XOM", "type": "US", "market": "US", "name": "ExxonMobil", "code": "XOM", "ticker": "XOM", "action": "Buy", "weight": "10%", "entry_date": "2026-05-26", "entry_price": 154.9199981689453, "entry_usdkrw": 1504.8800048828125, "last_confirmed_date": "2026-05-27", "status": "closed", "closed_date": "2026-05-31", "closed_price": 145.25999450683594, "close_reason": "현재 포트폴리오에서 제외"}];
 const insights=[{"id": "report-insight-1", "title": "AI/로봇 (피지컬 AI & 소버린 AI)", "summary": "2026년 6월, 엔비디아 젠슨 황 CEO가 한국을 방문함. 그는 피지컬 AI 및 소버린 AI의 중요성을 강조하며 관련 기업들을 칭찬함. 두산로보틱스와 네이버가 젠슨 황의 방문 및 협력 논의 대상에 포함됨.", "investment_implication": "Buy 강 — 엔비디아의 명확한 전략 방향과 직접적인 협력 언급으로 성장 기대가 높은 것임.", "evidence_posts": [], "related_decision_codes": []}, {"id": "report-insight-2", "title": "비만 치료제 시장의 고성장", "summary": "2025년 12월, 일라이 릴리의 삼중 작용제 비만 신약 '레타트루타이드'의 임상 3상 첫 번째 결과가 긍정적으로 발표됨. 이 신약은 '고질라급' 잠재력을 가진 것으로 평가됨.", "investment_implication": "Buy 강 — 압도적인 신약 효과로 시장 지배력 강화 및 매출 성장이 기대되는 것임.", "evidence_posts": [], "related_decision_codes": []}, {"id": "report-insight-3", "title": "국내 증시의 유동성 위축 및 금리 인상 압박", "summary": "서울을 제외한 주요 선거가 종료되어 단기적인 정책 기대감이 사라짐. 한국은행이 7월 금리 인상 가능성을 시사하며 통화 정책 전환 가능성이 제기됨. 국민연금의 국내 주식 투자 한도 상향은 매도를 막는 수준이며, 추가 매수 여력은 제한적임.", "investment_implication": "Watch/Avoid — 국내 거시 환경의 불확실성 증대로 시장 전반의 매력도가 하락한 것임.", "evidence_posts": [], "related_decision_codes": []}, {"id": "report-insight-4", "title": "HBM 시장의 경쟁 심화와 잠재적 리스크", "summary": "2026년 2월 12일, 삼성전자가 HBM4(6세대 고대역폭메모리)의 세계 최초 양산 출하를 공식 발표함.", "investment_implication": "Watch — HBM 기술 발전은 긍정적이나, 시장 경쟁 심화와 잠재적 리스크에 대한 주의가 필요한 것임.", "evidence_posts": [], "related_decision_codes": []}];
-const chartRows=[{"name": "LS", "code": "006220", "weight": 3.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"}, {"name": "대한전선", "code": "001440", "weight": 3.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"}, {"name": "삼성중공업", "code": "010140", "weight": 8.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"}, {"name": "Google (Alphabet)", "code": "GOOGL", "weight": 10.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"}, {"name": "Microsoft", "code": "MSFT", "weight": 3.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"}, {"name": "Alcoa", "code": "AA", "weight": 8.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"}, {"name": "Recursion Pharmaceuticals", "code": "RXRX", "weight": 3.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"}, {"name": "Northrop Grumman", "code": "NOC", "weight": 5.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"}, {"name": "LG이노텍", "code": "011070", "weight": 8.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"}, {"name": "Wabtec", "code": "WAB", "weight": 3.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"}, {"name": "두산로보틱스", "code": "454910", "weight": 10.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"}, {"name": "현대차", "code": "005380", "weight": 10.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"}, {"name": "네이버", "code": "035420", "weight": 10.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"}, {"name": "일라이 릴리", "code": "LLY", "weight": 5.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"}, {"name": "현금", "code": "", "weight": 11.0, "actor": "", "action": "보유", "reason": ""}];
+const chartRows=[{"name": "LS", "code": "006220", "weight": 3.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "market": "KR"}, {"name": "대한전선", "code": "001440", "weight": 3.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "market": "KR"}, {"name": "삼성중공업", "code": "010140", "weight": 8.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "market": "KR"}, {"name": "Google (Alphabet)", "code": "GOOGL", "weight": 10.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "market": "US"}, {"name": "Microsoft", "code": "MSFT", "weight": 3.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "market": "US"}, {"name": "Alcoa", "code": "AA", "weight": 8.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "market": "US"}, {"name": "Recursion Pharmaceuticals", "code": "RXRX", "weight": 3.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "market": "US"}, {"name": "Northrop Grumman", "code": "NOC", "weight": 5.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "market": "US"}, {"name": "LG이노텍", "code": "011070", "weight": 8.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "market": "KR"}, {"name": "Wabtec", "code": "WAB", "weight": 3.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "market": "US"}, {"name": "두산로보틱스", "code": "454910", "weight": 10.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "market": "KR"}, {"name": "현대차", "code": "005380", "weight": 10.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "market": "KR"}, {"name": "네이버", "code": "035420", "weight": 10.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "market": "KR"}, {"name": "일라이 릴리", "code": "LLY", "weight": 5.0, "actor": "미분류", "action": "보유", "reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존", "market": "US"}, {"name": "현금", "code": "", "weight": 11.0, "actor": "", "action": "보유", "reason": "", "market": "CASH"}];
 const summaries=[{"date": "2026-06-04", "avg_return_krw": 1.9, "stock_count": 13, "stocks": [{"key": "KR:006220", "type": "KR", "market": "KR", "name": "LS", "code": "006220", "ticker": "006220.KS", "action": "보유", "weight": "3%", "entry_date": "2026-05-28", "entry_price": 10270.0, "entry_usdkrw": null, "last_confirmed_date": "2026-06-04", "status": "active", "basis_type": "기존보유", "thesis": "전력 인프라 투자 확대 수혜 기대 유효함.", "current_price": 10000.0, "return_pct": -2.6290165530671863}, {"key": "KR:010140", "type": "KR", "market": "KR", "name": "삼성중공업", "code": "010140", "ticker": "010140.KS", "action": "보유", "weight": "8%", "entry_date": "2026-05-28", "entry_price": 28400.0, "entry_usdkrw": null, "last_confirmed_date": "2026-06-04", "status": "active", "basis_type": "기존보유", "thesis": "VLCC 수요 급증으로 조선업 호황 지속 근거 유효함.", "current_price": 28400.0, "return_pct": 0.0}, {"key": "KR:011070", "type": "KR", "market": "KR", "name": "LG이노텍", "code": "011070", "ticker": "011070.KS", "action": "보유", "weight": "8%", "entry_date": "2026-05-28", "entry_price": 1134000.0, "entry_usdkrw": null, "last_confirmed_date": "2026-06-04", "status": "active", "basis_type": "기존보유", "thesis": "Figure AI 투자 및 휴머노이드 로봇 부품 공급 기대 강화됨.", "current_price": 1173000.0, "return_pct": 3.439153439153439}, {"key": "US:GOOGL", "type": "US", "market": "US", "name": "Google (Alphabet)", "code": "GOOGL", "ticker": "GOOGL", "action": "Buy", "weight": "10%", "entry_date": "2026-05-28", "entry_price": 390.0555114746094, "entry_usdkrw": 1494.0999755859375, "last_confirmed_date": "2026-06-04", "status": "active", "basis_type": "기존보유", "thesis": "AI 로보틱스(제미나이)를 통한 피지컬 AI 시장 진출 강화됨.", "current_price": 372.760009765625, "return_pct": -4.434112889111227, "return_pct_krw": -1.9926737817550628, "current_usdkrw": 1532.27001953125}, {"key": "US:MSFT", "type": "US", "market": "US", "name": "Microsoft", "code": "MSFT", "ticker": "MSFT", "action": "Hold", "weight": "3%", "entry_date": "2026-05-28", "entry_price": 427.9599914550781, "entry_usdkrw": 1494.0999755859375, "last_confirmed_date": "2026-06-04", "status": "active", "basis_type": "기존보유", "thesis": "AI 서비스 수익성 우려 재확인됨.", "current_price": 427.2699890136719, "return_pct": -0.1612305951919054, "return_pct_krw": 2.389368613628076, "current_usdkrw": 1532.27001953125}, {"key": "US:AA", "type": "US", "market": "US", "name": "Alcoa", "code": "AA", "ticker": "AA", "action": "Hold", "weight": "8%", "entry_date": "2026-05-28", "entry_price": 75.59500122070312, "entry_usdkrw": 1494.0999755859375, "last_confirmed_date": "2026-06-04", "status": "active", "basis_type": "기존보유", "thesis": "보크사이트/알루미늄 공급망 불안정 심화 수혜 기대 유효함.", "current_price": 79.72000122070312, "return_pct": 5.456710011759734, "return_pct_krw": 8.150831771515708, "current_usdkrw": 1532.27001953125}, {"key": "US:RXRX", "type": "US", "market": "US", "name": "Recursion Pharmaceuticals", "code": "RXRX", "ticker": "RXRX", "action": "Hold", "weight": "3%", "entry_date": "2026-05-28", "entry_price": 3.2699999809265137, "entry_usdkrw": 1494.0999755859375, "last_confirmed_date": "2026-06-04", "status": "active", "basis_type": "기존보유", "thesis": "디지털 생물학 테마 강화, 엔비디아 협력 언급 유효함.", "current_price": 3.8550000190734863, "return_pct": 17.889909527804345, "return_pct_krw": 20.901664497963225, "current_usdkrw": 1532.27001953125}, {"key": "US:NOC", "type": "US", "market": "US", "name": "Northrop Grumman", "code": "NOC", "ticker": "NOC", "action": "Hold", "weight": "5%", "entry_date": "2026-05-28", "entry_price": 557.5250244140625, "entry_usdkrw": 1494.0999755859375, "last_confirmed_date": "2026-06-04", "status": "active", "basis_type": "기존보유", "thesis": "DARPA 달 철도 계획 직접 언급, 우주 인프라 수혜 구체화 유효함.", "current_price": 539.35498046875, "return_pct": -3.259054419020657, "return_pct_krw": -0.7875958791134152, "current_usdkrw": 1532.27001953125}, {"key": "US:WAB", "type": "US", "market": "US", "name": "Wabtec", "code": "WAB", "ticker": "WAB", "action": "Hold", "weight": "3%", "entry_date": "2026-05-28", "entry_price": 261.4700012207031, "entry_usdkrw": 1494.0999755859375, "last_confirmed_date": "2026-06-04", "status": "active", "basis_type": "기존보유", "thesis": "기니 시만두 광산 기관차 계약 수주로 직접 매출 증가 기대 유효함.", "current_price": 261.70001220703125, "return_pct": 0.0879684037382078, "return_pct_krw": 2.6449339447285385, "current_usdkrw": 1532.27001953125}, {"key": "KR:454910", "type": "KR", "market": "KR", "name": "두산로보틱스", "code": "454910", "ticker": "454910.KS", "action": "매수", "weight": "10%", "basis_type": "기존보유", "thesis": "젠슨 황 방문 및 엔비디아와 피지컬 AI 협력 논의 강화됨.", "entry_date": "2026-06-01", "entry_price": 138400.0, "entry_usdkrw": null, "last_confirmed_date": "2026-06-04", "status": "active", "current_price": 157900.0, "return_pct": 14.089595375722544}, {"key": "KR:005380", "type": "KR", "market": "KR", "name": "현대차", "code": "005380", "ticker": "005380.KS", "action": "매수", "weight": "10%", "basis_type": "기존보유", "thesis": "보스턴 다이내믹스 로봇 생산 및 구글 제미나이 로보틱스 결합 계획 강화됨.", "entry_date": "2026-06-01", "entry_price": 750000.0, "entry_usdkrw": null, "last_confirmed_date": "2026-06-04", "status": "active", "current_price": 700000.0, "return_pct": -6.666666666666667}, {"key": "KR:035420", "type": "KR", "market": "KR", "name": "네이버", "code": "035420", "ticker": "035420.KS", "action": "매수", "weight": "10%", "basis_type": "직접언급", "thesis": "젠슨 황 파트너 언급 및 소버린 AI 테마 핵심 수혜주임.", "entry_date": "2026-06-02", "entry_price": 280500.0, "entry_usdkrw": null, "last_confirmed_date": "2026-06-04", "status": "active", "current_price": 267500.0, "return_pct": -4.634581105169341}, {"key": "US:LLY", "type": "US", "market": "US", "name": "일라이 릴리", "code": "LLY", "ticker": "LLY", "action": "Buy", "weight": "5%", "basis_type": "직접언급", "thesis": "고질라급 비만 신약 '레타트루타이드' 임상 3상 긍정적 결과로 성장 기대 강화됨.", "entry_date": "2026-06-03", "entry_price": 1089.841796875, "entry_usdkrw": 1524.449951171875, "last_confirmed_date": "2026-06-04", "status": "active", "current_price": 1134.8699951171875, "return_pct": 4.131627028005426, "return_pct_krw": 4.66579769140173, "current_usdkrw": 1532.27001953125}]}];
-const statusNote="LLM 한도 초과 또는 일시 장애로 신규 글 분석 보류 / 새 글 14건 요약 실패로 투자 분석 보류: 주말에 읽는 아까시 나무 이야기, 서학개미, 환율상승의 주범 누명을 벗나?(feat RIA계좌) 외 12건";
-const reportText=`# 메르AI 포트폴리오 리포트
-**분석 기간:** 2026-06-03 ~ 2026-06-04
-**리포트 생성:** 2026-06-04
-**학습 글 수:** 4편
+const statusNote="LLM 한도 초과 또는 일시 장애로 신규 글 분석 보류";
+const reportText=`# 메르AI 모델 포트폴리오 리포트
 
----
+- 기준일: 2026-06-07
+- 메르 블로거의 실제 보유 내역이 아닙니다.
+- 블로그 직접 판단과 AI 해석을 구분해 표시합니다.
+- 모델 포트폴리오 수익률: 집계 전
+- 분석 보류: LLM 한도 초과 또는 일시 장애로 신규 글 분석 보류
+- 수익률 집계 전 종목: 001440
 
-## 📌 시장 분석 핵심 인사이트
+## 핵심 인사이트
 
 ### 인사이트 1: AI/로봇 (피지컬 AI & 소버린 AI)
 
-1.  2026년 6월, 엔비디아 젠슨 황 CEO가 한국을 방문함.
-2.  그는 피지컬 AI 및 소버린 AI의 중요성을 강조하며 관련 기업들을 칭찬함.
-3.  두산로보틱스와 네이버가 젠슨 황의 방문 및 협력 논의 대상에 포함됨.
-
-**해석(나비효과):**
-4.  엔비디아의 AI 전략이 단순 소프트웨어를 넘어 로봇 등 물리적 세계로 확장되는 것임.
-5.  이는 국내 로봇 및 AI 기술 기업들에게 새로운 성장 동력을 제공하며, 글로벌 AI 생태계의 핵심 파트너로 부상할 기회를 주는 것임.
-6.  관련 국내 기업들은 엔비디아와의 협력을 통해 기술력과 시장 지배력을 강화할 수 있는 것임.
+2026년 6월, 엔비디아 젠슨 황 CEO가 한국을 방문함. 그는 피지컬 AI 및 소버린 AI의 중요성을 강조하며 관련 기업들을 칭찬함. 두산로보틱스와 네이버가 젠슨 황의 방문 및 협력 논의 대상에 포함됨.
 
 **투자판단:** Buy 강 — 엔비디아의 명확한 전략 방향과 직접적인 협력 언급으로 성장 기대가 높은 것임.
 
----
-
 ### 인사이트 2: 비만 치료제 시장의 고성장
 
-1.  2025년 12월, 일라이 릴리의 삼중 작용제 비만 신약 '레타트루타이드'의 임상 3상 첫 번째 결과가 긍정적으로 발표됨.
-2.  이 신약은 '고질라급' 잠재력을 가진 것으로 평가됨.
-
-**해석(나비효과):**
-3.  일라이 릴리는 비만 치료제 시장에서 강력한 경쟁 우위를 확보하게 되는 것임.
-4.  이는 비만 치료제 시장의 폭발적인 성장을 가속화하며, 관련 제약사들의 경쟁 구도를 재편하는 것임.
-5.  혁신적인 신약 개발 역량을 가진 제약사는 장기적인 성장 동력을 확보하게 되는 것임.
+2025년 12월, 일라이 릴리의 삼중 작용제 비만 신약 '레타트루타이드'의 임상 3상 첫 번째 결과가 긍정적으로 발표됨. 이 신약은 '고질라급' 잠재력을 가진 것으로 평가됨.
 
 **투자판단:** Buy 강 — 압도적인 신약 효과로 시장 지배력 강화 및 매출 성장이 기대되는 것임.
 
----
-
 ### 인사이트 3: 국내 증시의 유동성 위축 및 금리 인상 압박
 
-1.  서울을 제외한 주요 선거가 종료되어 단기적인 정책 기대감이 사라짐.
-2.  한국은행이 7월 금리 인상 가능성을 시사하며 통화 정책 전환 가능성이 제기됨.
-3.  국민연금의 국내 주식 투자 한도 상향은 매도를 막는 수준이며, 추가 매수 여력은 제한적임.
-
-**해석(나비효과):**
-4.  국내 증시는 단기적인 호재 부재와 함께 금리 인상이라는 악재에 직면하게 되는 것임.
-5.  이는 시장 전반의 유동성을 위축시키고 투자 심리를 냉각시키는 요인으로 작용하는 것임.
-6.  투자자들은 국내 주식 시장 전반에 대해 보수적인 접근이 필요한 시점인 것임.
+서울을 제외한 주요 선거가 종료되어 단기적인 정책 기대감이 사라짐. 한국은행이 7월 금리 인상 가능성을 시사하며 통화 정책 전환 가능성이 제기됨. 국민연금의 국내 주식 투자 한도 상향은 매도를 막는 수준이며, 추가 매수 여력은 제한적임.
 
 **투자판단:** Watch/Avoid — 국내 거시 환경의 불확실성 증대로 시장 전반의 매력도가 하락한 것임.
 
----
-
 ### 인사이트 4: HBM 시장의 경쟁 심화와 잠재적 리스크
 
-1.  2026년 2월 12일, 삼성전자가 HBM4(6세대 고대역폭메모리)의 세계 최초 양산 출하를 공식 발표함.
-
-**해석(나비효과):**
-2.  삼성전자의 HBM 기술 리더십이 강화되며, 고부가가치 메모리 시장에서의 경쟁이 더욱 치열해지는 것임.
-3.  이는 HBM 시장의 기술 발전 속도를 가속화하지만, 동시에 후발 주자들의 추격과 가격 경쟁 심화 가능성을 내포하는 것임.
-4.  블로그 제목에서 "삼성전자와 SK하이닉스를 조심해야 하는 이유"를 언급하며, 기술 리더십 이면에 숨겨진 잠재적 리스크를 경고하는 것임.
+2026년 2월 12일, 삼성전자가 HBM4(6세대 고대역폭메모리)의 세계 최초 양산 출하를 공식 발표함.
 
 **투자판단:** Watch — HBM 기술 발전은 긍정적이나, 시장 경쟁 심화와 잠재적 리스크에 대한 주의가 필요한 것임.
 
----
+## 포트폴리오 추천
 
-## 📊 포트폴리오 추천
+### 국내주식 추천
+| 종목 | 코드 | 판단 | 목표비중 | 근거 | 수익률 |
+| --- | --- | --- | --- | --- | --- |
+| LS | 006220 | 미분류 · 보유 | 3% | 기존 상태 마이그레이션: 최초 재평가 전까지 보존 | -2.6% |
+| 대한전선 | 001440 | 미분류 · 보유 | 3% | 기존 상태 마이그레이션: 최초 재평가 전까지 보존 | 집계 전 |
+| 삼성중공업 | 010140 | 미분류 · 보유 | 8% | 기존 상태 마이그레이션: 최초 재평가 전까지 보존 | +0.0% |
+| LG이노텍 | 011070 | 미분류 · 보유 | 8% | 기존 상태 마이그레이션: 최초 재평가 전까지 보존 | +3.4% |
+| 두산로보틱스 | 454910 | 미분류 · 보유 | 10% | 기존 상태 마이그레이션: 최초 재평가 전까지 보존 | +14.1% |
+| 현대차 | 005380 | 미분류 · 보유 | 10% | 기존 상태 마이그레이션: 최초 재평가 전까지 보존 | -6.7% |
+| 네이버 | 035420 | 미분류 · 보유 | 10% | 기존 상태 마이그레이션: 최초 재평가 전까지 보존 | -4.6% |
 
-> ※ 이 추천은 메르 블로그의 거시 분석을 기반으로 한 참고 의견이며,
-> 투자 결정은 본인 판단 하에 이루어져야 합니다.
+### 해외주식 추천
+| 종목 | 코드 | 판단 | 목표비중 | 근거 | 수익률 |
+| --- | --- | --- | --- | --- | --- |
+| Google (Alphabet) | GOOGL | 미분류 · 보유 | 10% | 기존 상태 마이그레이션: 최초 재평가 전까지 보존 | -2.0% |
+| Microsoft | MSFT | 미분류 · 보유 | 3% | 기존 상태 마이그레이션: 최초 재평가 전까지 보존 | +2.4% |
+| Alcoa | AA | 미분류 · 보유 | 8% | 기존 상태 마이그레이션: 최초 재평가 전까지 보존 | +8.2% |
+| Recursion Pharmaceuticals | RXRX | 미분류 · 보유 | 3% | 기존 상태 마이그레이션: 최초 재평가 전까지 보존 | +20.9% |
+| Northrop Grumman | NOC | 미분류 · 보유 | 5% | 기존 상태 마이그레이션: 최초 재평가 전까지 보존 | -0.8% |
+| Wabtec | WAB | 미분류 · 보유 | 3% | 기존 상태 마이그레이션: 최초 재평가 전까지 보존 | +2.6% |
+| 일라이 릴리 | LLY | 미분류 · 보유 | 5% | 기존 상태 마이그레이션: 최초 재평가 전까지 보존 | +4.7% |
 
-### 🇰🇷 국내주식 (한국)
+## Watchlist
+표시할 항목이 없습니다.
 
-| 종목명 | 코드 | 판단 | 목표비중 | 근거유형 | 핵심 근거 |
-|--------|------|------|----------|----------|-----------|
-| LS | 006220 | 보유 | 3% | 기존보유 | 전력 인프라 투자 확대 수혜 기대 유효함. |
-| 대한전선 | 011440 | 보유 | 3% | 기존보유 | 전력 인프라 투자 확대 수혜 기대 유효함. |
-| 삼성중공업 | 010140 | 보유 | 8% | 기존보유 | VLCC 수요 급증으로 조선업 호황 지속 근거 유효함. |
-| LG이노텍 | 011070 | 보유 | 8% | 기존보유 | Figure AI 투자 및 휴머노이드 로봇 부품 공급 기대 강화됨. |
-| 두산로보틱스 | 454910 | 매수 | 10% | 기존보유 | 젠슨 황 방문 및 엔비디아와 피지컬 AI 협력 논의 강화됨. |
-| 현대차 | 005380 | 매수 | 10% | 기존보유 | 보스턴 다이내믹스 로봇 생산 및 구글 제미나이 로보틱스 결합 계획 강화됨. |
-| 네이버 | 035420 | 매수 | 10% | 직접언급 | 젠슨 황 파트너 언급 및 소버린 AI 테마 핵심 수혜주임. |
+## 종료 포지션
+| 종목 | 코드 | 종료일 | 종료 사유 |
+| --- | --- | --- | --- |
+| HMM | 011200 | 2026-05-12 | 초기 생성 시 매도 시그널 감지 |
+| NVIDIA | NVDA | 2026-05-30 | 매도 시그널 감지 (Avoid 판단 또는 주의종목 섹션) |
+| Comfort Systems USA | FIX | 2026-05-30 | 매도 시그널 감지 (Avoid 판단 또는 주의종목 섹션) |
+| GOP ETF | GOP | 2026-05-28 | 리밸런싱 결과 최신 검증 리포트에서 제외 |
+| 삼성전자 | 005930 | 2026-05-31 | 현재 포트폴리오에서 제외 |
+| HD현대중공업 | 329180 | 2026-05-31 | 현재 포트폴리오에서 제외 |
+| ExxonMobil | XOM | 2026-05-31 | 현재 포트폴리오에서 제외 |
 
-**국내 주의종목 (리스크):**
-- 삼성전자 (005930): HBM4 양산은 긍정적이나, 블로그 제목에서 "조심해야 하는 이유"를 언급하며 잠재적 리스크를 시사함.
-- SK하이닉스 (000660): 삼성전자와 함께 HBM 시장 경쟁 심화 및 잠재적 리스크 가능성.
-- 국내 주식 시장 전반: 선거 호재 소멸, 한은 금리 인상 시사, 국민연금 매수세 제한으로 유동성 위축 우려.
+## 한 줄 코멘트
 
----
-
-### 🇺🇸 해외주식 (미국)
-
-| 종목명 | 티커 | 판단 | 목표비중 | 근거유형 | 핵심 근거 |
-|--------|------|------|----------|----------|-----------|
-| Google (Alphabet) | GOOGL | Buy | 10% | 기존보유 | AI 로보틱스(제미나이)를 통한 피지컬 AI 시장 진출 강화됨. |
-| Microsoft | MSFT | Hold | 3% | 기존보유 | AI 서비스 수익성 우려 재확인됨. |
-| Alcoa | AA | Hold | 8% | 기존보유 | 보크사이트/알루미늄 공급망 불안정 심화 수혜 기대 유효함. |
-| Recursion Pharmaceuticals | RXRX | Hold | 3% | 기존보유 | 디지털 생물학 테마 강화, 엔비디아 협력 언급 유효함. |
-| Northrop Grumman | NOC | Hold | 5% | 기존보유 | DARPA 달 철도 계획 직접 언급, 우주 인프라 수혜 구체화 유효함. |
-| Wabtec | WAB | Hold | 3% | 기존보유 | 기니 시만두 광산 기관차 계약 수주로 직접 매출 증가 기대 유효함. |
-| 일라이 릴리 | LLY | Buy | 5% | 직접언급 | 고질라급 비만 신약 '레타트루타이드' 임상 3상 긍정적 결과로 성장 기대 강화됨. |
-
-**미국 주의종목 (리스크):**
-- 없음
-
----
-
-### 📦 ETF / 대안자산
-
-| 이름 | 코드/티커 | 판단 | 목표비중 | 용도 |
-|------|----------|------|----------|------|
-| 없음 | | | | |
-
----
-
-## ✅ 추천 검증 결과
-
-- 검증 기준: 신규 종목은 블로그 직접 언급 또는 기존 보유 종목일 때만 유지했습니다.
-- 긍정 섹터만으로 생성된 신규 Buy 종목은 허용하지 않았습니다.
-- API 재호출: 없음. 코드 후처리로만 검증했습니다.
-- 제외 종목: 없음
-
----
-
-## 🔍 섹터별 온도계
-
-| 섹터 | 온도 | 변화 | 근거 요약 |
-|------|------|------|-----------|
-| AI/로봇 | 🔥🔥🔥 | ▲ | 젠슨 황의 피지컬 AI 강조 및 관련 기업 언급. |
-| 비만약/제약 | 🔥🔥🔥 | ▲ | 일라이 릴리 신약 '레타트루타이드' 임상 3상 긍정적 결과. |
-| 조선/해운 | 🔥 | - | VLCC 수요 호황 지속 근거 유효. |
-| 전력 인프라 | 🔥 | - | 전력 인프라 투자 확대 수혜 기대 유효. |
-| 반도체 (HBM) | 🔥 | - | 삼성전자 HBM4 양산 소식은 긍정적이나, 블로그 제목에서 주의를 시사함. |
-| 국내 증시 (전반) | 🌡 | ▼ | 선거 호재 소멸, 한은 금리 인상 시사, 국민연금 매수세 제한. |
-
-(온도: 🧊=매우 부정적, 🌡=중립, 🔥=긍정적, 🔥🔥🔥=매우 긍정적)
-
----
-
-## 💬 한 줄 코멘트
-
-> 거시 환경의 불확실성이 커지는 가운데, AI와 비만약 등 명확한 성장 동력을 가진 섹터에 집중하는 것이 현명한 것임.
-
----
-
-## ⚠️ 전회 대비 주요 변경사항
-
-- 국내 주식 시장 전반에 대한 보수적 관점 강화됨.
-- AI/로봇 및 비만약 섹터의 성장 동력 재확인 및 투자 근거 강화됨.
-
----
-
-## 📈 모델 포트폴리오 성과
-*기준일: 2026-06-04 | 미국 주식은 원화 환산 기준*
-
-| 종목 | 편입일 | 진입가 | 현재가 | 목표비중 | 수익률(KRW) | 판단 |
-|------|--------|--------|--------|----------|-------------|------|
-| LG이노텍 | 2026-05-28 | ₩1,134,000 | ₩1,173,000 | 8% | 🟡 ▲3.4% | 보유 |
-| LS | 2026-05-28 | ₩10,270 | ₩10,000 | 3% | 🟡 ▼2.6% | 보유 |
-| 네이버 | 2026-06-02 | ₩280,500 | ₩267,500 | 10% | 🟡 ▼4.6% | 매수 |
-| 두산로보틱스 | 2026-06-01 | ₩138,400 | ₩157,900 | 10% | 🟢 ▲14.1% | 매수 |
-| 삼성중공업 | 2026-05-28 | ₩28,400 | ₩28,400 | 8% | 🟡 ▲0.0% | 보유 |
-| 현대차 | 2026-06-01 | ₩750,000 | ₩700,000 | 10% | 🔴 ▼6.7% | 매수 |
-| Alcoa | 2026-05-28 | $76 | $80 | 8% | 🟢 ▲8.2% | Hold |
-| Google (Alphabet) | 2026-05-28 | $390 | $373 | 10% | 🟡 ▼2.0% | Buy |
-| Microsoft | 2026-05-28 | $428 | $427 | 3% | 🟡 ▲2.4% | Hold |
-| Northrop Grumman | 2026-05-28 | $558 | $539 | 5% | 🟡 ▼0.8% | Hold |
-| Recursion Pharmaceuticals | 2026-05-28 | $3 | $4 | 3% | 🟢 ▲20.9% | Hold |
-| Wabtec | 2026-05-28 | $261 | $262 | 3% | 🟡 ▲2.6% | Hold |
-| 일라이 릴리 | 2026-06-03 | $1,090 | $1,135 | 5% | 🟡 ▲4.7% | Buy |
-| **현재 포트폴리오 수익률** | — | — | — | — | **▲1.9%** | — |
-
-> 현재 포트폴리오 표의 active 종목만 반영한 목표비중 가중 수익률입니다.
-> 같은 종목의 반복 추천은 하나의 포지션으로 병합하며, 종료 포지션은 아래 섹션에 별도로 보존합니다.
-
-### 최근 종료 포지션
-
-| 종목 | 편입일 | 종료일 | 종료 사유 |
-|------|--------|--------|-----------|
-| 대한전선 | 2026-05-28 | 2026-06-03 | 현재 포트폴리오에서 제외 |
-| 삼성전자 | 2026-05-26 | 2026-05-31 | 현재 포트폴리오에서 제외 |
-| HD현대중공업 | 2026-05-26 | 2026-05-31 | 현재 포트폴리오에서 제외 |
-| Nvidia | 2026-05-26 | 2026-05-31 | 현재 포트폴리오에서 제외 |
-| ExxonMobil | 2026-05-26 | 2026-05-31 | 현재 포트폴리오에서 제외 |
-| Comfort Systems USA | 2026-05-28 | 2026-05-31 | 현재 포트폴리오에서 제외 |`;
+> 이 보고서는 현재 모델 포트폴리오 상태를 기준으로 작성되며, 분석 보류 항목은 다음 실행에서 다시 확인합니다.
+`;
 
 document.getElementById('updated').textContent=updated;
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const actorLabel=r=>r.decision_actor==='메르'?'메르 직접 발언':r.decision_actor==='AI'?'AI 제안':'미분류';
 const actor=r=>`<span class="pill ${r.decision_actor==='메르'?'actor-mer':r.decision_actor==='AI'?'actor-ai':'actor-unknown'}">${actorLabel(r)} · ${esc(r.action||'')}</span>`;
 const evidence=r=>(r.evidence_posts||[]).map(p=>`<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a> · ${esc(p.published_date)}`).join('<br>')||'근거 글 없음';
-const returns=r=>{const v=r.return_pct_krw??r.return_pct;if(v===undefined||v===null)return '-';return `${Number(v)>=0?'▲':'▼'}${Math.abs(Number(v)).toFixed(1)}%`};
+const returns=r=>{if(r.return_label)return esc(r.return_label);const v=r.return_pct_krw??r.return_pct;if(v===undefined||v===null)return '집계 전';return `${Number(v)>=0?'▲':'▼'}${Math.abs(Number(v)).toFixed(1)}%`};
 const buttons=id=>`<div class="toolbar"><button onclick="toggleAll('${id}',true)">모두 펼치기</button><button onclick="toggleAll('${id}',false)">모두 접기</button></div>`;
 function toggle(id){document.getElementById(id).classList.toggle('open')}
 function toggleAll(id,open){document.querySelectorAll(`#${id} .detail`).forEach(el=>el.classList.toggle('open',open))}
@@ -231,6 +126,7 @@ function table(id,rows,kind){
 }
 document.getElementById('summary').innerHTML=`현재 ${portfolio.length}종목 · Watchlist ${watchlist.length}건 · 이번 변경 ${changes.length}건 · 종료 ${closed.length}건${statusNote?`<br><strong>분석 보류:</strong> ${esc(statusNote)}`:''}`;
 document.getElementById('insights').innerHTML=insights.length?insights.map((r,i)=>`<article><h3>${i+1}. ${esc(r.title)}</h3><p>${esc(r.summary)}</p><p><strong>투자 시사점:</strong> ${esc(r.investment_implication)}</p><p class="muted">${evidence(r)}</p></article>`).join(''):'<div class="empty">표시할 인사이트가 없습니다.</div>';
+document.getElementById('recommendations').innerHTML=`<h3>국내주식 추천</h3>${table('domestic-table',domestic,'portfolio')}<h3>해외주식 추천</h3>${table('overseas-table',overseas,'portfolio')}`;
 document.getElementById('portfolio').innerHTML=table('portfolio-table',portfolio,'portfolio');
 document.getElementById('changes').innerHTML=table('changes-table',changes,'changes');
 document.getElementById('watchlist').innerHTML=table('watchlist-table',watchlist,'watchlist');

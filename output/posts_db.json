@@ -1,5 +1,17 @@
 [
   {
+    "title": "삼성전자와 SK하이닉스를 흔든 엔비디아 SOCAMM 이슈가 뭘까?",
+    "date": "2026-06-07",
+    "url": "https://blog.naver.com/ranto28/224307440861?fromRss=true&trackingCode=rss",
+    "content": "'브로드컴 쇼크'에 반도체 패닉셀…증권가 \"저가매수 기회\" [분석+]\n'브로드컴 쇼크'에 반도체 패닉셀…증권가 \"저가매수 기회\" [분석+]\n미국 맞춤형 인공지능(AI) 칩 설계회사 브로드컴이 시장 기대에 못 미치는 실적 전망을 내놓으면서 국내 반도체주 투자심리가 경색, 투매가 확산했다. 삼성전자와 SK하이닉스가 나란히 급락한 데 이어 반도체 장비·소부장\nn.news.naver.com\n\n반도체 기업들 주가하락이 브로드컴 쇼크라는데, 다른 이유가 하나 더 있을 수 있어서 정리해 봅니다.\n\n보통 '\n메모리\n'라고 부르는 D램(DRAM)은 어디에 어떻게 쓰이느냐에 따라서 설계가 달라짐.\n\n© MeshCube, 출처 OGQ\n\n2. D램중 LPDDR은 스마트폰이나 노트북과 같이 배터리로 돌아가는 기기에 주로 사용됨.\n\n3. LPDDR중 DDR\n(Double Data Rate)은 데이터를 양쪽에서 전송한다는 일반D램의 기본동작 방식이고, LP가 중요함.\n\n4. LP(Low Power)는 저전력의 의미로, LPDDR은 전력을 최대한 아끼도록 설계되니, 배터리가 작은 스마트폰에 주로 사용되고 있음.\n\n5. AI데이터센터의 가장 큰 약점이 전력과 냉각임.\n\n6.  GPU 수만장이 빨아들이는 전기와 그걸 식히는 비용이 어마어마하니, 전기를 적게 먹는 LPDDR이 갑자기 각광을 받게 된 것임.\n\n7. LPDDR이 메모리 칩의 종류라면, SOCAMM은 LPDDR 칩들을 모아놓은 모듈의 이름임.\n\n8. SOCAMM은 Small Outline Compression Attached Memory Module임.\n\n9. Small Outline은 기존의 일반적인 모듈보다 가로·세로를 줄이고 높이를 납작하게 만들어서, 좁은 공간에도 쏙 들어가게 만든 규격임.\n\n10.  Compression Attached가 중요함.\n\n11. Compression Attached는 납땜이 아니라 압착식 소켓으로 꽂는 방식을 말함.\n\n12. 스마트폰은 LPDDR이 교체가 불가능한 납땜으로 들어가는데, SOCAMM은  꽂았다 뺐다가 가능한 모듈이라는 말임.\n\n13. 2026년 6월 5일, Dylan Patel의 리서치 회사인 세미애널리시스가 모닝 브리프에서 보도한 내용이 시장의 주목을 받았음.\n\n14. 엔비디아의 차세대 AI 서버 랙인 Vera Rubin NVL72의 메모리 구성이 크게 바뀐다고 보도한 것임.\n\n15. Rubin 랙의 메모리 용량을 55TB에서 28TB로 절반가깝게 줄이고, 192GB대신 96GB SOCAMM 모듈을 채택한다는 내용이었음.\n\n16. Vera Rubin NVL72 랙 한 대는 Rubin GPU 72개와 Vera CPU 36개로 구성되어 있음.\n\n17. HBM4가 들어가는 Rubin GPU는 동일한데, CPU쪽에 변동이 있었음.\n\n18. Vera CPU에는 SOCAMM 슬롯 8개가 있음.\n\n19. CES 2026에서 엔비디아는 192GB의 LPDDR 8개를 넣어서, CPU당 1.5TB가 나오게 된다고 발표함.\n\n20. 1.5TB짜리 CPU 36개가 모이면, 54~55TB가 나온다는 발표였음.\n\n21. 바뀐 부분은 LPDDR을 192GB가 아니라 96GB를 넣는 것임.\n\n22. 96GB의 LPDDR 8개를 넣으면 CPU당 768GB가 나오고, 768GB짜리 CPU 36개가 모이면 28TB가 되는 것임.\n\n23. 쉽게 말하면 엔비디아의 차세대 AI 서버 랙인 Vera Rubin NVL72의 LPDDR이 최초 계획보다 절반만 필요해 진다는 말임.\n\n24. 메모리를 만드는 마이크론, SK하이닉스,삼성전자의 주가가 영향을 받은 이유였음.\n\n25. 주의해서 볼 부분은 가격임.\n\n26. LPDDR을 절반 가깝게 줄였는데, Vera Rubin NVL72의 가격은 760만달러에서 680만달러로 내려간다는 추정이 나옴.\n\n27. 전체 원가가 10%정도 낮아진다는 말로, LPDDR이 가격에서 차지하는 비중이 그렇게 높지않다는 말임.\n\n28. 메모리 3사 이익의 메인은 HBM4임.\n\n© MeshCube, 출처 OGQ\n\n29. HBM4는 계획대로 그대로 들어가고, LPDDR만 절반정도 줄어들게 됨.\n\n30. 상대적으로 가격이 저렴한 LPDDR의 매출이 줄어드는 것이라, 실제 매출손실은 크지않은 상황임.\n\n31. 기본사양이 96GB로 내려가는 의미도 짚어볼 필요가 있음.\n\n32. 더 많은 CPU 메모리를 원하는 하이퍼스케일러등은 기본사양이 아니라 프리미엄 옵션인 192GB를 요구할 수 있음.\n\n33. 엔비디아가 메모리를 줄인 이유도 중요함.\n\n34. 수요가 줄어들어서 메모리를 줄인게 아니라, LPDDR을 충분히 구하지 못해서 줄인 것이라고 보고서는 말하고 있음.\n\n35. 실제 영향이 아주 크지 않는데 시장이 반응한 것은 LPDDR의 기대에 금이 간 것 때문으로 보임.\n\n36. LPDDR은 거의 스마트폰용이었는데, 스마트폰 시장은 성숙해서 크게 성장하는데 한계가 있는 상황이었음.\n\n© CoolPubilcDomains, 출처 OGQ\n\n37. 시장이 성숙된 상황에서 엔비디아가 LPDDR 기반인 SOCAMM을 AI서버에 채택하였던 것임 .\n\n38. LPDDR의 주 고객이 스마트폰이었는데, AI데이터센터가 추가된다는 것은 성숙 시장이 성장시장으로 바뀐다는 것임.\n\n39. 성숙시장이 성장시장으로 바뀐다는 가정은 틀린 것은 아고, 연초 발표보다는 적은 LPDDR이 엔비디아에 들어가는 정도임.\n\n한줄 코멘트. 주가가 많이 오른 상황이라, 실질보다 과하게 반응한 것 같음. 큰 성장을 기대하던 LPDDR 매출에 일부 차질이 생긴것은 사실임. 식당의 대표 메뉴(HBM4) 주문량은 그대로인데, 대박날 것으로 기대했던 신메뉴(LPDDR) 예상 판매량이 줄어든 정도로 보임.\n그래도 월요일 오전에는 이를 꽉 물어야 할 듯.",
+    "summary": "'브로드컴 쇼크'로 국내 반도체주(삼성전자, SK하이닉스) 투매가 확산된 가운데, 엔비디아의 차세대 AI 서버 랙 'Vera Rubin NVL72'의 메모리 구성 변경이 또 다른 주가 하락 원인으로 지목되었습니다. 2026년 6월 5일 세미애널리시스 보도에 따르면, 엔비디아는 Rubin 랙의 LPDDR 메모리 용량을 기존 55TB에서 28TB로 절반 가까이 줄이고, 192GB 대신 96GB SOCAMM 모듈을 채택할 예정입니다. 이는 Rubin GPU에 사용되는 HBM4가 아닌, Vera CPU에 들어가는 LPDDR의 용량이 줄어드는 것입니다. 이 소식은 마이크론, SK하이닉스, 삼성전자 등 메모리 3사의 주가에 영향을 미쳤습니다. 그러나 Rubin NVL72 랙의 추정 가격이 760만 달러에서 680만 달러로 하락하는 것으로 보아, LPDDR이 전체 원가에서 차지하는 비중이 크지 않으며, 메모리 3사의 주력 이익원인 HBM4는 계획대로 유지됩니다. LPDDR 매출 감소는 상대적으로 저렴한 제품군에 해당하여 실제 매출 손실은 크지 않을 것으로 분석됩니다. 엔비디아가 LPDDR을 줄인 이유는 수요 감소가 아닌 공급 부족 때문으로 보고서는 지적합니다. 시장은 LPDDR이 스마트폰 시장의 한계를 넘어 AI 데이터센터라는 성장 시장으로 확장될 것이라는 기대에 금이 간 것에 과하게 반응한 것으로 보이며, 저자는 실질보다 과하게 반응했으나 월요일 오전에는 주의가 필요하다고 언급했습니다.",
+    "investment_relevant": true,
+    "relevance_reason": "이 글은 브로드컴 실적 전망과 엔비디아의 차세대 AI 서버 랙 메모리 구성 변경이 삼성전자, SK하이닉스, 마이크론 등 주요 반도체 기업의 주가에 미치는 영향을 분석합니다. LPDDR, HBM4, SOCAMM 등 특정 반도체 기술의 시장 동향, 공급망, 수요 변화 및 기업 실적과의 연관성을 다루므로 투자 판단에 직접적인 영향을 줄 수 있는 산업 및 기업 분석에 해당합니다.",
+    "summary_version": 2,
+    "summary_status": "ok",
+    "summary_error": ""
+  },
+  {
     "title": "구글 초대형 유상증자의 속사정(feat OpenAI,스페이스X,엔트로픽)",
     "date": "2026-06-06",
     "url": "https://blog.naver.com/ranto28/224308296478?fromRss=true&trackingCode=rss",
@@ -189,8 +201,8 @@
     "relevance_reason": "글별 Flash 요약 실패로 투자 분석 보류",
     "summary_version": null,
     "summary_status": "deferred",
-    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 58.25519067s.', 'status': 'RESOUR",
-    "summary_failed_at": "2026-06-07T10:57:01"
+    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 11.958724696s.', 'status': 'RESOU",
+    "summary_failed_at": "2026-06-07T16:19:48"
   },
   {
     "title": "삼성전자와 SK하이닉스의 고민이 있다면?",
@@ -214,8 +226,8 @@
     "relevance_reason": "글별 Flash 요약 실패로 투자 분석 보류",
     "summary_version": null,
     "summary_status": "deferred",
-    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 50.124767332s.', 'status': 'RESOU",
-    "summary_failed_at": "2026-06-07T10:57:09"
+    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 3.790490231s.', 'status': 'RESOUR",
+    "summary_failed_at": "2026-06-07T16:19:56"
   },
   {
     "title": "화웨이가 1.4나노 반도체를 만든다고?",
@@ -227,8 +239,8 @@
     "relevance_reason": "글별 Flash 요약 실패로 투자 분석 보류",
     "summary_version": null,
     "summary_status": "deferred",
-    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 41.981385345s.', 'status': 'RESOU",
-    "summary_failed_at": "2026-06-07T10:57:18"
+    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 55.620554898s.', 'status': 'RESOU",
+    "summary_failed_at": "2026-06-07T16:20:04"
   },
   {
     "title": "주말에 가볼만한 서울 노포식당들",
@@ -240,8 +252,8 @@
     "relevance_reason": "글별 Flash 요약 실패로 투자 분석 보류",
     "summary_version": null,
     "summary_status": "deferred",
-    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 33.850122005s.', 'status': 'RESOU",
-    "summary_failed_at": "2026-06-07T10:57:26"
+    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 47.456762091s.', 'status': 'RESOU",
+    "summary_failed_at": "2026-06-07T16:20:12"
   },
   {
     "title": "토요일 여의도 걷기 좋은 곳",
@@ -253,8 +265,8 @@
     "relevance_reason": "글별 Flash 요약 실패로 투자 분석 보류",
     "summary_version": null,
     "summary_status": "deferred",
-    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 25.731433328s.', 'status': 'RESOU",
-    "summary_failed_at": "2026-06-07T10:57:34"
+    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 39.30328339s.', 'status': 'RESOUR",
+    "summary_failed_at": "2026-06-07T16:20:20"
   },
   {
     "title": "나사의 달기지(Moon Base)계획에 숨겨진 Lunar Economy",
@@ -266,8 +278,8 @@
     "relevance_reason": "글별 Flash 요약 실패로 투자 분석 보류",
     "summary_version": null,
     "summary_status": "deferred",
-    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 17.60156095s.', 'status': 'RESOUR",
-    "summary_failed_at": "2026-06-07T10:57:42"
+    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 31.138126244s.', 'status': 'RESOU",
+    "summary_failed_at": "2026-06-07T16:20:28"
   },
   {
     "title": "국민연금 비중조정 결과",
@@ -279,8 +291,8 @@
     "relevance_reason": "글별 Flash 요약 실패로 투자 분석 보류",
     "summary_version": null,
     "summary_status": "deferred",
-    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 9.483860774s.', 'status': 'RESOUR",
-    "summary_failed_at": "2026-06-07T10:57:50"
+    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 22.989154678s.', 'status': 'RESOU",
+    "summary_failed_at": "2026-06-07T16:20:37"
   },
   {
     "title": "엔비디아 젠슨 황이 꼽는 AI의 다음 격전지 디지털 생물학 A/S",
@@ -292,8 +304,8 @@
     "relevance_reason": "글별 Flash 요약 실패로 투자 분석 보류",
     "summary_version": null,
     "summary_status": "deferred",
-    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 1.364630468s.', 'status': 'RESOUR",
-    "summary_failed_at": "2026-06-07T10:57:58"
+    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 14.818029613s.', 'status': 'RESOU",
+    "summary_failed_at": "2026-06-07T16:20:45"
   },
   {
     "title": "기니 중국을 건드리나? 2 (feat 보크사이트, 알루미늄)",
@@ -305,8 +317,8 @@
     "relevance_reason": "글별 Flash 요약 실패로 투자 분석 보류",
     "summary_version": null,
     "summary_status": "deferred",
-    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 53.241832773s.', 'status': 'RESOU",
-    "summary_failed_at": "2026-06-07T10:58:06"
+    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 6.662445645s.', 'status': 'RESOUR",
+    "summary_failed_at": "2026-06-07T16:20:53"
   },
   {
     "title": "기니, 보크사이트 수출제한으로 중국을 건드리나? 1",
@@ -318,8 +330,8 @@
     "relevance_reason": "글별 Flash 요약 실패로 투자 분석 보류",
     "summary_version": null,
     "summary_status": "deferred",
-    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 45.112291532s.', 'status': 'RESOU",
-    "summary_failed_at": "2026-06-07T10:58:14"
+    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 58.498665145s.', 'status': 'RESOU",
+    "summary_failed_at": "2026-06-07T16:21:01"
   },
   {
     "title": "엔비디아 젠슨 황이 꼽는 AI의 다음 격전지(feat 디지털생물학)",
@@ -331,8 +343,8 @@
     "relevance_reason": "글별 Flash 요약 실패로 투자 분석 보류",
     "summary_version": null,
     "summary_status": "deferred",
-    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 36.974975987s.', 'status': 'RESOU",
-    "summary_failed_at": "2026-06-07T10:58:23"
+    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 50.341197871s.', 'status': 'RESOU",
+    "summary_failed_at": "2026-06-07T16:21:09"
   },
   {
     "title": "DNA 데이터 저장장치가 삼성전자와 SK하이닉스를 위협할까?",
@@ -344,8 +356,8 @@
     "relevance_reason": "글별 Flash 요약 실패로 투자 분석 보류",
     "summary_version": null,
     "summary_status": "deferred",
-    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 28.827224615s.', 'status': 'RESOU",
-    "summary_failed_at": "2026-06-07T10:58:31"
+    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 42.1739216s.', 'status': 'RESOURC",
+    "summary_failed_at": "2026-06-07T16:21:17"
   },
   {
     "title": "그 기업 댓글 다시읽기",
@@ -357,8 +369,8 @@
     "relevance_reason": "글별 Flash 요약 실패로 투자 분석 보류",
     "summary_version": null,
     "summary_status": "deferred",
-    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 20.704735953s.', 'status': 'RESOU",
-    "summary_failed_at": "2026-06-07T10:58:39"
+    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 34.007367849s.', 'status': 'RESOU",
+    "summary_failed_at": "2026-06-07T16:21:26"
   },
   {
     "title": "한국의 원유 상황이 어떻게 바뀌고 있나? 숨은 이슈는?",
@@ -370,8 +382,8 @@
     "relevance_reason": "글별 Flash 요약 실패로 투자 분석 보류",
     "summary_version": null,
     "summary_status": "deferred",
-    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 12.577190049s.', 'status': 'RESOU",
-    "summary_failed_at": "2026-06-07T10:58:47"
+    "summary_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 25.855171126s.', 'status': 'RESOU",
+    "summary_failed_at": "2026-06-07T16:21:34"
   },
   {
     "title": "여름이 다가오면 알아둬야 할 이야기 (feat 오줌과 수박)",
