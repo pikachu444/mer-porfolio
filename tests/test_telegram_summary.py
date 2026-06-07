@@ -11,7 +11,8 @@ class TelegramSummaryTest(unittest.TestCase):
         self.assertIn("메르 블로거의 실제 보유 내역이 아닙니다", summary)
         self.assertIn("알루미늄 공급 제한", summary)
         self.assertIn("*해외주식 추천*", summary)
-        self.assertIn("Alcoa (AA) — AI 제안 · 매수 — 8%", summary)
+        self.assertIn("Alcoa (AA) — Buy (8%)", summary)
+        self.assertNotIn("AI 제안 · 매수", summary)
         self.assertIn("우주 데이터센터", summary)
 
     def test_no_change_summary_is_short_performance_message(self):
@@ -29,7 +30,8 @@ class TelegramSummaryTest(unittest.TestCase):
         self.assertIn("모델 포트폴리오 수익률: +3.2%", summary)
         self.assertIn("포트폴리오 변경 없음", summary)
         self.assertIn("*해외주식 추천*", summary)
-        self.assertIn("Alcoa (AA) — AI 제안 · 매수 — 8%", summary)
+        self.assertIn("Alcoa (AA) — Buy (8%)", summary)
+        self.assertNotIn("수익률", summary.split("*해외주식 추천*", 1)[1])
 
     def test_no_change_summary_can_explain_deferred_analysis(self):
         state = state_payload()

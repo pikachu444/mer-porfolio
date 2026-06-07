@@ -55,6 +55,41 @@ class PortfolioOutputTest(unittest.TestCase):
         self.assertIn("| Alcoa | AA | AI 제안 · 매수 | 8%", report)
         self.assertIn("수익률 집계 전 종목: AA, 001440", report)
 
+    def test_current_portfolio_item_is_not_shown_as_closed_position(self):
+        state = state_payload()
+        state["portfolio"].append(
+            decision(
+                name="대한전선",
+                code="001440",
+                market="KR",
+                proposed_weight=3.0,
+            )
+        )
+        performance = {
+            "closed_positions": [
+                {
+                    "name": "대한전선",
+                    "code": "001440",
+                    "market": "KR",
+                    "closed_date": "2026-06-03",
+                    "close_reason": "현재 포트폴리오에서 제외",
+                },
+                {
+                    "name": "NVIDIA",
+                    "code": "NVDA",
+                    "market": "US",
+                    "closed_date": "2026-05-31",
+                    "close_reason": "현재 포트폴리오에서 제외",
+                },
+            ],
+        }
+
+        output = build_output_model(state, performance, today_str="2026-06-07")
+
+        closed_codes = {item.get("code") for item in output["closed_positions"]}
+        self.assertNotIn("001440", closed_codes)
+        self.assertIn("NVDA", closed_codes)
+
 
 if __name__ == "__main__":
     unittest.main()

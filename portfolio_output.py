@@ -66,6 +66,29 @@ def _performance_by_code(performance: dict | None) -> dict[str, dict]:
     return result
 
 
+def _item_code_set(items: list[dict]) -> set[str]:
+    return {_code(item.get("code")) for item in items if _code(item.get("code"))}
+
+
+def _closed_positions_for_output(state: dict, performance: dict | None, current_codes: set[str]) -> list[dict]:
+    closed: list[dict] = []
+    seen: set[str] = set()
+    for source in (
+        state.get("closed_positions", []) or [],
+        (performance or {}).get("closed_positions", []) or [],
+    ):
+        for item in source:
+            code = _code(item.get("code"))
+            if code and code in current_codes:
+                continue
+            key = code or f"{item.get('market', '')}:{item.get('name', '')}"
+            if key in seen:
+                continue
+            seen.add(key)
+            closed.append(dict(item))
+    return closed
+
+
 def build_output_model(
     state: dict,
     performance: dict | None = None,
@@ -78,6 +101,7 @@ def build_output_model(
     active_by_code = _performance_by_code(performance)
     portfolio = []
     missing_return_codes: list[str] = []
+    current_codes = _item_code_set(state.get("portfolio", []) or [])
 
     for item in state.get("portfolio", []) or []:
         row = dict(item)
@@ -139,7 +163,7 @@ def build_output_model(
         "domestic": domestic,
         "overseas": overseas,
         "watchlist": state.get("watchlist", []) or [],
-        "closed_positions": state.get("closed_positions", []) or [],
+        "closed_positions": _closed_positions_for_output(state, performance, current_codes),
         "decision_history": state.get("decision_history", []) or [],
         "insights": state.get("insights", []) or [],
         "chart_rows": chart_rows,

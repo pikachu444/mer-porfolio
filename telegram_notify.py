@@ -288,6 +288,27 @@ def build_structured_summary(
     else:
         lines.append("• 표시할 인사이트 없음")
 
+    def recommendation_action(item: dict) -> str:
+        action = str(item.get("action") or item.get("action_label") or "보유")
+        market = str(item.get("market") or "").upper()
+        if market.startswith("KR"):
+            return action
+        return {
+            "매수": "Buy",
+            "보유": "Hold",
+            "비중확대": "Buy",
+            "비중축소": "Hold",
+            "매도": "Sell",
+        }.get(action, action)
+
+    def recommendation_name(item: dict) -> str:
+        name = str(item.get("name") or "")
+        code = str(item.get("code") or "")
+        market = str(item.get("market") or "").upper()
+        if market.startswith("KR") or not code:
+            return name
+        return f"{name} ({code})"
+
     def append_recommendations(title: str, rows: list[dict]) -> None:
         lines.extend(["", title])
         if not rows:
@@ -295,14 +316,10 @@ def build_structured_summary(
             return
         for item in rows:
             lines.append(
-                f"• {item.get('name', '')} ({item.get('code', '')})"
-                f" — {item.get('decision_label', '')}"
-                f" — {item.get('weight', 0):g}%"
-                f" — 수익률 {item.get('return_label', '집계 전')}"
+                f"• {recommendation_name(item)}"
+                f" — {recommendation_action(item)}"
+                f" ({item.get('weight', 0):g}%)"
             )
-            reason = item.get("change_reason", "")
-            if reason:
-                lines.append(f"  └ {reason}")
 
     append_recommendations("*국내주식 추천*", output["domestic"])
     append_recommendations("*해외주식 추천*", output["overseas"])
