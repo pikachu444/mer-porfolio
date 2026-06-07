@@ -233,7 +233,10 @@ def _run_no_change_update(state, today: datetime, status_note: str = "") -> int:
     report = _load_latest_report()
     state = _state_with_report_insights(state, report)
     save_portfolio_state_file(state, STATE_PATH)
-    _, png_path = generate_all(report, today, state=state.to_dict())
+    output_state = state.to_dict()
+    if status_note:
+        output_state["status_note"] = status_note
+    _, png_path = generate_all(report, today, state=output_state)
     if RUN_POLICY.send_telegram:
         if png_path and png_path.exists():
             send_photo(str(png_path), f"모델 포트폴리오 성과 | {today:%Y년 %m월 %d일}")

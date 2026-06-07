@@ -1239,6 +1239,12 @@ HTML에는 다음 내용을 표시한다.
   `새 글 1건 요약 실패로 투자 분석 보류: 코스트코와 이마트 트레이더스의 비밀` 문구가 포함되는
   것을 확인했다.
 - `RUN_MODE=test python main.py` 진입점이 정상 동작하는 것을 확인했다.
+- 실제 GitHub Actions `rebalance` 실행 `27090264353`은 성공했지만, no-change/fallback 출력
+  경로에서 HTML `statusNote`가 비어 있어 HTML에는 보류 문구가 표시되지 않는 문제가 확인됐다.
+  Telegram 구조화 요약에는 보류 문구가 표시됐다.
+- no-change/fallback 출력 경로에서도 HTML 생성용 상태에 `status_note`를 전달하도록 수정했다.
+  로컬 검증 결과 `PYTHONUTF8=1 python -m unittest discover -s tests -q` 전체 90개 테스트 통과,
+  `test_runtime_modes.py` 단독 실행도 통과했다.
 
 ## 기존 완료 작업
 

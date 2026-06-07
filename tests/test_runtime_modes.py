@@ -1,6 +1,15 @@
 import unittest
+import sys
 from datetime import date
+from datetime import datetime
+from unittest.mock import Mock, patch
 
+try:
+    import feedparser  # noqa: F401
+except ModuleNotFoundError:
+    sys.modules["feedparser"] = Mock()
+
+import main
 from main import _extract_insights_from_report, _is_llm_service_unavailable_error
 from runtime_modes import get_run_policy, should_rebalance
 
@@ -70,6 +79,25 @@ class RuntimeModesTest(unittest.TestCase):
         self.assertEqual(insights[0]["title"], "AI/로봇")
         self.assertIn("엔비디아", insights[0]["summary"])
         self.assertIn("Buy 강", insights[0]["investment_implication"])
+
+    def test_no_change_update_passes_status_note_to_dashboard(self):
+        note = "새 글 1건 요약 실패로 투자 분석 보류: 코스트코와 이마트"
+        state = main._empty_state()
+
+        with patch.object(main, "load_model_ledger", return_value={}), \
+             patch.object(main, "_load_latest_report", return_value="# 보고서\n\n테스트"), \
+             patch.object(main, "save_portfolio_state_file"), \
+             patch.object(main, "generate_all", return_value=(None, None)) as generate_all, \
+             patch.object(main, "RUN_POLICY", Mock(send_telegram=False)):
+            result = main._run_no_change_update(
+                state,
+                datetime(2026, 6, 7),
+                status_note=note,
+            )
+
+        self.assertEqual(result, 0)
+        generated_state = generate_all.call_args.kwargs["state"]
+        self.assertEqual(generated_state["status_note"], note)
 
 
 if __name__ == "__main__":
