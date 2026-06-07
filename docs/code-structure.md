@@ -83,4 +83,24 @@ Actions에서 수정이 반영되려면 변경 사항이 `main` 브랜치에 병
 3. `git diff --check`
 4. 필요 시 GitHub Actions `verify` 또는 `rebalance` 실행 결과 확인
 
-Windows PowerShell에서는 `PYTHONUTF8=1` 대신 `$env:PYTHONUTF8='1'; python -m unittest discover -s tests -q`를 사용한다.
+## 셸별 명령 주의사항
+
+명령을 실행하기 전에 현재 터미널 셸을 확인한다. 이 저장소의 현재 작업 환경은 Windows
+PowerShell이다. 셸이 다르면 환경변수 설정, 경로 표기, 명령 연결 방식이 달라진다.
+
+| 환경 | 환경변수 설정 예시 | 경로 예시 | 주의사항 |
+|---|---|---|---|
+| PowerShell | `$env:PYTHONUTF8='1'; python -m unittest discover -s tests -q` | `docs\code-structure.md` | `PYTHONUTF8=1 python ...`는 동작하지 않는다. |
+| cmd.exe | `set PYTHONUTF8=1 && python -m unittest discover -s tests -q` | `docs\code-structure.md` | `$env:` 문법은 동작하지 않는다. |
+| bash/Linux | `PYTHONUTF8=1 python -m unittest discover -s tests -q` | `docs/code-structure.md` | Windows 전용 `Remove-Item`, `$env:` 문법을 쓰지 않는다. |
+
+현재 셸을 모르면 먼저 확인한다.
+
+| 환경 | 확인 명령 |
+|---|---|
+| PowerShell | `$PSVersionTable.PSVersion` |
+| cmd.exe | `echo %ComSpec%` |
+| bash/Linux | `echo $SHELL` |
+
+문서나 테스트에 명령을 남길 때도 대상 환경을 함께 적는다. 로컬 작업 환경이 PowerShell이면
+PowerShell 문법을 우선으로 쓴다.
