@@ -85,6 +85,7 @@ Actions의 정상 `scheduled`와 `rebalance`에서는 글별 Flash 요약을 활
 
 사용자에게 보이는 Markdown, HTML, PNG, Telegram은 모두 `portfolio_output.py`가 만든 같은 기준
 자료에서 생성합니다. `latest.md`는 사용자 출력 기준으로 사용하지 않습니다.
+`report_YYYYMMDD.md`의 날짜와 Telegram/HTML 기준일은 한국시간(`Asia/Seoul`) 기준입니다.
 수익률 계산 자료에 현재 종목이 빠져 있으면 종목을 숨기지 않고 `집계 전`으로 표시합니다.
 
 ## 현재 개선 방향
@@ -97,6 +98,7 @@ Actions의 정상 `scheduled`와 `rebalance`에서는 글별 Flash 요약을 활
 | 종목 창작 방지 | 원문 미등장 개별 종목은 Watchlist만 허용하고, AI 편입 후보는 필수 근거를 검증 |
 | HTML/Telegram 괴리 방지 | 사용자 출력은 모두 현재 모델 포트폴리오 상태와 핵심 인사이트를 기준으로 생성 |
 | 성과 표시 | 현재 종목을 먼저 표시하고 수익률 계산 자료는 덧붙임. 계산 전 종목은 `집계 전` 표시 |
+| 종료 포지션 | 현재 모델 포트폴리오에 남아 있는 종목은 종료 포지션에 동시에 표시하지 않음. 과거 코드 오기는 실제 코드 기준으로 정리 |
 
 ## 향후 작업자가 읽어야 하는 경우
 

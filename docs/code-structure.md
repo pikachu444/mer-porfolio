@@ -15,6 +15,9 @@
 | 9 | HTML/PNG 생성 | `generate_dashboard.py` |
 | 10 | Telegram 전송 | `telegram_notify.py` |
 
+실행 기준일은 `main.py`에서 한국시간(`Asia/Seoul`)으로 계산한다. GitHub Actions runner의 UTC
+날짜를 그대로 보고서 파일명이나 Telegram 날짜에 사용하지 않는다.
+
 ## 주요 모듈 책임
 
 | 파일 | 책임 |
@@ -25,7 +28,7 @@
 | `system_prompt.py` | Gemini 입력 프롬프트와 출력 계약 |
 | `portfolio_schema.py` | 상태 파일 스키마, 판단 검증, 상태 갱신 |
 | `portfolio_validation.py` | 보고서/판단 보조 검증 |
-| `track_returns.py` | 모델 포트폴리오 거래 원장과 수익률 계산 |
+| `track_returns.py` | 모델 포트폴리오 거래 원장, 종목 코드 정규화, 수익률 계산 |
 | `portfolio_output.py` | Telegram, HTML, Markdown이 함께 쓰는 사용자 출력 기준 자료 생성 |
 | `generate_dashboard.py` | HTML 대시보드와 Telegram용 PNG 차트 생성 |
 | `telegram_notify.py` | Telegram 메시지와 이미지 전송 |
@@ -46,6 +49,9 @@
 `latest.md`는 사용자 출력 기준으로 사용하지 않는다. 보고서가 필요하면 날짜가 들어간
 `report_YYYYMMDD.md`를 사용한다.
 
+`report_YYYYMMDD.md`의 날짜는 한국시간 기준이다. 예를 들어 GitHub Actions가 UTC
+2026-06-07 16:20에 실행되면 한국시간으로는 2026-06-08이므로 `report_20260608.md`를 만든다.
+
 ## 사용자 출력 기준
 
 `portfolio_output.build_output_model()`이 현재 상태와 수익률 계산 자료를 합쳐 출력 기준 자료를 만든다.
@@ -62,6 +68,8 @@
 
 수익률 계산 자료에 현재 종목이 없으면 종목을 제거하지 않고 `집계 전`으로 표시한다.
 전체 포트폴리오 수익률도 현재 종목 전체가 계산된 경우에만 표시한다.
+현재 모델 포트폴리오 종목과 종료 포지션 종목이 겹치면 성과 기록을 정리한다. 대한전선처럼 과거
+코드 오기(`011440`)가 있으면 실제 코드(`001440`) 기준으로 정규화한 뒤 비교한다.
 
 ## GitHub Actions
 

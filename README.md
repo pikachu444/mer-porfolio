@@ -34,6 +34,9 @@ prophit_(blog.naver.com/prophit_)이 수동으로 하던 "메르ai포트"를 완
 [output/report_YYYYMMDD.md 로 자동 저장 + 커밋]
 ```
 
+`report_YYYYMMDD.md`의 날짜는 한국시간 기준입니다. GitHub Actions 실행 환경이 UTC여도
+Telegram, HTML, Markdown 보고서는 투자자가 보는 한국 날짜로 생성됩니다.
+
 ---
 
 ## 셋업 (5분)

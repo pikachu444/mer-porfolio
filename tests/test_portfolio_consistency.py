@@ -1,4 +1,5 @@
 import unittest
+import json
 from datetime import datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -106,6 +107,72 @@ class PortfolioConsistencyTest(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             track_returns._assert_consistent(current, rows)
+
+    def test_sanitizes_daehan_wire_closed_record_when_currently_active(self):
+        state = {
+            "portfolio": [
+                {"name": "대한전선", "market": "KR", "code": "001440"},
+            ],
+        }
+        history = {
+            "schema_version": "2.0",
+            "positions": [
+                {
+                    "key": "KR:001440",
+                    "type": "KR",
+                    "market": "KR",
+                    "name": "대한전선",
+                    "code": "001440",
+                    "ticker": "001440.KS",
+                    "status": "closed",
+                    "closed_date": "2026-06-03",
+                    "close_reason": "현재 포트폴리오에서 제외",
+                    "weight": "3%",
+                },
+                {
+                    "key": "KR:011440",
+                    "type": "KR",
+                    "market": "KR",
+                    "name": "대한전선",
+                    "code": "011440",
+                    "status": "active",
+                    "weight": "3%",
+                },
+            ],
+            "closed_positions": [
+                {
+                    "key": "KR:001440",
+                    "type": "KR",
+                    "market": "KR",
+                    "name": "대한전선",
+                    "code": "001440",
+                    "ticker": "001440.KS",
+                    "status": "closed",
+                    "closed_date": "2026-06-03",
+                    "close_reason": "현재 포트폴리오에서 제외",
+                    "weight": "3%",
+                }
+            ],
+        }
+        cache = {
+            "active_positions": [],
+            "closed_positions": history["closed_positions"],
+        }
+
+        with TemporaryDirectory() as tmp:
+            track_returns.HISTORY_FILE = Path(tmp) / "portfolio_history.json"
+            track_returns.CACHE_FILE = Path(tmp) / "performance_cache.json"
+            track_returns.HISTORY_FILE.write_text(json.dumps(history, ensure_ascii=False), encoding="utf-8")
+            track_returns.CACHE_FILE.write_text(json.dumps(cache, ensure_ascii=False), encoding="utf-8")
+
+            sanitized_cache = track_returns.sanitize_performance_files_for_state(state)
+            sanitized_history = track_returns._load_history()
+
+        self.assertEqual(sanitized_cache["closed_positions"], [])
+        active = [item for item in sanitized_history["positions"] if item.get("status") == "active"]
+        self.assertEqual(len(active), 1)
+        self.assertEqual(active[0]["code"], "001440")
+        self.assertEqual(sanitized_history["closed_positions"], [])
 
 
 if __name__ == "__main__":

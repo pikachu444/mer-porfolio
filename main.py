@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-import json
 import os
 import shutil
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 try:
     from dotenv import load_dotenv
@@ -67,6 +67,9 @@ from track_returns import (
     get_structured_prices,
     load_model_ledger,
     refresh_structured_performance,
+    sanitize_model_ledger_for_state,
+    sanitize_performance_cache_for_state,
+    sanitize_performance_files_for_state,
     save_model_ledger,
     transaction_decisions_for_run,
 )
@@ -76,6 +79,17 @@ STATE_PATH = OUTPUT_DIR / "portfolio_state.json"
 DECISION_PATH = OUTPUT_DIR / "decision_latest.json"
 _fetch_days_env = os.environ.get("FETCH_DAYS", "").strip()
 FETCH_DAYS = int(_fetch_days_env) if _fetch_days_env else RUN_POLICY.fetch_days
+KST = ZoneInfo("Asia/Seoul")
+
+
+def _to_kst_naive(value: datetime) -> datetime:
+    if value.tzinfo is None:
+        value = value.replace(tzinfo=timezone.utc)
+    return value.astimezone(KST).replace(tzinfo=None)
+
+
+def _now_kst() -> datetime:
+    return _to_kst_naive(datetime.now(timezone.utc))
 
 
 def _empty_state():
@@ -165,13 +179,14 @@ def _run_no_change_update(state, today: datetime, status_note: str = "") -> int:
     else:
         print("  신규 글 없음: 판단과 목표 비중을 유지하고 성과만 갱신합니다.")
     ledger = load_model_ledger()
+    ledger = sanitize_model_ledger_for_state(ledger, state.to_dict())
     if ledger.get("positions"):
         prices = _prices_for_ledger(ledger)
         cache = refresh_structured_performance(ledger, prices, today.strftime("%Y-%m-%d"))
+        cache = sanitize_performance_cache_for_state(cache, state.to_dict())
         save_model_ledger(ledger)
     else:
-        cache_path = OUTPUT_DIR / "performance_cache.json"
-        cache = json.loads(cache_path.read_text(encoding="utf-8")) if cache_path.exists() else {}
+        cache = sanitize_performance_files_for_state(state.to_dict())
     save_portfolio_state_file(state, STATE_PATH)
     output_state = state.to_dict()
     if status_note:
@@ -259,7 +274,7 @@ def main() -> int:
         print("test 모드는 python -m unittest discover -s tests -v 로 실행합니다.")
         return 0
 
-    today = datetime.now()
+    today = _now_kst()
     today_date = today.strftime("%Y-%m-%d")
     print("=" * 60)
     print("  메르AI 모델 포트폴리오 실행")
@@ -319,6 +334,7 @@ def main() -> int:
             return _run_no_change_update(state, today, status_note=note)
         updated_state = apply_analysis_decision(state, result.decision)
         ledger = load_model_ledger()
+        ledger = sanitize_model_ledger_for_state(ledger, updated_state.to_dict())
         transaction_decisions = transaction_decisions_for_run(
             ledger,
             updated_state.portfolio,
@@ -333,6 +349,7 @@ def main() -> int:
             today_date,
         )
         cache = refresh_structured_performance(ledger, prices, today_date)
+        cache = sanitize_performance_cache_for_state(cache, updated_state.to_dict())
 
         save_analysis_decision_file(result.decision, DECISION_PATH)
         save_portfolio_state_file(updated_state, STATE_PATH)

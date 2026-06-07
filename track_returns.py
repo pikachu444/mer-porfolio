@@ -16,6 +16,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional
 
+from portfolio_schema import normalize_security_code
+
 try:
     import yfinance as yf
     YFINANCE_AVAILABLE = True
@@ -56,11 +58,48 @@ def _normalize_code(value: str) -> str:
     return re.sub(r"[^A-Za-z0-9.\-]", "", value or "")
 
 
+def _security_identity(item: dict) -> str:
+    market = str(item.get("market") or item.get("type") or "").strip().upper()
+    code = normalize_security_code(
+        item.get("name", ""),
+        market,
+        item.get("code") or item.get("ticker") or "",
+    )
+    if code:
+        return f"{market}:{code.upper()}"
+    return f"{market}:NAME:{str(item.get('name') or '').strip().lower()}"
+
+
+def _normalize_tracking_item(item: dict) -> dict:
+    normalized = deepcopy(item)
+    market = str(normalized.get("market") or normalized.get("type") or "").strip().upper()
+    if market:
+        normalized["market"] = market
+        normalized["type"] = normalized.get("type") or market
+    code = normalize_security_code(
+        normalized.get("name", ""),
+        market,
+        normalized.get("code") or normalized.get("ticker") or "",
+    )
+    if code:
+        normalized["code"] = code
+        if market == "KR":
+            ticker = str(normalized.get("ticker") or "")
+            suffix = ".KQ" if ticker.upper().endswith(".KQ") else ".KS"
+            normalized["ticker"] = f"{code}{suffix}"
+        elif not normalized.get("ticker"):
+            normalized["ticker"] = code
+    normalized["key"] = _position_key(normalized)
+    return normalized
+
+
 def _position_key(item: dict) -> str:
     market = (item.get("market") or item.get("type") or "").upper()
-    code = _normalize_code(item.get("code") or item.get("ticker") or "")
-    if market == "KR" and code:
-        code = re.sub(r"[^0-9]", "", code).zfill(6)
+    code = normalize_security_code(
+        item.get("name", ""),
+        market,
+        item.get("code") or item.get("ticker") or "",
+    )
     if code:
         return f"{market}:{code.upper()}"
     return f"{market}:NAME:{(item.get('name') or '').strip().lower()}"
@@ -157,7 +196,7 @@ def _load_history() -> dict:
     if HISTORY_FILE.exists():
         try:
             with open(HISTORY_FILE, encoding="utf-8") as f:
-                return _migrate_history(json.load(f))
+                return _normalize_tracking_history(_migrate_history(json.load(f)))
         except Exception:
             pass
     return {"schema_version": "2.0", "positions": [], "closed_positions": []}
@@ -204,10 +243,109 @@ def _migrate_history(history: dict) -> dict:
     return migrated
 
 
+def _normalize_tracking_history(history: dict) -> dict:
+    normalized = deepcopy(history)
+    normalized["schema_version"] = "2.0"
+    normalized["positions"] = [
+        _normalize_tracking_item(item)
+        for item in normalized.get("positions", [])
+    ]
+    normalized["closed_positions"] = [
+        _normalize_tracking_item(item)
+        for item in normalized.get("closed_positions", [])
+    ]
+    return normalized
+
+
 def _save_history(history: dict) -> None:
     HISTORY_FILE.parent.mkdir(parents=True, exist_ok=True)
     with open(HISTORY_FILE, "w", encoding="utf-8") as f:
         json.dump(history, f, ensure_ascii=False, indent=2)
+
+
+def _current_security_identities(state: Optional[dict]) -> set[str]:
+    if not state:
+        return set()
+    return {
+        _security_identity(item)
+        for item in state.get("portfolio", []) or []
+    }
+
+
+def _sanitize_tracking_history_for_state(history: dict, state: Optional[dict]) -> dict:
+    current = _current_security_identities(state)
+    normalized = _normalize_tracking_history(history)
+    active_by_identity = {
+        _security_identity(item)
+        for item in normalized.get("positions", [])
+        if item.get("status", "active") == "active"
+    }
+    blocked = current | active_by_identity
+
+    positions = []
+    seen_active: set[str] = set()
+    for item in normalized.get("positions", []):
+        identity = _security_identity(item)
+        if item.get("status", "active") != "active" and identity in current:
+            continue
+        if item.get("status", "active") == "active":
+            if identity in seen_active:
+                continue
+            seen_active.add(identity)
+        positions.append(item)
+
+    normalized["positions"] = positions
+    normalized["closed_positions"] = [
+        item
+        for item in normalized.get("closed_positions", [])
+        if _security_identity(item) not in blocked
+    ]
+    return normalized
+
+
+def sanitize_performance_cache_for_state(cache: dict, state: Optional[dict]) -> dict:
+    current = _current_security_identities(state)
+    sanitized = deepcopy(cache or {})
+
+    active_positions = [
+        _normalize_cache_item(item)
+        for item in sanitized.get("active_positions", []) or []
+    ]
+    active_identities = {_security_identity(item) for item in active_positions}
+    sanitized["active_positions"] = active_positions
+    sanitized["closed_positions"] = [
+        _normalize_cache_item(item)
+        for item in sanitized.get("closed_positions", []) or []
+        if _security_identity(item) not in (current | active_identities)
+    ]
+    return sanitized
+
+
+def _normalize_cache_item(item: dict) -> dict:
+    if item.get("asset_type") or str(item.get("key", "")).count(":") >= 2:
+        return _normalize_structured_item(item)
+    return _normalize_tracking_item(item)
+
+
+def sanitize_performance_files_for_state(state: Optional[dict]) -> dict:
+    if HISTORY_FILE.exists():
+        history = _load_history()
+        sanitized_history = _sanitize_tracking_history_for_state(history, state)
+        if sanitized_history != history:
+            _save_history(sanitized_history)
+
+    if not CACHE_FILE.exists():
+        return {}
+    with open(CACHE_FILE, encoding="utf-8") as file:
+        cache = json.load(file)
+    sanitized_cache = sanitize_performance_cache_for_state(cache, state)
+    if sanitized_cache != cache:
+        CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        temporary = CACHE_FILE.with_suffix(CACHE_FILE.suffix + ".tmp")
+        with open(temporary, "w", encoding="utf-8") as file:
+            json.dump(sanitized_cache, file, ensure_ascii=False, indent=2)
+        temporary.replace(CACHE_FILE)
+    return sanitized_cache
 
 
 def _ticker_for(item: dict) -> Optional[str]:
@@ -448,12 +586,13 @@ def load_model_ledger(path: Path = MODEL_LEDGER_FILE) -> dict:
         ledger = json.load(file)
     if ledger.get("schema_version") != MODEL_LEDGER_SCHEMA_VERSION:
         raise ValueError("structured model ledger schema_version must be '3.0'")
-    return ledger
+    return _normalize_model_ledger(ledger)
 
 
 def save_model_ledger(ledger: dict, path: Path = MODEL_LEDGER_FILE) -> None:
     if ledger.get("schema_version") != MODEL_LEDGER_SCHEMA_VERSION:
         raise ValueError("structured model ledger schema_version must be '3.0'")
+    ledger = _normalize_model_ledger(ledger)
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
     with open(temporary, "w", encoding="utf-8") as file:
@@ -466,9 +605,10 @@ def get_structured_prices(items: list[dict]) -> dict[str, float]:
     usdkrw = _get_usdkrw()
     prices: dict[str, float] = {}
     for item in items:
-        key = _structured_position_key(item)
-        market = str(item.get("market", "")).strip().upper()
-        code = str(item.get("code", "")).strip().upper()
+        normalized = _normalize_structured_item(item)
+        key = _structured_position_key(normalized)
+        market = str(normalized.get("market", "")).strip().upper()
+        code = str(normalized.get("code", "")).strip().upper()
         ticker = _resolve_kr_ticker(code) if market == "KR" else code
         price = _get_current_price(ticker or "")
         if price is None:
@@ -488,6 +628,7 @@ def refresh_structured_performance(
     path: Path = CACHE_FILE,
 ) -> dict:
     """Refresh the structured performance cache without changing allocation."""
+    ledger = _normalize_model_ledger(ledger)
     snapshot = record_model_snapshot(ledger, prices, today_str)
     active_positions = []
     for position in ledger.get("positions", []):
@@ -498,7 +639,7 @@ def refresh_structured_performance(
             "current_price": current_price,
             "return_pct_krw": (current_price / average_cost - 1.0) * 100.0,
         })
-    cache = {
+    cache = sanitize_performance_cache_for_state({
         "updated": today_str,
         "portfolio_return_krw": snapshot["return_pct"],
         "cash": snapshot["cash"],
@@ -512,7 +653,7 @@ def refresh_structured_performance(
             }
             for item in ledger.get("snapshots", [])
         ],
-    }
+    }, {"portfolio": ledger.get("positions", [])})
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
     with open(temporary, "w", encoding="utf-8") as file:
@@ -528,7 +669,7 @@ def apply_structured_transactions(
     trade_date: str,
 ) -> dict:
     """검증된 판단의 목표 비중을 신규 매수, 추가 매수, 일부 매도, 전량 매도로 기록한다."""
-    updated = deepcopy(ledger)
+    updated = _normalize_model_ledger(ledger)
     if updated.get("schema_version") != MODEL_LEDGER_SCHEMA_VERSION:
         raise ValueError("structured model ledger schema_version must be '3.0'")
     positions = updated.setdefault("positions", [])
@@ -654,12 +795,53 @@ def record_model_snapshot(ledger: dict, price_by_key: dict[str, float], snapshot
 
 
 def _structured_position_key(item: dict) -> str:
-    code = str(item.get("code", "")).strip().upper()
     market = str(item.get("market", "")).strip().upper()
     asset_type = str(item.get("asset_type", "")).strip().lower()
+    code = normalize_security_code(item.get("name", ""), market, item.get("code", ""))
     if code:
         return f"{asset_type}:{market}:{code}"
     return f"{asset_type}:{market}:NAME:{str(item.get('name', '')).strip().lower()}"
+
+
+def _normalize_structured_item(item: dict) -> dict:
+    normalized = deepcopy(item)
+    market = str(normalized.get("market", "")).strip().upper()
+    if market:
+        normalized["market"] = market
+    code = normalize_security_code(
+        normalized.get("name", ""),
+        market,
+        normalized.get("code", ""),
+    )
+    if code:
+        normalized["code"] = code
+    normalized["key"] = _structured_position_key(normalized)
+    return normalized
+
+
+def _normalize_model_ledger(ledger: dict) -> dict:
+    normalized = deepcopy(ledger)
+    normalized["positions"] = [
+        _normalize_structured_item(item)
+        for item in normalized.get("positions", []) or []
+    ]
+    normalized["closed_positions"] = [
+        _normalize_structured_item(item)
+        for item in normalized.get("closed_positions", []) or []
+    ]
+    return normalized
+
+
+def sanitize_model_ledger_for_state(ledger: dict, state: Optional[dict]) -> dict:
+    sanitized = _normalize_model_ledger(ledger)
+    current = _current_security_identities(state)
+    active = {_security_identity(item) for item in sanitized.get("positions", [])}
+    sanitized["closed_positions"] = [
+        item
+        for item in sanitized.get("closed_positions", [])
+        if _security_identity(item) not in (current | active)
+    ]
+    return sanitized
 
 
 def _required_trade_price(price_by_key: dict[str, float], key: str) -> float:
@@ -687,6 +869,10 @@ def update_and_get_performance(report_text: str, today: datetime, state: Optiona
 
     print("  📌 현재 포트폴리오 포지션 갱신 중...")
     _ensure_current_positions(history, current_items, today_str)
+    history = _sanitize_tracking_history_for_state(
+        history,
+        {"portfolio": current_items},
+    )
     active_rows = calculate_active_rows(history)
     _assert_consistent(current_items, active_rows)
     _save_history(history)

@@ -2,6 +2,7 @@ import unittest
 import sys
 from datetime import date
 from datetime import datetime
+from datetime import timezone
 from unittest.mock import Mock, patch
 
 try:
@@ -70,6 +71,13 @@ class RuntimeModesTest(unittest.TestCase):
         self.assertIn(note, saved_report)
         generated_state = generate_all.call_args.kwargs["state"]
         self.assertEqual(generated_state["status_note"], note)
+
+    def test_execution_date_uses_korean_time(self):
+        utc_time = datetime(2026, 6, 7, 16, 20, tzinfo=timezone.utc)
+
+        kst_time = main._to_kst_naive(utc_time)
+
+        self.assertEqual(kst_time.strftime("%Y-%m-%d %H:%M"), "2026-06-08 01:20")
 
 
 if __name__ == "__main__":

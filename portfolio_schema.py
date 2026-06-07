@@ -43,6 +43,20 @@ class PortfolioSchemaError(ValueError):
     """Raised when structured portfolio state does not satisfy the v2 contract."""
 
 
+def normalize_security_code(name: Any, market: Any, code: Any) -> str:
+    market_value = str(market or "").strip().upper()
+    name_value = str(name or "").strip()
+    code_value = str(code or "").strip().upper()
+    if market_value == "KR":
+        digits = re.sub(r"[^0-9]", "", code_value)
+        if digits:
+            code_value = digits.zfill(6)
+    return KNOWN_LEGACY_CODE_CORRECTIONS.get(
+        (market_value, name_value, code_value),
+        code_value,
+    )
+
+
 @dataclass(frozen=True)
 class PortfolioStateV2:
     portfolio: list[dict[str, Any]]
@@ -186,6 +200,7 @@ def parse_portfolio_state(payload: Any) -> PortfolioStateV2:
         _validate_watchlist_item(item, f"state.watchlist[{index}]")
     for index, item in enumerate(closed_positions):
         _validate_closed_position(item, f"state.closed_positions[{index}]")
+    _validate_no_current_closed_overlap(portfolio, closed_positions, "state")
     for index, item in enumerate(decision_history):
         _validate_decision(item, f"state.decision_history[{index}]")
     for index, item in enumerate(insights):
@@ -358,10 +373,7 @@ def _migrate_legacy_holding(holding: dict[str, Any], index: int) -> dict[str, An
 
 
 def _normalize_legacy_code(name: str, market: str, code: str) -> str:
-    return KNOWN_LEGACY_CODE_CORRECTIONS.get(
-        (market.strip().upper(), name.strip(), code.strip().upper()),
-        code,
-    )
+    return normalize_security_code(name, market, code)
 
 
 def _parse_legacy_weight(value: Any, path: str) -> float:
@@ -600,12 +612,29 @@ def apply_portfolio_decisions(
 
 
 def _item_key(item: dict[str, Any]) -> str:
-    code = item.get("code", "").strip().upper()
-    market = item.get("market", "").strip().upper()
-    asset_type = item.get("asset_type", "").strip().lower()
+    market = str(item.get("market", "")).strip().upper()
+    asset_type = str(item.get("asset_type", "")).strip().lower()
+    code = normalize_security_code(item.get("name", ""), market, item.get("code", ""))
     if code:
         return f"{asset_type}:{market}:{code}"
-    return f"{asset_type}:{market}:NAME:{item.get('name', '').strip().lower()}"
+    return f"{asset_type}:{market}:NAME:{str(item.get('name', '')).strip().lower()}"
+
+
+def _validate_no_current_closed_overlap(
+    portfolio: list[dict[str, Any]],
+    closed_positions: list[dict[str, Any]],
+    path: str,
+) -> None:
+    current_keys = {_item_key(item) for item in portfolio}
+    overlaps = sorted(
+        _item_key(item)
+        for item in closed_positions
+        if _item_key(item) in current_keys
+    )
+    if overlaps:
+        raise PortfolioSchemaError(
+            f"{path}.closed_positions overlaps with active portfolio: {', '.join(overlaps)}"
+        )
 
 
 def _validate_evidence_posts(item: dict[str, Any], path: str) -> list[dict[str, Any]]:

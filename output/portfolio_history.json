@@ -91,26 +91,6 @@
       "thesis": "전력 인프라 투자 확대 수혜 기대 유효함."
     },
     {
-      "key": "KR:001440",
-      "type": "KR",
-      "market": "KR",
-      "name": "대한전선",
-      "code": "001440",
-      "ticker": "001440.KS",
-      "action": "보유",
-      "weight": "3%",
-      "entry_date": "2026-05-28",
-      "entry_price": 47800.0,
-      "entry_usdkrw": null,
-      "last_confirmed_date": "2026-06-02",
-      "status": "closed",
-      "basis_type": "기존보유",
-      "thesis": "전력 인프라 투자 확대 수혜 기대 유효함.",
-      "closed_date": "2026-06-03",
-      "closed_price": 42500.0,
-      "close_reason": "현재 포트폴리오에서 제외"
-    },
-    {
       "key": "KR:010140",
       "type": "KR",
       "market": "KR",
@@ -316,12 +296,12 @@
       "status": "active"
     },
     {
-      "key": "KR:011440",
+      "key": "KR:001440",
       "type": "KR",
       "market": "KR",
       "name": "대한전선",
-      "code": "011440",
-      "ticker": null,
+      "code": "001440",
+      "ticker": "001440.KS",
       "action": "보유",
       "weight": "3%",
       "basis_type": "기존보유",
@@ -439,26 +419,6 @@
       "status": "closed",
       "closed_date": "2026-05-31",
       "closed_price": 1828.2099609375,
-      "close_reason": "현재 포트폴리오에서 제외"
-    },
-    {
-      "key": "KR:001440",
-      "type": "KR",
-      "market": "KR",
-      "name": "대한전선",
-      "code": "001440",
-      "ticker": "001440.KS",
-      "action": "보유",
-      "weight": "3%",
-      "entry_date": "2026-05-28",
-      "entry_price": 47800.0,
-      "entry_usdkrw": null,
-      "last_confirmed_date": "2026-06-02",
-      "status": "closed",
-      "basis_type": "기존보유",
-      "thesis": "전력 인프라 투자 확대 수혜 기대 유효함.",
-      "closed_date": "2026-06-03",
-      "closed_price": 42500.0,
       "close_reason": "현재 포트폴리오에서 제외"
     }
   ]

@@ -101,6 +101,8 @@ def state_payload():
         ],
         "closed_positions": [
             decision(
+                name="NVIDIA",
+                code="NVDA",
                 action="매도",
                 previous_weight=8.0,
                 proposed_weight=0.0,
@@ -131,6 +133,22 @@ class PortfolioSchemaTest(unittest.TestCase):
 
         self.assertEqual(parsed.run_type, "regular")
         self.assertEqual(parsed.portfolio_decisions[0]["name"], "Alcoa")
+
+    def test_rejects_position_that_is_active_and_closed(self):
+        payload = state_payload()
+        payload["closed_positions"] = [
+            decision(
+                action="매도",
+                previous_weight=8.0,
+                proposed_weight=0.0,
+                closed_date="2026-05-30",
+                close_reason="잘못된 종료 기록",
+                closed_performance=None,
+            )
+        ]
+
+        with self.assertRaisesRegex(PortfolioSchemaError, "overlaps with active portfolio"):
+            parse_portfolio_state_json(json.dumps(payload, ensure_ascii=False))
 
     def test_rejects_unknown_first_call_run_type(self):
         payload = {

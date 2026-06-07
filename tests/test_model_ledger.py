@@ -8,6 +8,7 @@ from track_returns import (
     create_model_ledger,
     load_model_ledger,
     refresh_structured_performance,
+    sanitize_model_ledger_for_state,
     save_model_ledger,
     transaction_decisions_for_run,
 )
@@ -132,6 +133,30 @@ class ModelLedgerTest(unittest.TestCase):
 
         self.assertEqual(len(updated["transactions"]), 1)
         self.assertAlmostEqual(updated["snapshots"][-1]["return_pct"], 20.0)
+
+    def test_sanitizes_closed_position_that_is_currently_active(self):
+        ledger = create_model_ledger()
+        closed = {
+            "key": "stock:KR:001440",
+            "name": "대한전선",
+            "code": "001440",
+            "market": "KR",
+            "asset_type": "stock",
+            "quantity": 0.0,
+            "average_cost": 100.0,
+            "closed_date": "2026-06-03",
+            "close_reason": "현재 포트폴리오에서 제외",
+        }
+        ledger["closed_positions"] = [closed]
+        state = {
+            "portfolio": [
+                {"name": "대한전선", "code": "001440", "market": "KR", "asset_type": "stock"}
+            ]
+        }
+
+        sanitized = sanitize_model_ledger_for_state(ledger, state)
+
+        self.assertEqual(sanitized["closed_positions"], [])
 
 
 if __name__ == "__main__":
