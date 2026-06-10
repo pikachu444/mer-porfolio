@@ -406,28 +406,23 @@
       "asset_type": "stock",
       "decision_actor": "AI",
       "basis": "종목 분석",
-      "decision_date": "2026-06-09",
+      "decision_date": "2026-06-11",
       "evidence_posts": [
         {
-          "title": "삼성전자와 SK하이닉스를 흔든 엔비디아 SOCAMM 이슈가 뭘까?",
-          "url": "https://blog.naver.com/ranto28/224307440861?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-07"
-        },
-        {
-          "title": "삼성전자와 SK하이닉스의 고민이 있다면?",
-          "url": "https://blog.naver.com/ranto28/224301051921?fromRss=true&trackingCode=rss",
-          "published_date": "2026-05-30"
+          "title": "오늘(2026년 6월 11일)이 국장 네마녀의 날이다. 어떤 영향이..",
+          "url": "https://blog.naver.com/ranto28/224312087790?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-10"
         }
       ],
       "source_mentioned": true,
       "watchlist_entry_date": "2026-06-09",
-      "latest_evidence_date": "2026-06-07",
-      "watchlist_duration_days": 0,
+      "latest_evidence_date": "2026-06-10",
+      "watchlist_duration_days": 2,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
       "source_scope": "source_named_security",
-      "observation_reason": "HBM 기술력은 긍정적이나, 엔비디아의 메모리 구성 변경 및 주요 고객사(OpenAI)의 재무 리스크 등 단기적 불확실성이 제기되어 즉시 편입하지 않고 추이를 관찰할 필요가 있음."
+      "observation_reason": "기존 HBM 기술 및 고객사 관련 불확실성에 더해, 네 마녀의 날 등 파생상품 만기일의 대규모 프로그램 매매로 인한 단기 주가 변동성 위험이 부각되어 관찰을 유지함."
     },
     {
       "name": "SK하이닉스",
@@ -436,28 +431,223 @@
       "asset_type": "stock",
       "decision_actor": "AI",
       "basis": "종목 분석",
-      "decision_date": "2026-06-09",
+      "decision_date": "2026-06-11",
       "evidence_posts": [
         {
-          "title": "삼성전자와 SK하이닉스를 흔든 엔비디아 SOCAMM 이슈가 뭘까?",
-          "url": "https://blog.naver.com/ranto28/224307440861?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-07"
-        },
-        {
-          "title": "삼성전자와 SK하이닉스의 고민이 있다면?",
-          "url": "https://blog.naver.com/ranto28/224301051921?fromRss=true&trackingCode=rss",
-          "published_date": "2026-05-30"
+          "title": "오늘(2026년 6월 11일)이 국장 네마녀의 날이다. 어떤 영향이..",
+          "url": "https://blog.naver.com/ranto28/224312087790?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-10"
         }
       ],
       "source_mentioned": true,
       "watchlist_entry_date": "2026-06-09",
-      "latest_evidence_date": "2026-06-07",
+      "latest_evidence_date": "2026-06-10",
+      "watchlist_duration_days": 2,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "기존 HBM 기술 및 고객사 관련 불확실성에 더해, 네 마녀의 날 등 파생상품 만기일의 대규모 프로그램 매매로 인한 단기 주가 변동성 위험이 부각되어 관찰을 유지함."
+    },
+    {
+      "name": "HD현대건설기계",
+      "code": "112040",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-11",
+      "evidence_posts": [
+        {
+          "title": "오늘(2026년 6월 11일)이 국장 네마녀의 날이다. 어떤 영향이..",
+          "url": "https://blog.naver.com/ranto28/224312087790?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-10"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-06-11",
+      "latest_evidence_date": "2026-06-10",
       "watchlist_duration_days": 0,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
       "source_scope": "source_named_security",
-      "observation_reason": "HBM 시장 선도 기업이나, 엔비디아의 메모리 구성 변경 및 주요 고객사(OpenAI)의 재무 리스크 등 단기적 불확실성이 제기되어 즉시 편입하지 않고 추이를 관찰할 필요가 있음."
+      "observation_reason": "코스피200 지수 신규 편입 종목으로 언급되었으나, 블로거의 구체적인 투자 논리가 없어 수급 효과 및 펀더멘털 변화를 관찰할 필요가 있음."
+    },
+    {
+      "name": "DB하이텍",
+      "code": "000990",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-11",
+      "evidence_posts": [
+        {
+          "title": "오늘(2026년 6월 11일)이 국장 네마녀의 날이다. 어떤 영향이..",
+          "url": "https://blog.naver.com/ranto28/224312087790?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-10"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-06-11",
+      "latest_evidence_date": "2026-06-10",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "코스피200 지수 신규 편입 종목으로 언급되었으나, 블로거의 구체적인 투자 논리가 없어 수급 효과 및 펀더멘털 변화를 관찰할 필요가 있음."
+    },
+    {
+      "name": "달바글로벌",
+      "code": "",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-11",
+      "evidence_posts": [
+        {
+          "title": "오늘(2026년 6월 11일)이 국장 네마녀의 날이다. 어떤 영향이..",
+          "url": "https://blog.naver.com/ranto28/224312087790?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-10"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-06-11",
+      "latest_evidence_date": "2026-06-10",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "코스피200 지수 신규 편입 종목으로 언급되었으나, 상장 코드가 불명확하여 관찰 대상으로 분류함."
+    },
+    {
+      "name": "OCI",
+      "code": "456040",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-11",
+      "evidence_posts": [
+        {
+          "title": "오늘(2026년 6월 11일)이 국장 네마녀의 날이다. 어떤 영향이..",
+          "url": "https://blog.naver.com/ranto28/224312087790?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-10"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-06-11",
+      "latest_evidence_date": "2026-06-10",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "코스피200 지수 신규 편입 종목으로 언급되었으나, 블로거의 구체적인 투자 논리가 없어 수급 효과 및 펀더멘털 변화를 관찰할 필요가 있음."
+    },
+    {
+      "name": "GS건설",
+      "code": "006360",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-11",
+      "evidence_posts": [
+        {
+          "title": "오늘(2026년 6월 11일)이 국장 네마녀의 날이다. 어떤 영향이..",
+          "url": "https://blog.naver.com/ranto28/224312087790?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-10"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-06-11",
+      "latest_evidence_date": "2026-06-10",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "코스피200 지수 편출 종목으로 언급. 패시브 자금 이탈 가능성이 있으나, 펀더멘털과 무관한 수급 이슈일 수 있어 주가 추이 관찰 필요."
+    },
+    {
+      "name": "세방전지",
+      "code": "004490",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-11",
+      "evidence_posts": [
+        {
+          "title": "오늘(2026년 6월 11일)이 국장 네마녀의 날이다. 어떤 영향이..",
+          "url": "https://blog.naver.com/ranto28/224312087790?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-10"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-06-11",
+      "latest_evidence_date": "2026-06-10",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "코스피200 지수 편출 종목으로 언급. 패시브 자금 이탈 가능성이 있으나, 펀더멘털과 무관한 수급 이슈일 수 있어 주가 추이 관찰 필요."
+    },
+    {
+      "name": "GKL",
+      "code": "114090",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-11",
+      "evidence_posts": [
+        {
+          "title": "오늘(2026년 6월 11일)이 국장 네마녀의 날이다. 어떤 영향이..",
+          "url": "https://blog.naver.com/ranto28/224312087790?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-10"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-06-11",
+      "latest_evidence_date": "2026-06-10",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "코스피200 지수 편출 종목으로 언급. 패시브 자금 이탈 가능성이 있으나, 펀더멘털과 무관한 수급 이슈일 수 있어 주가 추이 관찰 필요."
+    },
+    {
+      "name": "녹십자홀딩스",
+      "code": "005250",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-11",
+      "evidence_posts": [
+        {
+          "title": "오늘(2026년 6월 11일)이 국장 네마녀의 날이다. 어떤 영향이..",
+          "url": "https://blog.naver.com/ranto28/224312087790?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-10"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-06-11",
+      "latest_evidence_date": "2026-06-10",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "코스피200 지수 편출 종목으로 언급. 패시브 자금 이탈 가능성이 있으나, 펀더멘털과 무관한 수급 이슈일 수 있어 주가 추이 관찰 필요."
     }
   ],
   "closed_positions": [
@@ -842,123 +1032,34 @@
   ],
   "insights": [
     {
-      "id": "INSIGHT-20260609-1",
-      "title": "구글의 초대형 유상증자는 AI 패권 장악을 위한 전략적 포석",
-      "summary": "구글은 AI 설비투자 자금 조달, 경쟁사 IPO 전 유동성 선점, 경쟁사의 자금 조달을 방해하는 '자금 전쟁'을 목적으로 847억 달러 규모의 유상증자를 단행했습니다. 이는 재무 건전성을 유지하며 AI 시장에서의 지배력을 공고히 하려는 다목적 전략입니다.",
-      "investment_implication": "구글의 AI 사업에 대한 강력한 의지와 선제적 리스크 관리를 보여주는 긍정적 신호입니다.",
+      "id": "INSIGHT-20260611-1",
+      "title": "단기 시장 변동성 확대 경고: CPI, FOMC, 네 마녀의 날 등 주요 이벤트 집중",
+      "summary": "6월 둘째 주는 미국 CPI 발표, FOMC, 일본은행 회의 등 거시경제 이벤트와 한국 증시의 '네 마녀의 날' 및 지수 리밸런싱이 겹쳐 금리, 환율, 주가 변동성이 극심할 것으로 예상됩니다. 불안정한 매크로 환경은 파생상품 포지션 청산 가능성을 높여 시장 충격을 키울 수 있습니다.",
+      "investment_implication": "투자자는 단기적인 시장 충격에 대비하고 신중한 접근이 필요합니다.",
       "evidence_posts": [
         {
-          "title": "구글 초대형 유상증자의 속사정(feat OpenAI,스페이스X,엔트로픽)",
-          "url": "https://blog.naver.com/ranto28/224308296478?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-06"
-        }
-      ],
-      "related_decision_codes": [
-        "GOOGL"
-      ]
-    },
-    {
-      "id": "INSIGHT-20260609-2",
-      "title": "엔비디아의 '소버린 AI' 및 '피지컬 AI' 전략과 한국 파트너의 부상",
-      "summary": "엔비디아 젠슨 황 CEO는 '소버린 AI'와 '피지컬 AI'를 핵심 성장 동력으로 제시하며, 각 분야에서 네이버와 두산로보틱스와의 협력을 강화하고 있습니다. 이는 해당 기업들이 엔비디아의 글로벌 전략에서 중요한 역할을 맡게 될 것을 시사합니다.",
-      "investment_implication": "네이버와 두산로보틱스는 엔비디아 생태계 내에서 핵심 파트너로 자리매김하며 장기적인 성장 동력을 확보했습니다.",
-      "evidence_posts": [
-        {
-          "title": "엔비디아가 네이버를 방문하는 이유  2",
-          "url": "https://blog.naver.com/ranto28/224304099311?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-02"
+          "title": "오늘(2026년 6월 11일)이 국장 네마녀의 날이다. 어떤 영향이..",
+          "url": "https://blog.naver.com/ranto28/224312087790?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-10"
         },
         {
-          "title": "젠슨 황이 삼성과 LG가 아니라 이기업을 선택한 이유는?",
-          "url": "https://blog.naver.com/ranto28/224302397201?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-01"
-        },
-        {
-          "title": "젠슨 황이 이 기업을 선택한 이유 A/S",
-          "url": "https://blog.naver.com/ranto28/224303429967?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-01"
+          "title": "지금 우리 증시는 (feat 3종세트)",
+          "url": "https://blog.naver.com/ranto28/224311307187?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-09"
         }
       ],
-      "related_decision_codes": [
-        "035420",
-        "454910"
-      ]
+      "related_decision_codes": []
     },
     {
-      "id": "INSIGHT-20260609-3",
-      "title": "AI 기반 '디지털 생물학' 혁명과 관련 기업의 가치 재평가",
-      "summary": "엔비디아는 AI의 다음 격전지로 '디지털 생물학'을 지목하고, 리커전, 일라이 릴리와의 파트너십을 통해 신약 개발 패러다임 전환을 주도하고 있습니다. 일라이 릴리는 '고질라급' 비만 신약의 압도적인 임상 결과로 시장 지배력을 강화하고 있습니다.",
-      "investment_implication": "AI 신약 개발 플랫폼 기업과 압도적인 신약 파이프라인을 보유한 제약사의 성장 잠재력이 매우 높습니다.",
+      "id": "INSIGHT-20260611-2",
+      "title": "한국 증시 '네 마녀의 날' 영향력 증대와 대형주 변동성",
+      "summary": "ETF 헤지 물량 증가로 한국의 '네 마녀의 날' 영향력이 커지고 있으며, 만기일 장 막판 동시호가에 대량 프로그램 매매로 인한 지수 변동성 확대가 예상됩니다. 특히 코스피 대형주에 파생상품 관련 대기 물량이 많아 단기적 주가 변동 위험이 부각됩니다.",
+      "investment_implication": "코스피 대형주는 파생상품 관련 매물 출회 가능성이 있어 단기적 주가 변동에 유의해야 합니다.",
       "evidence_posts": [
         {
-          "title": "고질라급 비만약과 먹는 비만약 근황(feat 일라이 릴리 vs 노보노)",
-          "url": "https://blog.naver.com/ranto28/224304420228?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-03"
-        },
-        {
-          "title": "엔비디아 젠슨 황이 꼽는 AI의 다음 격전지 디지털 생물학 A/S",
-          "url": "https://blog.naver.com/ranto28/224298572075?fromRss=true&trackingCode=rss",
-          "published_date": "2026-05-28"
-        },
-        {
-          "title": "엔비디아 젠슨 황이 꼽는 AI의 다음 격전지(feat 디지털생물학)",
-          "url": "https://blog.naver.com/ranto28/224297585371?fromRss=true&trackingCode=rss",
-          "published_date": "2026-05-27"
-        }
-      ],
-      "related_decision_codes": [
-        "LLY",
-        "RXRX"
-      ]
-    },
-    {
-      "id": "INSIGHT-20260609-4",
-      "title": "기니의 자원 무기화와 글로벌 알루미늄 공급망 재편",
-      "summary": "세계 최대 보크사이트 생산국 기니가 수출 통제를 통해 중국을 압박하고 서방과의 관계를 강화하고 있습니다. 이는 글로벌 알루미늄 가격 상승을 유발하며, 중국 외 지역의 알루미늄 생산업체에 수혜로 작용할 전망입니다.",
-      "investment_implication": "알루미늄 가격 상승에 따른 알코아(Alcoa) 등 비중국계 생산업체의 실적 개선이 기대됩니다.",
-      "evidence_posts": [
-        {
-          "title": "기니 중국을 건드리나? 2 (feat 보크사이트, 알루미늄)",
-          "url": "https://blog.naver.com/ranto28/224298249695?fromRss=true&trackingCode=rss",
-          "published_date": "2026-05-27"
-        }
-      ],
-      "related_decision_codes": [
-        "AA",
-        "WAB"
-      ]
-    },
-    {
-      "id": "INSIGHT-20260609-5",
-      "title": "엔비디아의 파트너로 낙점된 마벨, 맞춤형 AI 칩 시장의 핵심 플레이어로 부상",
-      "summary": "젠슨 황이 '1조 달러 클럽' 후보로 칭찬한 마벨은 엔비디아와의 NVLink Fusion 파트너십을 통해 경쟁자에서 협력자로 변모했습니다. 이는 마벨이 설계하는 맞춤형 AI 칩이 엔비디아 생태계에 편입되어 함께 성장하는 구조를 만들었습니다.",
-      "investment_implication": "마벨은 브로드컴이 장악한 맞춤형 AI 칩 시장에서 점유율을 확대할 강력한 성장 동력을 확보했습니다.",
-      "evidence_posts": [
-        {
-          "title": "젠슨 황이 1조달러 클럽에 들어갈 것이라고 칭찬한 기업",
-          "url": "https://blog.naver.com/ranto28/224305346386?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-04"
-        }
-      ],
-      "related_decision_codes": [
-        "MRVL"
-      ]
-    },
-    {
-      "id": "INSIGHT-20260609-6",
-      "title": "한국 메모리 반도체, 단기적 불확실성 증대",
-      "summary": "엔비디아의 차세대 서버 메모리 구성 변경(SOCAMM)과 주요 고객사인 OpenAI의 재무적 지속가능성에 대한 우려가 제기되었습니다. 이는 HBM 등 고부가가치 메모리 수요에 대한 단기적 불확실성을 높이는 요인입니다.",
-      "investment_implication": "삼성전자, SK하이닉스 등 국내 메모리 반도체 기업에 대한 신중한 접근이 필요합니다.",
-      "evidence_posts": [
-        {
-          "title": "삼성전자와 SK하이닉스를 흔든 엔비디아 SOCAMM 이슈가 뭘까?",
-          "url": "https://blog.naver.com/ranto28/224307440861?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-07"
-        },
-        {
-          "title": "삼성전자와 SK하이닉스의 고민이 있다면?",
-          "url": "https://blog.naver.com/ranto28/224301051921?fromRss=true&trackingCode=rss",
-          "published_date": "2026-05-30"
+          "title": "오늘(2026년 6월 11일)이 국장 네마녀의 날이다. 어떤 영향이..",
+          "url": "https://blog.naver.com/ranto28/224312087790?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-10"
         }
       ],
       "related_decision_codes": [

@@ -1,6 +1,6 @@
 {
-  "updated": "2026-06-10",
-  "portfolio_return_krw": -2.14669179,
+  "updated": "2026-06-11",
+  "portfolio_return_krw": -5.37986524,
   "cash": 7.0,
   "realized_pnl": 0.0,
   "active_positions": [
@@ -15,8 +15,8 @@
       "decision_actor": "미분류",
       "opened_date": "2026-06-09",
       "target_weight": 3.0,
-      "current_price": 11130.0,
-      "return_pct_krw": 7.5362318840579645
+      "current_price": 12750.0,
+      "return_pct_krw": 23.188405797101442
     },
     {
       "key": "stock:KR:001440",
@@ -29,8 +29,8 @@
       "decision_actor": "미분류",
       "opened_date": "2026-06-09",
       "target_weight": 3.0,
-      "current_price": 38700.0,
-      "return_pct_krw": 3.892617449664426
+      "current_price": 37450.0,
+      "return_pct_krw": 0.5369127516778427
     },
     {
       "key": "stock:KR:010140",
@@ -43,8 +43,8 @@
       "decision_actor": "미분류",
       "opened_date": "2026-06-09",
       "target_weight": 8.0,
-      "current_price": 25850.0,
-      "return_pct_krw": -0.9578544061302652
+      "current_price": 26000.0,
+      "return_pct_krw": -0.3831417624521105
     },
     {
       "key": "stock:US:GOOGL",
@@ -57,8 +57,8 @@
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
       "target_weight": 10.0,
-      "current_price": 554298.2661895752,
-      "return_pct_krw": -0.3707587439062521
+      "current_price": 542284.9818492681,
+      "return_pct_krw": -2.530019338470646
     },
     {
       "key": "stock:US:MSFT",
@@ -71,8 +71,8 @@
       "decision_actor": "미분류",
       "opened_date": "2026-06-09",
       "target_weight": 3.0,
-      "current_price": 613636.0705947876,
-      "return_pct_krw": -2.3580662952325304
+      "current_price": 610036.4301602542,
+      "return_pct_krw": -2.9308420323710394
     },
     {
       "key": "stock:US:AA",
@@ -85,8 +85,8 @@
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
       "target_weight": 8.0,
-      "current_price": 108302.1965675354,
-      "return_pct_krw": -3.844066874671681
+      "current_price": 102538.22775462642,
+      "return_pct_krw": -8.961597426002088
     },
     {
       "key": "stock:US:RXRX",
@@ -99,8 +99,8 @@
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
       "target_weight": 3.0,
-      "current_price": 4890.633312821388,
-      "return_pct_krw": -3.7557282027787187
+      "current_price": 4706.919275958935,
+      "return_pct_krw": -7.371093037104092
     },
     {
       "key": "stock:US:NOC",
@@ -113,8 +113,8 @@
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
       "target_weight": 5.0,
-      "current_price": 827455.8446960449,
-      "return_pct_krw": 1.208357285163264
+      "current_price": 825696.1591230705,
+      "return_pct_krw": 0.9931253941557694
     },
     {
       "key": "stock:KR:011070",
@@ -127,8 +127,8 @@
       "decision_actor": "미분류",
       "opened_date": "2026-06-09",
       "target_weight": 8.0,
-      "current_price": 1137000.0,
-      "return_pct_krw": 3.835616438356171
+      "current_price": 1090000.0,
+      "return_pct_krw": -0.45662100456621557
     },
     {
       "key": "stock:US:WAB",
@@ -141,8 +141,8 @@
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
       "target_weight": 3.0,
-      "current_price": 401685.0487976074,
-      "return_pct_krw": 1.0839062080559625
+      "current_price": 390322.4796791747,
+      "return_pct_krw": -1.7754804544257707
     },
     {
       "key": "stock:KR:454910",
@@ -155,8 +155,8 @@
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
       "target_weight": 10.0,
-      "current_price": 116600.0,
-      "return_pct_krw": -8.333333333333337
+      "current_price": 106600.0,
+      "return_pct_krw": -16.19496855345912
     },
     {
       "key": "stock:KR:005380",
@@ -169,8 +169,8 @@
       "decision_actor": "미분류",
       "opened_date": "2026-06-09",
       "target_weight": 10.0,
-      "current_price": 639000.0,
-      "return_pct_krw": 0.0
+      "current_price": 602000.0,
+      "return_pct_krw": -5.790297339593109
     },
     {
       "key": "stock:KR:035420",
@@ -183,8 +183,8 @@
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
       "target_weight": 10.0,
-      "current_price": 257000.0,
-      "return_pct_krw": -7.885304659498205
+      "current_price": 227000.0,
+      "return_pct_krw": -18.63799283154122
     },
     {
       "key": "stock:US:LLY",
@@ -197,8 +197,8 @@
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
       "target_weight": 5.0,
-      "current_price": 1747043.2946777344,
-      "return_pct_krw": -1.3099295682413192
+      "current_price": 1729028.63070786,
+      "return_pct_krw": -2.327573756801238
     },
     {
       "key": "stock:US:MRVL",
@@ -211,8 +211,8 @@
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
       "target_weight": 4.0,
-      "current_price": 392685.2268447876,
-      "return_pct_krw": -14.93344874056569
+      "current_price": 396631.47151766345,
+      "return_pct_krw": -14.078582293348552
     }
   ],
   "closed_positions": [],
@@ -222,8 +222,8 @@
       "avg_return_krw": 0.0
     },
     {
-      "date": "2026-06-10",
-      "avg_return_krw": -2.14669179
+      "date": "2026-06-11",
+      "avg_return_krw": -5.37986524
     }
   ]
 }
