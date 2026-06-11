@@ -1,7 +1,7 @@
 {
   "schema_version": "3.0",
   "starting_value": 100.0,
-  "cash": 7.0,
+  "cash": 3.2208146468577272,
   "realized_pnl": 0.0,
   "positions": [
     {
@@ -182,6 +182,18 @@
       "average_cost": 461621.1907394528,
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
+      "target_weight": 4.0
+    },
+    {
+      "key": "stock:KR:042660",
+      "name": "한화오션",
+      "code": "042660",
+      "market": "KR",
+      "asset_type": "stock",
+      "quantity": 3.6164453140117444e-05,
+      "average_cost": 104500.0,
+      "decision_actor": "AI",
+      "opened_date": "2026-06-12",
       "target_weight": 4.0
     }
   ],
@@ -366,6 +378,18 @@
       "value": 4.0,
       "target_weight": 4.0,
       "reason": "신규 편입. 엔비디아 CEO 젠슨 황의 강력한 지지와 NVLink Fusion 파트너십을 통해 맞춤형 AI 칩 시장에서 브로드컴의 대항마로 성장할 잠재력을 높게 평가함."
+    },
+    {
+      "date": "2026-06-12",
+      "type": "신규 매수",
+      "key": "stock:KR:042660",
+      "name": "한화오션",
+      "decision_actor": "AI",
+      "price": 104500.0,
+      "quantity": 3.6164453140117444e-05,
+      "value": 3.7791853531422728,
+      "target_weight": 4.0,
+      "reason": "신규 편입. 미국 필리조선소 인수를 통해 현지 생산 거점을 확보, 미 해군 함정 건조 및 MRO 시장 진출의 교두보를 마련함. NDAA의 해외 건조 금지 조항의 직접적인 수혜가 기대됨."
     }
   ],
   "snapshots": [
@@ -383,6 +407,14 @@
       "invested_value": 87.62013476,
       "total_value": 94.62013476,
       "return_pct": -5.37986524,
+      "realized_pnl": 0.0
+    },
+    {
+      "date": "2026-06-12",
+      "cash": 3.22081465,
+      "invested_value": 91.25881918,
+      "total_value": 94.47963383,
+      "return_pct": -5.52036617,
       "realized_pnl": 0.0
     }
   ]
