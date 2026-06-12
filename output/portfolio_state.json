@@ -750,6 +750,31 @@
       "status": "관심",
       "source_scope": "source_named_security",
       "observation_reason": "비상장 기업이나, 우주 발사체 및 위성 인터넷, 우주 데이터센터 등 혁신적인 사업으로 상업 우주 경제를 주도하고 있어 향후 IPO 시 주목해야 할 핵심 기업임."
+    },
+    {
+      "name": "가스 터빈 / 분산 발전 섹터",
+      "code": "",
+      "market": "",
+      "asset_type": "sector",
+      "decision_actor": "AI",
+      "basis": "섹터 분석",
+      "decision_date": "2026-06-13",
+      "evidence_posts": [
+        {
+          "title": "일론 머스크가 만드는 데이터센터가 기적적인 속도로 건설되는 비밀",
+          "url": "https://blog.naver.com/ranto28/224313393861?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-12"
+        }
+      ],
+      "source_mentioned": false,
+      "watchlist_entry_date": "2026-06-13",
+      "latest_evidence_date": "2026-06-12",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "sector_only",
+      "observation_reason": "블로그에서 AI 데이터센터의 전력난 해결책으로 현장 가스 터빈 설치라는 새로운 강력한 트렌드를 제시했습니다. 이 트렌드의 수혜를 입을 수 있는 대표 상장기업을 식별하기 위해 추가적인 분석이 필요합니다."
     }
   ],
   "closed_positions": [
@@ -1233,38 +1258,32 @@
   ],
   "insights": [
     {
-      "id": "INSIGHT-20260612-1",
-      "title": "미국 조선업 보호주의, 현지 생산기반 갖춘 한국 기업에 기회",
-      "summary": "미 하원이 국방수권법(NDAA)에 해외 군함 건조 금지 조항을 포함시켰으나, 이는 역설적으로 필리조선소를 인수하고 투자를 확대하는 한화오션 등 미국 내 생산 거점을 확보한 한국 기업에게는 기회 요인으로 작용합니다. 최근 조선주 부진은 펀더멘털이 아닌 수급 문제로 분석됩니다.",
-      "investment_implication": "미국 현지 생산 전략을 갖춘 한국 조선 기업의 경쟁력이 부각될 것입니다.",
+      "id": "INSIGHT-20260613-1",
+      "title": "AI 데이터센터, 전력난 해결 위해 자체 가스 터빈 발전 채택 가속화",
+      "summary": "xAI는 규제 회피와 신속한 구축을 위해 데이터센터 부지에 직접 가스 터빈을 설치하여 전력을 조달하고 있습니다. 이는 AI 인프라 경쟁에서 전력 확보가 핵심 병목 현상이며, 이를 해결하기 위한 파격적인 시도가 늘고 있음을 보여줍니다.",
+      "investment_implication": "이동식 및 분산형 가스 터빈 발전 솔루션에 대한 수요가 증가할 것입니다.",
       "evidence_posts": [
         {
-          "title": "미국 하원, 해외 군함 건조 금지의 내막 (feat 조선업)",
-          "url": "https://blog.naver.com/ranto28/224311870961?fromRss=true&trackingCode=rss",
+          "title": "일론 머스크가 만드는 데이터센터가 기적적인 속도로 건설되는 비밀",
+          "url": "https://blog.naver.com/ranto28/224313393861?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-12"
+        }
+      ],
+      "related_decision_codes": []
+    },
+    {
+      "id": "INSIGHT-20260613-2",
+      "title": "미-이란 종전 합의 가능성 부상에 따른 지정학적 리스크 완화 기대",
+      "summary": "트럼프가 이란과의 종전 관련 합의를 발표하며 지정학적 리스크 완화 기대감이 커졌습니다. 합의의 최종 성사 여부는 불확실하지만, 성공 시 호르무즈 해협 개방으로 유가 및 비료 가격의 안정화가 예상됩니다.",
+      "investment_implication": "에너지 가격 하락은 인플레이션 압력을 완화시켜 증시에 긍정적이며, 특히 에너지 다소비 산업에 수혜가 될 수 있습니다.",
+      "evidence_posts": [
+        {
+          "title": "트럼프, 이란과 \"종전 관련 훌륭한 합의를 끝냈다\" 발표",
+          "url": "https://blog.naver.com/ranto28/224313465740?fromRss=true&trackingCode=rss",
           "published_date": "2026-06-11"
         }
       ],
-      "related_decision_codes": [
-        "010140",
-        "042660",
-        "329180"
-      ]
-    },
-    {
-      "id": "INSIGHT-20260612-2",
-      "title": "스페이스X의 우주 데이터센터, 상업 우주 경제 가속화",
-      "summary": "스페이스X가 우주 데이터센터 시범 가동 목표를 2027년 말로 앞당기는 등 민간 부문이 우주 경제 개발을 주도하고 있습니다. 이는 발사체, 위성, 관련 인프라 등 우주 산업 전반의 성장을 촉진하는 강력한 모멘텀입니다.",
-      "investment_implication": "우주 인프라 및 방위 산업 관련 기업들의 장기 성장성이 강화됩니다.",
-      "evidence_posts": [
-        {
-          "title": "스페이스X 근황 (feat 상장, 우주데이터센터)",
-          "url": "https://blog.naver.com/ranto28/224312456368?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-10"
-        }
-      ],
-      "related_decision_codes": [
-        "NOC"
-      ]
+      "related_decision_codes": []
     }
   ],
   "last_rebalanced_date": "2026-06-09"
