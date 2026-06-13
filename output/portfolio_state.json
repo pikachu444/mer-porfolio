@@ -1258,29 +1258,29 @@
   ],
   "insights": [
     {
-      "id": "INSIGHT-20260613-1",
-      "title": "AI 데이터센터, 전력난 해결 위해 자체 가스 터빈 발전 채택 가속화",
-      "summary": "xAI는 규제 회피와 신속한 구축을 위해 데이터센터 부지에 직접 가스 터빈을 설치하여 전력을 조달하고 있습니다. 이는 AI 인프라 경쟁에서 전력 확보가 핵심 병목 현상이며, 이를 해결하기 위한 파격적인 시도가 늘고 있음을 보여줍니다.",
-      "investment_implication": "이동식 및 분산형 가스 터빈 발전 솔루션에 대한 수요가 증가할 것입니다.",
+      "id": "INSIGHT-20260614-1",
+      "title": "지정학적 이벤트와 자연재해는 글로벌 물류망의 영구적 변화를 촉발하는 기회",
+      "summary": "베트남 전쟁이 컨테이너 운송의 확산을, 고베 대지진이 부산항의 도약을 이끌었듯, 예상치 못한 외부 충격은 준비된 물류 허브에 중대한 성장 기회를 제공합니다. 이는 물류 인프라의 전략적 중요성과 회복탄력성의 가치를 보여줍니다.",
+      "investment_implication": "물류 및 인프라 투자는 지정학적, 지리적 리스크와 기회를 포함한 장기적 관점이 필요합니다.",
       "evidence_posts": [
         {
-          "title": "일론 머스크가 만드는 데이터센터가 기적적인 속도로 건설되는 비밀",
-          "url": "https://blog.naver.com/ranto28/224313393861?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-12"
+          "title": "부산항",
+          "url": "https://blog.naver.com/ranto28/224314709934?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-13"
         }
       ],
       "related_decision_codes": []
     },
     {
-      "id": "INSIGHT-20260613-2",
-      "title": "미-이란 종전 합의 가능성 부상에 따른 지정학적 리스크 완화 기대",
-      "summary": "트럼프가 이란과의 종전 관련 합의를 발표하며 지정학적 리스크 완화 기대감이 커졌습니다. 합의의 최종 성사 여부는 불확실하지만, 성공 시 호르무즈 해협 개방으로 유가 및 비료 가격의 안정화가 예상됩니다.",
-      "investment_implication": "에너지 가격 하락은 인플레이션 압력을 완화시켜 증시에 긍정적이며, 특히 에너지 다소비 산업에 수혜가 될 수 있습니다.",
+      "id": "INSIGHT-20260614-2",
+      "title": "가덕도 신항 개발, 부산항의 글로벌 허브 지위 강화를 위한 장기 프로젝트",
+      "summary": "기존 자성대부두의 기능을 이전받는 가덕도 신항 프로젝트는 부산항의 처리 능력을 확장하고 경쟁력을 유지하기 위한 핵심 사업입니다. 이는 한국의 수출입 물류 인프라에 대한 지속적인 투자를 의미합니다.",
+      "investment_implication": "항만 건설, 엔지니어링, 운영 관련 기업에 장기적인 수혜가 예상됩니다.",
       "evidence_posts": [
         {
-          "title": "트럼프, 이란과 \"종전 관련 훌륭한 합의를 끝냈다\" 발표",
-          "url": "https://blog.naver.com/ranto28/224313465740?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-11"
+          "title": "부산항",
+          "url": "https://blog.naver.com/ranto28/224314709934?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-13"
         }
       ],
       "related_decision_codes": []
