@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-14",
+  "updated": "2026-06-15",
   "portfolio_return_krw": -3.68196001,
   "cash": 3.22081465,
   "realized_pnl": 0.0,
@@ -249,6 +249,10 @@
     },
     {
       "date": "2026-06-14",
+      "avg_return_krw": -3.68196001
+    },
+    {
+      "date": "2026-06-15",
       "avg_return_krw": -3.68196001
     }
   ]

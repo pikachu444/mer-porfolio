@@ -1,36 +1,76 @@
 {
-  "analysis_date": "2026-06-14",
+  "analysis_date": "2026-06-15",
   "run_type": "regular",
   "insights": [
     {
-      "id": "INSIGHT-20260614-1",
-      "title": "지정학적 이벤트와 자연재해는 글로벌 물류망의 영구적 변화를 촉발하는 기회",
-      "summary": "베트남 전쟁이 컨테이너 운송의 확산을, 고베 대지진이 부산항의 도약을 이끌었듯, 예상치 못한 외부 충격은 준비된 물류 허브에 중대한 성장 기회를 제공합니다. 이는 물류 인프라의 전략적 중요성과 회복탄력성의 가치를 보여줍니다.",
-      "investment_implication": "물류 및 인프라 투자는 지정학적, 지리적 리스크와 기회를 포함한 장기적 관점이 필요합니다.",
+      "id": "INSIGHT-20260615-1",
+      "title": "스페이스X IPO, 글로벌 투자은행의 막강한 배정 권력과 기관 수요 입증",
+      "summary": "스페이스X IPO 과정에서 주관사인 골드만삭스는 미래에셋증권의 대규모 주문에도 0주를 배정하며, 자사의 VVIP 고객과 글로벌 금융기관에 물량을 우선 배분했습니다. 이는 초대형 IPO에서 주관사의 절대적인 권한과 해당 딜에 대한 폭발적인 기관 수요를 보여줍니다.",
+      "investment_implication": "골드만삭스와 같은 최상위 투자은행들은 우량 비상장기업 IPO 접근성에서 독점적 지위를 가지며, 이는 강력한 경쟁 해자로 작용합니다.",
       "evidence_posts": [
         {
-          "title": "부산항",
-          "url": "https://blog.naver.com/ranto28/224314709934?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-13"
+          "title": "미래에셋증권이 스페이스 X 주식을 1주도 못 받은 비밀",
+          "url": "https://blog.naver.com/ranto28/224315627964?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-14"
         }
       ],
-      "related_decision_codes": []
-    },
-    {
-      "id": "INSIGHT-20260614-2",
-      "title": "가덕도 신항 개발, 부산항의 글로벌 허브 지위 강화를 위한 장기 프로젝트",
-      "summary": "기존 자성대부두의 기능을 이전받는 가덕도 신항 프로젝트는 부산항의 처리 능력을 확장하고 경쟁력을 유지하기 위한 핵심 사업입니다. 이는 한국의 수출입 물류 인프라에 대한 지속적인 투자를 의미합니다.",
-      "investment_implication": "항만 건설, 엔지니어링, 운영 관련 기업에 장기적인 수혜가 예상됩니다.",
-      "evidence_posts": [
-        {
-          "title": "부산항",
-          "url": "https://blog.naver.com/ranto28/224314709934?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-13"
-        }
-      ],
-      "related_decision_codes": []
+      "related_decision_codes": [
+        "GS",
+        "SpaceX"
+      ]
     }
   ],
   "portfolio_decisions": [],
-  "watchlist": []
+  "watchlist": [
+    {
+      "name": "SpaceX",
+      "code": "",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-15",
+      "evidence_posts": [
+        {
+          "title": "미래에셋증권이 스페이스 X 주식을 1주도 못 받은 비밀",
+          "url": "https://blog.naver.com/ranto28/224315627964?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-14"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-06-12",
+      "latest_evidence_date": "2026-06-14",
+      "watchlist_duration_days": 3,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "비상장 기업이나, 최근 IPO 시도에서 나타난 폭발적인 기관 수요는 동사의 독보적인 시장 지위와 성장성을 재확인시켜 줍니다. 향후 IPO 재추진 시 주목해야 할 핵심 기업입니다."
+    },
+    {
+      "name": "Goldman Sachs",
+      "code": "GS",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-15",
+      "evidence_posts": [
+        {
+          "title": "미래에셋증권이 스페이스 X 주식을 1주도 못 받은 비밀",
+          "url": "https://blog.naver.com/ranto28/224315627964?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-14"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-06-15",
+      "latest_evidence_date": "2026-06-14",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "스페이스X IPO 주관사로서 보여준 막강한 딜 소싱 및 배정 능력은 동사의 핵심 경쟁력입니다. 글로벌 자본시장에서의 독점적 지위가 어떻게 수익으로 연결되는지 관찰할 필요가 있습니다."
+    }
+  ]
 }
