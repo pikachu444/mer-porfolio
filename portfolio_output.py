@@ -53,7 +53,11 @@ def _review_required(item: dict) -> bool:
     if item.get("decision_actor") == "미분류":
         return True
     reason = str(item.get("change_reason") or "")
-    return "기존 상태 마이그레이션" in reason
+    if "기존 상태 마이그레이션" in reason:
+        return True
+    if item.get("decision_actor") == "AI" and not str(item.get("allocation_role") or "").strip():
+        return True
+    return False
 
 
 def _review_reason(item: dict) -> str:
@@ -61,6 +65,8 @@ def _review_reason(item: dict) -> str:
         return "판단 주체가 미분류라 다음 리밸런싱에서 유지 근거 재검증 필요"
     if "기존 상태 마이그레이션" in str(item.get("change_reason") or ""):
         return "기존 상태 마이그레이션 비중이라 다음 리밸런싱에서 재검증 필요"
+    if item.get("decision_actor") == "AI" and not str(item.get("allocation_role") or "").strip():
+        return "AI 판단이지만 포트폴리오 역할이 없어 다음 리밸런싱에서 재검증 필요"
     return ""
 
 

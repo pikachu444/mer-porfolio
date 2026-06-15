@@ -80,6 +80,26 @@ class PortfolioOutputTest(unittest.TestCase):
         self.assertIn("## 재검증 필요 포지션", report)
         self.assertIn("| 대한전선 | 001440 | 3% | 판단 주체가 미분류", report)
 
+    def test_ai_position_without_role_is_review_required_not_recommendation(self):
+        state = state_payload()
+        legacy_item = decision(
+            name="대한전선",
+            code="001440",
+            market="KR",
+            action="보유",
+            proposed_weight=3.0,
+            change_reason="기존 AI 판단 유지",
+        )
+        legacy_item.pop("allocation_role", None)
+        state["portfolio"].append(legacy_item)
+
+        output = build_output_model(state, {}, today_str="2026-06-07")
+        report = build_markdown_report(output)
+
+        self.assertEqual(output["domestic"], [])
+        self.assertEqual(output["review_required_positions"][0]["name"], "대한전선")
+        self.assertIn("AI 판단이지만 포트폴리오 역할이 없어", report)
+
     def test_current_portfolio_item_is_not_shown_as_closed_position(self):
         state = state_payload()
         state["portfolio"].append(
