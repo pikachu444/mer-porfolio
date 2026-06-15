@@ -47,6 +47,7 @@ def decision(**overrides):
         "proposed_weight": 8.0,
         "weight_source": "AI 제안",
         "change_reason": "알루미늄 공급 제한에 따른 수혜 추론",
+        "allocation_role": "satellite",
         "source_scope": "source_named_security",
         "investment_rationale": "원문에 등장한 Alcoa가 알루미늄 공급 제한의 수혜를 받을 수 있음",
         "current_entry_reason": "공급 제한 발표로 투자 논리가 구체화됨",
@@ -337,6 +338,19 @@ class PortfolioSchemaTest(unittest.TestCase):
 
         self.assertEqual(parsed.portfolio_decisions[0]["asset_type"], "etf")
 
+    def test_rejects_ai_buy_without_allocation_role(self):
+        payload = {
+            "analysis_date": "2026-06-01",
+            "run_type": "regular",
+            "insights": [insight()],
+            "portfolio_decisions": [decision()],
+            "watchlist": [],
+        }
+        del payload["portfolio_decisions"][0]["allocation_role"]
+
+        with self.assertRaisesRegex(PortfolioSchemaError, r"allocation_role"):
+            parse_analysis_decision(payload)
+
     def test_rejects_changed_decision_without_linked_insight(self):
         payload = {
             "analysis_date": "2026-06-01",
@@ -452,6 +466,35 @@ class PortfolioSchemaTest(unittest.TestCase):
         )
 
         self.assertEqual(updated.last_rebalanced_date, "2026-05-28")
+
+    def test_rejects_reducing_cash_below_defensive_target_without_reason(self):
+        payload = state_payload()
+        payload["portfolio"][0]["proposed_weight"] = 75.0
+        state = parse_portfolio_state_json(json.dumps(payload, ensure_ascii=False))
+        new_buy = decision(
+            name="Microsoft",
+            code="MSFT",
+            proposed_weight=10.0,
+            change_reason="AI 인프라 수혜 추론",
+        )
+
+        with self.assertRaisesRegex(PortfolioSchemaError, r"defensive cash"):
+            apply_portfolio_decisions(state, [new_buy])
+
+    def test_allows_reducing_cash_below_target_with_defensive_reason(self):
+        payload = state_payload()
+        payload["portfolio"][0]["proposed_weight"] = 75.0
+        state = parse_portfolio_state_json(json.dumps(payload, ensure_ascii=False))
+        new_buy = decision(
+            name="Microsoft",
+            code="MSFT",
+            proposed_weight=10.0,
+            change_reason="현금 방어 비중을 낮출 만큼 AI 인프라 근거가 강하지만 다음 리밸런싱에서 재점검",
+        )
+
+        updated = apply_portfolio_decisions(state, [new_buy])
+
+        self.assertEqual(len(updated.portfolio), 2)
 
     def test_rejects_weight_change_without_reason(self):
         payload = state_payload()

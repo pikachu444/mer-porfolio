@@ -26,7 +26,7 @@
 | `fetch_mer.py` | RSS 수집, 본문 저장, 글별 요약, 요약 실패 보류 |
 | `analyze.py` | Gemini 호출, 구조화 판단 JSON과 보고서 생성 시도 |
 | `system_prompt.py` | Gemini 입력 프롬프트와 출력 계약 |
-| `portfolio_schema.py` | 상태 파일 스키마, 판단 검증, 상태 갱신 |
+| `portfolio_schema.py` | 상태 파일 스키마, 판단 검증, 현금성 20% 하회 사유 검증, 상태 갱신 |
 | `portfolio_validation.py` | 보고서/판단 보조 검증 |
 | `track_returns.py` | 모델 포트폴리오 거래 원장, 종목 코드 정규화, 수익률 계산 |
 | `portfolio_output.py` | Telegram, HTML, Markdown이 함께 쓰는 사용자 출력 기준 자료 생성 |
@@ -62,6 +62,8 @@
 - 국내주식 추천
 - 해외주식 추천
 - 현재 모델 포트폴리오 목표 비중
+- 주식 노출과 현금성 비중
+- 재검증 필요 포지션
 - Watchlist
 - 종료 포지션
 - 수익률 표시
@@ -71,13 +73,21 @@
 현재 모델 포트폴리오 종목과 종료 포지션 종목이 겹치면 성과 기록을 정리한다. 대한전선처럼 과거
 코드 오기(`011440`)가 있으면 실제 코드(`001440`) 기준으로 정규화한 뒤 비교한다.
 
+기존 상태 마이그레이션이나 `미분류` 보유 종목은 국내/해외 추천 목록에서 제외하고
+`재검증 필요 포지션`으로 표시한다. 신규 매수 판단에는 `allocation_role`을 요구하며, 이 값은
+핵심/core, 위성/satellite, 위험자산/risk, 방어/defensive, 관찰/watch 중 하나다.
+
+신규 매수로 현금성 비중이 기본 방어 기준인 20% 아래로 내려가면 판단 사유에 현금성 비중을
+낮추는 이유가 포함되어야 한다. 이유가 없으면 `portfolio_schema.py` 검증 단계에서 차단한다.
+
 ## GitHub Actions
 
 | 모드 | 목적 |
 |---|---|
 | `scheduled` | 매일 신규 글 수집과 필요 시 판단 실행 |
 | `rebalance` | 수동 리밸런싱 실행 |
-| `verify` | 운영 상태를 직접 덮어쓰지 않는 실제 출력 검증 |
+| `verify` | Gemini 호출 없이 현재 포트폴리오 기준 출력과 Telegram 검증 |
+| `full_verify` | 운영 상태를 덮어쓰지 않는 실제 수집/요약/분석/출력 전체 검증 |
 | `test` | API 호출 없는 테스트 |
 
 Actions에서 수정이 반영되려면 변경 사항이 `main` 브랜치에 병합되어야 한다.
@@ -89,7 +99,7 @@ Actions에서 수정이 반영되려면 변경 사항이 `main` 브랜치에 병
 1. `python -m py_compile main.py generate_dashboard.py telegram_notify.py portfolio_output.py`
 2. `PYTHONUTF8=1 python -m unittest discover -s tests -q`
 3. `git diff --check`
-4. 필요 시 GitHub Actions `verify` 또는 `rebalance` 실행 결과 확인
+4. 출력 형식만 확인할 때는 GitHub Actions `verify`, 전체 운영 흐름을 확인할 때는 `full_verify` 실행 결과 확인
 
 ## 셸별 명령 주의사항
 

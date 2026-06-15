@@ -60,8 +60,17 @@ class TelegramSummaryTest(unittest.TestCase):
         self.assertIn("2. *피지컬 AI 확산*", summary)
 
     def test_status_note_can_name_deferred_post(self):
+        state = state_payload()
+        state["deferred_posts"] = [
+            {
+                "title": "코스트코와 이마트 트레이더스",
+                "url": "https://blog.naver.com/ranto28/223456789012",
+                "date": "2026-06-08",
+                "reason": "SummaryResponseError: 잘린 JSON",
+            }
+        ]
         summary = build_structured_summary(
-            state_payload(),
+            state,
             "2026년 06월 01일",
             {
                 "portfolio_return_krw": 3.25,
@@ -72,6 +81,8 @@ class TelegramSummaryTest(unittest.TestCase):
 
         self.assertIn("새 글 1건 요약 실패", summary)
         self.assertIn("코스트코와 이마트 트레이더스", summary)
+        self.assertIn("분석 보류 글", summary)
+        self.assertIn("https://blog.naver.com/ranto28/223456789012", summary)
 
     def test_changed_summary_still_includes_performance(self):
         summary = build_structured_summary(

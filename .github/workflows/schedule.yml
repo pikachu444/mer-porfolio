@@ -9,12 +9,13 @@ on:
   workflow_dispatch:
     inputs:
       run_mode:
-        description: "실행 모드 (verify=임시 검증, rebalance=운영 리밸런싱, test=mock 테스트)"
+        description: "실행 모드 (verify=출력 검증, full_verify=전체 흐름 검증, rebalance=운영 리밸런싱, test=mock 테스트)"
         required: true
         default: "verify"
         type: choice
         options:
           - verify
+          - full_verify
           - rebalance
           - test
       fetch_days:
@@ -73,7 +74,7 @@ jobs:
           RUN_MODE: ${{ github.event_name == 'schedule' && 'scheduled' || github.event.inputs.run_mode || 'verify' }}
           FETCH_DAYS: ${{ github.event.inputs.fetch_days || '' }}
           GEMINI_MODEL: ${{ github.event.inputs.gemini_model || '' }}
-          ENABLE_POST_SUMMARIES: ${{ (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && 'true' || 'false' }}
+          ENABLE_POST_SUMMARIES: ${{ (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance' || github.event.inputs.run_mode == 'full_verify') && 'true' || 'false' }}
         run: python main.py
 
       - name: verify 결과물 업로드
@@ -82,6 +83,13 @@ jobs:
         with:
           name: mer-ai-verify-${{ github.run_id }}
           path: output/verify
+
+      - name: full_verify 결과물 업로드
+        if: ${{ always() && github.event_name == 'workflow_dispatch' && github.event.inputs.run_mode == 'full_verify' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: mer-ai-full-verify-${{ github.run_id }}
+          path: output/full_verify
 
       - name: scheduled 실패 진단 업로드
         if: ${{ failure() && github.event_name == 'schedule' }}

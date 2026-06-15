@@ -39,6 +39,14 @@ class GenerateDashboardTest(unittest.TestCase):
             try:
                 state = state_payload()
                 state["status_note"] = "새 글 1건 요약 실패로 투자 분석 보류: 코스트코와 이마트"
+                state["deferred_posts"] = [
+                    {
+                        "title": "코스트코와 이마트",
+                        "date": "2026-06-08",
+                        "reason": "SummaryResponseError: 잘린 JSON",
+                        "url": "https://blog.naver.com/ranto28/223456789012",
+                    }
+                ]
                 state["portfolio"].append({
                     **state["portfolio"][0],
                     "name": "대한전선",
@@ -72,6 +80,8 @@ class GenerateDashboardTest(unittest.TestCase):
         self.assertIn("대한전선", html)
         self.assertIn("새 글 1건 요약 실패로 투자 분석 보류", html)
         self.assertIn("코스트코와 이마트", html)
+        self.assertIn("const deferredPosts=", html)
+        self.assertIn("https://blog.naver.com/ranto28/223456789012", html)
         self.assertIn("모두 펼치기", html)
         self.assertIn("type:'doughnut'", html)
         self.assertNotIn("type:'bar'", html)

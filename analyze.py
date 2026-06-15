@@ -266,16 +266,13 @@ def _call_stage_with_fallback(
 # ─── 입력 구성 헬퍼 ──────────────────────────────────────────────────────────
 
 def _analysis_text_for_post(post: Dict) -> tuple[str, str]:
-    """요약 캐시가 있으면 요약을, 없으면 원문을 최종 분석 입력으로 사용한다."""
+    """Use only the per-post summary as the final Pro-analysis input."""
     summary = post.get("summary", "").strip()
     if summary:
         return "1차 요약", summary
 
-    content = post.get("content", "").strip()
-    if content:
-        return "원문", content
-
-    return "내용 없음", ""
+    title = post.get("title", "제목 없음")
+    raise ValueError(f"요약 없는 글은 Pro 분석 입력으로 사용할 수 없습니다: {title}")
 
 
 def _format_report_date(today_str: str) -> str:

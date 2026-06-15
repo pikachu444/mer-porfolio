@@ -23,6 +23,14 @@ class RuntimeModesTest(unittest.TestCase):
         self.assertTrue(policy.send_telegram)
         self.assertTrue(policy.upload_artifact)
 
+    def test_full_verify_sends_telegram_without_persisting_operating_state(self):
+        policy = get_run_policy("full_verify")
+
+        self.assertFalse(policy.persist_operating_state)
+        self.assertTrue(policy.send_telegram)
+        self.assertTrue(policy.upload_artifact)
+        self.assertEqual(policy.fetch_days, 2)
+
     def test_test_mode_uses_fixture_without_telegram_or_state_write(self):
         policy = get_run_policy("test")
 
@@ -39,6 +47,12 @@ class RuntimeModesTest(unittest.TestCase):
 
     def test_manual_rebalance_always_rebalances(self):
         self.assertTrue(should_rebalance("rebalance", "2026-05-31", date(2026, 6, 1)))
+
+    def test_verify_does_not_force_rebalance(self):
+        today = date(2026, 6, 1)
+
+        self.assertFalse(should_rebalance("verify", "2026-05-31", today))
+        self.assertFalse(should_rebalance("full_verify", "2026-05-31", today))
 
     def test_rejects_old_adhoc_mode(self):
         with self.assertRaisesRegex(ValueError, "unknown RUN_MODE"):
@@ -71,6 +85,21 @@ class RuntimeModesTest(unittest.TestCase):
         self.assertIn(note, saved_report)
         generated_state = generate_all.call_args.kwargs["state"]
         self.assertEqual(generated_state["status_note"], note)
+
+    def test_verify_main_does_not_collect_or_analyze_posts(self):
+        state = main._empty_state()
+
+        with patch.object(main, "RUN_MODE", "verify"), \
+             patch.object(main, "_load_state", return_value=state), \
+             patch.object(main, "_collect_posts") as collect_posts, \
+             patch.object(main, "analyze_posts_structured") as analyze, \
+             patch.object(main, "_run_no_change_update", return_value=0) as no_change:
+            result = main.main()
+
+        self.assertEqual(result, 0)
+        collect_posts.assert_not_called()
+        analyze.assert_not_called()
+        self.assertIn("Gemini 분석 없음", no_change.call_args.kwargs["status_note"])
 
     def test_execution_date_uses_korean_time(self):
         utc_time = datetime(2026, 6, 7, 16, 20, tzinfo=timezone.utc)

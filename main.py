@@ -22,9 +22,11 @@ RUN_MODE = os.environ.get("RUN_MODE", "scheduled").lower()
 RUN_POLICY = get_run_policy(RUN_MODE)
 OPERATING_OUTPUT_DIR = Path(os.environ.get("OUTPUT_DIR", "output"))
 OUTPUT_DIR = OPERATING_OUTPUT_DIR
-if RUN_MODE == "verify":
-    OUTPUT_DIR = OPERATING_OUTPUT_DIR / "verify"
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def _prepare_temp_output_dir(mode: str) -> Path:
+    path = OPERATING_OUTPUT_DIR / mode
+    path.mkdir(parents=True, exist_ok=True)
     for filename in (
         "portfolio_state.json",
         "model_portfolio_ledger.json",
@@ -32,23 +34,21 @@ if RUN_MODE == "verify":
         "posts_db.json",
     ):
         source = OPERATING_OUTPUT_DIR / filename
-        target = OUTPUT_DIR / filename
+        target = path / filename
         if source.exists():
             shutil.copy2(source, target)
+    return path
+
+
+if RUN_POLICY.upload_artifact:
+    OUTPUT_DIR = _prepare_temp_output_dir(RUN_MODE)
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     os.environ["OUTPUT_DIR"] = str(OUTPUT_DIR)
 
 if RUN_MODE == "test" and __name__ == "__main__":
     print("test 모드는 python -m unittest discover -s tests -v 로 실행합니다.")
     sys.exit(0)
 
-from analyze import analyze_posts_structured
-from fetch_mer import (
-    fetch_recent_posts,
-    get_last_fetch_new_post_urls,
-    load_cached_posts,
-    select_new_relevant_posts,
-    select_rebalance_posts,
-)
 from generate_dashboard import generate_all
 from portfolio_output import build_markdown_report, build_output_model
 from portfolio_schema import (
@@ -80,6 +80,36 @@ DECISION_PATH = OUTPUT_DIR / "decision_latest.json"
 _fetch_days_env = os.environ.get("FETCH_DAYS", "").strip()
 FETCH_DAYS = int(_fetch_days_env) if _fetch_days_env else RUN_POLICY.fetch_days
 KST = ZoneInfo("Asia/Seoul")
+
+
+def analyze_posts_structured(*args, **kwargs):
+    from analyze import analyze_posts_structured as run
+    return run(*args, **kwargs)
+
+
+def fetch_recent_posts(*args, **kwargs):
+    from fetch_mer import fetch_recent_posts as run
+    return run(*args, **kwargs)
+
+
+def get_last_fetch_new_post_urls(*args, **kwargs):
+    from fetch_mer import get_last_fetch_new_post_urls as run
+    return run(*args, **kwargs)
+
+
+def load_cached_posts(*args, **kwargs):
+    from fetch_mer import load_cached_posts as run
+    return run(*args, **kwargs)
+
+
+def select_new_relevant_posts(*args, **kwargs):
+    from fetch_mer import select_new_relevant_posts as run
+    return run(*args, **kwargs)
+
+
+def select_rebalance_posts(*args, **kwargs):
+    from fetch_mer import select_rebalance_posts as run
+    return run(*args, **kwargs)
 
 
 def _to_kst_naive(value: datetime) -> datetime:
@@ -136,28 +166,63 @@ def _short_title(title: str, limit: int = 34) -> str:
     return title[: limit - 1] + "…"
 
 
-def _deferred_posts_for_run(
+def _post_date_after(post: dict, cutoff: datetime) -> bool:
+    try:
+        return datetime.fromisoformat(post["date"]) > cutoff
+    except Exception:
+        return False
+
+
+def _posts_in_current_analysis_scope(
     posts: list[dict],
     *,
     is_rebalance: bool,
     state,
     today: datetime,
 ) -> list[dict]:
-    deferred = [
-        post for post in posts
-        if post.get("summary_status") == "deferred"
-    ]
     if is_rebalance:
         try:
             cutoff = datetime.fromisoformat(state.last_rebalanced_date)
         except Exception:
             cutoff = today - timedelta(days=FETCH_DAYS)
-        return [
-            post for post in deferred
-            if datetime.fromisoformat(post["date"]) > cutoff
-        ]
+        return [post for post in posts if _post_date_after(post, cutoff)]
     new_urls = get_last_fetch_new_post_urls()
-    return [post for post in deferred if post.get("url") in new_urls]
+    return [post for post in posts if post.get("url") in new_urls]
+
+
+def _summary_block_reason(post: dict) -> str:
+    if post.get("summary_status") == "deferred":
+        error = str(post.get("summary_error") or "").strip()
+        return error or "글별 Flash 요약 실패"
+    if not str(post.get("summary") or "").strip() and post.get("investment_relevant") is not False:
+        return "글별 요약 없음"
+    return ""
+
+
+def _blocked_summary_posts_for_run(
+    posts: list[dict],
+    *,
+    is_rebalance: bool,
+    state,
+    today: datetime,
+) -> list[dict]:
+    blocked = []
+    for post in _posts_in_current_analysis_scope(
+        posts,
+        is_rebalance=is_rebalance,
+        state=state,
+        today=today,
+    ):
+        reason = _summary_block_reason(post)
+        if not reason:
+            continue
+        blocked.append({
+            "title": post.get("title", "제목 없음"),
+            "url": post.get("url", ""),
+            "date": post.get("date", ""),
+            "reason": reason,
+        })
+    return blocked
 
 
 def _deferred_status_note(posts: list[dict]) -> str:
@@ -166,14 +231,19 @@ def _deferred_status_note(posts: list[dict]) -> str:
     titles = ", ".join(_short_title(post.get("title", "")) for post in posts[:2])
     if len(posts) > 2:
         titles += f" 외 {len(posts) - 2}건"
-    return f"새 글 {len(posts)}건 요약 실패로 투자 분석 보류: {titles}"
+    return f"새 글 {len(posts)}건 요약 실패/없음으로 투자 분석 보류: {titles}"
 
 
 def _prices_for_ledger(ledger: dict) -> dict[str, float]:
     return get_structured_prices(ledger.get("positions", []))
 
 
-def _run_no_change_update(state, today: datetime, status_note: str = "") -> int:
+def _run_no_change_update(
+    state,
+    today: datetime,
+    status_note: str = "",
+    deferred_posts: list[dict] | None = None,
+) -> int:
     if status_note:
         print(f"  {status_note}: 판단과 목표 비중을 유지하고 성과만 갱신합니다.")
     else:
@@ -191,6 +261,8 @@ def _run_no_change_update(state, today: datetime, status_note: str = "") -> int:
     output_state = state.to_dict()
     if status_note:
         output_state["status_note"] = status_note
+    if deferred_posts:
+        output_state["deferred_posts"] = deferred_posts
     output = build_output_model(
         output_state,
         cache,
@@ -283,6 +355,13 @@ def main() -> int:
 
     try:
         state = _load_state()
+        if RUN_MODE == "verify":
+            return _run_no_change_update(
+                state,
+                today,
+                status_note="검증 실행: 현재 포트폴리오 기준 출력만 확인(Gemini 분석 없음)",
+            )
+
         is_rebalance = should_rebalance(
             RUN_MODE,
             state.last_rebalanced_date,
@@ -300,17 +379,22 @@ def main() -> int:
                 cached_posts,
                 get_last_fetch_new_post_urls(),
             )
-        deferred_posts = _deferred_posts_for_run(
+        blocked_posts = _blocked_summary_posts_for_run(
             cached_posts,
             is_rebalance=is_rebalance,
             state=state,
             today=today,
         )
-        deferred_note = _deferred_status_note(deferred_posts)
+        deferred_note = _deferred_status_note(blocked_posts)
         if not posts:
             if is_rebalance:
                 print("  리밸런싱 연기: 마지막 리밸런싱 이후 투자 관련 신규 글이 없습니다.")
-            return _run_no_change_update(state, today, status_note=deferred_note)
+            return _run_no_change_update(
+                state,
+                today,
+                status_note=deferred_note,
+                deferred_posts=blocked_posts,
+            )
 
         try:
             result = analyze_posts_structured(
@@ -331,7 +415,12 @@ def main() -> int:
                 note += f" / {deferred_note}"
             print(f"  {note}: 기존 포트폴리오 상태로 출력만 갱신합니다.")
             _save_error_log(f"{type(exc).__name__}: {exc}", today)
-            return _run_no_change_update(state, today, status_note=note)
+            return _run_no_change_update(
+                state,
+                today,
+                status_note=note,
+                deferred_posts=blocked_posts,
+            )
         updated_state = apply_analysis_decision(state, result.decision)
         ledger = load_model_ledger()
         ledger = sanitize_model_ledger_for_state(ledger, updated_state.to_dict())
@@ -357,6 +446,8 @@ def main() -> int:
         output_state = updated_state.to_dict()
         if deferred_note:
             output_state["status_note"] = deferred_note
+        if blocked_posts:
+            output_state["deferred_posts"] = blocked_posts
         output = build_output_model(
             output_state,
             cache,

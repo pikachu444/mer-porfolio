@@ -98,6 +98,19 @@ class FetchMerTest(unittest.TestCase):
 
         self.assertEqual([item["url"] for item in selected], ["new-relevant"])
 
+    def test_posts_without_summary_are_not_sent_to_analysis(self):
+        no_summary = post("2026-06-01", "no-summary")
+        no_summary["summary"] = ""
+        no_summary["summary_status"] = "skipped"
+        ready = post("2026-06-01", "ready")
+
+        selected = fetch_mer.select_new_relevant_posts(
+            [no_summary, ready],
+            {"no-summary", "ready"},
+        )
+
+        self.assertEqual([item["url"] for item in selected], ["ready"])
+
     def test_rebalance_selects_relevant_posts_after_last_actual_rebalance(self):
         posts = [
             post("2026-06-01", "new"),

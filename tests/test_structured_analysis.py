@@ -47,6 +47,7 @@ DECISION_RESPONSE = {
             "proposed_weight": 8.0,
             "weight_source": "AI 제안",
             "change_reason": "알루미늄 공급 제한에 따른 수혜 추론",
+            "allocation_role": "satellite",
             "source_scope": "source_named_security",
             "investment_rationale": "원문에 등장한 Alcoa가 알루미늄 공급 제한의 수혜를 받을 수 있음",
             "current_entry_reason": "공급 제한 발표로 투자 논리가 구체화됨",
@@ -63,7 +64,7 @@ POSTS = [
         "date": "2026-05-27",
         "url": "https://blog.naver.com/ranto28/123",
         "content": "알루미늄 공급망 관련 본문",
-        "summary": "",
+        "summary": "알루미늄 공급망 관련 요약",
     }
 ]
 
@@ -117,6 +118,13 @@ class StructuredAnalysisTest(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, r"필수 보고서 섹션 누락"):
             analyze._validate_markdown_report(report)
+
+    def test_analysis_input_rejects_post_without_summary(self):
+        no_summary = dict(POSTS[0])
+        no_summary["summary"] = ""
+
+        with self.assertRaisesRegex(ValueError, "요약 없는 글"):
+            analyze._analysis_text_for_post(no_summary)
 
     def test_excludes_unlisted_stock_suggestion_from_model_output(self):
         invalid = json.loads(json.dumps(DECISION_RESPONSE, ensure_ascii=False))
@@ -230,7 +238,7 @@ class StructuredAnalysisTest(unittest.TestCase):
 
     def test_repairs_decision_when_applied_portfolio_exceeds_one_hundred(self):
         retained = json.loads(json.dumps(DECISION_RESPONSE["portfolio_decisions"][0]))
-        retained["proposed_weight"] = 95.0
+        retained["proposed_weight"] = 75.0
         current_state = {
             "schema_version": "2.0",
             "portfolio": [retained],
@@ -242,6 +250,7 @@ class StructuredAnalysisTest(unittest.TestCase):
         additional = json.loads(json.dumps(DECISION_RESPONSE, ensure_ascii=False))
         additional["portfolio_decisions"][0]["name"] = "Microsoft"
         additional["portfolio_decisions"][0]["code"] = "MSFT"
+        additional["portfolio_decisions"][0]["proposed_weight"] = 30.0
         repaired = json.loads(json.dumps(additional, ensure_ascii=False))
         repaired["portfolio_decisions"][0]["proposed_weight"] = 5.0
         responses = [

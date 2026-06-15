@@ -314,7 +314,9 @@ def generate_html(
     )
     watchlist = output["watchlist"]
     closed_positions = output["closed_positions"]
+    review_required = output.get("review_required_positions", [])
     insights = output["insights"]
+    deferred_posts = output.get("deferred_posts", [])
     history = state.get("decision_history", [])
     latest_changes = [item for item in history if item.get("decision_date") == today_str]
     summaries = cache.get("report_summaries", []) if cache else []
@@ -335,6 +337,7 @@ def generate_html(
 <header><h1>메르AI 모델 포트폴리오</h1><div class="notice">메르 블로거의 실제 보유 내역이 아닙니다. 블로그 판단과 AI 해석을 구분하여 만든 모델 포트폴리오입니다.</div><div class="muted">업데이트: <span id="updated"></span></div></header>
 <main class="container">
 <section class="card"><h2>최근 분석 요약</h2><div id="summary"></div></section>
+<section class="card" id="deferred-card"><h2>분석 보류 글</h2><div id="deferred"></div></section>
 <section class="card"><h2>핵심 인사이트</h2><div id="insights"></div></section>
 <div class="grid"><section class="card"><h2>현재 모델 포트폴리오 목표 비중</h2><div class="chart"><canvas id="donut"></canvas></div></section><section class="card"><h2>포트폴리오 수익률 흐름</h2><div class="chart"><canvas id="returns"></canvas></div></section></div>
 <section class="card"><h2>국내/해외 추천</h2><div id="recommendations"></div></section>
@@ -352,10 +355,16 @@ def generate_html(
         "const changes=" + json.dumps(latest_changes, ensure_ascii=False) + ";\n"
         "const watchlist=" + json.dumps(watchlist, ensure_ascii=False) + ";\n"
         "const closed=" + json.dumps(closed_positions, ensure_ascii=False) + ";\n"
+        "const reviewRequired=" + json.dumps(review_required, ensure_ascii=False) + ";\n"
         "const insights=" + json.dumps(insights, ensure_ascii=False) + ";\n"
+        "const deferredPosts=" + json.dumps(deferred_posts, ensure_ascii=False) + ";\n"
         "const chartRows=" + json.dumps(chart_rows, ensure_ascii=False) + ";\n"
         "const summaries=" + json.dumps(summaries, ensure_ascii=False) + ";\n"
         "const statusNote=" + json.dumps(output.get("status_note", ""), ensure_ascii=False) + ";\n"
+        "const stockWeight=" + json.dumps(output.get("stock_weight", 0), ensure_ascii=False) + ";\n"
+        "const cashWeight=" + json.dumps(output.get("cash_weight", 0), ensure_ascii=False) + ";\n"
+        "const defensiveTarget=" + json.dumps(output.get("defensive_cash_target", 20), ensure_ascii=False) + ";\n"
+        "const defensiveAlert=" + json.dumps(output.get("defensive_alert", False), ensure_ascii=False) + ";\n"
         "const reportText=`" + report_escaped + "`;\n"
     ) + """
 document.getElementById('updated').textContent=updated;
@@ -369,14 +378,21 @@ function toggle(id){document.getElementById(id).classList.toggle('open')}
 function toggleAll(id,open){document.querySelectorAll(`#${id} .detail`).forEach(el=>el.classList.toggle('open',open))}
 function table(id,rows,kind){
  if(!rows.length)return '<div class="empty">표시할 항목이 없습니다.</div>';
- const body=rows.map((r,i)=>{const key=`${id}-${i}`;const detail=`판단일: ${esc(r.decision_date||r.closed_date||'-')}<br>출처: ${actorLabel(r)}<br>근거 유형: ${esc(r.basis||'-')}<br>비중 출처: ${esc(r.weight_source||'-')}<br>변경 이유: ${esc(r.change_reason||r.observation_reason||r.close_reason||'-')}<br>근거: ${evidence(r)}<br>원문 종목 등장: ${r.source_mentioned===true?'있음':r.source_mentioned===false?'없음':'-'}`;
- return `<tr class="${kind==='changes'?'changed':''}"><td>${esc(r.name)}<br><span class="muted">${esc(r.code)}</span></td><td>${actor(r)}</td><td>${r.proposed_weight===undefined?'-':esc(r.proposed_weight)+'%'}</td><td class="desktop">${esc(r.decision_date||r.closed_date||r.watchlist_entry_date||'-')}</td><td>${kind==='portfolio'?returns(r):esc(r.status||r.close_reason||'')}</td><td><button onclick="toggle('${key}')">펼치기</button></td></tr><tr id="${key}" class="detail"><td colspan="6">${detail}</td></tr>`}).join('');
- return buttons(id)+`<div class="table-wrap"><table class="data-table" id="${id}"><thead><tr><th>종목</th><th>판단</th><th>비중</th><th class="desktop">판단일</th><th>상태/수익률</th><th>상세</th></tr></thead><tbody>${body}</tbody></table></div>`;
+ const body=rows.map((r,i)=>{const key=`${id}-${i}`;const role=esc(r.allocation_role_label||r.allocation_role||'-');const detail=`판단일: ${esc(r.decision_date||r.closed_date||'-')}<br>출처: ${actorLabel(r)}<br>역할: ${role}<br>근거 유형: ${esc(r.basis||'-')}<br>비중 출처: ${esc(r.weight_source||'-')}<br>변경 이유: ${esc(r.change_reason||r.observation_reason||r.close_reason||'-')}<br>${r.review_reason?`재검증 사유: ${esc(r.review_reason)}<br>`:''}근거: ${evidence(r)}<br>원문 종목 등장: ${r.source_mentioned===true?'있음':r.source_mentioned===false?'없음':'-'}`;
+ return `<tr class="${kind==='changes'?'changed':''}"><td>${esc(r.name)}<br><span class="muted">${esc(r.code)}</span></td><td>${actor(r)}</td><td>${role}</td><td>${r.proposed_weight===undefined?'-':esc(r.proposed_weight)+'%'}</td><td class="desktop">${esc(r.decision_date||r.closed_date||r.watchlist_entry_date||'-')}</td><td>${kind==='portfolio'?returns(r):esc(r.status||r.close_reason||'')}</td><td><button onclick="toggle('${key}')">펼치기</button></td></tr><tr id="${key}" class="detail"><td colspan="7">${detail}</td></tr>`}).join('');
+ return buttons(id)+`<div class="table-wrap"><table class="data-table" id="${id}"><thead><tr><th>종목</th><th>판단</th><th>역할</th><th>비중</th><th class="desktop">판단일</th><th>상태/수익률</th><th>상세</th></tr></thead><tbody>${body}</tbody></table></div>`;
 }
-document.getElementById('summary').innerHTML=`현재 ${portfolio.length}종목 · Watchlist ${watchlist.length}건 · 이번 변경 ${changes.length}건 · 종료 ${closed.length}건${statusNote?`<br><strong>분석 보류:</strong> ${esc(statusNote)}`:''}`;
+function deferredTable(rows){
+ if(!rows.length){document.getElementById('deferred-card').style.display='none';return ''}
+ const body=rows.map(r=>`<tr><td>${esc(r.title||'제목 없음')}</td><td>${esc(r.date||'')}</td><td>${esc(r.reason||'')}</td><td>${r.url?`<a href="${esc(r.url)}" target="_blank" rel="noopener">원문 보기</a>`:''}</td></tr>`).join('');
+ return `<div class="notice">아래 글은 요약이 준비되지 않아 이번 투자 판단에서 제외됐고 다음 실행에서 다시 확인합니다.</div><div class="table-wrap"><table class="data-table"><thead><tr><th>제목</th><th>날짜</th><th>사유</th><th>URL</th></tr></thead><tbody>${body}</tbody></table></div>`;
+}
+document.getElementById('summary').innerHTML=`현재 ${portfolio.length}종목 · 주식 노출 ${Number(stockWeight).toFixed(1)}% · 현금성 ${Number(cashWeight).toFixed(1)}% / 방어 기준 ${Number(defensiveTarget).toFixed(0)}% · 재검증 ${reviewRequired.length}건 · Watchlist ${watchlist.length}건 · 이번 변경 ${changes.length}건 · 종료 ${closed.length}건${defensiveAlert?'<br><strong>방어 기준 미달:</strong> 다음 리밸런싱에서 현금성 비중 재검토 필요':''}${statusNote?`<br><strong>분석 보류:</strong> ${esc(statusNote)}`:''}`;
+document.getElementById('deferred').innerHTML=deferredTable(deferredPosts);
 document.getElementById('insights').innerHTML=insights.length?insights.map((r,i)=>`<article><h3>${i+1}. ${esc(r.title)}</h3><p>${esc(r.summary)}</p><p><strong>투자 시사점:</strong> ${esc(r.investment_implication)}</p><p class="muted">${evidence(r)}</p></article>`).join(''):'<div class="empty">표시할 인사이트가 없습니다.</div>';
 document.getElementById('recommendations').innerHTML=`<h3>국내주식 추천</h3>${table('domestic-table',domestic,'portfolio')}<h3>해외주식 추천</h3>${table('overseas-table',overseas,'portfolio')}`;
 document.getElementById('portfolio').innerHTML=table('portfolio-table',portfolio,'portfolio');
+document.getElementById('portfolio').insertAdjacentHTML('afterend',`<h3>재검증 필요 포지션</h3>${table('review-table',reviewRequired,'portfolio')}`);
 document.getElementById('changes').innerHTML=table('changes-table',changes,'changes');
 document.getElementById('watchlist').innerHTML=table('watchlist-table',watchlist,'watchlist');
 document.getElementById('closed').innerHTML=table('closed-table',closed,'closed');

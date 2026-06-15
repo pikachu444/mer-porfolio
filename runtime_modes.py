@@ -22,7 +22,8 @@ class RunPolicy:
 POLICIES = {
     "scheduled": RunPolicy("scheduled", 2, True, True, False, False),
     "rebalance": RunPolicy("rebalance", 14, True, True, False, False),
-    "verify": RunPolicy("verify", 14, False, True, False, True),
+    "verify": RunPolicy("verify", 2, False, True, False, True),
+    "full_verify": RunPolicy("full_verify", 2, False, True, False, True),
     "test": RunPolicy("test", 3, False, False, True, False),
 }
 
@@ -37,7 +38,7 @@ def get_run_policy(mode: str) -> RunPolicy:
 def should_rebalance(mode: str, last_rebalanced_date: str | None, today: date) -> bool:
     """Return whether this run should reevaluate the complete target allocation."""
     policy = get_run_policy(mode)
-    if policy.mode in {"rebalance", "verify"}:
+    if policy.mode == "rebalance":
         return True
     if policy.mode == "test":
         return False

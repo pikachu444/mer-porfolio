@@ -5,6 +5,16 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
+DEFENSIVE_CASH_TARGET = 20.0
+
+ALLOCATION_ROLE_LABELS = {
+    "core": "핵심",
+    "satellite": "위성",
+    "risk": "위험자산",
+    "defensive": "방어",
+    "watch": "관찰",
+}
+
 
 def _as_float(value: Any, default: float = 0.0) -> float:
     try:
@@ -32,6 +42,26 @@ def _actor_label(item: dict) -> str:
 
 def _action_label(item: dict) -> str:
     return str(item.get("action") or "보유")
+
+
+def _allocation_role_label(item: dict) -> str:
+    role = str(item.get("allocation_role") or "").strip()
+    return ALLOCATION_ROLE_LABELS.get(role, "역할 미지정")
+
+
+def _review_required(item: dict) -> bool:
+    if item.get("decision_actor") == "미분류":
+        return True
+    reason = str(item.get("change_reason") or "")
+    return "기존 상태 마이그레이션" in reason
+
+
+def _review_reason(item: dict) -> str:
+    if item.get("decision_actor") == "미분류":
+        return "판단 주체가 미분류라 다음 리밸런싱에서 유지 근거 재검증 필요"
+    if "기존 상태 마이그레이션" in str(item.get("change_reason") or ""):
+        return "기존 상태 마이그레이션 비중이라 다음 리밸런싱에서 재검증 필요"
+    return ""
 
 
 def _return_value(row: dict | None) -> float | None:
@@ -116,14 +146,27 @@ def build_output_model(
         row["actor_label"] = _actor_label(item)
         row["action_label"] = _action_label(item)
         row["decision_label"] = f"{row['actor_label']} · {row['action_label']}"
+        row["allocation_role_label"] = _allocation_role_label(row)
+        row["review_required"] = _review_required(row)
+        row["review_reason"] = _review_reason(row)
         row["return_value"] = return_value
         row["return_label"] = _return_label(return_value)
         row["weight"] = _as_float(item.get("proposed_weight"))
         portfolio.append(row)
 
-    domestic = [item for item in portfolio if _is_domestic(item)]
-    overseas = [item for item in portfolio if not _is_domestic(item)]
+    recommendation_rows = [item for item in portfolio if not item.get("review_required")]
+    domestic = [item for item in recommendation_rows if _is_domestic(item)]
+    overseas = [item for item in recommendation_rows if not _is_domestic(item)]
+    review_required_positions = [item for item in portfolio if item.get("review_required")]
     cash_weight = max(0.0, 100.0 - sum(item["weight"] for item in portfolio))
+    stock_weight = sum(item["weight"] for item in portfolio if item.get("asset_type") == "stock")
+    etf_weight = sum(item["weight"] for item in portfolio if item.get("asset_type") == "etf")
+    risk_weight = sum(item["weight"] for item in portfolio if item.get("allocation_role") == "risk")
+    defensive_weight = cash_weight + sum(
+        item["weight"]
+        for item in portfolio
+        if item.get("allocation_role") == "defensive"
+    )
     chart_rows = [
         {
             "name": item.get("name", ""),
@@ -133,6 +176,7 @@ def build_output_model(
             "action": item.get("action", ""),
             "reason": item.get("change_reason", ""),
             "market": item.get("market", ""),
+            "allocation_role": item.get("allocation_role", ""),
         }
         for item in portfolio
         if item.get("weight", 0) > 0
@@ -164,10 +208,18 @@ def build_output_model(
         "overseas": overseas,
         "watchlist": state.get("watchlist", []) or [],
         "closed_positions": _closed_positions_for_output(state, performance, current_codes),
+        "review_required_positions": review_required_positions,
         "decision_history": state.get("decision_history", []) or [],
         "insights": state.get("insights", []) or [],
+        "deferred_posts": state.get("deferred_posts", []) or [],
         "chart_rows": chart_rows,
         "cash_weight": cash_weight,
+        "stock_weight": stock_weight,
+        "etf_weight": etf_weight,
+        "risk_weight": risk_weight,
+        "defensive_weight": defensive_weight,
+        "defensive_cash_target": DEFENSIVE_CASH_TARGET,
+        "defensive_alert": cash_weight < DEFENSIVE_CASH_TARGET,
         "performance": performance,
         "portfolio_return_value": portfolio_return_value,
         "portfolio_return_label": _return_label(portfolio_return_value),
@@ -182,7 +234,7 @@ def _date_for_title(today_str: str) -> str:
 
 
 def _table(rows: list[dict], *, include_return: bool = True) -> list[str]:
-    headers = ["종목", "코드", "판단", "목표비중", "근거"]
+    headers = ["종목", "코드", "판단", "역할", "목표비중", "근거"]
     if include_return:
         headers.append("수익률")
     lines = [
@@ -190,7 +242,7 @@ def _table(rows: list[dict], *, include_return: bool = True) -> list[str]:
         "| " + " | ".join("---" for _ in headers) + " |",
     ]
     if not rows:
-        empty = ["표시할 항목 없음", "", "", "", ""]
+        empty = ["표시할 항목 없음", "", "", "", "", ""]
         if include_return:
             empty.append("")
         lines.append("| " + " | ".join(empty) + " |")
@@ -200,6 +252,7 @@ def _table(rows: list[dict], *, include_return: bool = True) -> list[str]:
             str(item.get("name", "")),
             str(item.get("code", "")),
             str(item.get("decision_label") or f"{_actor_label(item)} · {_action_label(item)}"),
+            str(item.get("allocation_role_label") or _allocation_role_label(item)),
             f"{_as_float(item.get('proposed_weight', item.get('weight'))):g}%",
             str(item.get("change_reason") or item.get("observation_reason") or ""),
         ]
@@ -219,12 +272,36 @@ def build_markdown_report(output: dict) -> str:
         "- 메르 블로거의 실제 보유 내역이 아닙니다.",
         "- 블로그 직접 판단과 AI 해석을 구분해 표시합니다.",
         f"- 모델 포트폴리오 수익률: {output.get('portfolio_return_label', '집계 전')}",
+        f"- 주식 노출: {output.get('stock_weight', 0):g}%",
+        f"- 현금성 비중: {output.get('cash_weight', 0):g}% (방어 기준 {output.get('defensive_cash_target', 20):g}%)",
     ]
+    if output.get("defensive_alert"):
+        lines.append("- 방어 기준 미달: 현금성 비중이 20% 아래라 다음 리밸런싱에서 방어 비중 재검토 필요")
     if output.get("status_note"):
         lines.append(f"- 분석 보류: {output['status_note']}")
     if output.get("missing_return_codes"):
         joined = ", ".join(output["missing_return_codes"])
         lines.append(f"- 수익률 집계 전 종목: {joined}")
+
+    deferred_posts = output.get("deferred_posts", [])
+    if deferred_posts:
+        lines += [
+            "",
+            "## 분석 보류 글",
+            "",
+            "| 제목 | 날짜 | 사유 | URL |",
+            "| --- | --- | --- | --- |",
+        ]
+        for item in deferred_posts:
+            title = str(item.get("title", "제목 없음")).replace("|", "/")
+            date = str(item.get("date", "")).replace("|", "/")
+            reason = str(item.get("reason", "")).replace("|", "/")
+            url = str(item.get("url", "")).replace("|", "/")
+            lines.append(f"| {title} | {date} | {reason} | {url} |")
+        lines += [
+            "",
+            "위 글은 요약이 준비되지 않아 이번 투자 판단에서 제외됐고 다음 실행에서 다시 확인합니다.",
+        ]
 
     lines += ["", "## 핵심 인사이트"]
     insights = output.get("insights", [])
@@ -261,6 +338,27 @@ def build_markdown_report(output: dict) -> str:
                     f"{_actor_label(item)} · {item.get('basis', '')}",
                     str(item.get("status", "")),
                     str(item.get("observation_reason") or item.get("change_reason") or ""),
+                ])
+                + " |"
+            )
+    else:
+        lines.append("표시할 항목이 없습니다.")
+
+    lines += ["", "## 재검증 필요 포지션"]
+    review_required = output.get("review_required_positions", [])
+    if review_required:
+        lines += [
+            "| 종목 | 코드 | 현재비중 | 재검증 사유 |",
+            "| --- | --- | --- | --- |",
+        ]
+        for item in review_required:
+            lines.append(
+                "| "
+                + " | ".join([
+                    str(item.get("name", "")),
+                    str(item.get("code", "")),
+                    f"{_as_float(item.get('weight', item.get('proposed_weight'))):g}%",
+                    str(item.get("review_reason", "")),
                 ])
                 + " |"
             )

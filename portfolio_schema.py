@@ -27,6 +27,8 @@ ASSET_TYPES = {"stock", "etf", "sector", "cash"}
 WEIGHT_SOURCES = {"메르 직접 발언 기반", "AI 제안"}
 WATCHLIST_STATUSES = {"관심", "재검토 필요", "포트폴리오 편입", "종료"}
 RUN_TYPES = {"regular", "rebalance"}
+ALLOCATION_ROLES = {"core", "satellite", "risk", "defensive", "watch"}
+DEFENSIVE_CASH_TARGET = 20.0
 SOURCE_SCOPES = {
     "blogger_trade_disclosure",
     "source_named_security",
@@ -483,6 +485,12 @@ def _validate_decision(
     _require_number(item, "proposed_weight", path)
     _require_allowed(item, "weight_source", WEIGHT_SOURCES, path)
     _require_string(item, "change_reason", path)
+    allocation_role = _require_optional_allowed(
+        item,
+        "allocation_role",
+        ALLOCATION_ROLES,
+        path,
+    )
     source_scope = _require_optional_allowed(item, "source_scope", SOURCE_SCOPES, path)
     _require_optional_string(item, "investment_rationale", path)
     _require_optional_string(item, "current_entry_reason", path)
@@ -528,6 +536,8 @@ def _validate_decision(
             f"{path}: an AI stock buy not mentioned in source must stay on the Watchlist"
         )
     if decision_actor == "AI" and item["action"] == "매수" and strict_candidate_details:
+        if allocation_role is None:
+            raise PortfolioSchemaError(f"{path}.allocation_role must be set for an AI buy")
         _require_string(item, "investment_rationale", path)
         _require_string(item, "current_entry_reason", path)
         risks = _require_string_list(item, "key_risks", path)
@@ -570,6 +580,7 @@ def apply_portfolio_decisions(
     decision_history = updated["decision_history"]
     by_key = {_item_key(item): item for item in portfolio}
     performance = closed_performance_by_key or {}
+    before_cash = _cash_weight(portfolio)
 
     for index, raw_decision in enumerate(decisions):
         decision = deepcopy(raw_decision)
@@ -603,12 +614,43 @@ def apply_portfolio_decisions(
 
         decision_history.append(decision)
 
+    after_cash = _cash_weight(portfolio)
+    if after_cash < DEFENSIVE_CASH_TARGET and after_cash < before_cash:
+        if not any(_has_defensive_cash_reason(decision) for decision in decisions):
+            raise PortfolioSchemaError(
+                "decisions reduce defensive cash below 20% without explaining cash/defensive risk"
+            )
+
     if rebalanced_date is not None:
         if not rebalanced_date.strip():
             raise PortfolioSchemaError("rebalanced_date must not be empty")
         updated["last_rebalanced_date"] = rebalanced_date
 
     return parse_portfolio_state(updated)
+
+
+def _cash_weight(portfolio: list[dict[str, Any]]) -> float:
+    total = sum(float(item.get("proposed_weight", 0) or 0) for item in portfolio)
+    return max(0.0, 100.0 - total)
+
+
+def _has_defensive_cash_reason(item: dict[str, Any]) -> bool:
+    reason = " ".join(
+        str(item.get(key) or "")
+        for key in ("change_reason", "investment_rationale", "current_entry_reason")
+    )
+    keywords = (
+        "현금",
+        "현금성",
+        "방어",
+        "리스크",
+        "위험",
+        "단기채",
+        "유동성",
+        "불확실",
+        "방어자산",
+    )
+    return any(keyword in reason for keyword in keywords)
 
 
 def _item_key(item: dict[str, Any]) -> str:

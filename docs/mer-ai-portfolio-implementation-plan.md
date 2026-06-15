@@ -122,6 +122,7 @@ Watchlist 항목에는 최소한 다음 이력을 기록한다.
 | `proposed_weight` | 제안 목표 비중 |
 | `weight_source` | 비중 출처: `메르 직접 발언 기반`, `AI 제안` |
 | `change_reason` | 판단 또는 비중 변경 이유 |
+| `allocation_role` | 포트폴리오 역할: `core`, `satellite`, `risk`, `defensive`, `watch` |
 
 `evidence_posts`의 각 항목은 다음 필드를 사용한다.
 
@@ -1419,6 +1420,104 @@ Telegram 추천 목록은 세부 분석이 아니라 빠른 확인용 요약으�
 - 출력 파일 점검 결과: 대한전선(`001440`)은 현재 포트폴리오에 있고 성과 캐시와 히스토리의 종료
   포지션에는 없다. `011440` 흔적도 제거됐다. HTML 기준일은 `2026-06-08`이고
   `output/report_20260608.md`가 생성됐다.
+
+### 19. `verify`/`full_verify` 분리 및 요약 실패 사용자 표시
+
+**목적:** 반복 검증이 Gemini API를 과도하게 소모하지 않도록 하고, 실제 운영 흐름 검증은 별도
+모드에서 수행한다. 요약 실패 또는 요약 없음 글은 조용히 제외하지 않고 투자자가 제목과 URL을
+확인할 수 있게 한다.
+
+**합의됨**
+
+- `verify`는 Gemini Flash/Pro를 호출하지 않는다. 현재 포트폴리오 기록을 임시 폴더로 복사해
+  Markdown, HTML, PNG, Telegram 메시지만 재생성한다.
+- `verify`는 실제 Telegram 메시지를 보낸다. 사용자가 Telegram/HTML/PNG의 출력 일관성을 확인할
+  수 있어야 한다.
+- `full_verify`는 실제 운영 흐름 검증용이다. 임시 폴더에서 신규 글 수집, Flash 요약, Pro 1차
+  판단, 2차 사용자용 보고서, HTML, PNG, Telegram 전송을 수행한다.
+- `full_verify`도 현재 포트폴리오 기록과 main output을 덮어쓰지 않는다.
+- `full_verify` 기본 수집 기간은 `scheduled`와 같은 2일이다. 큰 리밸런싱 검증이 필요할 때만
+  수동 입력 `fetch_days=14`를 사용한다.
+- Pro 투자 판단에는 요약이 준비된 글만 넘긴다. 요약 없는 글을 원문 그대로 넘겨 API 입력을
+  키우지 않는다.
+- Flash 요약 실패, 깨진 JSON, 빈 응답, 요약 없음 글은 투자 판단에서 보류한다.
+- 보류 글은 다음 scheduled/rebalance/full_verify 실행에서 다시 요약을 시도한다.
+- Telegram에는 보류 글 최대 3건의 제목과 URL을 표시하고, 초과분은 HTML에서 확인하게 한다.
+- HTML과 Markdown 보고서에는 보류 글 제목, URL, 날짜, 실패 사유를 표로 표시한다.
+
+**완료 조건**
+
+- `verify` 실행 경로에서 글 수집, Flash 요약, Pro 판단이 호출되지 않는다.
+- `full_verify`가 Actions 입력 옵션에 추가되고 Flash 요약이 켜진다.
+- 요약 없는 글은 Pro 분석 입력에서 차단된다.
+- 보류 글 제목과 URL이 Telegram, HTML, Markdown 보고서에 표시된다.
+- `verify`와 `full_verify` 모두 운영 `output/portfolio_state.json`을 덮어쓰지 않는다.
+- 관련 자동 테스트, 문법 검사, 실제 출력 경로 검증을 통과한다.
+
+**구현 진행**
+
+- `runtime_modes.py`에 `full_verify` 정책을 추가하고, `verify`가 강제 리밸런싱을 유발하지 않도록
+  수정했다.
+- `main.py`에서 `verify`는 현재 포트폴리오 기준 출력만 생성하고, `full_verify`는 임시 폴더에서
+  기존 분석 경로를 타도록 분리했다.
+- `fetch_mer.py`와 `analyze.py`에서 Pro 분석 대상은 투자 관련 요약이 준비된 글로 제한했다.
+- `portfolio_output.py`, `telegram_notify.py`, `generate_dashboard.py`에 보류 글 제목, URL, 날짜,
+  사유를 전달하고 표시하는 경로를 추가했다.
+- `.github/workflows/schedule.yml`에 `full_verify` 입력과 artifact 업로드를 추가했다.
+
+**구현 완료**
+
+- `main.py`에서 `analyze.py`와 `fetch_mer.py`를 분석이 필요한 모드에서만 import하도록 바꿔
+  `verify`가 Gemini/수집 라이브러리 import에도 묶이지 않게 했다.
+- `verify` 로컬 실행 결과 Gemini 분석 없이 현재 상태 기준 HTML, PNG, Markdown, Telegram
+  구조화 요약이 생성되고 실제 Telegram 전송이 성공했다.
+- 로컬 검증 결과:
+  `python -m py_compile main.py generate_dashboard.py telegram_notify.py portfolio_output.py fetch_mer.py analyze.py portfolio_schema.py track_returns.py runtime_modes.py` 통과,
+  `$env:PYTHONUTF8='1'; python -m unittest discover -s tests -q` 전체 102개 테스트 통과.
+
+### 20. 방어적 리밸런싱, 현금성 20% 기준, 재검증 대상 표시
+
+**목적:** 테마 발굴이 맞더라도 주식 노출이 과도해지는 문제를 막고, 투자자가 Telegram과 HTML에서
+현금성 비중, 주식 노출, 재검증 필요 종목을 바로 확인하게 한다.
+
+**합의됨**
+
+- 매일 `regular` 실행은 감시 중심이다. 전체 포트폴리오 비중을 매번 다시 짜지 않는다.
+- 전체 비중 조정은 기본적으로 `14일` 리밸런싱에서 수행한다.
+- 평상시 현금 또는 현금성 방어 비중은 약 `20%`를 기준으로 한다. 절대 고정값은 아니지만,
+  강한 이유 없이 20% 아래로 낮추지 않는다.
+- 전쟁, 금리 급등, 환율 급변, 유동성 위축, 시장 과열, 정책 불확실성, 메르의 관망/주의 언급이
+  있으면 14일 전이라도 방어 조정 후보를 기록할 수 있다.
+- 비중은 종목 호감도가 아니라 포트폴리오 역할로 판단한다. 역할은 `core`, `satellite`, `risk`,
+  `defensive`, `watch`로 기록한다.
+- ETF는 자산군 노출 수단이므로 개별 종목보다 큰 비중을 가질 수 있지만, 개별 종목은 기업 고유
+  리스크 때문에 더 보수적으로 본다.
+- `미분류 · 보유` 또는 `기존 상태 마이그레이션` 종목은 추천처럼 보이지 않게 하고, 다음
+  리밸런싱의 재검증 대상으로 표시한다.
+
+**완료 조건**
+
+- 1차 판단 프롬프트가 현금성 20%, 14일 리밸런싱, 큰 이벤트 방어 조정, 역할 기반 비중 판단을
+  명시한다.
+- AI 신규 매수 판단에는 `allocation_role`이 있어야 한다.
+- 현금성 비중을 20% 아래로 낮추는 판단은 방어 비중을 낮추는 이유가 없으면 차단된다.
+- HTML, Telegram, Markdown에 주식 노출, 현금성 비중, 재검증 필요 종목이 표시된다.
+- 재검증 대상은 국내/해외 추천 목록에 섞이지 않고 별도 영역에 표시된다.
+- 관련 자동 테스트와 문법 검사를 통과한다.
+
+**구현 완료**
+
+- `system_prompt.py`의 1차 구조화 판단 프롬프트에 방어적 비중 원칙과 `allocation_role` 출력
+  계약을 추가했다. 레거시 Markdown 프롬프트의 임의 국내/미국/ETF 비율 지시는 현재 구조화 판단
+  원칙을 우선하도록 정리했다.
+- `portfolio_schema.py`에 `allocation_role` 허용값과 현금성 20% 방어 기준 검증을 추가했다.
+- `portfolio_output.py`에서 주식 노출, 현금성 비중, 방어 기준 미달 여부, 재검증 필요 포지션을
+  단일 출력 기준 자료에 포함했다.
+- `generate_dashboard.py`와 `telegram_notify.py`가 같은 출력 기준 자료에서 방어 지표와 재검증
+  대상 목록을 표시한다.
+- 로컬 검증 결과:
+  `python -m py_compile portfolio_schema.py portfolio_output.py generate_dashboard.py telegram_notify.py system_prompt.py` 통과,
+  `$env:PYTHONUTF8='1'; python -m unittest discover -s tests -q` 전체 106개 테스트 통과.
 
 ## 기존 완료 작업
 

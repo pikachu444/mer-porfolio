@@ -267,17 +267,38 @@ def build_structured_summary(
     watchlist = output["watchlist"]
     closed = output["closed_positions"]
     insights = output["insights"]
+    deferred_posts = output.get("deferred_posts", [])
+    review_required = output.get("review_required_positions", [])
     lines = [
         "📊 *메르AI 모델 포트폴리오*",
         f"📅 {today_str}",
         "※ 메르 블로거의 실제 보유 내역이 아닙니다.",
         "※ 블로그 직접 판단과 AI 해석을 구분해 표시합니다.",
     ]
-    lines += ["", "*오늘의 성과 요약*", f"• 모델 포트폴리오 수익률: {output['portfolio_return_label']}"]
+    lines += [
+        "",
+        "*오늘의 성과 요약*",
+        f"• 모델 포트폴리오 수익률: {output['portfolio_return_label']}",
+        f"• 주식 노출: {output.get('stock_weight', 0):g}%",
+        f"• 현금성 비중: {output.get('cash_weight', 0):g}% / 방어 기준 {output.get('defensive_cash_target', 20):g}%",
+    ]
+    if output.get("defensive_alert"):
+        lines.append("• 방어 기준 미달: 다음 리밸런싱에서 현금성 비중 재검토 필요")
     if status_note:
         lines.append(f"• {status_note}")
     if no_changes:
         lines.append("• 포트폴리오 변경 없음")
+
+    if deferred_posts:
+        lines += ["", "⚠ *분석 보류 글*"]
+        for item in deferred_posts[:3]:
+            title = str(item.get("title") or "제목 없음")
+            url = str(item.get("url") or "")
+            lines.append(f"• {title}")
+            if url:
+                lines.append(f"  {url}")
+        if len(deferred_posts) > 3:
+            lines.append(f"• 외 {len(deferred_posts) - 3}건은 HTML에서 확인")
 
     lines += ["", "📌 *핵심 인사이트*"]
     if insights:
@@ -323,6 +344,19 @@ def build_structured_summary(
 
     append_recommendations("*국내주식 추천*", output["domestic"])
     append_recommendations("*해외주식 추천*", output["overseas"])
+
+    lines += ["", "*재검증 필요 포지션*"]
+    if review_required:
+        for item in review_required[:5]:
+            lines.append(
+                f"• {recommendation_name(item)}"
+                f" — {recommendation_action(item)}"
+                f" ({item.get('weight', 0):g}%)"
+            )
+        if len(review_required) > 5:
+            lines.append(f"• 외 {len(review_required) - 5}건은 HTML에서 확인")
+    else:
+        lines.append("• 표시할 항목 없음")
 
     lines += ["", "*Watchlist*"]
     if watchlist:

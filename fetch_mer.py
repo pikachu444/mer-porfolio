@@ -483,10 +483,19 @@ def is_investment_relevant(post: dict) -> bool:
     return post.get("investment_relevant") is not False
 
 
+def is_ready_for_analysis(post: dict) -> bool:
+    """Require a usable summary before a post can enter Pro analysis."""
+    if post.get("investment_relevant") is not True:
+        return False
+    if post.get("summary_status") == "deferred":
+        return False
+    return bool(str(post.get("summary") or "").strip())
+
+
 def select_new_relevant_posts(posts: list[dict], new_urls: set[str]) -> list[dict]:
     return [
         post for post in posts
-        if post.get("url") in new_urls and is_investment_relevant(post)
+        if post.get("url") in new_urls and is_ready_for_analysis(post)
     ]
 
 
@@ -502,7 +511,7 @@ def select_rebalance_posts(
     )
     return [
         post for post in posts
-        if datetime.fromisoformat(post["date"]) > cutoff and is_investment_relevant(post)
+        if datetime.fromisoformat(post["date"]) > cutoff and is_ready_for_analysis(post)
     ]
 
 
