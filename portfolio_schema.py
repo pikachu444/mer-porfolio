@@ -627,6 +627,7 @@ def apply_portfolio_decisions(
             )
 
     if rebalanced_date is not None:
+        _validate_rebalance_defensive_cash_progress(before_cash, after_cash)
         if not rebalanced_date.strip():
             raise PortfolioSchemaError("rebalanced_date must not be empty")
         updated["last_rebalanced_date"] = rebalanced_date
@@ -656,6 +657,14 @@ def _has_defensive_cash_reason(item: dict[str, Any]) -> bool:
         "방어자산",
     )
     return any(keyword in reason for keyword in keywords)
+
+
+def _validate_rebalance_defensive_cash_progress(before_cash: float, after_cash: float) -> None:
+    if before_cash < DEFENSIVE_CASH_TARGET and after_cash < DEFENSIVE_CASH_TARGET:
+        if after_cash <= before_cash:
+            raise PortfolioSchemaError(
+                "rebalance must increase defensive cash toward 20% when current cash is below target"
+            )
 
 
 def _item_key(item: dict[str, Any]) -> str:

@@ -481,6 +481,50 @@ class PortfolioSchemaTest(unittest.TestCase):
 
         self.assertEqual(updated.last_rebalanced_date, "2026-05-28")
 
+    def test_rebalance_rejects_no_cash_progress_when_below_defensive_target(self):
+        payload = state_payload()
+        payload["portfolio"][0]["action"] = "보유"
+        payload["portfolio"][0]["previous_weight"] = 97.0
+        payload["portfolio"][0]["proposed_weight"] = 97.0
+        state = parse_portfolio_state_json(json.dumps(payload, ensure_ascii=False))
+
+        with self.assertRaisesRegex(PortfolioSchemaError, r"defensive cash toward 20%"):
+            apply_portfolio_decisions(
+                state,
+                [
+                    decision(
+                        action="보유",
+                        previous_weight=97.0,
+                        proposed_weight=97.0,
+                        change_reason="기존 성장 논리가 유지되어 현금성보다 우선",
+                    )
+                ],
+                rebalanced_date="2026-06-01",
+            )
+
+    def test_rebalance_allows_cash_progress_when_below_defensive_target(self):
+        payload = state_payload()
+        payload["portfolio"][0]["action"] = "보유"
+        payload["portfolio"][0]["previous_weight"] = 97.0
+        payload["portfolio"][0]["proposed_weight"] = 97.0
+        state = parse_portfolio_state_json(json.dumps(payload, ensure_ascii=False))
+
+        updated = apply_portfolio_decisions(
+            state,
+            [
+                decision(
+                    action="비중축소",
+                    previous_weight=97.0,
+                    proposed_weight=80.0,
+                    change_reason="현금성 20% 방어 기준에 맞추기 위해 비중 축소",
+                )
+            ],
+            rebalanced_date="2026-06-01",
+        )
+
+        self.assertEqual(updated.portfolio[0]["proposed_weight"], 80.0)
+        self.assertEqual(updated.last_rebalanced_date, "2026-06-01")
+
     def test_rejects_reducing_cash_below_defensive_target_without_reason(self):
         payload = state_payload()
         payload["portfolio"][0]["proposed_weight"] = 75.0
