@@ -481,14 +481,14 @@ class PortfolioSchemaTest(unittest.TestCase):
 
         self.assertEqual(updated.last_rebalanced_date, "2026-05-28")
 
-    def test_rebalance_rejects_no_cash_progress_when_below_defensive_target(self):
+    def test_rebalance_rejects_cash_below_defensive_target(self):
         payload = state_payload()
         payload["portfolio"][0]["action"] = "보유"
         payload["portfolio"][0]["previous_weight"] = 97.0
         payload["portfolio"][0]["proposed_weight"] = 97.0
         state = parse_portfolio_state_json(json.dumps(payload, ensure_ascii=False))
 
-        with self.assertRaisesRegex(PortfolioSchemaError, r"defensive cash toward 20%"):
+        with self.assertRaisesRegex(PortfolioSchemaError, r"defensive cash to at least 20%"):
             apply_portfolio_decisions(
                 state,
                 [
@@ -502,7 +502,7 @@ class PortfolioSchemaTest(unittest.TestCase):
                 rebalanced_date="2026-06-01",
             )
 
-    def test_rebalance_allows_cash_progress_when_below_defensive_target(self):
+    def test_rebalance_allows_cash_restored_to_defensive_target(self):
         payload = state_payload()
         payload["portfolio"][0]["action"] = "보유"
         payload["portfolio"][0]["previous_weight"] = 97.0

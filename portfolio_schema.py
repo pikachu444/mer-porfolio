@@ -661,10 +661,9 @@ def _has_defensive_cash_reason(item: dict[str, Any]) -> bool:
 
 def _validate_rebalance_defensive_cash_progress(before_cash: float, after_cash: float) -> None:
     if before_cash < DEFENSIVE_CASH_TARGET and after_cash < DEFENSIVE_CASH_TARGET:
-        if after_cash <= before_cash:
-            raise PortfolioSchemaError(
-                "rebalance must increase defensive cash toward 20% when current cash is below target"
-            )
+        raise PortfolioSchemaError(
+            "rebalance must restore defensive cash to at least 20% when current cash is below target"
+        )
 
 
 def _item_key(item: dict[str, Any]) -> str:
