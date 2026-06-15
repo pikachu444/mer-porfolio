@@ -149,8 +149,8 @@ output/
 | `GEMINI_API_KEY` | (필수) | Google AI Studio API 키 |
 | `RUN_MODE` | `scheduled` | `scheduled`, `rebalance`, `verify`, `full_verify`, `test` |
 | `FETCH_DAYS` | 모드별 기본값 | RSS 조회 범위를 임시 조정할 때만 사용하는 일수 |
-| `GEMINI_MODEL` | `gemini-2.5-pro` | 구조화 포트폴리오 판단 우선 모델 |
-| `GEMINI_FALLBACK_MODEL` | `gemini-2.5-flash` | Pro 실패/quota 시 대체 모델 |
+| `GEMINI_MODEL` | `gemini-2.5-pro` | 구조화 포트폴리오 판단 모델. 투자 판단 단계는 Pro 계열만 허용 |
+| `GEMINI_FALLBACK_MODEL` | `gemini-2.5-flash` | 2차 사용자용 보고서 단계의 대체 모델 |
 | `ENABLE_POST_SUMMARIES` | 켜짐 | 신규 글별 1차 요약 API 호출 여부. Actions의 `verify`에서는 꺼지고 `full_verify`에서는 켜짐 |
 | `OUTPUT_DIR` | `output` | 리포트 저장 경로 |
 
@@ -176,14 +176,15 @@ RUN_MODE=rebalance FETCH_DAYS=14 python main.py
 - 요약이 없는 글은 Pro에 원문 그대로 넘기지 않습니다.
 - 저장 원문은 유지하며, Flash 요약 요청에서 모델 입력 한도의 `80%`를 넘는 비정상 요청에만 전송용 본문 끝부분을 줄입니다.
 - Actions의 정상 `scheduled`, `rebalance`, `full_verify`에서는 글별 Flash 요약을 켜고, 반복 출력 검증용 `verify`에서는 Gemini를 호출하지 않습니다.
-- 구조화 판단 JSON과 사용자용 Markdown 보고서는 각각 `gemini-2.5-pro`를 먼저 시도하고 실패/quota 시 `gemini-2.5-flash`를 사용합니다.
+- 구조화 판단 JSON은 `gemini-2.5-pro` 전용입니다. 서버 혼잡 시 5분 간격으로 5회 더 재시도하고, 그래도 실패하면 Flash로 투자 판단을 대체하지 않습니다.
+- 사용자용 Markdown 보고서는 `gemini-2.5-pro`를 먼저 시도하고, 실패하면 대체 모델 또는 구조화 판단 기반 결정적 보고서로 생성합니다.
 - 일별 분석은 관련 신규 글만, `14일` 리밸런싱은 마지막 실제 리밸런싱 이후 누적 관련 글만 사용합니다.
 - 관련 신규 글이 없으면 LLM을 호출하지 않고 가격, 성과, 출력만 갱신합니다.
 - HTML, PNG, Telegram, Markdown 보고서는 추가 LLM 호출 없이 현재 모델 포트폴리오 상태와 핵심 인사이트로 생성합니다.
-- `gemini-2.5-pro` 한도가 낮거나 지원되지 않으면 자동으로 Flash를 사용합니다.
+- `gemini-2.5-pro` 한도가 낮거나 지원되지 않아도 1차 포트폴리오 판단을 Flash로 대체하지 않습니다.
 - `flash-lite` 계열은 품질 저하 우려가 있어 기본 경로에서 사용하지 않습니다.
 - rate limit 또는 quota 오류가 나면 모델별 호출 간격을 두고 재시도합니다.
-- 1차 포트폴리오 판단에서 Pro와 Flash가 모두 한도 초과 또는 일시 장애로 실패하면 새 판단을 만들지 않고 기존 상태로 오늘 날짜 보고서, HTML, PNG, Telegram을 갱신합니다.
+- 1차 포트폴리오 판단에서 Pro가 한도 초과 또는 일시 장애로 실패하면 새 판단을 만들지 않고 기존 상태로 오늘 날짜 보고서, HTML, PNG, Telegram을 갱신합니다.
 - API 키 미설정 같은 구성 오류는 실행 실패로 처리합니다.
 
 기본 호출 간격:

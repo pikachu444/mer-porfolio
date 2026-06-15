@@ -81,10 +81,29 @@ class StructuredAnalysisTest(unittest.TestCase):
     def test_default_analysis_models_preserve_quality_order(self):
         self.assertEqual(analyze.PRIMARY_MODEL, "gemini-2.5-pro")
         self.assertEqual(analyze.FALLBACK_MODEL, "gemini-2.5-flash")
+        self.assertEqual(analyze._decision_model(), "gemini-2.5-pro")
         self.assertEqual(
             analyze._model_sequence(),
             ["gemini-2.5-pro", "gemini-2.5-flash"],
         )
+
+    def test_investment_decision_defers_instead_of_falling_back_when_pro_busy(self):
+        pro_busy = RuntimeError("503 UNAVAILABLE high demand")
+
+        with patch.object(analyze, "PRO_SERVER_BUSY_RETRY_DELAY_SECONDS", 0), \
+             patch.object(analyze, "_get_client", return_value=object()), \
+             patch.object(analyze.time, "sleep") as sleep, \
+             patch.object(analyze, "_call_model_text", side_effect=[pro_busy] * 6) as call:
+            with self.assertRaisesRegex(RuntimeError, "Gemini Pro 서버 혼잡"):
+                analyze.analyze_posts_structured(
+                    POSTS,
+                    "2026-06-01",
+                    {"last_rebalanced_date": "2026-05-14"},
+                )
+
+        self.assertEqual(call.call_count, 6)
+        self.assertEqual({item.args[1] for item in call.call_args_list}, {"gemini-2.5-pro"})
+        self.assertEqual(sleep.call_count, 5)
 
     def test_pro_context_trims_only_transmitted_tail_over_safe_limit(self):
         client = unittest.mock.Mock()

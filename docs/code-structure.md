@@ -8,7 +8,7 @@
 | 2 | 상태 로드 | `portfolio_schema.py`, `output/portfolio_state.json` |
 | 3 | 블로그 글 수집 | `fetch_mer.py`, `output/posts_db.json` |
 | 4 | 신규 글 요약 | `fetch_mer.py`, Gemini Flash |
-| 5 | 포트폴리오 판단 | `analyze.py`, Gemini Pro 우선 |
+| 5 | 포트폴리오 판단 | `analyze.py`, Gemini Pro 전용 |
 | 6 | 판단 검증과 상태 반영 | `portfolio_schema.py`, `portfolio_validation.py` |
 | 7 | 수익률 계산 | `track_returns.py`, `output/performance_cache.json` |
 | 8 | 사용자 출력 기준 자료 생성 | `portfolio_output.py` |
@@ -24,7 +24,7 @@
 |---|---|
 | `main.py` | 전체 실행 순서 제어, no-change/분석 보류/분석 성공 경로 연결 |
 | `fetch_mer.py` | RSS 수집, 본문 저장, 글별 요약, 요약 실패 보류 |
-| `analyze.py` | Gemini 호출, 구조화 판단 JSON과 보고서 생성 시도 |
+| `analyze.py` | Gemini 호출, Pro 전용 구조화 판단 JSON과 보고서 생성 시도 |
 | `system_prompt.py` | Gemini 입력 프롬프트와 출력 계약 |
 | `portfolio_schema.py` | 상태 파일 스키마, 판단 검증, 현금성 20% 하회와 리밸런싱 현금성 개선 검증, 상태 갱신 |
 | `portfolio_validation.py` | 보고서/판단 보조 검증 |

@@ -295,19 +295,26 @@ def _run_no_change_update(
 
 def _is_llm_service_unavailable_error(exc: Exception) -> bool:
     message = str(exc)
-    if "1차 포트폴리오 판단 실패" not in message:
+    if (
+        "1차 포트폴리오 판단 실패" not in message
+        and "Gemini Pro 서버 혼잡으로 투자 판단 보류" not in message
+    ):
         return False
     markers = (
         "429",
         "RESOURCE_EXHAUSTED",
-        "503",
         "UNAVAILABLE",
         "504",
         "DEADLINE_EXCEEDED",
         "timeout",
         "Server disconnected",
+        "Gemini Pro 서버 혼잡으로 투자 판단 보류",
     )
     return any(marker in message for marker in markers)
+
+
+def _is_pro_server_busy_investment_deferral(exc: Exception) -> bool:
+    return "Gemini Pro 서버 혼잡으로 투자 판단 보류" in str(exc)
 
 
 def _collect_posts() -> list[dict]:
@@ -417,7 +424,10 @@ def main() -> int:
         except RuntimeError as exc:
             if not _is_llm_service_unavailable_error(exc):
                 raise
-            note = "LLM 한도 초과 또는 일시 장애로 신규 글 분석 보류"
+            if _is_pro_server_busy_investment_deferral(exc):
+                note = "Gemini Pro 서버 혼잡으로 리밸런싱 판단 보류. 포트폴리오 비중은 변경하지 않음"
+            else:
+                note = "Gemini Pro 한도 초과 또는 일시 장애로 신규 투자 판단 보류. 포트폴리오 비중은 변경하지 않음"
             if deferred_note:
                 note += f" / {deferred_note}"
             print(f"  {note}: 기존 포트폴리오 상태로 출력만 갱신합니다.")

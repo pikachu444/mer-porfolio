@@ -3,8 +3,8 @@ analyze.py
 Google AI Studio (Gemini) 무료 API를 이용한 메르AI 분석 모듈
 
 무료 티어 한도 (2026년 기준):
-  - gemini-2.5-pro:   최종 분석 우선 모델
-  - gemini-2.5-flash: Pro 실패 시 fallback 모델
+  - gemini-2.5-pro:   1차 포트폴리오 판단 전용 모델
+  - gemini-2.5-flash: 글별 요약 및 2차 보고서 보조 모델
 
 API 키 발급: https://aistudio.google.com/app/apikey
 환경변수: GEMINI_API_KEY
@@ -13,6 +13,7 @@ API 키 발급: https://aistudio.google.com/app/apikey
 import json
 import os
 import re
+import time
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Callable, List, Dict, Tuple
@@ -34,17 +35,27 @@ from system_prompt import (
     build_report_user_message,
     build_user_message,
 )
-from gemini_utils import DEFAULT_HTTP_TIMEOUT_MS, generate_content_with_retry, is_daily_quota_error
+from gemini_utils import (
+    DEFAULT_HTTP_TIMEOUT_MS,
+    generate_content_with_retry,
+    is_daily_quota_error,
+    is_server_busy_error,
+)
 
 
 # ─── 모델 설정 ────────────────────────────────────────────────────────────────
 #
-# 최종 분석은 Pro를 먼저 시도하고, quota/지원 오류가 나면 Flash로 fallback한다.
-# GEMINI_MODEL을 지정하면 해당 모델을 우선 시도한다.
+# 투자 판단은 Pro 전용이다. 보고서 작성 단계만 일반 fallback 순서를 사용한다.
+# GEMINI_MODEL을 지정해도 1차 포트폴리오 판단은 Pro 계열 모델만 허용한다.
 
 _gemini_model_env = os.environ.get("GEMINI_MODEL", "").strip()
 PRIMARY_MODEL = _gemini_model_env if _gemini_model_env else "gemini-2.5-pro"
 FALLBACK_MODEL = os.environ.get("GEMINI_FALLBACK_MODEL", "gemini-2.5-flash").strip()
+DECISION_MODEL = PRIMARY_MODEL if "pro" in PRIMARY_MODEL.lower() else "gemini-2.5-pro"
+PRO_SERVER_BUSY_MAX_ATTEMPTS = int(os.environ.get("GEMINI_PRO_BUSY_MAX_ATTEMPTS", "6"))
+PRO_SERVER_BUSY_RETRY_DELAY_SECONDS = float(
+    os.environ.get("GEMINI_PRO_BUSY_RETRY_DELAY_SECONDS", "300")
+)
 MODEL_INPUT_TOKEN_LIMIT = 1_048_576
 MODEL_INPUT_SAFE_RATIO = 0.8
 MODEL_OUTPUT_TOKEN_LIMIT = 65_536
@@ -120,6 +131,10 @@ def _retry_count_for_model(model_name: str) -> int:
     return 1 if "pro" in model_name.lower() else 5
 
 
+def _decision_model() -> str:
+    return DECISION_MODEL
+
+
 def _try_model(
     client: genai.Client,
     model_name: str,
@@ -193,6 +208,7 @@ def _call_model_text(
     user_message: str,
     system_instruction: str,
     response_mime_type: str | None = None,
+    max_retries: int | None = None,
 ) -> str:
     """Call one Gemini model and require a non-empty text response."""
     config = types.GenerateContentConfig(
@@ -208,7 +224,7 @@ def _call_model_text(
         model=model_name,
         contents=user_message,
         config=config,
-        max_retries=_retry_count_for_model(model_name),
+        max_retries=max_retries if max_retries is not None else _retry_count_for_model(model_name),
     )
     text = response.text
     if not text or not text.strip():
@@ -261,6 +277,76 @@ def _call_stage_with_fallback(
             errors.append(f"{model_name}: {exc}")
             print(f"    {stage_name} 실패: {model_name} — {str(exc)[:180]}")
     raise RuntimeError(f"{stage_name} 실패. " + " | ".join(errors))
+
+
+def _call_investment_decision_with_pro_only(
+    client: genai.Client,
+    user_message: str,
+    validator: Callable[[str], object],
+) -> object:
+    """Run the investment decision stage with Gemini Pro only."""
+    stage_name = "1차 포트폴리오 판단"
+    model_name = _decision_model()
+    attempts = max(1, PRO_SERVER_BUSY_MAX_ATTEMPTS)
+    errors: list[str] = []
+
+    for attempt in range(attempts):
+        try:
+            print(f"  {stage_name} 모델 시도: {model_name} ({attempt + 1}/{attempts})")
+            text = _call_model_text(
+                client,
+                model_name,
+                user_message,
+                DECISION_SYSTEM_PROMPT,
+                response_mime_type="application/json",
+                max_retries=1,
+            )
+            for correction_attempt in range(3):
+                try:
+                    return validator(text)
+                except Exception as validation_error:
+                    if correction_attempt == 2:
+                        raise
+                    print(
+                        f"    {stage_name} 형식 교정 재시도 "
+                        f"{correction_attempt + 1}/2: {model_name} — "
+                        f"{str(validation_error)[:180]}"
+                    )
+                    text = _call_model_text(
+                        client,
+                        model_name,
+                        user_message
+                        + "\n\n직전 응답은 다음 검증 오류가 있었습니다:\n"
+                        + str(validation_error)
+                        + "\n누락된 근거와 필수 필드를 보완하여 요구 형식의 전체 응답을 다시 출력하십시오.",
+                        DECISION_SYSTEM_PROMPT,
+                        response_mime_type="application/json",
+                        max_retries=1,
+                    )
+        except Exception as exc:
+            message = str(exc)
+            errors.append(f"{model_name}: {message}")
+            print(f"    {stage_name} 실패: {model_name} — {message[:180]}")
+            if is_server_busy_error(message):
+                if attempt < attempts - 1:
+                    print(
+                        "    Gemini Pro 서버가 혼잡합니다. "
+                        f"{PRO_SERVER_BUSY_RETRY_DELAY_SECONDS:.0f}초 뒤 다시 시도합니다."
+                    )
+                    time.sleep(PRO_SERVER_BUSY_RETRY_DELAY_SECONDS)
+                    continue
+                raise RuntimeError(
+                    "Gemini Pro 서버 혼잡으로 투자 판단 보류. "
+                    "Flash로 투자 판단을 대체하지 않습니다. "
+                    + " | ".join(errors)
+                ) from exc
+            raise RuntimeError(f"{stage_name} 실패. " + " | ".join(errors)) from exc
+
+    raise RuntimeError(
+        "Gemini Pro 서버 혼잡으로 투자 판단 보류. "
+        "Flash로 투자 판단을 대체하지 않습니다. "
+        + " | ".join(errors)
+    )
 
 
 # ─── 입력 구성 헬퍼 ──────────────────────────────────────────────────────────
@@ -381,17 +467,14 @@ def analyze_posts_structured(
     )
     context = _fit_context_to_budget(client, context, decision_builder)
     decision_message = decision_builder(context)
-    decision = _call_stage_with_fallback(
+    decision = _call_investment_decision_with_pro_only(
         client,
         decision_message,
-        DECISION_SYSTEM_PROMPT,
         lambda text: _parse_and_validate_model_decision_json(
             text,
             current_state,
             decision_validator,
         ),
-        "1차 포트폴리오 판단",
-        response_mime_type="application/json",
     )
     assert isinstance(decision, AnalysisDecisionV2)
 

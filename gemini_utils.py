@@ -36,18 +36,27 @@ def is_rate_limit_error(message: str) -> bool:
 
 def is_transient_error(message: str) -> bool:
     msg = message.lower()
-    return is_rate_limit_error(message) or any(
+    return is_rate_limit_error(message) or is_server_busy_error(message) or any(
+        token in msg
+        for token in (
+            "timeout",
+            "timed out",
+            "read timeout",
+            "server disconnected",
+            "disconnected without sending a response",
+        )
+    )
+
+
+def is_server_busy_error(message: str) -> bool:
+    msg = message.lower()
+    return any(
         token in msg
         for token in (
             "503",
             "unavailable",
             "high demand",
             "try again later",
-            "timeout",
-            "timed out",
-            "read timeout",
-            "server disconnected",
-            "disconnected without sending a response",
         )
     )
 

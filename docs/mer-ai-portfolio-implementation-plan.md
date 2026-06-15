@@ -892,13 +892,13 @@ HTML에는 다음 내용을 표시한다.
 **목적:** 투자 판단 품질에 직접 영향을 주는 Gemini 모델 역할을 기존 운영 의도에 맞게
 복원하고, 구조화된 2단계 호출에서 각 모델의 책임을 명확히 한다.
 
-**기존 운영 문서에서 확인한 정책**
+**과거 운영 문서에서 확인했으나 25번에서 투자 판단에는 폐기한 정책**
 
 | 작업 | 모델 |
 |---|---|
 | 글별 1차 요약 | `gemini-2.5-flash` |
 | 최종 투자 분석 | `gemini-2.5-pro` 우선 |
-| 최종 투자 분석 fallback | `gemini-2.5-flash` |
+| 최종 투자 분석 fallback | `gemini-2.5-flash`였으나 25번에서 투자 판단에는 사용하지 않기로 변경 |
 | `flash-lite` | 품질 저하 우려로 기본 경로에서 사용하지 않음 |
 
 **폐기 예정인 미합의 변경**
@@ -914,9 +914,9 @@ HTML에는 다음 내용을 표시한다.
 | 작업 | 모델 |
 |---|---|
 | 글별 1차 요약 | `gemini-2.5-flash` |
-| 1차 포트폴리오 판단 JSON | `gemini-2.5-pro` 우선 |
+| 1차 포트폴리오 판단 JSON | `gemini-2.5-pro` 전용 |
 | 2차 사용자용 Markdown 보고서 | `gemini-2.5-pro` 우선 |
-| 두 분석 단계의 fallback | `gemini-2.5-flash` |
+| 2차 보고서 fallback | `gemini-2.5-flash` 또는 구조화 판단 기반 결정적 보고서 |
 | `gemini-2.5-flash-lite` | 정상 경로에서 사용하지 않음 |
 
 - 2차 사용자용 보고서는 단순 JSON 포맷 변환이 아니다. 블로그 글과 검증된 판단 JSON을
@@ -924,8 +924,11 @@ HTML에는 다음 내용을 표시한다.
   `gemini-2.5-pro`를 사용한다.
 - 정상 분석 경로는 `pro` 호출 `2회`다. HTML, PNG, Telegram은 추가 LLM 호출 없이 검증된
   판단 JSON과 Markdown 보고서로 생성한다.
-- `pro` 호출 실패 시 기존 운영 정책처럼 `flash`로 fallback한다. `flash`도 실패하면 이전
-  상태와 보고서를 유지하고 실행을 실패 처리한다.
+- 1차 포트폴리오 판단은 투자 판단 품질에 직접 영향을 주므로 `flash`로 대체하지 않는다.
+  Gemini Pro가 서버 혼잡으로 응답하지 않으면 5분 간격으로 5회 더 재시도하고, 그래도 실패하면
+  기존 포트폴리오와 비중을 유지한 채 분석 보류 사유를 Telegram, HTML, Markdown에 표시한다.
+- 2차 사용자용 보고서는 검증된 판단 JSON 이후의 설명 단계다. Pro 또는 fallback 호출이 실패해도
+  구조화 판단 기반 결정적 Markdown 보고서로 사용자 출력은 계속 생성한다.
 - 글별 1차 요약은 기존 정책대로 `flash`를 사용한다. 이미 생성된 요약 캐시는 재사용한다.
 - Actions의 정상 `scheduled`와 `rebalance`에서는 글별 Flash 요약을 활성화한다. 반복 실행되는
   개발 검증용 `verify`에서는 요약 호출을 끄고 원문을 사용하여 최종 투자 판단과 보고서 생성
@@ -1697,6 +1700,56 @@ Telegram 추천 목록은 세부 분석이 아니라 빠른 확인용 요약으�
   수정했다.
 - GitHub Actions 운영 `rebalance` 실행 `27549718268`을 통해 `output/portfolio_state.json`,
   `output/dashboard.html`, `output/report_20260615.md`, `output/chart_latest.png`가 갱신됐다.
+
+### 25. Gemini Pro 서버 혼잡 시 투자 판단 보류 정책
+
+**목적:** 투자 판단 품질을 낮추는 임시 대체 모델 사용을 막고, Gemini Pro가 일시적으로 응답하지
+않는 경우에는 새 매수/매도/비중 판단을 만들지 않고 기존 포트폴리오를 유지한다.
+
+**확인된 문제**
+
+- 2026-06-15 운영 리밸런싱에서 Gemini Pro가 서버 혼잡으로 응답하지 않았고, Flash가 대신 1차
+  포트폴리오 판단을 완료했다.
+- 이 결과는 현금성 20% 기준을 충족했지만, 투자 판단 단계가 합의한 고품질 모델이 아니라 대체
+  모델에서 나온 판단이라는 문제가 있다.
+- 투자자가 보는 결과에서는 왜 판단 품질이 달라졌는지 알 수 없으므로, 같은 상황이 다시 생기면
+  비중을 바꾸지 않고 보류 사유를 명확히 보여야 한다.
+
+**합의됨**
+
+- 글별 1차 요약은 기존대로 `gemini-2.5-flash`를 사용할 수 있다.
+- 1차 포트폴리오 판단 JSON은 `gemini-2.5-pro` 전용이다. `GEMINI_MODEL`이 Flash로 지정되어도
+  투자 판단 단계에는 Pro 계열 모델만 사용한다.
+- Gemini Pro가 서버 혼잡으로 응답하지 않으면 5분 간격으로 5회 더 재시도한다. 최초 시도까지
+  합쳐 총 6회다.
+- 총 6회 뒤에도 응답하지 않으면 Flash로 투자 판단을 대체하지 않는다.
+- 이 경우 기존 포트폴리오와 목표 비중을 유지하고, 사용자 출력에
+  `Gemini Pro 서버 혼잡으로 리밸런싱 판단 보류. 포트폴리오 비중은 변경하지 않음`을 표시한다.
+- Pro가 한도 초과 또는 기타 일시 장애로 투자 판단을 완료하지 못한 경우에도 새 판단을 만들지
+  않고 기존 포트폴리오와 목표 비중을 유지한다.
+- 2차 사용자용 Markdown 보고서는 이미 검증된 판단 이후의 설명 단계이므로, Pro 보고서 호출이
+  실패하면 구조화 판단 기반 결정적 보고서로 사용자 출력 생성을 계속한다.
+
+**완료 조건**
+
+- `analyze.py`에서 1차 포트폴리오 판단은 Pro 전용 호출 경로를 사용하고 Flash fallback을 호출하지 않는다.
+- Pro 서버 혼잡 시 5분 간격 5회 추가 재시도 정책이 코드에 있다.
+- 재시도 후에도 실패하면 `main.py`가 no-change 출력 경로로 전환해 HTML, Markdown, Telegram에
+  보류 사유를 표시한다.
+- `docs/project-overview.md`, `docs/code-structure.md`, `docs/project-operation.md`가 같은 정책을 설명한다.
+- 자동 테스트가 “Pro 서버 혼잡 시 Flash를 호출하지 않음”을 확인한다.
+
+**구현 완료**
+
+- `gemini_utils.py`에 서버 혼잡 오류 판별을 분리했다.
+- `analyze.py`에 1차 포트폴리오 판단 전용 Pro 호출 경로를 추가했다.
+- `main.py`의 no-change 출력 문구를 투자자 관점의 보류 메시지로 바꿨다.
+- `README.md`, `docs/project-operation.md`, `docs/project-overview.md`, `docs/code-structure.md`,
+  작업 목록을 같은 정책으로 갱신했다.
+- 테스트에 “Pro 서버 혼잡 시 Flash를 호출하지 않고 총 6회 Pro만 시도한 뒤 보류” 검증을 추가했다.
+- 로컬 검증 결과: `python -m py_compile analyze.py gemini_utils.py main.py`,
+  `$env:PYTHONUTF8='1'; python -m unittest discover -s tests -q` 전체 114개 테스트,
+  `git diff --check`가 통과했다.
 
 ## 기존 완료 작업
 

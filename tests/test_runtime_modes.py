@@ -77,9 +77,11 @@ class RuntimeModesTest(unittest.TestCase):
             get_run_policy("adhoc")
 
     def test_identifies_first_stage_llm_service_unavailability(self):
-        exc = RuntimeError("1차 포트폴리오 판단 실패. gemini-2.5-flash: 429 RESOURCE_EXHAUSTED")
+        exc = RuntimeError("1차 포트폴리오 판단 실패. gemini-2.5-pro: 429 RESOURCE_EXHAUSTED")
+        busy = RuntimeError("Gemini Pro 서버 혼잡으로 투자 판단 보류")
 
         self.assertTrue(_is_llm_service_unavailable_error(exc))
+        self.assertTrue(_is_llm_service_unavailable_error(busy))
         self.assertFalse(_is_llm_service_unavailable_error(RuntimeError("검증 오류")))
 
     def test_no_change_update_creates_today_report_and_passes_status_note_to_dashboard(self):
