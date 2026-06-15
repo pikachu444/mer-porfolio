@@ -1589,6 +1589,9 @@ Telegram 추천 목록은 세부 분석이 아니라 빠른 확인용 요약으�
   `python -m py_compile scripts/backfill_legacy_evidence.py portfolio_schema.py portfolio_output.py system_prompt.py main.py analyze.py generate_dashboard.py telegram_notify.py` 통과,
   `$env:PYTHONUTF8='1'; python -m unittest discover -s tests -q` 전체 108개 테스트 통과,
   `git diff --check` 통과.
+- 원격 `main` 검증 결과: GitHub Actions `full_verify` 실행 `27526863005` 성공. 실제 수집/요약/Pro 판단,
+  HTML/PNG 생성, Telegram 전송, artifact 업로드가 완료됐다. artifact 기준 국내/해외 추천 목록에 보강
+  대상 5개 종목이 포함되고 `재검증 필요 포지션`은 비어 있다.
 
 ## 기존 완료 작업
 
