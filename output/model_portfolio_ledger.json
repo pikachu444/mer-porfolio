@@ -1,8 +1,8 @@
 {
   "schema_version": "3.0",
   "starting_value": 100.0,
-  "cash": 3.2208146468577272,
-  "realized_pnl": 0.0,
+  "cash": 5.466703630947345,
+  "realized_pnl": -0.23557625973607427,
   "positions": [
     {
       "key": "stock:KR:006220",
@@ -70,7 +70,7 @@
       "code": "AA",
       "market": "US",
       "asset_type": "stock",
-      "quantity": 7.102787287633054e-05,
+      "quantity": 5.7293278757848444e-05,
       "average_cost": 112631.83981208503,
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
@@ -130,7 +130,7 @@
       "code": "454910",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 7.861635220125786e-05,
+      "quantity": 7.126955472335839e-05,
       "average_cost": 127200.0,
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
@@ -390,6 +390,30 @@
       "value": 3.7791853531422728,
       "target_weight": 4.0,
       "reason": "신규 편입. 미국 필리조선소 인수를 통해 현지 생산 거점을 확보, 미 해군 함정 건조 및 MRO 시장 진출의 교두보를 마련함. NDAA의 해외 건조 금지 조항의 직접적인 수혜가 기대됨."
+    },
+    {
+      "date": "2026-06-15",
+      "type": "일부 매도",
+      "key": "stock:KR:454910",
+      "name": "두산로보틱스",
+      "decision_actor": "AI",
+      "price": 111400.0,
+      "quantity": 7.34679747789946e-06,
+      "value": -0.8184332390379998,
+      "target_weight": 8.0,
+      "reason": "리밸런싱 실행. 엔비디아와의 '피지컬 AI' 파트너십이라는 핵심 투자 논리는 유효하나, 위험(risk) 자산군에 10% 비중은 과도하다고 판단. 시장 불확실성 증대에 대응하고 목표 현금 비중(20%)을 확보하기 위해 비중을 8%로 축소 조정합니다."
+    },
+    {
+      "date": "2026-06-15",
+      "type": "일부 매도",
+      "key": "stock:US:AA",
+      "name": "Alcoa",
+      "decision_actor": "AI",
+      "price": 103931.41091302782,
+      "quantity": 1.3734594118482095e-05,
+      "value": -1.4274557450516179,
+      "target_weight": 6.0,
+      "reason": "리밸런싱 실행. 기니의 보크사이트 공급 차질이라는 투자 논리는 유효하나, 지정학적 리스크에 기반한 위험(risk) 자산군의 비중이 8%로 높은 점을 고려. 시장 불확실성 증대에 대응하고 목표 현금 비중(20%)을 확보하기 위해 비중을 6%로 축소 조정합니다."
     }
   ],
   "snapshots": [
@@ -435,11 +459,11 @@
     },
     {
       "date": "2026-06-15",
-      "cash": 3.22081465,
-      "invested_value": 96.05383995,
-      "total_value": 99.2746546,
-      "return_pct": -0.7253454,
-      "realized_pnl": 0.0
+      "cash": 5.46670363,
+      "invested_value": 93.77615132,
+      "total_value": 99.24285495,
+      "return_pct": -0.75714505,
+      "realized_pnl": -0.23557626
     }
   ]
 }
