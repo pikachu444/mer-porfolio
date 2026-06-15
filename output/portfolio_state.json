@@ -9,25 +9,25 @@
       "decision_actor": "AI",
       "action": "보유",
       "basis": "섹터 분석",
-      "decision_date": "2026-06-15",
+      "decision_date": "2026-06-16",
       "evidence_posts": [
         {
-          "title": "일론 머스크가 만드는 데이터센터가 기적적인 속도로 건설되는 비밀",
-          "url": "https://blog.naver.com/ranto28/224313393861?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-12"
+          "title": "올해 여름, 수퍼엘니뇨가 돌아온다. 투자 포인트는 뭘까?",
+          "url": "https://blog.naver.com/ranto28/224316751515?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-15"
         }
       ],
       "source_mentioned": false,
       "previous_weight": 3.0,
       "proposed_weight": 3.0,
       "weight_source": "AI 제안",
-      "change_reason": "리밸런싱 검토 결과, AI 데이터센터발 전력 수요 급증이라는 메가트렌드가 xAI 사례를 통해 더욱 명확해졌습니다. 전력 인프라 핵심 수혜주로서 투자 논리가 유효하며 기존 비중을 유지합니다.",
+      "change_reason": "기존 AI 데이터센터발 전력 수요 증가 논리가 슈퍼 엘니뇨로 인한 폭염과 냉방 수요 급증 전망으로 더욱 강화됨. 전력 인프라의 중요성이 재부각되어 보유 의견을 유지함.",
       "allocation_role": "satellite",
       "allocation_role_source": "rebalance_review_2026-06-15",
       "allocation_role_reason": "전력/인프라 수혜 보조 포지션",
       "source_scope": "previous_decision",
-      "investment_rationale": "AI 데이터센터발 전력 수요 증가와 전력망 증설 흐름에서 전선/케이블 인프라 수혜 가능성이 높음.",
-      "current_entry_reason": "기존 보유 포지션이며 AI 데이터센터 전력난 심화로 전력 인프라 투자 확대의 필요성이 더욱 부각됨.",
+      "investment_rationale": "AI 데이터센터와 더불어 엘니뇨로 인한 기후 변화가 전력 수요를 급증시켜 전력망 인프라(전선/케이블)의 중요성을 부각시킴.",
+      "current_entry_reason": "기존 보유 종목의 투자 근거가 새로운 기후 이벤트(엘니뇨)로 인해 강화되었음을 확인함.",
       "key_risks": [
         "전력 인프라 투자 지연",
         "구리 등 원자재 가격 변동",
@@ -35,7 +35,7 @@
       ],
       "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15",
       "linked_insight_ids": [
-        "INSIGHT-20260615-3"
+        "INSIGHT-20260616-2"
       ]
     },
     {
@@ -46,25 +46,25 @@
       "decision_actor": "AI",
       "action": "보유",
       "basis": "섹터 분석",
-      "decision_date": "2026-06-15",
+      "decision_date": "2026-06-16",
       "evidence_posts": [
         {
-          "title": "일론 머스크가 만드는 데이터센터가 기적적인 속도로 건설되는 비밀",
-          "url": "https://blog.naver.com/ranto28/224313393861?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-12"
+          "title": "올해 여름, 수퍼엘니뇨가 돌아온다. 투자 포인트는 뭘까?",
+          "url": "https://blog.naver.com/ranto28/224316751515?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-15"
         }
       ],
       "source_mentioned": false,
       "previous_weight": 3.0,
       "proposed_weight": 3.0,
       "weight_source": "AI 제안",
-      "change_reason": "리밸런싱 검토 결과, AI 데이터센터 확산과 노후 전력망 증설에 따른 초고압 케이블 수요 증가 근거가 유효하며, xAI의 사례는 전력 인프라의 중요성을 재확인시켜 줍니다. 기존 비중을 유지합니다.",
+      "change_reason": "기존 AI 데이터센터발 전력 수요 증가 논리가 슈퍼 엘니뇨로 인한 폭염과 냉방 수요 급증 전망으로 더욱 강화됨. 초고압 케이블 등 전력망 확충의 필요성이 커져 보유 의견을 유지함.",
       "allocation_role": "satellite",
       "allocation_role_source": "rebalance_review_2026-06-15",
       "allocation_role_reason": "전력 케이블 수혜 보조 포지션",
       "source_scope": "previous_decision",
-      "investment_rationale": "AI 데이터센터 확산과 노후 전력망 증설에 따른 초고압 케이블 수요 증가로 수혜가 예상됨.",
-      "current_entry_reason": "기존 보유 포지션이며 AI 데이터센터 전력난 심화로 전력 인프라 투자 확대의 필요성이 더욱 부각됨.",
+      "investment_rationale": "AI 데이터센터와 더불어 엘니뇨로 인한 기후 변화가 전력 수요를 급증시켜 전력망 인프라(전선/케이블)의 중요성을 부각시킴.",
+      "current_entry_reason": "기존 보유 종목의 투자 근거가 새로운 기후 이벤트(엘니뇨)로 인해 강화되었음을 확인함.",
       "key_risks": [
         "전력 인프라 투자 지연",
         "원자재 가격 변동",
@@ -72,7 +72,7 @@
       ],
       "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15",
       "linked_insight_ids": [
-        "INSIGHT-20260615-3"
+        "INSIGHT-20260616-2"
       ]
     },
     {
@@ -188,31 +188,31 @@
       "market": "US",
       "asset_type": "stock",
       "decision_actor": "AI",
-      "action": "비중축소",
-      "basis": "이전 판단 유지",
-      "decision_date": "2026-06-15",
+      "action": "보유",
+      "basis": "섹터 분석",
+      "decision_date": "2026-06-16",
       "evidence_posts": [
         {
-          "title": "선거 이후 포트폴리오는...",
-          "url": "https://blog.naver.com/ranto28/224305344367?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-03"
+          "title": "올해 여름, 수퍼엘니뇨가 돌아온다. 투자 포인트는 뭘까?",
+          "url": "https://blog.naver.com/ranto28/224316751515?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-15"
         }
       ],
       "source_mentioned": false,
-      "previous_weight": 8.0,
+      "previous_weight": 5.0,
       "proposed_weight": 5.0,
       "weight_source": "AI 제안",
-      "change_reason": "리밸런싱 실행. 기니의 보크사이트 공급 차질이라는 투자 논리는 유효하나, 지정학적 리스크에 기반한 위험(risk) 자산군의 비중이 8%로 높은 점을 고려. 시장 불확실성 증대에 대응하고 목표 현금 비중(20%)을 확보하기 위해 비중을 5%로 축소 조정합니다.",
+      "change_reason": "기존 지정학적 리스크에 더해, 슈퍼 엘니뇨로 인한 전력 비용 상승이 알루미늄 생산 원가를 자극해 가격 상승 압력으로 작용할 수 있다는 논리가 추가되어 보유 의견을 유지함.",
       "source_scope": "previous_decision",
-      "investment_rationale": "세계 최대 보크사이트 생산국인 기니의 수출 통제와 중동 제련소 생산 차질이 겹치며 글로벌 알루미늄 공급 부족이 심화될 것으로 예상됨. 이는 알루미늄 가격 상승으로 이어져 알코아의 실적 개선에 기여할 것임.",
-      "current_entry_reason": "리밸런싱을 통해 위험자산 비중을 조정하고 포트폴리오 안정성을 높이기 위함.",
+      "investment_rationale": "엘니뇨로 인한 전력 수요 급증은 알루미늄 생산 원가(전기료 비중 37%)를 상승시켜 알루미늄 가격 상승으로 이어질 수 있음.",
+      "current_entry_reason": "기존 보유 종목의 투자 근거가 새로운 기후 이벤트(엘니뇨)로 인해 강화되었음을 확인함.",
       "key_risks": [
         "글로벌 경기 둔화에 따른 알루미늄 수요 감소",
         "기니의 정책 변화 또는 중국과의 타협 가능성",
         "원자재 가격 변동성"
       ],
       "linked_insight_ids": [
-        "INSIGHT-20260615-5"
+        "INSIGHT-20260616-2"
       ],
       "allocation_role": "risk",
       "allocation_role_source": "rebalance_review_2026-06-15",
@@ -950,6 +950,81 @@
       "status": "관심",
       "source_scope": "source_named_security",
       "observation_reason": "스페이스X IPO 주관사로서 보여준 막강한 딜 소싱 및 배정 능력은 동사의 핵심 경쟁력입니다. 글로벌 자본시장에서의 독점적 지위가 어떻게 수익으로 연결되는지 관찰할 필요가 있습니다."
+    },
+    {
+      "name": "농산물/곡물 섹터",
+      "code": "",
+      "market": "",
+      "asset_type": "sector",
+      "decision_actor": "AI",
+      "basis": "섹터 분석",
+      "decision_date": "2026-06-16",
+      "evidence_posts": [
+        {
+          "title": "올해 여름, 수퍼엘니뇨가 돌아온다. 투자 포인트는 뭘까?",
+          "url": "https://blog.naver.com/ranto28/224316751515?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-15"
+        }
+      ],
+      "source_mentioned": false,
+      "watchlist_entry_date": "2026-06-16",
+      "latest_evidence_date": "2026-06-15",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "sector_only",
+      "observation_reason": "슈퍼 엘니뇨 현상으로 인해 옥수수, 밀, 대두 등 주요 곡물 가격의 변동성이 커질 것으로 예상됨. 풍작과 가뭄, 비료 문제 등이 복합적으로 작용하여 투자 기회가 발생할 수 있으나, 구체적인 수혜/피해 종목 특정이 필요하여 관찰 대상으로 편입."
+    },
+    {
+      "name": "해상운송 섹터",
+      "code": "",
+      "market": "",
+      "asset_type": "sector",
+      "decision_actor": "AI",
+      "basis": "섹터 분석",
+      "decision_date": "2026-06-16",
+      "evidence_posts": [
+        {
+          "title": "올해 여름, 수퍼엘니뇨가 돌아온다. 투자 포인트는 뭘까?",
+          "url": "https://blog.naver.com/ranto28/224316751515?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-15"
+        }
+      ],
+      "source_mentioned": false,
+      "watchlist_entry_date": "2026-06-16",
+      "latest_evidence_date": "2026-06-15",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "sector_only",
+      "observation_reason": "엘니뇨로 인한 중남미 가뭄이 파나마 운하의 통항량을 감소시켜 글로벌 해상 운임이 급등할 가능성이 제기됨. 관련 수혜 기업을 식별하기 위해 관찰이 필요함."
+    },
+    {
+      "name": "한국 여름 소비재 섹터",
+      "code": "",
+      "market": "KR",
+      "asset_type": "sector",
+      "decision_actor": "AI",
+      "basis": "섹터 분석",
+      "decision_date": "2026-06-16",
+      "evidence_posts": [
+        {
+          "title": "올해 여름, 수퍼엘니뇨가 돌아온다. 투자 포인트는 뭘까?",
+          "url": "https://blog.naver.com/ranto28/224316751515?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-15"
+        }
+      ],
+      "source_mentioned": false,
+      "watchlist_entry_date": "2026-06-16",
+      "latest_evidence_date": "2026-06-15",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "sector_only",
+      "observation_reason": "슈퍼 엘니뇨로 인한 한국의 찜통더위가 예상되어 빙과, 음료 등 관련 소비재 기업의 계절적 수혜가 기대됨. 단기 테마 성격이 강해 구체적인 투자 대상과 진입 시점을 판단하기 위해 관찰함."
     }
   ],
   "closed_positions": [
@@ -3197,141 +3272,167 @@
         "INSIGHT-20260615-4"
       ],
       "source_scope": "source_named_security"
+    },
+    {
+      "name": "LS",
+      "code": "006220",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "보유",
+      "basis": "섹터 분석",
+      "decision_date": "2026-06-16",
+      "evidence_posts": [
+        {
+          "title": "올해 여름, 수퍼엘니뇨가 돌아온다. 투자 포인트는 뭘까?",
+          "url": "https://blog.naver.com/ranto28/224316751515?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-15"
+        }
+      ],
+      "source_mentioned": false,
+      "previous_weight": 3.0,
+      "proposed_weight": 3.0,
+      "weight_source": "AI 제안",
+      "change_reason": "기존 AI 데이터센터발 전력 수요 증가 논리가 슈퍼 엘니뇨로 인한 폭염과 냉방 수요 급증 전망으로 더욱 강화됨. 전력 인프라의 중요성이 재부각되어 보유 의견을 유지함.",
+      "allocation_role": "satellite",
+      "source_scope": "previous_decision",
+      "investment_rationale": "AI 데이터센터와 더불어 엘니뇨로 인한 기후 변화가 전력 수요를 급증시켜 전력망 인프라(전선/케이블)의 중요성을 부각시킴.",
+      "current_entry_reason": "기존 보유 종목의 투자 근거가 새로운 기후 이벤트(엘니뇨)로 인해 강화되었음을 확인함.",
+      "key_risks": [
+        "전력 인프라 투자 지연",
+        "구리 등 원자재 가격 변동",
+        "수주 경쟁 심화"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260616-2"
+      ]
+    },
+    {
+      "name": "대한전선",
+      "code": "001440",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "보유",
+      "basis": "섹터 분석",
+      "decision_date": "2026-06-16",
+      "evidence_posts": [
+        {
+          "title": "올해 여름, 수퍼엘니뇨가 돌아온다. 투자 포인트는 뭘까?",
+          "url": "https://blog.naver.com/ranto28/224316751515?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-15"
+        }
+      ],
+      "source_mentioned": false,
+      "previous_weight": 3.0,
+      "proposed_weight": 3.0,
+      "weight_source": "AI 제안",
+      "change_reason": "기존 AI 데이터센터발 전력 수요 증가 논리가 슈퍼 엘니뇨로 인한 폭염과 냉방 수요 급증 전망으로 더욱 강화됨. 초고압 케이블 등 전력망 확충의 필요성이 커져 보유 의견을 유지함.",
+      "allocation_role": "satellite",
+      "source_scope": "previous_decision",
+      "investment_rationale": "AI 데이터센터와 더불어 엘니뇨로 인한 기후 변화가 전력 수요를 급증시켜 전력망 인프라(전선/케이블)의 중요성을 부각시킴.",
+      "current_entry_reason": "기존 보유 종목의 투자 근거가 새로운 기후 이벤트(엘니뇨)로 인해 강화되었음을 확인함.",
+      "key_risks": [
+        "전력 인프라 투자 지연",
+        "원자재 가격 변동",
+        "국내외 케이블 업체 경쟁"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260616-2"
+      ]
+    },
+    {
+      "name": "Alcoa",
+      "code": "AA",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "보유",
+      "basis": "섹터 분석",
+      "decision_date": "2026-06-16",
+      "evidence_posts": [
+        {
+          "title": "올해 여름, 수퍼엘니뇨가 돌아온다. 투자 포인트는 뭘까?",
+          "url": "https://blog.naver.com/ranto28/224316751515?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-15"
+        }
+      ],
+      "source_mentioned": false,
+      "previous_weight": 5.0,
+      "proposed_weight": 5.0,
+      "weight_source": "AI 제안",
+      "change_reason": "기존 지정학적 리스크에 더해, 슈퍼 엘니뇨로 인한 전력 비용 상승이 알루미늄 생산 원가를 자극해 가격 상승 압력으로 작용할 수 있다는 논리가 추가되어 보유 의견을 유지함.",
+      "allocation_role": "risk",
+      "source_scope": "previous_decision",
+      "investment_rationale": "엘니뇨로 인한 전력 수요 급증은 알루미늄 생산 원가(전기료 비중 37%)를 상승시켜 알루미늄 가격 상승으로 이어질 수 있음.",
+      "current_entry_reason": "기존 보유 종목의 투자 근거가 새로운 기후 이벤트(엘니뇨)로 인해 강화되었음을 확인함.",
+      "key_risks": [
+        "글로벌 경기 둔화에 따른 알루미늄 수요 감소",
+        "기니의 정책 변화 또는 중국과의 타협 가능성",
+        "원자재 가격 변동성"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260616-2"
+      ]
     }
   ],
   "insights": [
     {
-      "id": "INSIGHT-20260615-1",
-      "title": "미국-이란 평화협정 타결, 중동 지정학적 리스크 완화 기대",
-      "summary": "미국과 이란이 평화협정에 합의했으며, 호르무즈 해협 통행 재개와 경제 제재 완화가 포함될 예정입니다. 이는 글로벌 유가 안정 및 해상 물류 정상화에 기여할 수 있는 중요한 이벤트입니다.",
-      "investment_implication": "중동 리스크 완화는 글로벌 교역량 증가와 인플레이션 압력 완화에 긍정적이나, 합의의 최종 이행과 관련된 불확실성은 여전히 존재합니다.",
+      "id": "INSIGHT-20260616-1",
+      "title": "슈퍼 엘니뇨 현상, 농산물 시장 변동성 증폭",
+      "summary": "2026년 겨울 역대급 슈퍼 엘니뇨가 예상됨에 따라, 미국 옥수수 풍작(가격 하락 요인)과 호주 등지 밀 가뭄(가격 상승 요인)이 동시에 발생할 수 있습니다. 또한 비료 공급 차질이 옥수수 대신 대두 경작을 유도하는 등 복합적인 변수가 작용하여 곡물 시장의 불확실성이 커지고 있습니다.",
+      "investment_implication": "곡물 가격의 방향성이 혼재되어 있어, 관련 상품 및 기업 투자에 신중한 접근과 면밀한 관찰이 필요합니다.",
       "evidence_posts": [
         {
-          "title": "미국과 이란, 협상타결 내용은?",
-          "url": "https://blog.naver.com/ranto28/224316120615?fromRss=true&trackingCode=rss",
+          "title": "올해 여름, 수퍼엘니뇨가 돌아온다. 투자 포인트는 뭘까?",
+          "url": "https://blog.naver.com/ranto28/224316751515?fromRss=true&trackingCode=rss",
           "published_date": "2026-06-15"
-        },
-        {
-          "title": "트럼프, 이란과 \"종전 관련 훌륭한 합의를 끝냈다\" 발표",
-          "url": "https://blog.naver.com/ranto28/224313465740?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-11"
         }
       ],
       "related_decision_codes": []
     },
     {
-      "id": "INSIGHT-20260615-2",
-      "title": "스페이스X IPO, 주관사의 막강한 배정 권한과 기관 수요 입증",
-      "summary": "스페이스X IPO 과정에서 주관사인 골드만삭스는 물량 배정에 절대적인 권한을 행사했으며, 이는 초대형 IPO 딜에 대한 접근성이 최상위 투자은행의 핵심 경쟁력임을 보여줍니다. 또한 스페이스X에 대한 폭발적인 기관 수요는 동사의 독보적인 성장성을 재확인시켜 줍니다.",
-      "investment_implication": "골드만삭스와 같은 글로벌 투자은행의 독점적 지위가 부각되며, 스페이스X는 상장 시 높은 가치를 인정받을 가능성이 큽니다.",
+      "id": "INSIGHT-20260616-2",
+      "title": "엘니뇨 발 전력 수요 급증, 전력 인프라 및 알루미늄 가격 상승 압력 강화",
+      "summary": "슈퍼 엘니뇨로 인한 폭염은 냉방 수요를 급증시켜 전력망에 부담을 줄 것입니다. 이는 전력 인프라 투자의 중요성을 부각시키며, 동시에 생산원가의 37%가 전기인 알루미늄의 생산 비용을 높여 가격 상승 요인으로 작용할 수 있습니다.",
+      "investment_implication": "전력 인프라 관련주와 알루미늄 생산 기업의 기존 투자 논리가 더욱 강화됩니다.",
       "evidence_posts": [
         {
-          "title": "미래에셋증권이 스페이스 X 주식을 1주도 못 받은 비밀",
-          "url": "https://blog.naver.com/ranto28/224315627964?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-14"
+          "title": "올해 여름, 수퍼엘니뇨가 돌아온다. 투자 포인트는 뭘까?",
+          "url": "https://blog.naver.com/ranto28/224316751515?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-15"
         }
       ],
       "related_decision_codes": [
-        "GS",
-        "SpaceX"
-      ]
-    },
-    {
-      "id": "INSIGHT-20260615-3",
-      "title": "xAI, 현장 가스터빈 설치로 데이터센터 전력난 해결 및 건설 가속화",
-      "summary": "일론 머스크의 xAI는 송전망 연결을 기다리지 않고 데이터센터 현장에 직접 가스터빈을 설치하는 방식으로 건설 기간을 획기적으로 단축하고 있습니다. 이는 규제 회피 논란이 있지만, AI 경쟁에서 속도를 우선하는 공격적인 전략입니다.",
-      "investment_implication": "AI 데이터센터의 폭발적인 전력 수요는 기존 전력망의 한계를 드러내며, 가스터빈을 활용한 분산형 현장 발전에 대한 수요를 급증시킬 것입니다.",
-      "evidence_posts": [
-        {
-          "title": "일론 머스크가 만드는 데이터센터가 기적적인 속도로 건설되는 비밀",
-          "url": "https://blog.naver.com/ranto28/224313393861?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-12"
-        }
-      ],
-      "related_decision_codes": [
+        "AA",
         "006220",
         "001440"
       ]
     },
     {
-      "id": "INSIGHT-20260615-4",
-      "title": "미국 NDAA 해외 군함 건조 금지, 현지 거점 확보한 한국 조선사에 기회",
-      "summary": "미국 국방수권법(NDAA)의 해외 군함 건조 금지 조항은 미국 내 생산 거점을 확보했거나 현지 파트너십을 구축한 한국 조선업체에게 오히려 기회로 작용할 수 있습니다. 최근 조선주 부진은 펀더멘털이 아닌 수급 요인으로 분석됩니다.",
-      "investment_implication": "한화오션, HD현대 등 미국 현지화 전략을 추진하는 기업들은 미국의 보호주의 정책을 활용해 미 해군 및 MRO 시장에서 안정적인 수주를 확보할 가능성이 높습니다.",
+      "id": "INSIGHT-20260616-3",
+      "title": "엘니뇨, 파나마 운하 가뭄으로 글로벌 물류대란 재현 가능성",
+      "summary": "엘니뇨가 유발하는 중남미 지역의 가뭄은 파나마 운하의 수위를 낮춰 통항량을 급격히 감소시킬 수 있습니다. 이는 글로벌 해상 운임의 폭등으로 이어질 수 있는 잠재적 리스크입니다.",
+      "investment_implication": "해상 운송 관련 기업들의 주가 변동성이 커질 수 있으므로 관련 섹터에 대한 관찰이 필요합니다.",
       "evidence_posts": [
         {
-          "title": "미국 하원, 해외 군함 건조 금지의 내막 (feat 조선업)",
-          "url": "https://blog.naver.com/ranto28/224311870961?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-11"
+          "title": "올해 여름, 수퍼엘니뇨가 돌아온다. 투자 포인트는 뭘까?",
+          "url": "https://blog.naver.com/ranto28/224316751515?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-15"
         }
       ],
-      "related_decision_codes": [
-        "010140",
-        "042660",
-        "329180"
-      ]
+      "related_decision_codes": []
     },
     {
-      "id": "INSIGHT-20260615-5",
-      "title": "시장 불확실성 증대 및 현금 확보 필요성 부각",
-      "summary": "미국의 견조한 고용 및 물가 지표로 인한 금리 인상 우려, 국내 정책 모멘텀 부재 및 한국은행의 매파적 스탠스 전환 가능성이 제기되었습니다. 또한 '네마녀의 날' 등 수급 이벤트로 단기 변동성 확대가 예상됩니다.",
-      "investment_implication": "시장 불확실성이 높아지는 국면으로, 수익 실현을 통해 현금 비중을 확대하고 포트폴리오 위험을 관리할 필요성이 있습니다.",
+      "id": "INSIGHT-20260616-4",
+      "title": "한국의 찜통더위 예고, 여름 관련 소비재 수요 증가 기대",
+      "summary": "슈퍼 엘니뇨의 영향으로 한국에 집중호우와 습한 찜통더위가 예상됩니다. 이는 빙과, 음료 등 여름철 소비재에 대한 수요를 자연스럽게 증가시킬 것으로 보입니다.",
+      "investment_implication": "여름 소비재 관련 기업들의 계절적 실적 개선이 기대되나, 단기 테마 성격이 강합니다.",
       "evidence_posts": [
         {
-          "title": "선거 이후 포트폴리오는...",
-          "url": "https://blog.naver.com/ranto28/224305344367?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-03"
-        },
-        {
-          "title": "미국 고용지표 발표의 나비효과 (feat 금, 비트코인, 환율)",
-          "url": "https://blog.naver.com/ranto28/224307573432?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-06"
-        },
-        {
-          "title": "오늘(2026년 6월 11일)이 국장 네마녀의 날이다. 어떤 영향이..",
-          "url": "https://blog.naver.com/ranto28/224312087790?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-10"
-        }
-      ],
-      "related_decision_codes": [
-        "454910",
-        "AA",
-        "GOOGL",
-        "005380",
-        "035420",
-        "010140",
-        "011070",
-        "NOC",
-        "MRVL"
-      ]
-    },
-    {
-      "id": "INSIGHT-20260615-6",
-      "title": "스페이스X, 우주 데이터센터 계획 가속화로 우주 경제 테마 강화",
-      "summary": "스페이스X가 우주 데이터센터 시범 가동 목표를 1년 앞당기고 AI 위성 생산 시설을 착공하는 등 관련 계획을 가속화하고 있습니다. 이는 AI 시대의 데이터 처리 수요를 우주 공간에서 해결하려는 혁신적인 시도입니다.",
-      "investment_implication": "우주 AI 인프라 구축은 위성, 발사체, 관련 부품 및 방산 기업 등 우주 경제 생태계 전반에 새로운 성장 동력을 제공할 것입니다.",
-      "evidence_posts": [
-        {
-          "title": "스페이스X 근황 (feat 상장, 우주데이터센터)",
-          "url": "https://blog.naver.com/ranto28/224312456368?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-10"
-        }
-      ],
-      "related_decision_codes": [
-        "NOC",
-        "SpaceX"
-      ]
-    },
-    {
-      "id": "INSIGHT-20260615-7",
-      "title": "미국, 한국산 제품에 대한 관세 부과 리스크 부상",
-      "summary": "미국이 한국의 강제노동 제품 차단 실패를 이유로 12.5%의 관세를 부과할 가능성을 시사했습니다. 이는 특정 기업의 문제를 넘어 한국 수출 전반에 영향을 미칠 수 있는 매크로 리스크입니다.",
-      "investment_implication": "미국의 보호무역주의 강화는 한국 수출 기업들의 비용 증가와 수익성 악화로 이어질 수 있어, 포트폴리오 내 한국 주식 비중에 대한 주의가 필요합니다.",
-      "evidence_posts": [
-        {
-          "title": "미국이 한국에 12.5% 관세를 때리겠다는데, 이것이 끝이 아닌 이유",
-          "url": "https://blog.naver.com/ranto28/224306532703?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-05"
+          "title": "올해 여름, 수퍼엘니뇨가 돌아온다. 투자 포인트는 뭘까?",
+          "url": "https://blog.naver.com/ranto28/224316751515?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-15"
         }
       ],
       "related_decision_codes": []
