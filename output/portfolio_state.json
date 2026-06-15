@@ -6,38 +6,70 @@
       "code": "006220",
       "market": "KR",
       "asset_type": "stock",
-      "decision_actor": "미분류",
+      "decision_actor": "AI",
       "action": "보유",
-      "basis": "이전 판단 유지",
-      "decision_date": "2026-06-04",
-      "evidence_posts": [],
+      "basis": "섹터 분석",
+      "decision_date": "2026-06-15",
+      "evidence_posts": [
+        {
+          "title": "과거 보고서: report_20260512.md - 해저/초고압 케이블 수요 증가, 전력 인프라 투자 확대 수혜",
+          "url": "https://github.com/pikachu444/mer-portfolio/blob/main/output/report_20260512.md",
+          "published_date": "2026-05-12",
+          "evidence_type": "historical_report"
+        }
+      ],
       "source_mentioned": false,
       "previous_weight": 3.0,
       "proposed_weight": 3.0,
       "weight_source": "AI 제안",
-      "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존",
+      "change_reason": "과거 보고서 근거 복구: 전력 인프라 및 해저/초고압 케이블 수혜 근거 확인.",
       "allocation_role": "satellite",
-      "allocation_role_source": "historical_backfill_2026-06-15",
-      "allocation_role_reason": "??/?? ??? ?? ???"
+      "allocation_role_source": "legacy_evidence_backfill_2026-06-15",
+      "allocation_role_reason": "전력/인프라 수혜 보조 포지션",
+      "source_scope": "previous_decision",
+      "investment_rationale": "AI 데이터센터발 전력 수요 증가와 전력망 증설 흐름에서 전선/케이블 인프라 수혜 가능성이 과거 보고서에 기록됨.",
+      "current_entry_reason": "기존 보유 포지션이며 과거 보고서에서 전력 인프라 수혜 근거가 확인되어 재검증 전까지 보유 근거를 복구함.",
+      "key_risks": [
+        "전력 인프라 투자 지연",
+        "구리 등 원자재 가격 변동",
+        "수주 경쟁 심화"
+      ],
+      "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15"
     },
     {
       "name": "대한전선",
       "code": "001440",
       "market": "KR",
       "asset_type": "stock",
-      "decision_actor": "미분류",
+      "decision_actor": "AI",
       "action": "보유",
-      "basis": "이전 판단 유지",
-      "decision_date": "2026-06-04",
-      "evidence_posts": [],
+      "basis": "섹터 분석",
+      "decision_date": "2026-06-15",
+      "evidence_posts": [
+        {
+          "title": "과거 보고서: report_20260512.md - 해저/초고압 케이블 수요 증가, 전력 인프라 투자 확대 수혜",
+          "url": "https://github.com/pikachu444/mer-portfolio/blob/main/output/report_20260512.md",
+          "published_date": "2026-05-12",
+          "evidence_type": "historical_report"
+        }
+      ],
       "source_mentioned": false,
       "previous_weight": 3.0,
       "proposed_weight": 3.0,
       "weight_source": "AI 제안",
-      "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존",
+      "change_reason": "과거 보고서 근거 복구: 전력 인프라 및 해저/초고압 케이블 수혜 근거 확인.",
       "allocation_role": "satellite",
-      "allocation_role_source": "historical_backfill_2026-06-15",
-      "allocation_role_reason": "?? ??? ?? ???"
+      "allocation_role_source": "legacy_evidence_backfill_2026-06-15",
+      "allocation_role_reason": "전력 케이블 수혜 보조 포지션",
+      "source_scope": "previous_decision",
+      "investment_rationale": "AI 데이터센터 확산과 노후 전력망 증설에 따른 초고압 케이블 수요 증가 근거가 과거 보고서에 기록됨.",
+      "current_entry_reason": "기존 보유 포지션이며 과거 보고서에서 전력 인프라 수혜 근거가 확인되어 재검증 전까지 보유 근거를 복구함.",
+      "key_risks": [
+        "전력 인프라 투자 지연",
+        "원자재 가격 변동",
+        "국내외 케이블 업체 경쟁"
+      ],
+      "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15"
     },
     {
       "name": "삼성중공업",
@@ -73,7 +105,7 @@
       ],
       "allocation_role": "core",
       "allocation_role_source": "historical_backfill_2026-06-15",
-      "allocation_role_reason": "??/MRO ?? ?? ???"
+      "allocation_role_reason": "조선/MRO 수혜 보조 성장 포지션"
     },
     {
       "name": "Google (Alphabet)",
@@ -108,26 +140,42 @@
       ],
       "allocation_role": "core",
       "allocation_role_source": "historical_backfill_2026-06-15",
-      "allocation_role_reason": "AI ??? ?? ???"
+      "allocation_role_reason": "AI 플랫폼 핵심 포지션"
     },
     {
       "name": "Microsoft",
       "code": "MSFT",
       "market": "US",
       "asset_type": "stock",
-      "decision_actor": "미분류",
+      "decision_actor": "AI",
       "action": "보유",
-      "basis": "이전 판단 유지",
-      "decision_date": "2026-06-04",
-      "evidence_posts": [],
-      "source_mentioned": false,
+      "basis": "종목 분석",
+      "decision_date": "2026-06-15",
+      "evidence_posts": [
+        {
+          "title": "DNA 데이터 저장장치가 삼성전자와 SK하이닉스를 위협할까?",
+          "url": "https://blog.naver.com/ranto28/224296522850?fromRss=true&trackingCode=rss",
+          "published_date": "2026-05-26",
+          "evidence_type": "blog_post"
+        }
+      ],
+      "source_mentioned": true,
       "previous_weight": 3.0,
       "proposed_weight": 3.0,
       "weight_source": "AI 제안",
-      "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존",
+      "change_reason": "원문 근거 복구: Microsoft의 DNA 데이터 저장 및 AI/클라우드 생태계 확장 근거 확인.",
       "allocation_role": "core",
-      "allocation_role_source": "historical_backfill_2026-06-15",
-      "allocation_role_reason": "?? AI/???? ?? ???"
+      "allocation_role_source": "legacy_evidence_backfill_2026-06-15",
+      "allocation_role_reason": "클라우드 AI 핵심 포지션",
+      "source_scope": "source_named_security",
+      "investment_rationale": "AI, 클라우드, 장기 데이터 저장 기술 확장 흐름에서 Microsoft의 AI 생태계와 인프라 경쟁력이 확인됨.",
+      "current_entry_reason": "기존 보유 포지션이며 원문에서 Microsoft의 DNA 데이터 저장 기술 개발 사례가 확인되어 보유 근거를 복구함.",
+      "key_risks": [
+        "AI 서비스 수익성 압박",
+        "클라우드 경쟁 심화",
+        "규제 리스크"
+      ],
+      "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15"
     },
     {
       "name": "Alcoa",
@@ -162,7 +210,7 @@
       ],
       "allocation_role": "risk",
       "allocation_role_source": "historical_backfill_2026-06-15",
-      "allocation_role_reason": "????/??? ???? ???"
+      "allocation_role_reason": "알루미늄/원자재 사이클 포지션"
     },
     {
       "name": "Recursion Pharmaceuticals",
@@ -198,7 +246,7 @@
       ],
       "allocation_role": "risk",
       "allocation_role_source": "historical_backfill_2026-06-15",
-      "allocation_role_reason": "AI ?? ??? ?? ?? ???"
+      "allocation_role_reason": "AI 신약 고위험 소형 성장 포지션"
     },
     {
       "name": "Northrop Grumman",
@@ -234,26 +282,42 @@
       ],
       "allocation_role": "satellite",
       "allocation_role_source": "historical_backfill_2026-06-15",
-      "allocation_role_reason": "??/?? ?? ?? ???"
+      "allocation_role_reason": "방산/우주 방어 성장 포지션"
     },
     {
       "name": "LG이노텍",
       "code": "011070",
       "market": "KR",
       "asset_type": "stock",
-      "decision_actor": "미분류",
+      "decision_actor": "AI",
       "action": "보유",
-      "basis": "이전 판단 유지",
-      "decision_date": "2026-06-04",
-      "evidence_posts": [],
-      "source_mentioned": false,
+      "basis": "종목 분석",
+      "decision_date": "2026-06-15",
+      "evidence_posts": [
+        {
+          "title": "4일 5시간 30분째 일하고 있는 피겨AI의 택배 분류로봇 근황",
+          "url": "https://blog.naver.com/ranto28/224288716966?fromRss=true&trackingCode=rss",
+          "published_date": "2026-05-17",
+          "evidence_type": "blog_post"
+        }
+      ],
+      "source_mentioned": true,
       "previous_weight": 8.0,
       "proposed_weight": 8.0,
       "weight_source": "AI 제안",
-      "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존",
+      "change_reason": "원문 근거 복구: Figure AI 투자 및 휴머노이드 로봇 부품 공급 기대 확인.",
       "allocation_role": "satellite",
-      "allocation_role_source": "historical_backfill_2026-06-15",
-      "allocation_role_reason": "??/AI ???? ?? ?? ???"
+      "allocation_role_source": "legacy_evidence_backfill_2026-06-15",
+      "allocation_role_reason": "로봇/AI 하드웨어 보조 성장 포지션",
+      "source_scope": "source_named_security",
+      "investment_rationale": "Figure AI 투자와 휴머노이드 로봇 부품 공급 가능성이 원문에서 확인되어 피지컬 AI 하드웨어 생태계 수혜 가능성이 있음.",
+      "current_entry_reason": "기존 보유 포지션이며 원문에서 LG이노텍의 Figure AI 투자와 휴머노이드 협력 근거가 확인되어 보유 근거를 복구함.",
+      "key_risks": [
+        "휴머노이드 로봇 상용화 지연",
+        "부품 공급 계약 불확실성",
+        "고객사 투자 속도 변화"
+      ],
+      "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15"
     },
     {
       "name": "Wabtec",
@@ -288,7 +352,7 @@
       ],
       "allocation_role": "satellite",
       "allocation_role_source": "historical_backfill_2026-06-15",
-      "allocation_role_reason": "???/?? ?? ?? ???"
+      "allocation_role_reason": "철도/물류 인프라 성장 포지션"
     },
     {
       "name": "두산로보틱스",
@@ -328,26 +392,42 @@
       ],
       "allocation_role": "risk",
       "allocation_role_source": "historical_backfill_2026-06-15",
-      "allocation_role_reason": "??? AI ??? ??? ???"
+      "allocation_role_reason": "피지컬 AI 고위험 성장 포지션"
     },
     {
       "name": "현대차",
       "code": "005380",
       "market": "KR",
       "asset_type": "stock",
-      "decision_actor": "미분류",
+      "decision_actor": "AI",
       "action": "보유",
-      "basis": "이전 판단 유지",
-      "decision_date": "2026-06-04",
-      "evidence_posts": [],
-      "source_mentioned": false,
+      "basis": "종목 분석",
+      "decision_date": "2026-06-15",
+      "evidence_posts": [
+        {
+          "title": "젠슨 황이 삼성과 LG가 아니라 이기업을 선택한 이유는?",
+          "url": "https://blog.naver.com/ranto28/224302397201?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-01",
+          "evidence_type": "blog_post"
+        }
+      ],
+      "source_mentioned": true,
       "previous_weight": 10.0,
       "proposed_weight": 10.0,
       "weight_source": "AI 제안",
-      "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존",
+      "change_reason": "원문 근거 복구: 보스턴 다이내믹스와 제미나이 로보틱스 결합, 휴머노이드 생산 계획 확인.",
       "allocation_role": "core",
-      "allocation_role_source": "historical_backfill_2026-06-15",
-      "allocation_role_reason": "?? ??/???AI ?? ??? ???"
+      "allocation_role_source": "legacy_evidence_backfill_2026-06-15",
+      "allocation_role_reason": "로봇 제조/피지컬 AI 핵심 포지션",
+      "source_scope": "source_named_security",
+      "investment_rationale": "보스턴 다이내믹스, 제미나이 로보틱스 결합, 휴머노이드 생산 계획이 원문에서 확인되어 피지컬 AI 핵심 제조 포지션으로 볼 수 있음.",
+      "current_entry_reason": "기존 보유 포지션이며 원문에서 현대차그룹의 피지컬 AI 전략과 로봇 생산 계획이 확인되어 보유 근거를 복구함.",
+      "key_risks": [
+        "로봇 상용화 지연",
+        "자동차 경기 둔화",
+        "AI 로보틱스 투자 회수 지연"
+      ],
+      "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15"
     },
     {
       "name": "네이버",
@@ -382,7 +462,7 @@
       ],
       "allocation_role": "core",
       "allocation_role_source": "historical_backfill_2026-06-15",
-      "allocation_role_reason": "??? AI ?? ???"
+      "allocation_role_reason": "소버린 AI 핵심 포지션"
     },
     {
       "name": "일라이 릴리",
@@ -423,7 +503,7 @@
       ],
       "allocation_role": "core",
       "allocation_role_source": "historical_backfill_2026-06-15",
-      "allocation_role_reason": "?????/AI ?? ?? ???"
+      "allocation_role_reason": "제약/AI 신약 방어 성장 포지션"
     },
     {
       "name": "Marvell Technology",
@@ -459,7 +539,7 @@
       ],
       "allocation_role": "satellite",
       "allocation_role_source": "historical_backfill_2026-06-15",
-      "allocation_role_reason": "AI ??? ?? ???"
+      "allocation_role_reason": "AI 반도체 보조 성장 포지션"
     },
     {
       "name": "한화오션",
@@ -495,7 +575,7 @@
       ],
       "allocation_role": "satellite",
       "allocation_role_source": "historical_backfill_2026-06-15",
-      "allocation_role_reason": "??/MRO ?? ?? ???"
+      "allocation_role_reason": "조선/MRO 수혜 보조 성장 포지션"
     }
   ],
   "watchlist": [
@@ -1327,6 +1407,186 @@
       "linked_insight_ids": [
         "INSIGHT-20260612-2"
       ]
+    },
+    {
+      "name": "LS",
+      "code": "006220",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "보유",
+      "basis": "섹터 분석",
+      "decision_date": "2026-06-15",
+      "evidence_posts": [
+        {
+          "title": "과거 보고서: report_20260512.md - 해저/초고압 케이블 수요 증가, 전력 인프라 투자 확대 수혜",
+          "url": "https://github.com/pikachu444/mer-portfolio/blob/main/output/report_20260512.md",
+          "published_date": "2026-05-12",
+          "evidence_type": "historical_report"
+        }
+      ],
+      "source_mentioned": false,
+      "previous_weight": 3.0,
+      "proposed_weight": 3.0,
+      "weight_source": "AI 제안",
+      "change_reason": "과거 보고서 근거 복구: 전력 인프라 및 해저/초고압 케이블 수혜 근거 확인.",
+      "allocation_role": "satellite",
+      "allocation_role_source": "legacy_evidence_backfill_2026-06-15",
+      "allocation_role_reason": "전력/인프라 수혜 보조 포지션",
+      "source_scope": "previous_decision",
+      "investment_rationale": "AI 데이터센터발 전력 수요 증가와 전력망 증설 흐름에서 전선/케이블 인프라 수혜 가능성이 과거 보고서에 기록됨.",
+      "current_entry_reason": "기존 보유 포지션이며 과거 보고서에서 전력 인프라 수혜 근거가 확인되어 재검증 전까지 보유 근거를 복구함.",
+      "key_risks": [
+        "전력 인프라 투자 지연",
+        "구리 등 원자재 가격 변동",
+        "수주 경쟁 심화"
+      ],
+      "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15",
+      "backfill_note": "과거 보고서/글 DB에서 누락된 근거를 복구한 1회성 데이터 보정"
+    },
+    {
+      "name": "대한전선",
+      "code": "001440",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "보유",
+      "basis": "섹터 분석",
+      "decision_date": "2026-06-15",
+      "evidence_posts": [
+        {
+          "title": "과거 보고서: report_20260512.md - 해저/초고압 케이블 수요 증가, 전력 인프라 투자 확대 수혜",
+          "url": "https://github.com/pikachu444/mer-portfolio/blob/main/output/report_20260512.md",
+          "published_date": "2026-05-12",
+          "evidence_type": "historical_report"
+        }
+      ],
+      "source_mentioned": false,
+      "previous_weight": 3.0,
+      "proposed_weight": 3.0,
+      "weight_source": "AI 제안",
+      "change_reason": "과거 보고서 근거 복구: 전력 인프라 및 해저/초고압 케이블 수혜 근거 확인.",
+      "allocation_role": "satellite",
+      "allocation_role_source": "legacy_evidence_backfill_2026-06-15",
+      "allocation_role_reason": "전력 케이블 수혜 보조 포지션",
+      "source_scope": "previous_decision",
+      "investment_rationale": "AI 데이터센터 확산과 노후 전력망 증설에 따른 초고압 케이블 수요 증가 근거가 과거 보고서에 기록됨.",
+      "current_entry_reason": "기존 보유 포지션이며 과거 보고서에서 전력 인프라 수혜 근거가 확인되어 재검증 전까지 보유 근거를 복구함.",
+      "key_risks": [
+        "전력 인프라 투자 지연",
+        "원자재 가격 변동",
+        "국내외 케이블 업체 경쟁"
+      ],
+      "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15",
+      "backfill_note": "과거 보고서/글 DB에서 누락된 근거를 복구한 1회성 데이터 보정"
+    },
+    {
+      "name": "Microsoft",
+      "code": "MSFT",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "보유",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-15",
+      "evidence_posts": [
+        {
+          "title": "DNA 데이터 저장장치가 삼성전자와 SK하이닉스를 위협할까?",
+          "url": "https://blog.naver.com/ranto28/224296522850?fromRss=true&trackingCode=rss",
+          "published_date": "2026-05-26",
+          "evidence_type": "blog_post"
+        }
+      ],
+      "source_mentioned": true,
+      "previous_weight": 3.0,
+      "proposed_weight": 3.0,
+      "weight_source": "AI 제안",
+      "change_reason": "원문 근거 복구: Microsoft의 DNA 데이터 저장 및 AI/클라우드 생태계 확장 근거 확인.",
+      "allocation_role": "core",
+      "allocation_role_source": "legacy_evidence_backfill_2026-06-15",
+      "allocation_role_reason": "클라우드 AI 핵심 포지션",
+      "source_scope": "source_named_security",
+      "investment_rationale": "AI, 클라우드, 장기 데이터 저장 기술 확장 흐름에서 Microsoft의 AI 생태계와 인프라 경쟁력이 확인됨.",
+      "current_entry_reason": "기존 보유 포지션이며 원문에서 Microsoft의 DNA 데이터 저장 기술 개발 사례가 확인되어 보유 근거를 복구함.",
+      "key_risks": [
+        "AI 서비스 수익성 압박",
+        "클라우드 경쟁 심화",
+        "규제 리스크"
+      ],
+      "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15",
+      "backfill_note": "과거 보고서/글 DB에서 누락된 근거를 복구한 1회성 데이터 보정"
+    },
+    {
+      "name": "LG이노텍",
+      "code": "011070",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "보유",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-15",
+      "evidence_posts": [
+        {
+          "title": "4일 5시간 30분째 일하고 있는 피겨AI의 택배 분류로봇 근황",
+          "url": "https://blog.naver.com/ranto28/224288716966?fromRss=true&trackingCode=rss",
+          "published_date": "2026-05-17",
+          "evidence_type": "blog_post"
+        }
+      ],
+      "source_mentioned": true,
+      "previous_weight": 8.0,
+      "proposed_weight": 8.0,
+      "weight_source": "AI 제안",
+      "change_reason": "원문 근거 복구: Figure AI 투자 및 휴머노이드 로봇 부품 공급 기대 확인.",
+      "allocation_role": "satellite",
+      "allocation_role_source": "legacy_evidence_backfill_2026-06-15",
+      "allocation_role_reason": "로봇/AI 하드웨어 보조 성장 포지션",
+      "source_scope": "source_named_security",
+      "investment_rationale": "Figure AI 투자와 휴머노이드 로봇 부품 공급 가능성이 원문에서 확인되어 피지컬 AI 하드웨어 생태계 수혜 가능성이 있음.",
+      "current_entry_reason": "기존 보유 포지션이며 원문에서 LG이노텍의 Figure AI 투자와 휴머노이드 협력 근거가 확인되어 보유 근거를 복구함.",
+      "key_risks": [
+        "휴머노이드 로봇 상용화 지연",
+        "부품 공급 계약 불확실성",
+        "고객사 투자 속도 변화"
+      ],
+      "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15",
+      "backfill_note": "과거 보고서/글 DB에서 누락된 근거를 복구한 1회성 데이터 보정"
+    },
+    {
+      "name": "현대차",
+      "code": "005380",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "보유",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-15",
+      "evidence_posts": [
+        {
+          "title": "젠슨 황이 삼성과 LG가 아니라 이기업을 선택한 이유는?",
+          "url": "https://blog.naver.com/ranto28/224302397201?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-01",
+          "evidence_type": "blog_post"
+        }
+      ],
+      "source_mentioned": true,
+      "previous_weight": 10.0,
+      "proposed_weight": 10.0,
+      "weight_source": "AI 제안",
+      "change_reason": "원문 근거 복구: 보스턴 다이내믹스와 제미나이 로보틱스 결합, 휴머노이드 생산 계획 확인.",
+      "allocation_role": "core",
+      "allocation_role_source": "legacy_evidence_backfill_2026-06-15",
+      "allocation_role_reason": "로봇 제조/피지컬 AI 핵심 포지션",
+      "source_scope": "source_named_security",
+      "investment_rationale": "보스턴 다이내믹스, 제미나이 로보틱스 결합, 휴머노이드 생산 계획이 원문에서 확인되어 피지컬 AI 핵심 제조 포지션으로 볼 수 있음.",
+      "current_entry_reason": "기존 보유 포지션이며 원문에서 현대차그룹의 피지컬 AI 전략과 로봇 생산 계획이 확인되어 보유 근거를 복구함.",
+      "key_risks": [
+        "로봇 상용화 지연",
+        "자동차 경기 둔화",
+        "AI 로보틱스 투자 회수 지연"
+      ],
+      "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15",
+      "backfill_note": "과거 보고서/글 DB에서 누락된 근거를 복구한 1회성 데이터 보정"
     }
   ],
   "insights": [

@@ -1544,6 +1544,52 @@ Telegram 추천 목록은 세부 분석이 아니라 빠른 확인용 요약으�
 - Telegram/HTML/Markdown 추천 목록에 기존 보유 종목이 역할 누락 때문에 전부 빠지지 않는다.
 - 관련 테스트와 원격 `main` 실검증을 통과한다.
 
+### 22. 과거 미분류 보유 종목의 근거 글 복구 및 판단 이력 보강
+
+**목적:** 과거 상태 마이그레이션 때문에 현재 보유 종목 일부가 `미분류`이며 근거 글이 비어 있어,
+투자자가 추천 목록과 상세 보고서에서 해당 종목의 보유 근거를 추적할 수 없는 문제를 해결한다.
+
+**합의됨**
+
+- 과거 판단 이력에 근거 글이 없으면 가능한 범위에서 원문 글 또는 과거 보고서를 찾아 보강한다.
+- 원문 글이 `output/posts_db.json`에 남아 있으면 해당 네이버 블로그 URL을 근거로 사용한다.
+- 원문 글을 특정할 수 없고 과거 보고서에만 근거가 남아 있으면, 이를 원문 근거처럼 표시하지 않고
+  `historical_report` 근거로 구분한다.
+- 이 작업은 운영 로직이 아니라 2026-06-15 기준 일회성 데이터 정정이다. 이후 신규 판단은 정상
+  수집/요약/Pro 판단 경로에서 근거 글을 생성해야 한다.
+- 보강 대상은 LS, 대한전선, Microsoft, LG이노텍, 현대차다.
+- LS와 대한전선은 원문 글을 특정하지 못했으므로 과거 보고서 근거로만 복구한다.
+- Microsoft, LG이노텍, 현대차는 `posts_db.json`의 원문 글 URL을 근거로 복구한다.
+- 보강 후 `미분류 · 보유`로 남아 추천 목록에서 빠지는 상태를 없애되, 메르 직접 판단으로 승격하지
+  않는다. 판단 주체는 `AI`, 판단은 `보유`로 기록한다.
+
+**완료 조건**
+
+- `output/portfolio_state.json`의 5개 보유 종목에 `evidence_posts`, `decision_actor`,
+  `basis`, `source_mentioned`, `source_scope`, `allocation_role`, `investment_rationale`,
+  `current_entry_reason`, `key_risks`가 채워진다.
+- `decision_history`에 보강 이력이 남는다.
+- 보강 스크립트는 `scripts/backfill_legacy_evidence.py`에 보존하되, 기본 실행은 dry-run이다.
+- 국내/해외 추천 목록에 5개 종목이 정상 복귀하고 `재검증 필요 포지션`에 남지 않는다.
+- 관련 문법 검사, 상태 스키마 검증, 자동 테스트를 통과한다.
+
+**구현 완료**
+
+- `scripts/backfill_legacy_evidence.py`를 추가했다. 기본은 dry-run이고 `--apply`를 줄 때만
+  `output/portfolio_state.json`을 수정한다.
+- `output/portfolio_state.json`의 LS, 대한전선, Microsoft, LG이노텍, 현대차 근거와 판단 이력을
+  보강했다.
+- LS와 대한전선은 `report_20260512.md`의 전력 인프라/해저·초고압 케이블 근거를
+  `historical_report`로 기록했다.
+- Microsoft, LG이노텍, 현대차는 `posts_db.json`에서 확인한 원문 블로그 URL을 `blog_post`로
+  기록했다.
+- 기존에 깨져 있던 `allocation_role_reason` 설명을 현재 보유 종목 전체에 대해 정상 한국어로
+  정리했다.
+- 로컬 검증 결과:
+  `python -m py_compile scripts/backfill_legacy_evidence.py portfolio_schema.py portfolio_output.py system_prompt.py main.py analyze.py generate_dashboard.py telegram_notify.py` 통과,
+  `$env:PYTHONUTF8='1'; python -m unittest discover -s tests -q` 전체 108개 테스트 통과,
+  `git diff --check` 통과.
+
 ## 기존 완료 작업
 
 - [x] 동일 종목의 추천일별 중복 성과 행 제거

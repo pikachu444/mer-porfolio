@@ -32,6 +32,7 @@
 | `portfolio_output.py` | Telegram, HTML, Markdown이 함께 쓰는 사용자 출력 기준 자료 생성 |
 | `generate_dashboard.py` | HTML 대시보드와 Telegram용 PNG 차트 생성 |
 | `telegram_notify.py` | Telegram 메시지와 이미지 전송 |
+| `scripts/backfill_legacy_evidence.py` | 2026-06-15 과거 미분류 보유 종목 근거 복구용 일회성 유지보수 스크립트 |
 
 ## 출력 파일 관계
 
@@ -80,6 +81,11 @@
 
 신규 매수로 현금성 비중이 기본 방어 기준인 20% 아래로 내려가면 판단 사유에 현금성 비중을
 낮추는 이유가 포함되어야 한다. 이유가 없으면 `portfolio_schema.py` 검증 단계에서 차단한다.
+
+과거 상태 파일에 근거가 빠져 있는 보유 종목을 정정할 때는 운영 경로에 임의 보정 로직을 넣지 않는다.
+필요한 경우 `scripts/backfill_legacy_evidence.py` 같은 일회성 유지보수 스크립트로 dry-run 결과를
+확인한 뒤 상태 파일과 판단 이력을 명시적으로 보강한다. 원문 글 URL을 찾지 못하고 과거 보고서만
+근거로 쓸 때는 `historical_report`로 구분한다.
 
 ## GitHub Actions
 
