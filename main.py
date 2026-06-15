@@ -182,12 +182,18 @@ def _posts_in_current_analysis_scope(
 ) -> list[dict]:
     if is_rebalance:
         try:
-            cutoff = datetime.fromisoformat(state.last_rebalanced_date)
+            cutoff = _rebalance_cutoff_date(state, today)
         except Exception:
             cutoff = today - timedelta(days=FETCH_DAYS)
         return [post for post in posts if _post_date_after(post, cutoff)]
     new_urls = get_last_fetch_new_post_urls()
     return [post for post in posts if post.get("url") in new_urls]
+
+
+def _rebalance_cutoff_date(state, today: datetime) -> datetime:
+    if RUN_POLICY.mode == "rebalance":
+        return today - timedelta(days=FETCH_DAYS)
+    return datetime.fromisoformat(state.last_rebalanced_date)
 
 
 def _summary_block_reason(post: dict) -> str:
@@ -372,7 +378,7 @@ def main() -> int:
         if is_rebalance:
             posts = select_rebalance_posts(
                 cached_posts,
-                state.last_rebalanced_date,
+                None if RUN_POLICY.mode == "rebalance" else state.last_rebalanced_date,
                 today,
             )
         else:

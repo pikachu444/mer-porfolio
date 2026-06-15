@@ -48,6 +48,24 @@ class RuntimeModesTest(unittest.TestCase):
     def test_manual_rebalance_always_rebalances(self):
         self.assertTrue(should_rebalance("rebalance", "2026-05-31", date(2026, 6, 1)))
 
+    def test_manual_rebalance_uses_fetch_window_even_after_today_rebalance(self):
+        state = Mock(last_rebalanced_date="2026-06-01")
+
+        with patch.object(main, "RUN_POLICY", Mock(mode="rebalance")), \
+             patch.object(main, "FETCH_DAYS", 14):
+            cutoff = main._rebalance_cutoff_date(state, datetime(2026, 6, 15))
+
+        self.assertEqual(cutoff.date(), date(2026, 6, 1))
+
+    def test_scheduled_rebalance_uses_last_rebalance_date_as_cutoff(self):
+        state = Mock(last_rebalanced_date="2026-05-18")
+
+        with patch.object(main, "RUN_POLICY", Mock(mode="scheduled")), \
+             patch.object(main, "FETCH_DAYS", 14):
+            cutoff = main._rebalance_cutoff_date(state, datetime(2026, 6, 15))
+
+        self.assertEqual(cutoff.date(), date(2026, 5, 18))
+
     def test_verify_does_not_force_rebalance(self):
         today = date(2026, 6, 1)
 
