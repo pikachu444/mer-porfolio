@@ -351,6 +351,20 @@ class PortfolioSchemaTest(unittest.TestCase):
         with self.assertRaisesRegex(PortfolioSchemaError, r"allocation_role"):
             parse_analysis_decision(payload)
 
+    def test_rejects_ai_hold_without_allocation_role(self):
+        item = decision(action="보유", proposed_weight=8.0)
+        del item["allocation_role"]
+        payload = {
+            "analysis_date": "2026-06-01",
+            "run_type": "regular",
+            "insights": [insight()],
+            "portfolio_decisions": [item],
+            "watchlist": [],
+        }
+
+        with self.assertRaisesRegex(PortfolioSchemaError, r"allocation_role"):
+            parse_analysis_decision(payload)
+
     def test_rejects_changed_decision_without_linked_insight(self):
         payload = {
             "analysis_date": "2026-06-01",

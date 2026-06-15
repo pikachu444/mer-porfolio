@@ -15,7 +15,10 @@
       "previous_weight": 3.0,
       "proposed_weight": 3.0,
       "weight_source": "AI 제안",
-      "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"
+      "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존",
+      "allocation_role": "satellite",
+      "allocation_role_source": "historical_backfill_2026-06-15",
+      "allocation_role_reason": "??/?? ??? ?? ???"
     },
     {
       "name": "대한전선",
@@ -31,7 +34,10 @@
       "previous_weight": 3.0,
       "proposed_weight": 3.0,
       "weight_source": "AI 제안",
-      "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"
+      "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존",
+      "allocation_role": "satellite",
+      "allocation_role_source": "historical_backfill_2026-06-15",
+      "allocation_role_reason": "?? ??? ?? ???"
     },
     {
       "name": "삼성중공업",
@@ -64,7 +70,10 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260612-1"
-      ]
+      ],
+      "allocation_role": "core",
+      "allocation_role_source": "historical_backfill_2026-06-15",
+      "allocation_role_reason": "??/MRO ?? ?? ???"
     },
     {
       "name": "Google (Alphabet)",
@@ -96,7 +105,10 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-1"
-      ]
+      ],
+      "allocation_role": "core",
+      "allocation_role_source": "historical_backfill_2026-06-15",
+      "allocation_role_reason": "AI ??? ?? ???"
     },
     {
       "name": "Microsoft",
@@ -112,7 +124,10 @@
       "previous_weight": 3.0,
       "proposed_weight": 3.0,
       "weight_source": "AI 제안",
-      "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"
+      "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존",
+      "allocation_role": "core",
+      "allocation_role_source": "historical_backfill_2026-06-15",
+      "allocation_role_reason": "?? AI/???? ?? ???"
     },
     {
       "name": "Alcoa",
@@ -144,7 +159,10 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-4"
-      ]
+      ],
+      "allocation_role": "risk",
+      "allocation_role_source": "historical_backfill_2026-06-15",
+      "allocation_role_reason": "????/??? ???? ???"
     },
     {
       "name": "Recursion Pharmaceuticals",
@@ -177,7 +195,10 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-3"
-      ]
+      ],
+      "allocation_role": "risk",
+      "allocation_role_source": "historical_backfill_2026-06-15",
+      "allocation_role_reason": "AI ?? ??? ?? ?? ???"
     },
     {
       "name": "Northrop Grumman",
@@ -210,7 +231,10 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260612-2"
-      ]
+      ],
+      "allocation_role": "satellite",
+      "allocation_role_source": "historical_backfill_2026-06-15",
+      "allocation_role_reason": "??/?? ?? ?? ???"
     },
     {
       "name": "LG이노텍",
@@ -226,7 +250,10 @@
       "previous_weight": 8.0,
       "proposed_weight": 8.0,
       "weight_source": "AI 제안",
-      "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"
+      "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존",
+      "allocation_role": "satellite",
+      "allocation_role_source": "historical_backfill_2026-06-15",
+      "allocation_role_reason": "??/AI ???? ?? ?? ???"
     },
     {
       "name": "Wabtec",
@@ -258,7 +285,10 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-4"
-      ]
+      ],
+      "allocation_role": "satellite",
+      "allocation_role_source": "historical_backfill_2026-06-15",
+      "allocation_role_reason": "???/?? ?? ?? ???"
     },
     {
       "name": "두산로보틱스",
@@ -295,7 +325,10 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-2"
-      ]
+      ],
+      "allocation_role": "risk",
+      "allocation_role_source": "historical_backfill_2026-06-15",
+      "allocation_role_reason": "??? AI ??? ??? ???"
     },
     {
       "name": "현대차",
@@ -311,7 +344,10 @@
       "previous_weight": 10.0,
       "proposed_weight": 10.0,
       "weight_source": "AI 제안",
-      "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존"
+      "change_reason": "기존 상태 마이그레이션: 최초 재평가 전까지 보존",
+      "allocation_role": "core",
+      "allocation_role_source": "historical_backfill_2026-06-15",
+      "allocation_role_reason": "?? ??/???AI ?? ??? ???"
     },
     {
       "name": "네이버",
@@ -343,7 +379,10 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-2"
-      ]
+      ],
+      "allocation_role": "core",
+      "allocation_role_source": "historical_backfill_2026-06-15",
+      "allocation_role_reason": "??? AI ?? ???"
     },
     {
       "name": "일라이 릴리",
@@ -381,7 +420,10 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-3"
-      ]
+      ],
+      "allocation_role": "core",
+      "allocation_role_source": "historical_backfill_2026-06-15",
+      "allocation_role_reason": "?????/AI ?? ?? ???"
     },
     {
       "name": "Marvell Technology",
@@ -414,7 +456,10 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-5"
-      ]
+      ],
+      "allocation_role": "satellite",
+      "allocation_role_source": "historical_backfill_2026-06-15",
+      "allocation_role_reason": "AI ??? ?? ???"
     },
     {
       "name": "한화오션",
@@ -447,7 +492,10 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260612-1"
-      ]
+      ],
+      "allocation_role": "satellite",
+      "allocation_role_source": "historical_backfill_2026-06-15",
+      "allocation_role_reason": "??/MRO ?? ?? ???"
     }
   ],
   "watchlist": [

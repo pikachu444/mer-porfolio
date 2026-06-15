@@ -1519,6 +1519,31 @@ Telegram 추천 목록은 세부 분석이 아니라 빠른 확인용 요약으�
   `python -m py_compile portfolio_schema.py portfolio_output.py generate_dashboard.py telegram_notify.py system_prompt.py` 통과,
   `$env:PYTHONUTF8='1'; python -m unittest discover -s tests -q` 전체 106개 테스트 통과.
 
+### 21. 과거 포트폴리오 `allocation_role` 백필 및 신규 AI 판단 역할 검증 강화
+
+**목적:** 20번에서 새로 도입한 포트폴리오 역할 필드가 과거 상태 파일에는 없어, 기존 보유 종목이
+추천 목록에서 과도하게 빠지는 문제를 해결한다.
+
+**합의됨**
+
+- 과거 상태 파일에 역할 정보가 없다면 현재 보유 포지션에 역할을 백필한다.
+- 백필은 기존 종목명, 근거 유형, 투자 논리, 목표 비중을 기준으로 보수적으로 기록한다.
+- 백필된 역할은 이후 리밸런싱에서 최신 근거에 따라 바뀔 수 있다.
+- 과거 `decision_history`에도 근거가 없는 `미분류` 포지션은 역할만 백필하고, 판단 주체를 AI로
+  임의 승격하지 않는다.
+- 앞으로 AI가 신규 매수뿐 아니라 보유, 비중확대, 비중축소를 판단할 때도 `allocation_role`을
+  반드시 채워야 한다.
+- 현재 포트폴리오에 역할이 비어 있는 종목이 있으면 LLM은 변경이 없더라도 `보유` 판단으로 역할을
+  보강해야 한다.
+
+**완료 조건**
+
+- `output/portfolio_state.json`의 현재 보유 포지션에 `allocation_role`이 채워진다.
+- 신규 AI 포트폴리오 판단에서 `allocation_role`이 없으면 검증 단계에서 차단된다.
+- 프롬프트가 역할 누락 기존 포지션의 보강 출력을 명시한다.
+- Telegram/HTML/Markdown 추천 목록에 기존 보유 종목이 역할 누락 때문에 전부 빠지지 않는다.
+- 관련 테스트와 원격 `main` 실검증을 통과한다.
+
 ## 기존 완료 작업
 
 - [x] 동일 종목의 추천일별 중복 성과 행 제거

@@ -535,9 +535,14 @@ def _validate_decision(
         raise PortfolioSchemaError(
             f"{path}: an AI stock buy not mentioned in source must stay on the Watchlist"
         )
+    if (
+        decision_actor == "AI"
+        and item["action"] != "매도"
+        and strict_candidate_details
+        and allocation_role is None
+    ):
+        raise PortfolioSchemaError(f"{path}.allocation_role must be set for an AI portfolio decision")
     if decision_actor == "AI" and item["action"] == "매수" and strict_candidate_details:
-        if allocation_role is None:
-            raise PortfolioSchemaError(f"{path}.allocation_role must be set for an AI buy")
         _require_string(item, "investment_rationale", path)
         _require_string(item, "current_entry_reason", path)
         risks = _require_string_list(item, "key_risks", path)
