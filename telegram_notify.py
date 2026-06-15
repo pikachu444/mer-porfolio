@@ -255,6 +255,7 @@ def build_structured_summary(
     *,
     no_changes: bool = False,
     status_note: str = "",
+    include_dashboard_link: bool = True,
 ) -> str:
     """Build a user-facing summary from validated structured state."""
     performance = performance or {}
@@ -365,7 +366,10 @@ def build_structured_summary(
     else:
         lines.append("• 표시할 항목 없음")
     lines += ["", f"• 종료 포지션: {len(closed)}건"]
-    lines += ["", f"🌐 [대시보드 전체 보기]({_get_dashboard_url()})"]
+    if include_dashboard_link:
+        lines += ["", f"🌐 [대시보드 전체 보기]({_get_dashboard_url()})"]
+    else:
+        lines += ["", "🌐 검증 모드: HTML은 GitHub Actions artifact에서 확인합니다."]
     return "\n".join(lines)
 
 
@@ -399,6 +403,7 @@ def send_structured_summary(
     *,
     no_changes: bool = False,
     status_note: str = "",
+    include_dashboard_link: bool = True,
 ) -> bool:
     token, chat_id = _get_credentials()
     if not token or not chat_id:
@@ -411,6 +416,7 @@ def send_structured_summary(
             performance,
             no_changes=no_changes,
             status_note=status_note,
+            include_dashboard_link=include_dashboard_link,
         )
     )
     ok = all(_send_message(token, chat_id, message) for message in messages)

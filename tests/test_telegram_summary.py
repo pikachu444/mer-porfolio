@@ -116,6 +116,17 @@ class TelegramSummaryTest(unittest.TestCase):
         self.assertIn("2. *피지컬 AI 확산*", summary)
         self.assertEqual(summary.count("시사점:"), len(state["insights"]))
 
+    def test_validation_summary_does_not_link_stale_operating_dashboard(self):
+        summary = build_structured_summary(
+            state_payload(),
+            "2026년 06월 01일",
+            include_dashboard_link=False,
+        )
+
+        self.assertNotIn("대시보드 전체 보기", summary)
+        self.assertIn("검증 모드", summary)
+        self.assertIn("GitHub Actions artifact", summary)
+
     def test_long_summary_is_split_without_dropping_tail(self):
         text = "\n".join(f"인사이트 {index}: " + ("x" * 40) for index in range(10))
 

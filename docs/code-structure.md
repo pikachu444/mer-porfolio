@@ -93,8 +93,8 @@
 |---|---|
 | `scheduled` | 매일 신규 글 수집과 필요 시 판단 실행 |
 | `rebalance` | 수동 리밸런싱 실행 |
-| `verify` | Gemini 호출 없이 현재 포트폴리오 기준 출력과 Telegram 검증 |
-| `full_verify` | 운영 상태를 덮어쓰지 않는 실제 수집/요약/분석/출력 전체 검증 |
+| `verify` | Gemini 호출 없이 현재 포트폴리오 기준 출력과 Telegram 검증. 운영 대시보드 링크는 보내지 않음 |
+| `full_verify` | 운영 상태를 덮어쓰지 않는 실제 수집/요약/분석/출력 전체 검증. HTML은 artifact로 확인 |
 | `test` | API 호출 없는 테스트 |
 
 Actions에서 수정이 반영되려면 변경 사항이 `main` 브랜치에 병합되어야 한다.

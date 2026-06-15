@@ -281,6 +281,7 @@ def _run_no_change_update(
             cache,
             no_changes=True,
             status_note=status_note,
+            include_dashboard_link=RUN_POLICY.persist_operating_state,
         ):
             return 1
     return 0
@@ -466,6 +467,7 @@ def main() -> int:
                 today.strftime("%Y년 %m월 %d일"),
                 cache,
                 status_note=deferred_note,
+                include_dashboard_link=RUN_POLICY.persist_operating_state,
             ):
                 return 1
         print(f"  완료: 포트폴리오 {len(updated_state.portfolio)}종목")

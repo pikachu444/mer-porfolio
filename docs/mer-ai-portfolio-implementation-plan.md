@@ -1593,6 +1593,44 @@ Telegram 추천 목록은 세부 분석이 아니라 빠른 확인용 요약으�
   HTML/PNG 생성, Telegram 전송, artifact 업로드가 완료됐다. artifact 기준 국내/해외 추천 목록에 보강
   대상 5개 종목이 포함되고 `재검증 필요 포지션`은 비어 있다.
 
+### 23. 검증 모드 Telegram 링크와 운영 HTML 불일치 수정
+
+**목적:** `verify`/`full_verify`가 운영 파일을 덮어쓰지 않는데도 Telegram 메시지에 운영
+대시보드 링크를 넣어, 검증 결과와 사용자가 누른 HTML이 서로 다르게 보이는 문제를 제거한다.
+
+**확인된 문제**
+
+- `full_verify` artifact의 `output/full_verify/dashboard.html`에서는 LS, 대한전선, 현대차가
+  `AI 제안 · 보유`로 정상 표시됐다.
+- 그러나 Telegram의 `대시보드 전체 보기` 링크는 GitHub Pages의 운영 `output/dashboard.html`을
+  가리켰고, 이 운영 HTML은 이전 실행 결과라 `미분류 · 보유`가 남아 있었다.
+- 따라서 검증 메시지와 링크된 HTML이 서로 다른 기준 자료처럼 보였다.
+
+**합의됨**
+
+- 운영 파일을 덮어쓰지 않는 `verify`/`full_verify`에서는 Telegram 구조화 요약에 운영 대시보드
+  링크를 넣지 않는다.
+- 검증 모드 메시지에는 HTML이 GitHub Actions artifact에 저장된다는 안내를 표시한다.
+- 운영용 `output/dashboard.html`은 현재 `output/portfolio_state.json` 기준으로 재생성해
+  GitHub Pages에 반영한다.
+
+**완료 조건**
+
+- `scheduled`/`rebalance`처럼 운영 결과를 남기는 모드만 Telegram에 운영 대시보드 링크를 표시한다.
+- `verify`/`full_verify` Telegram 메시지는 운영 대시보드 링크를 표시하지 않는다.
+- 운영 `output/dashboard.html`에서 LS, 대한전선, 현대차가 `AI 제안 · 보유`로 표시된다.
+- 관련 테스트와 문법 검사를 통과한다.
+
+**구현 완료**
+
+- `telegram_notify.py`의 구조화 요약에 `include_dashboard_link` 옵션을 추가했다.
+- `main.py`에서 `RUN_POLICY.persist_operating_state`가 참인 운영 모드에만 대시보드 링크를 넣도록
+  연결했다.
+- `tests/test_telegram_summary.py`에 검증 모드 요약이 운영 대시보드 링크를 포함하지 않는 테스트를
+  추가했다.
+- API 호출 없이 현재 상태 기준으로 `output/dashboard.html`, `output/chart_latest.png`,
+  `output/report_20260615.md`를 재생성했다.
+
 ## 기존 완료 작업
 
 - [x] 동일 종목의 추천일별 중복 성과 행 제거
