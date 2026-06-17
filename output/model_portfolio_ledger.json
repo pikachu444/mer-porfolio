@@ -1,7 +1,7 @@
 {
   "schema_version": "3.0",
   "starting_value": 100.0,
-  "cash": 20.797939239392875,
+  "cash": 15.831625375772585,
   "realized_pnl": -0.21447662972819037,
   "positions": [
     {
@@ -195,6 +195,18 @@
       "decision_actor": "AI",
       "opened_date": "2026-06-12",
       "target_weight": 4.0
+    },
+    {
+      "key": "stock:KR:005930",
+      "name": "삼성전자",
+      "code": "005930",
+      "market": "KR",
+      "asset_type": "stock",
+      "quantity": 1.4332796143204298e-05,
+      "average_cost": 346500.0,
+      "decision_actor": "AI",
+      "opened_date": "2026-06-18",
+      "target_weight": 5.0
     }
   ],
   "closed_positions": [],
@@ -522,6 +534,18 @@
       "value": -0.8464310945770683,
       "target_weight": 3.0,
       "reason": "리밸런싱 실행. 엔비디아와의 파트너십을 통해 맞춤형 AI 칩 시장에서 성장할 것이라는 투자 논리는 유효하나, 시장 불확실성 증대에 대응하고 목표 현금 비중(20%)을 확보하기 위해 위성(satellite) 포지션의 비중을 3%로 축소 조정합니다."
+    },
+    {
+      "date": "2026-06-18",
+      "type": "신규 매수",
+      "key": "stock:KR:005930",
+      "name": "삼성전자",
+      "decision_actor": "AI",
+      "price": 346500.0,
+      "quantity": 1.4332796143204298e-05,
+      "value": 4.9663138636202895,
+      "target_weight": 5.0,
+      "reason": "신규 편입. 일론 머스크의 뉴럴링크(4나노 BCI칩) 및 테슬라(차세대 AI칩)로부터 대규모 파운드리 수주에 성공하여, HBM 메모리 외에 시스템 반도체 분야에서도 확실한 AI 성장 동력을 확보함. Watchlist 편입 사유였던 고객사 관련 불확실성이 해소되고 강력한 신규 모멘텀이 발생하여 포트폴리오에 편입함."
     }
   ],
   "snapshots": [
@@ -587,6 +611,14 @@
       "invested_value": 78.44966525,
       "total_value": 99.24760449,
       "return_pct": -0.75239551,
+      "realized_pnl": -0.21447663
+    },
+    {
+      "date": "2026-06-18",
+      "cash": 15.83162538,
+      "invested_value": 83.4946519,
+      "total_value": 99.32627727,
+      "return_pct": -0.67372273,
       "realized_pnl": -0.21447663
     }
   ]

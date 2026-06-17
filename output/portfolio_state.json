@@ -573,6 +573,40 @@
       "allocation_role": "satellite",
       "allocation_role_source": "rebalance_review_2026-06-15",
       "allocation_role_reason": "조선/MRO 수혜 보조 성장 포지션"
+    },
+    {
+      "name": "삼성전자",
+      "code": "005930",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "매수",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-18",
+      "evidence_posts": [
+        {
+          "title": "일론 머스크와 삼성전자의 협업?  뉴럴링크 이야기",
+          "url": "https://blog.naver.com/ranto28/224318878089?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-17"
+        }
+      ],
+      "source_mentioned": true,
+      "previous_weight": null,
+      "proposed_weight": 5.0,
+      "weight_source": "AI 제안",
+      "change_reason": "신규 편입. 일론 머스크의 뉴럴링크(4나노 BCI칩) 및 테슬라(차세대 AI칩)로부터 대규모 파운드리 수주에 성공하여, HBM 메모리 외에 시스템 반도체 분야에서도 확실한 AI 성장 동력을 확보함. Watchlist 편입 사유였던 고객사 관련 불확실성이 해소되고 강력한 신규 모멘텀이 발생하여 포트폴리오에 편입함.",
+      "allocation_role": "core",
+      "source_scope": "source_named_security",
+      "investment_rationale": "뉴럴링크와 테슬라향 차세대 칩 수주는 삼성 파운드리의 기술력을 입증하고, AI 시장에서의 역할을 메모리에서 비메모리 시스템 반도체로 확장시키는 중요한 전환점임.",
+      "current_entry_reason": "Watchlist에서 관찰하던 중, 구체적인 대규모 수주 계약(뉴럴링크, 테슬라)이 확인되어 투자 불확실성이 해소되고 장기 성장 가시성이 확보되었기에 지금 편입함.",
+      "key_risks": [
+        "파운드리 수율 문제 발생 가능성",
+        "글로벌 반도체 업황 변동성",
+        "TSMC와의 기술 격차"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260618-1"
+      ]
     }
   ],
   "watchlist": [
@@ -583,33 +617,23 @@
       "asset_type": "stock",
       "decision_actor": "AI",
       "basis": "종목 분석",
-      "decision_date": "2026-06-15",
+      "decision_date": "2026-06-18",
       "evidence_posts": [
         {
-          "title": "오늘(2026년 6월 11일)이 국장 네마녀의 날이다. 어떤 영향이..",
-          "url": "https://blog.naver.com/ranto28/224312087790?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-10"
-        },
-        {
-          "title": "삼성전자와 SK하이닉스를 흔든 엔비디아 SOCAMM 이슈가 뭘까?",
-          "url": "https://blog.naver.com/ranto28/224307440861?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-07"
-        },
-        {
-          "title": "삼성전자와 SK하이닉스를 조심해야 하는 이유",
-          "url": "https://blog.naver.com/ranto28/224304436074?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-03"
+          "title": "일론 머스크와 삼성전자의 협업?  뉴럴링크 이야기",
+          "url": "https://blog.naver.com/ranto28/224318878089?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-17"
         }
       ],
       "source_mentioned": true,
       "watchlist_entry_date": "2026-06-09",
-      "latest_evidence_date": "2026-06-10",
-      "watchlist_duration_days": 6,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "latest_evidence_date": "2026-06-17",
+      "watchlist_duration_days": 9,
+      "portfolio_entry_date": "2026-06-18",
+      "watchlist_closed_date": "2026-06-18",
+      "status": "포트폴리오 편입",
       "source_scope": "source_named_security",
-      "observation_reason": "기존 HBM 기술 및 고객사 관련 불확실성에 더해, 네 마녀의 날 등 파생상품 만기일의 대규모 프로그램 매매로 인한 단기 주가 변동성 위험이 부각되어 관찰을 유지함. 엔비디아 SOCAMM 이슈는 시장의 과도한 반응으로 분석되나, 여전히 주의가 필요함."
+      "observation_reason": "포트폴리오 편입 결정. 뉴럴링크 및 테슬라향 차세대 칩 파운드리 수주로 비메모리 부문 AI 성장성이 확인되어 편입 결정."
     },
     {
       "name": "SK하이닉스",
@@ -1025,6 +1049,31 @@
       "status": "관심",
       "source_scope": "sector_only",
       "observation_reason": "슈퍼 엘니뇨로 인한 한국의 찜통더위가 예상되어 빙과, 음료 등 관련 소비재 기업의 계절적 수혜가 기대됨. 단기 테마 성격이 강해 구체적인 투자 대상과 진입 시점을 판단하기 위해 관찰함."
+    },
+    {
+      "name": "Neuralink",
+      "code": "",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-18",
+      "evidence_posts": [
+        {
+          "title": "일론 머스크와 삼성전자의 협업?  뉴럴링크 이야기",
+          "url": "https://blog.naver.com/ranto28/224318878089?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-17"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-06-18",
+      "latest_evidence_date": "2026-06-17",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "비상장 기업. 뇌-컴퓨터 인터페이스(BCI) 분야의 선두주자로, 성공적인 임상과 상용화 계획을 통해 막대한 성장 잠재력을 보여줌. 삼성전자와의 칩 개발 협력으로 기술 구현 가시성이 높아짐. 향후 IPO 추진 시 주목해야 할 기업."
     }
   ],
   "closed_positions": [
@@ -3374,33 +3423,69 @@
       "linked_insight_ids": [
         "INSIGHT-20260616-2"
       ]
+    },
+    {
+      "name": "삼성전자",
+      "code": "005930",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "매수",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-18",
+      "evidence_posts": [
+        {
+          "title": "일론 머스크와 삼성전자의 협업?  뉴럴링크 이야기",
+          "url": "https://blog.naver.com/ranto28/224318878089?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-17"
+        }
+      ],
+      "source_mentioned": true,
+      "previous_weight": null,
+      "proposed_weight": 5.0,
+      "weight_source": "AI 제안",
+      "change_reason": "신규 편입. 일론 머스크의 뉴럴링크(4나노 BCI칩) 및 테슬라(차세대 AI칩)로부터 대규모 파운드리 수주에 성공하여, HBM 메모리 외에 시스템 반도체 분야에서도 확실한 AI 성장 동력을 확보함. Watchlist 편입 사유였던 고객사 관련 불확실성이 해소되고 강력한 신규 모멘텀이 발생하여 포트폴리오에 편입함.",
+      "allocation_role": "core",
+      "source_scope": "source_named_security",
+      "investment_rationale": "뉴럴링크와 테슬라향 차세대 칩 수주는 삼성 파운드리의 기술력을 입증하고, AI 시장에서의 역할을 메모리에서 비메모리 시스템 반도체로 확장시키는 중요한 전환점임.",
+      "current_entry_reason": "Watchlist에서 관찰하던 중, 구체적인 대규모 수주 계약(뉴럴링크, 테슬라)이 확인되어 투자 불확실성이 해소되고 장기 성장 가시성이 확보되었기에 지금 편입함.",
+      "key_risks": [
+        "파운드리 수율 문제 발생 가능성",
+        "글로벌 반도체 업황 변동성",
+        "TSMC와의 기술 격차"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260618-1"
+      ]
     }
   ],
   "insights": [
     {
-      "id": "INSIGHT-20260617-1",
-      "title": "자산 가격 안정의 핵심은 수요 억제가 아닌 공급 확대",
-      "summary": "1980년대 후반 한국의 주식 및 부동산 버블은 정부의 수요 억제책으로 잡히지 않았고, 1기 신도시 등 대규모 주택 공급이 이루어진 후에야 안정되었습니다. 이는 자산 가격 안정화에 있어 공급 정책의 중요성을 시사합니다.",
-      "investment_implication": "장기적인 관점에서 부동산 및 관련 산업에 대한 정책 분석 시 공급 확대 정책의 실효성을 주시할 필요가 있습니다.",
+      "id": "INSIGHT-20260618-1",
+      "title": "삼성전자, 뉴럴링크/테슬라 칩 수주로 비메모리 AI 성장 동력 확보",
+      "summary": "삼성전자 파운드리가 일론 머스크의 뉴럴링크와 테슬라로부터 차세대 AI 및 BCI 칩 생산 계약을 수주했습니다. 이는 HBM 중심의 AI 수혜 논리를 넘어 시스템 반도체 분야에서의 경쟁력을 입증하고 성장성을 다각화하는 중요한 계기입니다.",
+      "investment_implication": "삼성전자의 장기 성장성에 대한 긍정적 신호이며, 파운드리 사업부의 가치 재평가로 이어질 수 있습니다.",
       "evidence_posts": [
         {
-          "title": "서울 아파트 가격은 잡힐수 있을까?",
-          "url": "https://blog.naver.com/ranto28/224317787077?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-16"
+          "title": "일론 머스크와 삼성전자의 협업?  뉴럴링크 이야기",
+          "url": "https://blog.naver.com/ranto28/224318878089?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-17"
         }
       ],
-      "related_decision_codes": []
+      "related_decision_codes": [
+        "005930"
+      ]
     },
     {
-      "id": "INSIGHT-20260617-2",
-      "title": "일본은행의 완화적 긴축, 엔 캐리 트레이드 청산 리스크는 여전",
-      "summary": "일본은행이 금리를 인상했으나 국채 매입 축소 계획이 시장 기대보다 완화적으로 발표되었습니다. 그러나 투기적 엔화 숏 포지션이 여전히 높은 수준이어서, 향후 정책 기조 변화 시 급격한 포지션 청산이 발생하며 한국 증시를 포함한 글로벌 위험자산에 충격을 줄 수 있는 잠재적 리스크가 존재합니다.",
-      "investment_implication": "엔화 가치의 급격한 변동 가능성은 포트폴리오의 위험 요인이므로, 적정 수준의 현금 비중 유지 등 방어적 자세가 유효합니다.",
+      "id": "INSIGHT-20260618-2",
+      "title": "엔비디아의 대규모 채권 발행, 미래 M&A를 위한 전략적 포석",
+      "summary": "엔비디아가 막대한 현금 보유에도 불구하고 250억 달러의 회사채를 발행한 것은 향후 대규모 M&A나 투자를 위한 '신용 벤치마크'를 구축하려는 의도로 분석됩니다. 이는 AI 생태계 지배력을 강화하기 위한 장기 전략의 일환입니다.",
+      "investment_implication": "엔비디아가 단순 하드웨어 판매를 넘어 AI 플랫폼 사업자로 확장하려는 야심을 보여주며, 향후 AI 산업의 재편 가능성을 시사합니다.",
       "evidence_posts": [
         {
-          "title": "일본은행 금리발표 내용 뜯어보기",
-          "url": "https://blog.naver.com/ranto28/224317198846?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-15"
+          "title": "엔비디아는 돈을 왜 빌릴까?",
+          "url": "https://blog.naver.com/ranto28/224318349554?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-16"
         }
       ],
       "related_decision_codes": []
