@@ -1,8 +1,8 @@
 {
   "schema_version": "3.0",
   "starting_value": 100.0,
-  "cash": 15.831625375772585,
-  "realized_pnl": -0.21447662972819037,
+  "cash": 18.553547310024936,
+  "realized_pnl": -0.3136896083438016,
   "positions": [
     {
       "key": "stock:KR:006220",
@@ -70,7 +70,7 @@
       "code": "AA",
       "market": "US",
       "asset_type": "stock",
-      "quantity": 5.0892881044565585e-05,
+      "quantity": 4.2971283346849746e-05,
       "average_cost": 112631.83981208503,
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
@@ -106,7 +106,7 @@
       "code": "011070",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 4.93329746880119e-06,
+      "quantity": 3.831246773763583e-06,
       "average_cost": 1095000.0,
       "decision_actor": "미분류",
       "opened_date": "2026-06-09",
@@ -130,7 +130,7 @@
       "code": "454910",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 5.354000574309371e-05,
+      "quantity": 4.786260575208059e-05,
       "average_cost": 127200.0,
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
@@ -546,6 +546,42 @@
       "value": 4.9663138636202895,
       "target_weight": 5.0,
       "reason": "신규 편입. 일론 머스크의 뉴럴링크(4나노 BCI칩) 및 테슬라(차세대 AI칩)로부터 대규모 파운드리 수주에 성공하여, HBM 메모리 외에 시스템 반도체 분야에서도 확실한 AI 성장 동력을 확보함. Watchlist 편입 사유였던 고객사 관련 불확실성이 해소되고 강력한 신규 모멘텀이 발생하여 포트폴리오에 편입함."
+    },
+    {
+      "date": "2026-06-19",
+      "type": "일부 매도",
+      "key": "stock:KR:454910",
+      "name": "두산로보틱스",
+      "decision_actor": "AI",
+      "price": 102700.0,
+      "quantity": 5.677399991013115e-06,
+      "value": -0.5830689790770469,
+      "target_weight": 5.0,
+      "reason": "연준의 매파적 정책 전환(금리 인상 가능성 시사)으로 인한 시장 불확실성 증대에 대응하기 위해 방어적 관점에서 현금 비중을 확대. 고밸류에이션 위험(risk) 자산인 점을 고려하여 비중을 축소함."
+    },
+    {
+      "date": "2026-06-19",
+      "type": "일부 매도",
+      "key": "stock:US:AA",
+      "name": "Alcoa",
+      "decision_actor": "AI",
+      "price": 91512.08393870853,
+      "quantity": 7.921597697715842e-06,
+      "value": -0.7249219134420524,
+      "target_weight": 4.0,
+      "reason": "연준의 매파적 정책 전환으로 인한 경기 둔화 우려 및 시장 불확실성 증대에 대응. 위험(risk) 자산군에 속하는 원자재 주식의 비중을 축소하여 포트폴리오 방어력을 강화함."
+    },
+    {
+      "date": "2026-06-19",
+      "type": "일부 매도",
+      "key": "stock:KR:011070",
+      "name": "LG이노텍",
+      "decision_actor": "AI",
+      "price": 1283000.0,
+      "quantity": 1.1020506950376068e-06,
+      "value": -1.4139310417332496,
+      "target_weight": 5.0,
+      "reason": "연준의 매파적 정책 전환은 고금리 장기화 가능성을 높여 IT 기기 등 최종 소비재 수요에 부정적 영향을 줄 수 있음. 시장 불확실성 증대에 대응하여 위성(satellite) 자산의 비중을 일부 축소함."
     }
   ],
   "snapshots": [
@@ -620,6 +656,14 @@
       "total_value": 99.32627727,
       "return_pct": -0.67372273,
       "realized_pnl": -0.21447663
+    },
+    {
+      "date": "2026-06-19",
+      "cash": 18.55354731,
+      "invested_value": 79.7562449,
+      "total_value": 98.30979221,
+      "return_pct": -1.69020779,
+      "realized_pnl": -0.31368961
     }
   ]
 }
