@@ -3595,38 +3595,29 @@
   ],
   "insights": [
     {
-      "id": "INSIGHT-20260619-1",
-      "title": "연준의 매파적 전환, '더 높게 더 오래' 금리 기조 시사",
-      "summary": "6월 FOMC 점도표는 연내 금리 인하 전망이 사실상 소멸하고 오히려 한 차례 인상 가능성으로 돌아섰음을 보여줍니다. 이는 연준이 지속적인 인플레이션을 심각하게 우려하고 있음을 나타내며, 위험 자산에 대한 부담을 가중시키는 요인입니다.",
-      "investment_implication": "시장 변동성 확대가 예상되므로, 고위험 성장주 비중을 줄이고 현금 보유를 늘리는 등 포트폴리오의 방어적 조정이 필요합니다.",
+      "id": "INSIGHT-20260620-1",
+      "title": "중앙그룹 부도 사태로 본 미디어/콘텐츠 산업의 신용 리스크 부각",
+      "summary": "중앙그룹의 부도는 주요 계열사의 지속적인 적자와 무리한 투자(스포츠 중계권) 실패가 결합된 결과로, 전통 미디어 및 콘텐츠 산업 내 높은 부채와 취약한 수익 모델의 위험성을 보여줍니다.",
+      "investment_implication": "미디어/콘텐츠 섹터 투자 시, 기업의 부채 수준과 핵심 사업의 현금 창출 능력을 면밀히 검토하는 등 신용 리스크에 대한 주의가 필요합니다.",
       "evidence_posts": [
         {
-          "title": "점도표로 보는 연준 위원들의 속마음",
-          "url": "https://blog.naver.com/ranto28/224319891507?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-18"
-        },
-        {
-          "title": "FOMC 기준금리 동결! 점도표 논란과 캐빈 워시 연준의장 기자회견",
-          "url": "https://blog.naver.com/ranto28/224319388680?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-17"
+          "title": "중앙일보 최종부도, JTBC 기업회생의 내막",
+          "url": "https://blog.naver.com/ranto28/224321145776?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-19"
         }
       ],
-      "related_decision_codes": [
-        "454910",
-        "AA",
-        "011070"
-      ]
+      "related_decision_codes": []
     },
     {
-      "id": "INSIGHT-20260619-2",
-      "title": "미국-이란 MOU, 중동 긴장 완화 속 호르무즈 해협 통행료 변수 부상",
-      "summary": "미국과 이란이 군사작전 중단 및 제재 해제를 골자로 하는 양해각서(MOU)에 합의하여 단기적인 지정학적 리스크가 완화되었습니다. 그러나 이란이 60일 후 호르무즈 해협에 통행료를 부과할 수 있게 되어, 향후 글로벌 해상 운임 및 유가에 새로운 불확실성으로 작용할 전망입니다.",
-      "investment_implication": "중동 리스크 감소는 시장에 긍정적이나, 해상운송 및 에너지 관련 섹터는 새로운 비용 구조 변화에 직면할 수 있어 지속적인 관찰이 필요합니다.",
+      "id": "INSIGHT-20260620-2",
+      "title": "퇴직연금 ETF 실시간 매매 확대, 국내 증시의 잠재적 수급 개선 요인",
+      "summary": "정부의 퇴직연금 ETF 실시간 매매 전면 확대 검토는 501조원 규모의 퇴직연금 자금 일부가 주식 시장으로 유입될 수 있는 경로를 열어줍니다. 이는 국내 증시의 장기적인 수급 구조를 개선할 수 있는 잠재적 호재입니다.",
+      "investment_implication": "이는 한국 증시 전반에 긍정적인 장기 모멘텀으로 작용할 수 있으며, 특히 시장 대표 ETF나 우량주에 대한 기관 수요를 자극할 수 있습니다.",
       "evidence_posts": [
         {
-          "title": "트럼프, 이란과 MOU 전문 공개, 해협이 열리기는 하는데...",
-          "url": "https://blog.naver.com/ranto28/224319486464?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-17"
+          "title": "국장에 새로운 자금이 들어오나?",
+          "url": "https://blog.naver.com/ranto28/224320424646?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-18"
         }
       ],
       "related_decision_codes": []

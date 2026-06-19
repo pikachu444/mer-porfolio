@@ -1,190 +1,36 @@
 {
-  "analysis_date": "2026-06-19",
+  "analysis_date": "2026-06-20",
   "run_type": "regular",
   "insights": [
     {
-      "id": "INSIGHT-20260619-1",
-      "title": "연준의 매파적 전환, '더 높게 더 오래' 금리 기조 시사",
-      "summary": "6월 FOMC 점도표는 연내 금리 인하 전망이 사실상 소멸하고 오히려 한 차례 인상 가능성으로 돌아섰음을 보여줍니다. 이는 연준이 지속적인 인플레이션을 심각하게 우려하고 있음을 나타내며, 위험 자산에 대한 부담을 가중시키는 요인입니다.",
-      "investment_implication": "시장 변동성 확대가 예상되므로, 고위험 성장주 비중을 줄이고 현금 보유를 늘리는 등 포트폴리오의 방어적 조정이 필요합니다.",
+      "id": "INSIGHT-20260620-1",
+      "title": "중앙그룹 부도 사태로 본 미디어/콘텐츠 산업의 신용 리스크 부각",
+      "summary": "중앙그룹의 부도는 주요 계열사의 지속적인 적자와 무리한 투자(스포츠 중계권) 실패가 결합된 결과로, 전통 미디어 및 콘텐츠 산업 내 높은 부채와 취약한 수익 모델의 위험성을 보여줍니다.",
+      "investment_implication": "미디어/콘텐츠 섹터 투자 시, 기업의 부채 수준과 핵심 사업의 현금 창출 능력을 면밀히 검토하는 등 신용 리스크에 대한 주의가 필요합니다.",
       "evidence_posts": [
         {
-          "title": "점도표로 보는 연준 위원들의 속마음",
-          "url": "https://blog.naver.com/ranto28/224319891507?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-18"
-        },
-        {
-          "title": "FOMC 기준금리 동결! 점도표 논란과 캐빈 워시 연준의장 기자회견",
-          "url": "https://blog.naver.com/ranto28/224319388680?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-17"
+          "title": "중앙일보 최종부도, JTBC 기업회생의 내막",
+          "url": "https://blog.naver.com/ranto28/224321145776?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-19"
         }
       ],
-      "related_decision_codes": [
-        "454910",
-        "AA",
-        "011070"
-      ]
+      "related_decision_codes": []
     },
     {
-      "id": "INSIGHT-20260619-2",
-      "title": "미국-이란 MOU, 중동 긴장 완화 속 호르무즈 해협 통행료 변수 부상",
-      "summary": "미국과 이란이 군사작전 중단 및 제재 해제를 골자로 하는 양해각서(MOU)에 합의하여 단기적인 지정학적 리스크가 완화되었습니다. 그러나 이란이 60일 후 호르무즈 해협에 통행료를 부과할 수 있게 되어, 향후 글로벌 해상 운임 및 유가에 새로운 불확실성으로 작용할 전망입니다.",
-      "investment_implication": "중동 리스크 감소는 시장에 긍정적이나, 해상운송 및 에너지 관련 섹터는 새로운 비용 구조 변화에 직면할 수 있어 지속적인 관찰이 필요합니다.",
+      "id": "INSIGHT-20260620-2",
+      "title": "퇴직연금 ETF 실시간 매매 확대, 국내 증시의 잠재적 수급 개선 요인",
+      "summary": "정부의 퇴직연금 ETF 실시간 매매 전면 확대 검토는 501조원 규모의 퇴직연금 자금 일부가 주식 시장으로 유입될 수 있는 경로를 열어줍니다. 이는 국내 증시의 장기적인 수급 구조를 개선할 수 있는 잠재적 호재입니다.",
+      "investment_implication": "이는 한국 증시 전반에 긍정적인 장기 모멘텀으로 작용할 수 있으며, 특히 시장 대표 ETF나 우량주에 대한 기관 수요를 자극할 수 있습니다.",
       "evidence_posts": [
         {
-          "title": "트럼프, 이란과 MOU 전문 공개, 해협이 열리기는 하는데...",
-          "url": "https://blog.naver.com/ranto28/224319486464?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-17"
+          "title": "국장에 새로운 자금이 들어오나?",
+          "url": "https://blog.naver.com/ranto28/224320424646?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-18"
         }
       ],
       "related_decision_codes": []
     }
   ],
-  "portfolio_decisions": [
-    {
-      "name": "두산로보틱스",
-      "code": "454910",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "action": "비중축소",
-      "basis": "이전 판단 유지",
-      "decision_date": "2026-06-19",
-      "evidence_posts": [
-        {
-          "title": "점도표로 보는 연준 위원들의 속마음",
-          "url": "https://blog.naver.com/ranto28/224319891507?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-18"
-        },
-        {
-          "title": "FOMC 기준금리 동결! 점도표 논란과 캐빈 워시 연준의장 기자회견",
-          "url": "https://blog.naver.com/ranto28/224319388680?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-17"
-        }
-      ],
-      "source_mentioned": true,
-      "previous_weight": 6.0,
-      "proposed_weight": 5.0,
-      "weight_source": "AI 제안",
-      "change_reason": "연준의 매파적 정책 전환(금리 인상 가능성 시사)으로 인한 시장 불확실성 증대에 대응하기 위해 방어적 관점에서 현금 비중을 확대. 고밸류에이션 위험(risk) 자산인 점을 고려하여 비중을 축소함.",
-      "allocation_role": "risk",
-      "source_scope": "previous_decision",
-      "investment_rationale": "엔비디아와의 긴밀한 협력을 통해 로봇 기술에 AI를 접목하는 '피지컬 AI' 시장을 선도할 것으로 기대되며, 이는 두산그룹 전체의 AI 관련 시너지로 이어질 수 있음.",
-      "current_entry_reason": "거시 경제 환경 변화에 따른 포트폴리오 위험 관리 차원에서 비중을 조정함.",
-      "key_risks": [
-        "로봇 시장의 경쟁 심화",
-        "글로벌 경기 둔화에 따른 설비 투자 위축",
-        "높은 밸류에이션 부담",
-        "고금리 장기화로 인한 자금 조달 비용 증가"
-      ],
-      "linked_insight_ids": [
-        "INSIGHT-20260619-1"
-      ]
-    },
-    {
-      "name": "Alcoa",
-      "code": "AA",
-      "market": "US",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "action": "비중축소",
-      "basis": "이전 판단 유지",
-      "decision_date": "2026-06-19",
-      "evidence_posts": [
-        {
-          "title": "점도표로 보는 연준 위원들의 속마음",
-          "url": "https://blog.naver.com/ranto28/224319891507?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-18"
-        },
-        {
-          "title": "FOMC 기준금리 동결! 점도표 논란과 캐빈 워시 연준의장 기자회견",
-          "url": "https://blog.naver.com/ranto28/224319388680?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-17"
-        }
-      ],
-      "source_mentioned": false,
-      "previous_weight": 5.0,
-      "proposed_weight": 4.0,
-      "weight_source": "AI 제안",
-      "change_reason": "연준의 매파적 정책 전환으로 인한 경기 둔화 우려 및 시장 불확실성 증대에 대응. 위험(risk) 자산군에 속하는 원자재 주식의 비중을 축소하여 포트폴리오 방어력을 강화함.",
-      "allocation_role": "risk",
-      "source_scope": "previous_decision",
-      "investment_rationale": "엘니뇨로 인한 전력 수요 급증은 알루미늄 생산 원가(전기료 비중 37%)를 상승시켜 알루미늄 가격 상승으로 이어질 수 있음.",
-      "current_entry_reason": "거시 경제 환경 변화에 따른 포트폴리오 위험 관리 차원에서 비중을 조정함.",
-      "key_risks": [
-        "글로벌 경기 둔화에 따른 알루미늄 수요 감소",
-        "기니의 정책 변화 또는 중국과의 타협 가능성",
-        "원자재 가격 변동성"
-      ],
-      "linked_insight_ids": [
-        "INSIGHT-20260619-1"
-      ]
-    },
-    {
-      "name": "LG이노텍",
-      "code": "011070",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "action": "비중축소",
-      "basis": "이전 판단 유지",
-      "decision_date": "2026-06-19",
-      "evidence_posts": [
-        {
-          "title": "점도표로 보는 연준 위원들의 속마음",
-          "url": "https://blog.naver.com/ranto28/224319891507?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-18"
-        },
-        {
-          "title": "FOMC 기준금리 동결! 점도표 논란과 캐빈 워시 연준의장 기자회견",
-          "url": "https://blog.naver.com/ranto28/224319388680?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-17"
-        }
-      ],
-      "source_mentioned": true,
-      "previous_weight": 6.0,
-      "proposed_weight": 5.0,
-      "weight_source": "AI 제안",
-      "change_reason": "연준의 매파적 정책 전환은 고금리 장기화 가능성을 높여 IT 기기 등 최종 소비재 수요에 부정적 영향을 줄 수 있음. 시장 불확실성 증대에 대응하여 위성(satellite) 자산의 비중을 일부 축소함.",
-      "allocation_role": "satellite",
-      "source_scope": "source_named_security",
-      "investment_rationale": "Figure AI 투자와 휴머노이드 로봇 부품 공급 가능성이 원문에서 확인되어 피지컬 AI 하드웨어 생태계 수혜 가능성이 있음.",
-      "current_entry_reason": "거시 경제 환경 변화에 따른 포트폴리오 위험 관리 차원에서 비중을 조정함.",
-      "key_risks": [
-        "휴머노이드 로봇 상용화 지연",
-        "부품 공급 계약 불확실성",
-        "주요 고객사(애플)의 스마트폰 판매 둔화"
-      ],
-      "linked_insight_ids": [
-        "INSIGHT-20260619-1"
-      ]
-    }
-  ],
-  "watchlist": [
-    {
-      "name": "해상운송 섹터",
-      "code": "",
-      "market": "",
-      "asset_type": "sector",
-      "decision_actor": "AI",
-      "basis": "섹터 분석",
-      "decision_date": "2026-06-19",
-      "evidence_posts": [
-        {
-          "title": "트럼프, 이란과 MOU 전문 공개, 해협이 열리기는 하는데...",
-          "url": "https://blog.naver.com/ranto28/224319486464?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-17"
-        }
-      ],
-      "source_mentioned": false,
-      "watchlist_entry_date": "2026-06-16",
-      "latest_evidence_date": "2026-06-17",
-      "watchlist_duration_days": 3,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "sector_only",
-      "observation_reason": "기존 엘니뇨로 인한 파나마 운하 통항량 감소 리스크에 더해, 미국-이란 MOU 결과로 호르무즈 해협에 통행료가 부과될 가능성이 생겨 글로벌 해상 운임의 변동성이 더욱 커짐. 관련 수혜 및 피해 기업을 식별하기 위해 관찰을 지속함."
-    }
-  ]
+  "portfolio_decisions": [],
+  "watchlist": []
 }
