@@ -1,7 +1,7 @@
 {
   "schema_version": "3.0",
   "starting_value": 100.0,
-  "cash": 18.553547310024936,
+  "cash": 14.679108943223152,
   "realized_pnl": -0.3136896083438016,
   "positions": [
     {
@@ -207,6 +207,18 @@
       "decision_actor": "AI",
       "opened_date": "2026-06-18",
       "target_weight": 5.0
+    },
+    {
+      "key": "stock:KR:000660",
+      "name": "SK하이닉스",
+      "code": "000660",
+      "market": "KR",
+      "asset_type": "stock",
+      "quantity": 1.4017504945013688e-06,
+      "average_cost": 2764000.0,
+      "decision_actor": "AI",
+      "opened_date": "2026-06-22",
+      "target_weight": 4.0
     }
   ],
   "closed_positions": [],
@@ -582,6 +594,18 @@
       "value": -1.4139310417332496,
       "target_weight": 5.0,
       "reason": "연준의 매파적 정책 전환은 고금리 장기화 가능성을 높여 IT 기기 등 최종 소비재 수요에 부정적 영향을 줄 수 있음. 시장 불확실성 증대에 대응하여 위성(satellite) 자산의 비중을 일부 축소함."
+    },
+    {
+      "date": "2026-06-22",
+      "type": "신규 매수",
+      "key": "stock:KR:000660",
+      "name": "SK하이닉스",
+      "decision_actor": "AI",
+      "price": 2764000.0,
+      "quantity": 1.4017504945013688e-06,
+      "value": 3.874438366801783,
+      "target_weight": 4.0,
+      "reason": "신규 편입. Watchlist에서 관찰하던 중, 반도체 생산의 핵심 소재인 WF₆ 공급망 위기가 발생했으나, 워렌 버핏의 자회사가 국내에 텅스텐 분말 공장을 건설하며 결정적인 해결책을 제공함. 이로써 HBM 등 첨단 공정의 생산 불확실성이 해소되어 포트폴리오에 편입함."
     }
   ],
   "snapshots": [
@@ -677,6 +701,14 @@
       "date": "2026-06-21",
       "cash": 18.55354731,
       "invested_value": 78.30741186,
+      "total_value": 96.86095917,
+      "return_pct": -3.13904083,
+      "realized_pnl": -0.31368961
+    },
+    {
+      "date": "2026-06-22",
+      "cash": 14.67910894,
+      "invested_value": 82.18185023,
       "total_value": 96.86095917,
       "return_pct": -3.13904083,
       "realized_pnl": -0.31368961

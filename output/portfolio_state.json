@@ -597,32 +597,68 @@
       "market": "KR",
       "asset_type": "stock",
       "decision_actor": "AI",
-      "action": "매수",
+      "action": "보유",
       "basis": "종목 분석",
-      "decision_date": "2026-06-18",
+      "decision_date": "2026-06-22",
       "evidence_posts": [
         {
-          "title": "일론 머스크와 삼성전자의 협업?  뉴럴링크 이야기",
-          "url": "https://blog.naver.com/ranto28/224318878089?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-17"
+          "title": "삼성전자와 SK하이닉스가 긴급 공급망 점검을 하는 이유",
+          "url": "https://blog.naver.com/ranto28/224322350093?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-21"
         }
       ],
       "source_mentioned": true,
-      "previous_weight": null,
+      "previous_weight": 5.0,
       "proposed_weight": 5.0,
       "weight_source": "AI 제안",
-      "change_reason": "신규 편입. 일론 머스크의 뉴럴링크(4나노 BCI칩) 및 테슬라(차세대 AI칩)로부터 대규모 파운드리 수주에 성공하여, HBM 메모리 외에 시스템 반도체 분야에서도 확실한 AI 성장 동력을 확보함. Watchlist 편입 사유였던 고객사 관련 불확실성이 해소되고 강력한 신규 모멘텀이 발생하여 포트폴리오에 편입함.",
+      "change_reason": "기존 보유. 중국발 텅스텐 공급 위기라는 중대한 리스크가 부각되었으나, 동시에 버크셔 해서웨이 자회사의 국내 공장 건설이라는 강력한 해결책이 제시되어 공급망 안정성이 오히려 강화될 것으로 판단. 기존 투자 논리를 지지하여 보유 의견을 유지함.",
       "allocation_role": "core",
       "source_scope": "source_named_security",
-      "investment_rationale": "뉴럴링크와 테슬라향 차세대 칩 수주는 삼성 파운드리의 기술력을 입증하고, AI 시장에서의 역할을 메모리에서 비메모리 시스템 반도체로 확장시키는 중요한 전환점임.",
-      "current_entry_reason": "Watchlist에서 관찰하던 중, 구체적인 대규모 수주 계약(뉴럴링크, 테슬라)이 확인되어 투자 불확실성이 해소되고 장기 성장 가시성이 확보되었기에 지금 편입함.",
+      "investment_rationale": "뉴럴링크/테슬라향 파운드리 수주에 이어, 반도체 핵심 소재인 텅스텐 분말의 국내 공급망 확보로 생산 안정성이 강화되어 AI 반도체 시장에서의 경쟁력이 더욱 공고해질 것으로 기대됨.",
+      "current_entry_reason": "기존 보유 종목의 핵심 리스크(공급망)가 해소되는 긍정적인 근거가 발생하여 보유를 지속함.",
       "key_risks": [
         "파운드리 수율 문제 발생 가능성",
         "글로벌 반도체 업황 변동성",
         "TSMC와의 기술 격차"
       ],
       "linked_insight_ids": [
-        "INSIGHT-20260618-1"
+        "INSIGHT-20260622-1",
+        "INSIGHT-20260622-2"
+      ]
+    },
+    {
+      "name": "SK하이닉스",
+      "code": "000660",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "매수",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-22",
+      "evidence_posts": [
+        {
+          "title": "삼성전자와 SK하이닉스가 긴급 공급망 점검을 하는 이유",
+          "url": "https://blog.naver.com/ranto28/224322350093?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-21"
+        }
+      ],
+      "source_mentioned": true,
+      "previous_weight": null,
+      "proposed_weight": 4.0,
+      "weight_source": "AI 제안",
+      "change_reason": "신규 편입. Watchlist에서 관찰하던 중, 반도체 생산의 핵심 소재인 WF₆ 공급망 위기가 발생했으나, 워렌 버핏의 자회사가 국내에 텅스텐 분말 공장을 건설하며 결정적인 해결책을 제공함. 이로써 HBM 등 첨단 공정의 생산 불확실성이 해소되어 포트폴리오에 편입함.",
+      "allocation_role": "satellite",
+      "source_scope": "source_named_security",
+      "investment_rationale": "중국의 텅스텐 수출 통제 리스크에도 불구하고, 버크셔 해서웨이 자회사의 국내 투자를 통해 안정적인 핵심 원료 공급망을 확보하게 되어 HBM 시장에서의 리더십을 공고히 할 것으로 기대됨.",
+      "current_entry_reason": "핵심 소재 공급망 리스크라는 가장 큰 불확실성이 구체적인 해결책(대구텍 공장 건설)으로 해소되는 전환점이 확인되었기에 지금 편입함.",
+      "key_risks": [
+        "HBM 시장 경쟁 심화",
+        "글로벌 메모리 반도체 업황 변동성",
+        "신규 텅스텐 분말 공장 가동 지연 가능성"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260622-1",
+        "INSIGHT-20260622-2"
       ]
     }
   ],
@@ -659,33 +695,23 @@
       "asset_type": "stock",
       "decision_actor": "AI",
       "basis": "종목 분석",
-      "decision_date": "2026-06-15",
+      "decision_date": "2026-06-22",
       "evidence_posts": [
         {
-          "title": "오늘(2026년 6월 11일)이 국장 네마녀의 날이다. 어떤 영향이..",
-          "url": "https://blog.naver.com/ranto28/224312087790?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-10"
-        },
-        {
-          "title": "삼성전자와 SK하이닉스를 흔든 엔비디아 SOCAMM 이슈가 뭘까?",
-          "url": "https://blog.naver.com/ranto28/224307440861?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-07"
-        },
-        {
-          "title": "삼성전자와 SK하이닉스를 조심해야 하는 이유",
-          "url": "https://blog.naver.com/ranto28/224304436074?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-03"
+          "title": "삼성전자와 SK하이닉스가 긴급 공급망 점검을 하는 이유",
+          "url": "https://blog.naver.com/ranto28/224322350093?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-21"
         }
       ],
       "source_mentioned": true,
       "watchlist_entry_date": "2026-06-09",
-      "latest_evidence_date": "2026-06-10",
-      "watchlist_duration_days": 6,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "latest_evidence_date": "2026-06-21",
+      "watchlist_duration_days": 13,
+      "portfolio_entry_date": "2026-06-22",
+      "watchlist_closed_date": "2026-06-22",
+      "status": "포트폴리오 편입",
       "source_scope": "source_named_security",
-      "observation_reason": "기존 HBM 기술 및 고객사 관련 불확실성에 더해, 네 마녀의 날 등 파생상품 만기일의 대규모 프로그램 매매로 인한 단기 주가 변동성 위험이 부각되어 관찰을 유지함. 엔비디아 SOCAMM 이슈는 시장의 과도한 반응으로 분석되나, 여전히 주의가 필요함."
+      "observation_reason": "포트폴리오 편입 결정. WF₆ 공급망 위기에도 불구하고 버크셔 해서웨이 자회사의 국내 텅스텐 분말 공장 건설로 핵심 리스크가 해소되어 편입 결정."
     },
     {
       "name": "HD현대건설기계",
@@ -1024,8 +1050,13 @@
       "asset_type": "sector",
       "decision_actor": "AI",
       "basis": "섹터 분석",
-      "decision_date": "2026-06-19",
+      "decision_date": "2026-06-22",
       "evidence_posts": [
+        {
+          "title": "호르무즈해협 재봉쇄 상황과 통행료 관련 새로운 국면 근황",
+          "url": "https://blog.naver.com/ranto28/224322627044?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-21"
+        },
         {
           "title": "트럼프, 이란과 MOU 전문 공개, 해협이 열리기는 하는데...",
           "url": "https://blog.naver.com/ranto28/224319486464?fromRss=true&trackingCode=rss",
@@ -1034,13 +1065,13 @@
       ],
       "source_mentioned": false,
       "watchlist_entry_date": "2026-06-16",
-      "latest_evidence_date": "2026-06-17",
-      "watchlist_duration_days": 3,
+      "latest_evidence_date": "2026-06-21",
+      "watchlist_duration_days": 6,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
       "source_scope": "sector_only",
-      "observation_reason": "기존 엘니뇨로 인한 파나마 운하 통항량 감소 리스크에 더해, 미국-이란 MOU 결과로 호르무즈 해협에 통행료가 부과될 가능성이 생겨 글로벌 해상 운임의 변동성이 더욱 커짐. 관련 수혜 및 피해 기업을 식별하기 위해 관찰을 지속함."
+      "observation_reason": "기존 파나마 운하 및 호르무즈 통행료 리스크에 더해, 이란의 호르무즈 해협 재봉쇄 위협이 발생하여 지정학적 긴장이 고조되고 있음. 이는 글로벌 해상 운임의 변동성을 더욱 증폭시킬 수 있어 관련 기업 식별을 위해 관찰을 지속함."
     },
     {
       "name": "한국 여름 소비재 섹터",
@@ -1091,6 +1122,31 @@
       "status": "관심",
       "source_scope": "source_named_security",
       "observation_reason": "비상장 기업. 뇌-컴퓨터 인터페이스(BCI) 분야의 선두주자로, 성공적인 임상과 상용화 계획을 통해 막대한 성장 잠재력을 보여줌. 삼성전자와의 칩 개발 협력으로 기술 구현 가시성이 높아짐. 향후 IPO 추진 시 주목해야 할 기업."
+    },
+    {
+      "name": "Berkshire Hathaway",
+      "code": "BRK.B",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-22",
+      "evidence_posts": [
+        {
+          "title": "삼성전자와 SK하이닉스가 긴급 공급망 점검을 하는 이유",
+          "url": "https://blog.naver.com/ranto28/224322350093?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-21"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-06-22",
+      "latest_evidence_date": "2026-06-21",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "자회사 대구텍을 통해 반도체 공급망의 핵심 병목인 텅스텐 분말 국내 생산에 투자하는 등, 지정학적 리스크를 기회로 활용하는 탁월한 산업 통찰력을 보여줌. 향후 유사한 전략적 투자를 관찰할 필요가 있음."
     }
   ],
   "closed_positions": [
@@ -3661,25 +3717,128 @@
       "linked_insight_ids": [
         "INSIGHT-20260621-1"
       ]
+    },
+    {
+      "name": "삼성전자",
+      "code": "005930",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "보유",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-22",
+      "evidence_posts": [
+        {
+          "title": "삼성전자와 SK하이닉스가 긴급 공급망 점검을 하는 이유",
+          "url": "https://blog.naver.com/ranto28/224322350093?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-21"
+        }
+      ],
+      "source_mentioned": true,
+      "previous_weight": 5.0,
+      "proposed_weight": 5.0,
+      "weight_source": "AI 제안",
+      "change_reason": "기존 보유. 중국발 텅스텐 공급 위기라는 중대한 리스크가 부각되었으나, 동시에 버크셔 해서웨이 자회사의 국내 공장 건설이라는 강력한 해결책이 제시되어 공급망 안정성이 오히려 강화될 것으로 판단. 기존 투자 논리를 지지하여 보유 의견을 유지함.",
+      "allocation_role": "core",
+      "source_scope": "source_named_security",
+      "investment_rationale": "뉴럴링크/테슬라향 파운드리 수주에 이어, 반도체 핵심 소재인 텅스텐 분말의 국내 공급망 확보로 생산 안정성이 강화되어 AI 반도체 시장에서의 경쟁력이 더욱 공고해질 것으로 기대됨.",
+      "current_entry_reason": "기존 보유 종목의 핵심 리스크(공급망)가 해소되는 긍정적인 근거가 발생하여 보유를 지속함.",
+      "key_risks": [
+        "파운드리 수율 문제 발생 가능성",
+        "글로벌 반도체 업황 변동성",
+        "TSMC와의 기술 격차"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260622-1",
+        "INSIGHT-20260622-2"
+      ]
+    },
+    {
+      "name": "SK하이닉스",
+      "code": "000660",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "매수",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-22",
+      "evidence_posts": [
+        {
+          "title": "삼성전자와 SK하이닉스가 긴급 공급망 점검을 하는 이유",
+          "url": "https://blog.naver.com/ranto28/224322350093?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-21"
+        }
+      ],
+      "source_mentioned": true,
+      "previous_weight": null,
+      "proposed_weight": 4.0,
+      "weight_source": "AI 제안",
+      "change_reason": "신규 편입. Watchlist에서 관찰하던 중, 반도체 생산의 핵심 소재인 WF₆ 공급망 위기가 발생했으나, 워렌 버핏의 자회사가 국내에 텅스텐 분말 공장을 건설하며 결정적인 해결책을 제공함. 이로써 HBM 등 첨단 공정의 생산 불확실성이 해소되어 포트폴리오에 편입함.",
+      "allocation_role": "satellite",
+      "source_scope": "source_named_security",
+      "investment_rationale": "중국의 텅스텐 수출 통제 리스크에도 불구하고, 버크셔 해서웨이 자회사의 국내 투자를 통해 안정적인 핵심 원료 공급망을 확보하게 되어 HBM 시장에서의 리더십을 공고히 할 것으로 기대됨.",
+      "current_entry_reason": "핵심 소재 공급망 리스크라는 가장 큰 불확실성이 구체적인 해결책(대구텍 공장 건설)으로 해소되는 전환점이 확인되었기에 지금 편입함.",
+      "key_risks": [
+        "HBM 시장 경쟁 심화",
+        "글로벌 메모리 반도체 업황 변동성",
+        "신규 텅스텐 분말 공장 가동 지연 가능성"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260622-1",
+        "INSIGHT-20260622-2"
+      ]
     }
   ],
   "insights": [
     {
-      "id": "INSIGHT-20260621-1",
-      "title": "트럼프 행정부의 풍력발전 규제와 전력 인프라 수요의 재편",
-      "summary": "트럼프 행정부가 법적 패소에도 불구하고 행정적 수단을 통해 해상풍력 사업을 실질적으로 방해하고 있습니다. 그러나 AI 데이터센터와 노후 전력망 교체 수요가 폭증하면서, 풍력발전 수요 감소를 상쇄하고도 남아 전력 케이블 등 인프라 기업에게는 오히려 기회가 되고 있습니다.",
-      "investment_implication": "미국 풍력발전 섹터의 불확실성은 커졌으나, AI발 전력 수요가 전력 인프라 투자의 핵심 동력임을 재확인시켜 관련 기업의 성장 가시성을 높입니다.",
+      "id": "INSIGHT-20260622-1",
+      "title": "중국의 텅스텐 수출 통제로 인한 반도체 공급망 위기 부상",
+      "summary": "중국이 반도체 증착 공정의 필수 가스(WF₆) 원료인 고순도 텅스텐 분말 수출을 통제하면서, 일본 공급업체들이 삼성전자와 SK하이닉스에 공급 중단을 통보했습니다. 이는 HBM, 낸드 등 첨단 반도체 생산에 직접적인 위협이 되고 있습니다.",
+      "investment_implication": "반도체 공급망의 취약성이 부각되었으며, 중국 외 텅스텐 공급망을 확보한 기업의 전략적 가치가 크게 상승할 것입니다.",
       "evidence_posts": [
         {
-          "title": "트럼프는 풍력발전을 왜 이렇게 싫어할까?",
-          "url": "https://blog.naver.com/ranto28/224321684736?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-20"
+          "title": "삼성전자와 SK하이닉스가 긴급 공급망 점검을 하는 이유",
+          "url": "https://blog.naver.com/ranto28/224322350093?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-21"
         }
       ],
       "related_decision_codes": [
-        "006220",
-        "001440"
+        "005930",
+        "000660",
+        "BRK.B"
       ]
+    },
+    {
+      "id": "INSIGHT-20260622-2",
+      "title": "버크셔 해서웨이의 국내 투자, 한국 반도체 공급망의 안전장치로 부상",
+      "summary": "워렌 버핏의 버크셔 해서웨이 자회사(대구텍)가 대구에 텅스텐 분말 제조 시설을 건설하기로 한 투자가 중국의 수출 통제에 대한 결정적인 해결책으로 부상했습니다. 이는 삼성전자와 SK하이닉스의 핵심 소재 공급망을 안정시키는 역할을 할 것입니다.",
+      "investment_implication": "외부 투자를 통해 국가적 공급망 리스크가 해소되면서, 삼성전자와 SK하이닉스의 생산 안정성과 장기 투자 매력이 강화되었습니다.",
+      "evidence_posts": [
+        {
+          "title": "삼성전자와 SK하이닉스가 긴급 공급망 점검을 하는 이유",
+          "url": "https://blog.naver.com/ranto28/224322350093?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-21"
+        }
+      ],
+      "related_decision_codes": [
+        "005930",
+        "000660",
+        "BRK.B"
+      ]
+    },
+    {
+      "id": "INSIGHT-20260622-3",
+      "title": "호르무즈 해협 지정학적 긴장 고조, 해상 운임 불확실성 증대",
+      "summary": "이란의 호르무즈 해협 봉쇄 위협과 미국-이란 간의 통행료/보험료 부과 가능성이 맞물리면서 글로벌 해상 운송의 불확실성이 커지고 있습니다. 이는 유가 및 물류비용의 급등으로 이어질 수 있는 리스크 요인입니다.",
+      "investment_implication": "해상 운송 섹터의 변동성이 확대될 것으로 예상되며, 관련 운임 지수 및 기업들의 주가 추이에 대한 면밀한 관찰이 필요합니다.",
+      "evidence_posts": [
+        {
+          "title": "호르무즈해협 재봉쇄 상황과 통행료 관련 새로운 국면 근황",
+          "url": "https://blog.naver.com/ranto28/224322627044?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-21"
+        }
+      ],
+      "related_decision_codes": []
     }
   ],
   "last_rebalanced_date": "2026-06-15"

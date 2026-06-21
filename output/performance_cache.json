@@ -1,7 +1,7 @@
 {
-  "updated": "2026-06-21",
+  "updated": "2026-06-22",
   "portfolio_return_krw": -3.13904083,
-  "cash": 18.55354731,
+  "cash": 14.67910894,
   "realized_pnl": -0.31368961,
   "active_positions": [
     {
@@ -241,6 +241,20 @@
       "target_weight": 5.0,
       "current_price": 354000.0,
       "return_pct_krw": 2.164502164502169
+    },
+    {
+      "key": "stock:KR:000660",
+      "name": "SK하이닉스",
+      "code": "000660",
+      "market": "KR",
+      "asset_type": "stock",
+      "quantity": 1.4017504945013688e-06,
+      "average_cost": 2764000.0,
+      "decision_actor": "AI",
+      "opened_date": "2026-06-22",
+      "target_weight": 4.0,
+      "current_price": 2764000.0,
+      "return_pct_krw": 0.0
     }
   ],
   "closed_positions": [],
@@ -291,6 +305,10 @@
     },
     {
       "date": "2026-06-21",
+      "avg_return_krw": -3.13904083
+    },
+    {
+      "date": "2026-06-22",
       "avg_return_krw": -3.13904083
     }
   ]
