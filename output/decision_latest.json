@@ -1,210 +1,58 @@
 {
-  "analysis_date": "2026-06-22",
+  "analysis_date": "2026-06-23",
   "run_type": "regular",
   "insights": [
     {
-      "id": "INSIGHT-20260622-1",
-      "title": "중국의 텅스텐 수출 통제로 인한 반도체 공급망 위기 부상",
-      "summary": "중국이 반도체 증착 공정의 필수 가스(WF₆) 원료인 고순도 텅스텐 분말 수출을 통제하면서, 일본 공급업체들이 삼성전자와 SK하이닉스에 공급 중단을 통보했습니다. 이는 HBM, 낸드 등 첨단 반도체 생산에 직접적인 위협이 되고 있습니다.",
-      "investment_implication": "반도체 공급망의 취약성이 부각되었으며, 중국 외 텅스텐 공급망을 확보한 기업의 전략적 가치가 크게 상승할 것입니다.",
+      "id": "INSIGHT-20260623-1",
+      "title": "스페이스X, 나스닥 100 조기 편입에 따른 강력한 수급 모멘텀 발생 가능성",
+      "summary": "스페이스X는 상장 시, 시가총액 상위 기업에 대한 나스닥의 완화된 규정에 따라 15거래일 만에 나스닥 100 지수에 조기 편입될 가능성이 높습니다. 4.3%에 불과한 낮은 유동주식 비율과 맞물려, 지수 추종 패시브 펀드의 대규모 강제 매수가 예상되어 상장 초기 주가에 강력한 상승 압력으로 작용할 수 있습니다.",
+      "investment_implication": "실제 상장 시, 지수 편입 이벤트가 본격화되기 전이 스페이스X에 대한 핵심적인 투자 기회가 될 수 있습니다.",
       "evidence_posts": [
         {
-          "title": "삼성전자와 SK하이닉스가 긴급 공급망 점검을 하는 이유",
-          "url": "https://blog.naver.com/ranto28/224322350093?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-21"
-        }
-      ],
-      "related_decision_codes": [
-        "005930",
-        "000660",
-        "BRK.B"
-      ]
-    },
-    {
-      "id": "INSIGHT-20260622-2",
-      "title": "버크셔 해서웨이의 국내 투자, 한국 반도체 공급망의 안전장치로 부상",
-      "summary": "워렌 버핏의 버크셔 해서웨이 자회사(대구텍)가 대구에 텅스텐 분말 제조 시설을 건설하기로 한 투자가 중국의 수출 통제에 대한 결정적인 해결책으로 부상했습니다. 이는 삼성전자와 SK하이닉스의 핵심 소재 공급망을 안정시키는 역할을 할 것입니다.",
-      "investment_implication": "외부 투자를 통해 국가적 공급망 리스크가 해소되면서, 삼성전자와 SK하이닉스의 생산 안정성과 장기 투자 매력이 강화되었습니다.",
-      "evidence_posts": [
-        {
-          "title": "삼성전자와 SK하이닉스가 긴급 공급망 점검을 하는 이유",
-          "url": "https://blog.naver.com/ranto28/224322350093?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-21"
-        }
-      ],
-      "related_decision_codes": [
-        "005930",
-        "000660",
-        "BRK.B"
-      ]
-    },
-    {
-      "id": "INSIGHT-20260622-3",
-      "title": "호르무즈 해협 지정학적 긴장 고조, 해상 운임 불확실성 증대",
-      "summary": "이란의 호르무즈 해협 봉쇄 위협과 미국-이란 간의 통행료/보험료 부과 가능성이 맞물리면서 글로벌 해상 운송의 불확실성이 커지고 있습니다. 이는 유가 및 물류비용의 급등으로 이어질 수 있는 리스크 요인입니다.",
-      "investment_implication": "해상 운송 섹터의 변동성이 확대될 것으로 예상되며, 관련 운임 지수 및 기업들의 주가 추이에 대한 면밀한 관찰이 필요합니다.",
-      "evidence_posts": [
-        {
-          "title": "호르무즈해협 재봉쇄 상황과 통행료 관련 새로운 국면 근황",
-          "url": "https://blog.naver.com/ranto28/224322627044?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-21"
+          "title": "스페이스X를 공모가에 못샀다면 언제쯤 사는게 좋을까?",
+          "url": "https://blog.naver.com/ranto28/224323794586?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-22"
         }
       ],
       "related_decision_codes": []
     }
   ],
-  "portfolio_decisions": [
-    {
-      "name": "삼성전자",
-      "code": "005930",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "action": "보유",
-      "basis": "종목 분석",
-      "decision_date": "2026-06-22",
-      "evidence_posts": [
-        {
-          "title": "삼성전자와 SK하이닉스가 긴급 공급망 점검을 하는 이유",
-          "url": "https://blog.naver.com/ranto28/224322350093?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-21"
-        }
-      ],
-      "source_mentioned": true,
-      "previous_weight": 5.0,
-      "proposed_weight": 5.0,
-      "weight_source": "AI 제안",
-      "change_reason": "기존 보유. 중국발 텅스텐 공급 위기라는 중대한 리스크가 부각되었으나, 동시에 버크셔 해서웨이 자회사의 국내 공장 건설이라는 강력한 해결책이 제시되어 공급망 안정성이 오히려 강화될 것으로 판단. 기존 투자 논리를 지지하여 보유 의견을 유지함.",
-      "allocation_role": "core",
-      "source_scope": "source_named_security",
-      "investment_rationale": "뉴럴링크/테슬라향 파운드리 수주에 이어, 반도체 핵심 소재인 텅스텐 분말의 국내 공급망 확보로 생산 안정성이 강화되어 AI 반도체 시장에서의 경쟁력이 더욱 공고해질 것으로 기대됨.",
-      "current_entry_reason": "기존 보유 종목의 핵심 리스크(공급망)가 해소되는 긍정적인 근거가 발생하여 보유를 지속함.",
-      "key_risks": [
-        "파운드리 수율 문제 발생 가능성",
-        "글로벌 반도체 업황 변동성",
-        "TSMC와의 기술 격차"
-      ],
-      "linked_insight_ids": [
-        "INSIGHT-20260622-1",
-        "INSIGHT-20260622-2"
-      ]
-    },
-    {
-      "name": "SK하이닉스",
-      "code": "000660",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "action": "매수",
-      "basis": "종목 분석",
-      "decision_date": "2026-06-22",
-      "evidence_posts": [
-        {
-          "title": "삼성전자와 SK하이닉스가 긴급 공급망 점검을 하는 이유",
-          "url": "https://blog.naver.com/ranto28/224322350093?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-21"
-        }
-      ],
-      "source_mentioned": true,
-      "previous_weight": null,
-      "proposed_weight": 4.0,
-      "weight_source": "AI 제안",
-      "change_reason": "신규 편입. Watchlist에서 관찰하던 중, 반도체 생산의 핵심 소재인 WF₆ 공급망 위기가 발생했으나, 워렌 버핏의 자회사가 국내에 텅스텐 분말 공장을 건설하며 결정적인 해결책을 제공함. 이로써 HBM 등 첨단 공정의 생산 불확실성이 해소되어 포트폴리오에 편입함.",
-      "allocation_role": "satellite",
-      "source_scope": "source_named_security",
-      "investment_rationale": "중국의 텅스텐 수출 통제 리스크에도 불구하고, 버크셔 해서웨이 자회사의 국내 투자를 통해 안정적인 핵심 원료 공급망을 확보하게 되어 HBM 시장에서의 리더십을 공고히 할 것으로 기대됨.",
-      "current_entry_reason": "핵심 소재 공급망 리스크라는 가장 큰 불확실성이 구체적인 해결책(대구텍 공장 건설)으로 해소되는 전환점이 확인되었기에 지금 편입함.",
-      "key_risks": [
-        "HBM 시장 경쟁 심화",
-        "글로벌 메모리 반도체 업황 변동성",
-        "신규 텅스텐 분말 공장 가동 지연 가능성"
-      ],
-      "linked_insight_ids": [
-        "INSIGHT-20260622-1",
-        "INSIGHT-20260622-2"
-      ]
-    }
-  ],
+  "portfolio_decisions": [],
   "watchlist": [
     {
-      "name": "SK하이닉스",
-      "code": "000660",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-06-22",
-      "evidence_posts": [
-        {
-          "title": "삼성전자와 SK하이닉스가 긴급 공급망 점검을 하는 이유",
-          "url": "https://blog.naver.com/ranto28/224322350093?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-21"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-06-09",
-      "latest_evidence_date": "2026-06-21",
-      "watchlist_duration_days": 13,
-      "portfolio_entry_date": "2026-06-22",
-      "watchlist_closed_date": "2026-06-22",
-      "status": "포트폴리오 편입",
-      "source_scope": "source_named_security",
-      "observation_reason": "포트폴리오 편입 결정. WF₆ 공급망 위기에도 불구하고 버크셔 해서웨이 자회사의 국내 텅스텐 분말 공장 건설로 핵심 리스크가 해소되어 편입 결정."
-    },
-    {
-      "name": "해상운송 섹터",
+      "name": "SpaceX",
       "code": "",
-      "market": "",
-      "asset_type": "sector",
-      "decision_actor": "AI",
-      "basis": "섹터 분석",
-      "decision_date": "2026-06-22",
-      "evidence_posts": [
-        {
-          "title": "호르무즈해협 재봉쇄 상황과 통행료 관련 새로운 국면 근황",
-          "url": "https://blog.naver.com/ranto28/224322627044?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-21"
-        },
-        {
-          "title": "트럼프, 이란과 MOU 전문 공개, 해협이 열리기는 하는데...",
-          "url": "https://blog.naver.com/ranto28/224319486464?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-17"
-        }
-      ],
-      "source_mentioned": false,
-      "watchlist_entry_date": "2026-06-16",
-      "latest_evidence_date": "2026-06-21",
-      "watchlist_duration_days": 6,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "sector_only",
-      "observation_reason": "기존 파나마 운하 및 호르무즈 통행료 리스크에 더해, 이란의 호르무즈 해협 재봉쇄 위협이 발생하여 지정학적 긴장이 고조되고 있음. 이는 글로벌 해상 운임의 변동성을 더욱 증폭시킬 수 있어 관련 기업 식별을 위해 관찰을 지속함."
-    },
-    {
-      "name": "Berkshire Hathaway",
-      "code": "BRK.B",
       "market": "US",
       "asset_type": "stock",
       "decision_actor": "AI",
       "basis": "종목 분석",
-      "decision_date": "2026-06-22",
+      "decision_date": "2026-06-23",
       "evidence_posts": [
         {
-          "title": "삼성전자와 SK하이닉스가 긴급 공급망 점검을 하는 이유",
-          "url": "https://blog.naver.com/ranto28/224322350093?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-21"
+          "title": "스페이스X를 공모가에 못샀다면 언제쯤 사는게 좋을까?",
+          "url": "https://blog.naver.com/ranto28/224323794586?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-22"
+        },
+        {
+          "title": "미래에셋증권이 스페이스 X 주식을 1주도 못 받은 비밀",
+          "url": "https://blog.naver.com/ranto28/224315627964?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-14"
+        },
+        {
+          "title": "스페이스X 근황 (feat 상장, 우주데이터센터)",
+          "url": "https://blog.naver.com/ranto28/224312456368?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-10"
         }
       ],
       "source_mentioned": true,
-      "watchlist_entry_date": "2026-06-22",
-      "latest_evidence_date": "2026-06-21",
-      "watchlist_duration_days": 0,
+      "watchlist_entry_date": "2026-06-12",
+      "latest_evidence_date": "2026-06-22",
+      "watchlist_duration_days": 11,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
       "source_scope": "source_named_security",
-      "observation_reason": "자회사 대구텍을 통해 반도체 공급망의 핵심 병목인 텅스텐 분말 국내 생산에 투자하는 등, 지정학적 리스크를 기회로 활용하는 탁월한 산업 통찰력을 보여줌. 향후 유사한 전략적 투자를 관찰할 필요가 있음."
+      "observation_reason": "비상장 기업. 기존의 독보적인 시장 지위에 더해, 상장 시 나스닥 100 조기 편입 규칙의 적용을 받아 강력한 패시브 자금 유입이 예상됨. 낮은 유동주식 비율과 결합된 이 수급 이벤트는 상장 초기에 중요한 투자 기회를 제공할 수 있어 IPO 추진 여부를 면밀히 관찰할 필요가 있음."
     }
   ]
 }
