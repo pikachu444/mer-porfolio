@@ -1152,6 +1152,131 @@
       "status": "관심",
       "source_scope": "source_named_security",
       "observation_reason": "자회사 대구텍을 통해 반도체 공급망의 핵심 병목인 텅스텐 분말 국내 생산에 투자하는 등, 지정학적 리스크를 기회로 활용하는 탁월한 산업 통찰력을 보여줌. 향후 유사한 전략적 투자를 관찰할 필요가 있음."
+    },
+    {
+      "name": "양자컴퓨팅 및 양자내성암호(PQC) 섹터",
+      "code": "",
+      "market": "",
+      "asset_type": "sector",
+      "decision_actor": "AI",
+      "basis": "섹터 분석",
+      "decision_date": "2026-06-24",
+      "evidence_posts": [
+        {
+          "title": "트럼프, 새로운 행정명령에 서명하다. (feat 양자내성암호,양자컴)",
+          "url": "https://blog.naver.com/ranto28/224324165623?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-22"
+        }
+      ],
+      "source_mentioned": false,
+      "watchlist_entry_date": "2026-06-24",
+      "latest_evidence_date": "2026-06-22",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "sector_only",
+      "observation_reason": "미국 정부의 행정명령을 통해 PQC 전환이 가속화되고 양자컴퓨터 개발에 대한 대규모 투자가 시작됨. 이는 관련 산업의 본격적인 성장 신호탄으로, 핵심 수혜 기업을 식별하기 위한 관찰이 필요합니다."
+    },
+    {
+      "name": "IBM",
+      "code": "IBM",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-24",
+      "evidence_posts": [
+        {
+          "title": "트럼프, 새로운 행정명령에 서명하다. (feat 양자내성암호,양자컴)",
+          "url": "https://blog.naver.com/ranto28/224324165623?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-22"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-06-24",
+      "latest_evidence_date": "2026-06-22",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "미국 정부의 'QC-ADDS' 프로젝트와 관련하여 분사기업이 10억 달러의 대규모 투자를 유치하는 등 양자컴퓨팅 분야의 핵심 플레이어로 부상함. 정부와의 긴밀한 협력 관계와 기술 리더십을 관찰할 필요가 있습니다."
+    },
+    {
+      "name": "GlobalFoundries",
+      "code": "GFS",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-24",
+      "evidence_posts": [
+        {
+          "title": "트럼프, 새로운 행정명령에 서명하다. (feat 양자내성암호,양자컴)",
+          "url": "https://blog.naver.com/ranto28/224324165623?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-22"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-06-24",
+      "latest_evidence_date": "2026-06-22",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "미국 정부의 양자컴퓨팅 관련 투자에서 3억 7,500만 달러를 배정받은 반도체 파운드리 기업. 양자컴퓨터 하드웨어 생산 생태계에서 차지할 역할을 관찰할 필요가 있습니다."
+    },
+    {
+      "name": "Rigetti Computing",
+      "code": "RGTI",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-24",
+      "evidence_posts": [
+        {
+          "title": "트럼프, 새로운 행정명령에 서명하다. (feat 양자내성암호,양자컴)",
+          "url": "https://blog.naver.com/ranto28/224324165623?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-22"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-06-24",
+      "latest_evidence_date": "2026-06-22",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "미국 정부의 양자컴퓨팅 관련 투자에서 1억 달러를 배정받은 기업 중 하나. 정부 지원을 통한 기술 개발 및 상용화 가능성을 관찰할 필요가 있습니다."
+    },
+    {
+      "name": "D-Wave Quantum",
+      "code": "QBTS",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-24",
+      "evidence_posts": [
+        {
+          "title": "트럼프, 새로운 행정명령에 서명하다. (feat 양자내성암호,양자컴)",
+          "url": "https://blog.naver.com/ranto28/224324165623?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-22"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-06-24",
+      "latest_evidence_date": "2026-06-22",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "미국 정부의 양자컴퓨팅 관련 투자에서 1억 달러를 배정받은 기업 중 하나. 정부 지원을 통한 기술 개발 및 상용화 가능성을 관찰할 필요가 있습니다."
     }
   ],
   "closed_positions": [
@@ -3796,18 +3921,40 @@
   ],
   "insights": [
     {
-      "id": "INSIGHT-20260623-1",
-      "title": "스페이스X, 나스닥 100 조기 편입에 따른 강력한 수급 모멘텀 발생 가능성",
-      "summary": "스페이스X는 상장 시, 시가총액 상위 기업에 대한 나스닥의 완화된 규정에 따라 15거래일 만에 나스닥 100 지수에 조기 편입될 가능성이 높습니다. 4.3%에 불과한 낮은 유동주식 비율과 맞물려, 지수 추종 패시브 펀드의 대규모 강제 매수가 예상되어 상장 초기 주가에 강력한 상승 압력으로 작용할 수 있습니다.",
-      "investment_implication": "실제 상장 시, 지수 편입 이벤트가 본격화되기 전이 스페이스X에 대한 핵심적인 투자 기회가 될 수 있습니다.",
+      "id": "INSIGHT-20260624-1",
+      "title": "기관 리밸런싱과 개인 유동성 축소로 인한 국내 증시 단기 변동성 확대",
+      "summary": "외국인 및 국내 연기금이 월/분기/반기 말을 맞아 기계적인 리밸런싱 매도에 나서고 있으며, 은행권의 신용대출 규제 강화로 개인 투자자의 매수 여력이 약화되었습니다. 이 두 가지 수급 요인이 결합되어 삼성전자, SK하이닉스 등 대형주를 중심으로 시장 전반의 단기 변동성을 키우고 있습니다.",
+      "investment_implication": "현재 시장 하락은 펀더멘털 훼손보다는 수급 이슈에 기인하므로, 월말까지 변동성 장세가 이어질 수 있음을 감안한 신중한 접근이 필요합니다.",
       "evidence_posts": [
         {
-          "title": "스페이스X를 공모가에 못샀다면 언제쯤 사는게 좋을까?",
-          "url": "https://blog.naver.com/ranto28/224323794586?fromRss=true&trackingCode=rss",
+          "title": "오늘 국장은 왜 빠졌을까? 내일은?",
+          "url": "https://blog.naver.com/ranto28/224324723728?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-23"
+        }
+      ],
+      "related_decision_codes": [
+        "005930",
+        "000660"
+      ]
+    },
+    {
+      "id": "INSIGHT-20260624-2",
+      "title": "미국, 양자컴퓨팅 및 양자내성암호(PQC) 개발 국가안보 과제로 격상 및 투자 가속화",
+      "summary": "트럼프 행정부는 행정명령을 통해 연방기관의 PQC 전환 시한을 2031년으로 단축하고, 2028년까지 국가 주도 양자컴퓨터 개발을 지시했습니다. 이는 관련 기술을 국가안보 자산으로 격상하고, IBM, GlobalFoundries 등 민간 기업에 대한 대규모 투자를 동반합니다.",
+      "investment_implication": "미국 정부의 정책적 지원과 대규모 투자는 양자컴퓨팅 및 PQC 관련 기업들의 본격적인 성장기가 시작되었음을 시사합니다.",
+      "evidence_posts": [
+        {
+          "title": "트럼프, 새로운 행정명령에 서명하다. (feat 양자내성암호,양자컴)",
+          "url": "https://blog.naver.com/ranto28/224324165623?fromRss=true&trackingCode=rss",
           "published_date": "2026-06-22"
         }
       ],
-      "related_decision_codes": []
+      "related_decision_codes": [
+        "IBM",
+        "GFS",
+        "RGTI",
+        "QBTS"
+      ]
     }
   ],
   "last_rebalanced_date": "2026-06-15"
