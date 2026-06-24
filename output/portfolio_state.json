@@ -264,10 +264,15 @@
       "market": "US",
       "asset_type": "stock",
       "decision_actor": "AI",
-      "action": "비중축소",
-      "basis": "종목 분석",
-      "decision_date": "2026-06-15",
+      "action": "보유",
+      "basis": "이전 판단 유지",
+      "decision_date": "2026-06-25",
       "evidence_posts": [
+        {
+          "title": "스페이스X의 우주 데이터센터, 새로 알려진 사실",
+          "url": "https://blog.naver.com/ranto28/224323682143?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-24"
+        },
         {
           "title": "스페이스X 근황 (feat 상장, 우주데이터센터)",
           "url": "https://blog.naver.com/ranto28/224312456368?fromRss=true&trackingCode=rss",
@@ -275,10 +280,10 @@
         }
       ],
       "source_mentioned": false,
-      "previous_weight": 5.0,
+      "previous_weight": 4.0,
       "proposed_weight": 4.0,
       "weight_source": "AI 제안",
-      "change_reason": "리밸런싱 실행. 스페이스X의 우주 데이터센터 계획 가속화 등 민간 우주 산업의 빠른 성장이 확인되어 '우주 경제' 테마의 수혜주로서 투자 매력이 강화되었으나, 시장 불확실성 증대에 대응하고 목표 현금 비중(20%)을 확보하기 위해 위성(satellite) 포지션의 비중을 4%로 축소 조정합니다.",
+      "change_reason": "기존 보유. 스페이스X의 우주 데이터센터 계획이 구체화되면서 민간 우주 산업의 폭발적 성장 가능성이 재확인됨. 이는 '우주 경제' 테마의 핵심 수혜주 중 하나인 동사의 장기 투자 논리를 더욱 강화하는 근거로 작용하여 보유 의견을 유지함.",
       "source_scope": "previous_decision",
       "investment_rationale": "미국의 우주 개발 및 국방 예산의 안정적인 수혜와 더불어, 스페이스X와 같은 민간 기업이 주도하는 상업 우주 시장의 폭발적 성장에 따른 인프라 및 기술 수요 증가의 수혜를 입을 것으로 기대됨.",
       "current_entry_reason": "기존 보유 종목. 민간 우주 산업의 성장이 가속화되면서 동사의 장기 성장 스토리가 더욱 견고해졌음을 확인함.",
@@ -288,8 +293,7 @@
         "민간 우주 기업과의 경쟁 심화"
       ],
       "linked_insight_ids": [
-        "INSIGHT-20260615-6",
-        "INSIGHT-20260615-5"
+        "INSIGHT-20260625-1"
       ],
       "allocation_role": "satellite",
       "allocation_role_source": "rebalance_review_2026-06-15",
@@ -945,8 +949,13 @@
       "asset_type": "stock",
       "decision_actor": "AI",
       "basis": "종목 분석",
-      "decision_date": "2026-06-23",
+      "decision_date": "2026-06-25",
       "evidence_posts": [
+        {
+          "title": "스페이스X의 우주 데이터센터, 새로 알려진 사실",
+          "url": "https://blog.naver.com/ranto28/224323682143?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-24"
+        },
         {
           "title": "스페이스X를 공모가에 못샀다면 언제쯤 사는게 좋을까?",
           "url": "https://blog.naver.com/ranto28/224323794586?fromRss=true&trackingCode=rss",
@@ -965,13 +974,13 @@
       ],
       "source_mentioned": true,
       "watchlist_entry_date": "2026-06-12",
-      "latest_evidence_date": "2026-06-22",
-      "watchlist_duration_days": 11,
+      "latest_evidence_date": "2026-06-24",
+      "watchlist_duration_days": 13,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
       "source_scope": "source_named_security",
-      "observation_reason": "비상장 기업. 기존의 독보적인 시장 지위에 더해, 상장 시 나스닥 100 조기 편입 규칙의 적용을 받아 강력한 패시브 자금 유입이 예상됨. 낮은 유동주식 비율과 결합된 이 수급 이벤트는 상장 초기에 중요한 투자 기회를 제공할 수 있어 IPO 추진 여부를 면밀히 관찰할 필요가 있음."
+      "observation_reason": "비상장 기업. 기존 독보적 시장 지위에 더해, 스타십 기반의 초저비용 발사를 전제로 한 테라와트급 우주 데이터센터 구축이라는 구체적이고 거대한 비전이 확인됨. 이 계획의 실현 가능성과 향후 IPO 추진 여부를 면밀히 관찰할 필요가 있음."
     },
     {
       "name": "가스 터빈 / 분산 발전 섹터",
@@ -3917,43 +3926,88 @@
         "INSIGHT-20260622-1",
         "INSIGHT-20260622-2"
       ]
+    },
+    {
+      "name": "Northrop Grumman",
+      "code": "NOC",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "보유",
+      "basis": "이전 판단 유지",
+      "decision_date": "2026-06-25",
+      "evidence_posts": [
+        {
+          "title": "스페이스X의 우주 데이터센터, 새로 알려진 사실",
+          "url": "https://blog.naver.com/ranto28/224323682143?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-24"
+        },
+        {
+          "title": "스페이스X 근황 (feat 상장, 우주데이터센터)",
+          "url": "https://blog.naver.com/ranto28/224312456368?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-10"
+        }
+      ],
+      "source_mentioned": false,
+      "previous_weight": 4.0,
+      "proposed_weight": 4.0,
+      "weight_source": "AI 제안",
+      "change_reason": "기존 보유. 스페이스X의 우주 데이터센터 계획이 구체화되면서 민간 우주 산업의 폭발적 성장 가능성이 재확인됨. 이는 '우주 경제' 테마의 핵심 수혜주 중 하나인 동사의 장기 투자 논리를 더욱 강화하는 근거로 작용하여 보유 의견을 유지함.",
+      "allocation_role": "satellite",
+      "source_scope": "previous_decision",
+      "investment_rationale": "미국의 우주 개발 및 국방 예산의 안정적인 수혜와 더불어, 스페이스X와 같은 민간 기업이 주도하는 상업 우주 시장의 폭발적 성장에 따른 인프라 및 기술 수요 증가의 수혜를 입을 것으로 기대됨.",
+      "current_entry_reason": "기존 보유 종목. 민간 우주 산업의 성장이 가속화되면서 동사의 장기 성장 스토리가 더욱 견고해졌음을 확인함.",
+      "key_risks": [
+        "미국 정부의 우주 탐사 및 국방 예산 삭감",
+        "기술 개발 지연 및 실패 위험",
+        "민간 우주 기업과의 경쟁 심화"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260625-1"
+      ]
     }
   ],
   "insights": [
     {
-      "id": "INSIGHT-20260624-1",
-      "title": "기관 리밸런싱과 개인 유동성 축소로 인한 국내 증시 단기 변동성 확대",
-      "summary": "외국인 및 국내 연기금이 월/분기/반기 말을 맞아 기계적인 리밸런싱 매도에 나서고 있으며, 은행권의 신용대출 규제 강화로 개인 투자자의 매수 여력이 약화되었습니다. 이 두 가지 수급 요인이 결합되어 삼성전자, SK하이닉스 등 대형주를 중심으로 시장 전반의 단기 변동성을 키우고 있습니다.",
-      "investment_implication": "현재 시장 하락은 펀더멘털 훼손보다는 수급 이슈에 기인하므로, 월말까지 변동성 장세가 이어질 수 있음을 감안한 신중한 접근이 필요합니다.",
+      "id": "INSIGHT-20260625-1",
+      "title": "스페이스X, 우주 데이터센터 구축 계획 구체화로 장기 성장 비전 강화",
+      "summary": "스페이스X는 스타십의 획기적인 발사 비용 절감을 전제로, 10만~100만 기의 위성을 활용한 테라와트급 우주 데이터센터 구축 계획을 구체화했습니다. 이는 단순 통신망을 넘어선 거대한 우주 컴퓨팅 인프라 구축을 목표로 합니다.",
+      "investment_implication": "스페이스X의 비전은 우주 경제의 폭발적 성장을 예고하며, 관련 인프라, 부품, 기술을 보유한 기업들의 장기적인 수혜가 기대됩니다.",
       "evidence_posts": [
         {
-          "title": "오늘 국장은 왜 빠졌을까? 내일은?",
-          "url": "https://blog.naver.com/ranto28/224324723728?fromRss=true&trackingCode=rss",
+          "title": "스페이스X의 우주 데이터센터, 새로 알려진 사실",
+          "url": "https://blog.naver.com/ranto28/224323682143?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-24"
+        }
+      ],
+      "related_decision_codes": [
+        "NOC",
+        "SpaceX"
+      ]
+    },
+    {
+      "id": "INSIGHT-20260625-2",
+      "title": "MSCI 선진국 지수 편입 실패, 단기 실망감 속 외환시장 개방 리스크 부각",
+      "summary": "한국 증시의 MSCI 선진국 지수 관찰대상국 등재가 또다시 실패했습니다. 이는 외환시장 접근성 등 구조적 문제가 아직 해결되지 않았기 때문이며, 향후 추진될 외환시장 개방은 자본 유출입 변동성을 키울 수 있는 잠재적 위험 요인입니다.",
+      "investment_implication": "단기적으로 외국인 수급에 대한 기대감이 꺾일 수 있으며, 장기적으로는 환율 변동성 확대가 국내 증시 투자 시 고려해야 할 리스크로 작용할 것입니다.",
+      "evidence_posts": [
+        {
+          "title": "한국이 MSCI  선진국 지수 편입에 실패한 이유",
+          "url": "https://blog.naver.com/ranto28/224325319296?fromRss=true&trackingCode=rss",
           "published_date": "2026-06-23"
         }
       ],
       "related_decision_codes": [
+        "006220",
+        "001440",
+        "010140",
+        "011070",
+        "454910",
+        "005380",
+        "035420",
+        "042660",
         "005930",
         "000660"
-      ]
-    },
-    {
-      "id": "INSIGHT-20260624-2",
-      "title": "미국, 양자컴퓨팅 및 양자내성암호(PQC) 개발 국가안보 과제로 격상 및 투자 가속화",
-      "summary": "트럼프 행정부는 행정명령을 통해 연방기관의 PQC 전환 시한을 2031년으로 단축하고, 2028년까지 국가 주도 양자컴퓨터 개발을 지시했습니다. 이는 관련 기술을 국가안보 자산으로 격상하고, IBM, GlobalFoundries 등 민간 기업에 대한 대규모 투자를 동반합니다.",
-      "investment_implication": "미국 정부의 정책적 지원과 대규모 투자는 양자컴퓨팅 및 PQC 관련 기업들의 본격적인 성장기가 시작되었음을 시사합니다.",
-      "evidence_posts": [
-        {
-          "title": "트럼프, 새로운 행정명령에 서명하다. (feat 양자내성암호,양자컴)",
-          "url": "https://blog.naver.com/ranto28/224324165623?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-22"
-        }
-      ],
-      "related_decision_codes": [
-        "IBM",
-        "GFS",
-        "RGTI",
-        "QBTS"
       ]
     }
   ],
