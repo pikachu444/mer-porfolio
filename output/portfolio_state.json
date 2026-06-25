@@ -636,10 +636,15 @@
       "market": "KR",
       "asset_type": "stock",
       "decision_actor": "AI",
-      "action": "매수",
+      "action": "보유",
       "basis": "종목 분석",
-      "decision_date": "2026-06-22",
+      "decision_date": "2026-06-26",
       "evidence_posts": [
+        {
+          "title": "SK하이닉스가 7월 10일 나스닥에 상장(ADR)한다. 어떤 영향이?",
+          "url": "https://blog.naver.com/ranto28/224326515853?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-24"
+        },
         {
           "title": "삼성전자와 SK하이닉스가 긴급 공급망 점검을 하는 이유",
           "url": "https://blog.naver.com/ranto28/224322350093?fromRss=true&trackingCode=rss",
@@ -647,22 +652,22 @@
         }
       ],
       "source_mentioned": true,
-      "previous_weight": null,
+      "previous_weight": 4.0,
       "proposed_weight": 4.0,
       "weight_source": "AI 제안",
-      "change_reason": "신규 편입. Watchlist에서 관찰하던 중, 반도체 생산의 핵심 소재인 WF₆ 공급망 위기가 발생했으나, 워렌 버핏의 자회사가 국내에 텅스텐 분말 공장을 건설하며 결정적인 해결책을 제공함. 이로써 HBM 등 첨단 공정의 생산 불확실성이 해소되어 포트폴리오에 편입함.",
+      "change_reason": "기존 보유. 나스닥 ADR 상장을 통해 대규모 투자 재원을 확보하고 '코리아 디스카운트' 해소의 발판을 마련함. 이는 HBM 시장 리더십을 공고히 하고 기업가치 재평가를 이끌어낼 매우 강력한 긍정적 모멘텀으로, 기존 투자 근거를 대폭 강화하여 보유 의견을 유지함.",
       "allocation_role": "satellite",
       "source_scope": "source_named_security",
-      "investment_rationale": "중국의 텅스텐 수출 통제 리스크에도 불구하고, 버크셔 해서웨이 자회사의 국내 투자를 통해 안정적인 핵심 원료 공급망을 확보하게 되어 HBM 시장에서의 리더십을 공고히 할 것으로 기대됨.",
-      "current_entry_reason": "핵심 소재 공급망 리스크라는 가장 큰 불확실성이 구체적인 해결책(대구텍 공장 건설)으로 해소되는 전환점이 확인되었기에 지금 편입함.",
+      "investment_rationale": "중국발 공급망 리스크 해소에 더해, 나스닥 상장을 통한 대규모 자금 조달로 용인 클러스터 등 미래 성장 동력을 확보하고, 기업가치 재평가 가능성이 높아져 HBM 시장 리더십이 더욱 공고해질 것으로 기대됨.",
+      "current_entry_reason": "기존 보유 포지션에 대해, 나스닥 상장이라는 중대한 긍정적 이벤트가 발생하여 장기 성장성과 투자 매력이 크게 강화되었음을 확인함.",
       "key_risks": [
         "HBM 시장 경쟁 심화",
         "글로벌 메모리 반도체 업황 변동성",
-        "신규 텅스텐 분말 공장 가동 지연 가능성"
+        "신규 텅스텐 분말 공장 가동 지연 가능성",
+        "미국 시장의 집단소송 리스크"
       ],
       "linked_insight_ids": [
-        "INSIGHT-20260622-1",
-        "INSIGHT-20260622-2"
+        "INSIGHT-20260626-2"
       ]
     }
   ],
@@ -3965,48 +3970,80 @@
       "linked_insight_ids": [
         "INSIGHT-20260625-1"
       ]
+    },
+    {
+      "name": "SK하이닉스",
+      "code": "000660",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "보유",
+      "basis": "종목 분석",
+      "decision_date": "2026-06-26",
+      "evidence_posts": [
+        {
+          "title": "SK하이닉스가 7월 10일 나스닥에 상장(ADR)한다. 어떤 영향이?",
+          "url": "https://blog.naver.com/ranto28/224326515853?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-24"
+        },
+        {
+          "title": "삼성전자와 SK하이닉스가 긴급 공급망 점검을 하는 이유",
+          "url": "https://blog.naver.com/ranto28/224322350093?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-21"
+        }
+      ],
+      "source_mentioned": true,
+      "previous_weight": 4.0,
+      "proposed_weight": 4.0,
+      "weight_source": "AI 제안",
+      "change_reason": "기존 보유. 나스닥 ADR 상장을 통해 대규모 투자 재원을 확보하고 '코리아 디스카운트' 해소의 발판을 마련함. 이는 HBM 시장 리더십을 공고히 하고 기업가치 재평가를 이끌어낼 매우 강력한 긍정적 모멘텀으로, 기존 투자 근거를 대폭 강화하여 보유 의견을 유지함.",
+      "allocation_role": "satellite",
+      "source_scope": "source_named_security",
+      "investment_rationale": "중국발 공급망 리스크 해소에 더해, 나스닥 상장을 통한 대규모 자금 조달로 용인 클러스터 등 미래 성장 동력을 확보하고, 기업가치 재평가 가능성이 높아져 HBM 시장 리더십이 더욱 공고해질 것으로 기대됨.",
+      "current_entry_reason": "기존 보유 포지션에 대해, 나스닥 상장이라는 중대한 긍정적 이벤트가 발생하여 장기 성장성과 투자 매력이 크게 강화되었음을 확인함.",
+      "key_risks": [
+        "HBM 시장 경쟁 심화",
+        "글로벌 메모리 반도체 업황 변동성",
+        "신규 텅스텐 분말 공장 가동 지연 가능성",
+        "미국 시장의 집단소송 리스크"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260626-2"
+      ]
     }
   ],
   "insights": [
     {
-      "id": "INSIGHT-20260625-1",
-      "title": "스페이스X, 우주 데이터센터 구축 계획 구체화로 장기 성장 비전 강화",
-      "summary": "스페이스X는 스타십의 획기적인 발사 비용 절감을 전제로, 10만~100만 기의 위성을 활용한 테라와트급 우주 데이터센터 구축 계획을 구체화했습니다. 이는 단순 통신망을 넘어선 거대한 우주 컴퓨팅 인프라 구축을 목표로 합니다.",
-      "investment_implication": "스페이스X의 비전은 우주 경제의 폭발적 성장을 예고하며, 관련 인프라, 부품, 기술을 보유한 기업들의 장기적인 수혜가 기대됩니다.",
+      "id": "INSIGHT-20260626-1",
+      "title": "연준의 잠재적 인플레이션 지표 변경 가능성 ('골대 옮기기')",
+      "summary": "최근 PCE 지표가 높게 나왔으나, 차기 연준 의장 후보인 케빈 워시가 선호하는 '절사 평균 PCE'는 목표치에 근접해 있습니다. 이는 향후 연준이 인플레이션 목표 달성을 위해 주요 지표를 변경하며 예상보다 완화적인 통화정책을 펼칠 가능성을 시사합니다.",
+      "investment_implication": "고금리 장기화에 대한 시장의 우려를 완화시켜, 금리에 민감한 성장주 및 위험자산에 긍정적으로 작용할 수 있습니다.",
       "evidence_posts": [
         {
-          "title": "스페이스X의 우주 데이터센터, 새로 알려진 사실",
-          "url": "https://blog.naver.com/ranto28/224323682143?fromRss=true&trackingCode=rss",
+          "title": "PCE가 4.1%로 나왔다. 이런데도 금리 인하 시나리오가 있다면?",
+          "url": "https://blog.naver.com/ranto28/224327359398?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-25"
+        }
+      ],
+      "related_decision_codes": [
+        "454910",
+        "AA",
+        "011070"
+      ]
+    },
+    {
+      "id": "INSIGHT-20260626-2",
+      "title": "SK하이닉스 나스닥 ADR 상장, '코리아 디스카운트' 해소 및 성장 재원 확보",
+      "summary": "SK하이닉스가 ADR 발행을 통해 나스닥에 상장하여 약 300억 달러의 대규모 자금을 조달합니다. 이는 용인 반도체 클러스터 등 핵심 시설 투자를 가속화하고, 미국 시장 직접 상장을 통해 기업가치 재평가를 이끌어낼 중요한 모멘텀입니다.",
+      "investment_implication": "대규모 투자 재원 확보로 HBM 시장 리더십이 공고해지고, '코리아 디스카운트' 해소 기대감으로 주가 상승 동력이 강화될 것입니다.",
+      "evidence_posts": [
+        {
+          "title": "SK하이닉스가 7월 10일 나스닥에 상장(ADR)한다. 어떤 영향이?",
+          "url": "https://blog.naver.com/ranto28/224326515853?fromRss=true&trackingCode=rss",
           "published_date": "2026-06-24"
         }
       ],
       "related_decision_codes": [
-        "NOC",
-        "SpaceX"
-      ]
-    },
-    {
-      "id": "INSIGHT-20260625-2",
-      "title": "MSCI 선진국 지수 편입 실패, 단기 실망감 속 외환시장 개방 리스크 부각",
-      "summary": "한국 증시의 MSCI 선진국 지수 관찰대상국 등재가 또다시 실패했습니다. 이는 외환시장 접근성 등 구조적 문제가 아직 해결되지 않았기 때문이며, 향후 추진될 외환시장 개방은 자본 유출입 변동성을 키울 수 있는 잠재적 위험 요인입니다.",
-      "investment_implication": "단기적으로 외국인 수급에 대한 기대감이 꺾일 수 있으며, 장기적으로는 환율 변동성 확대가 국내 증시 투자 시 고려해야 할 리스크로 작용할 것입니다.",
-      "evidence_posts": [
-        {
-          "title": "한국이 MSCI  선진국 지수 편입에 실패한 이유",
-          "url": "https://blog.naver.com/ranto28/224325319296?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-23"
-        }
-      ],
-      "related_decision_codes": [
-        "006220",
-        "001440",
-        "010140",
-        "011070",
-        "454910",
-        "005380",
-        "035420",
-        "042660",
-        "005930",
         "000660"
       ]
     }
