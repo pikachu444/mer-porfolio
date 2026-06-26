@@ -1,83 +1,100 @@
 {
-  "analysis_date": "2026-06-26",
+  "analysis_date": "2026-06-27",
   "run_type": "regular",
   "insights": [
     {
-      "id": "INSIGHT-20260626-1",
-      "title": "연준의 잠재적 인플레이션 지표 변경 가능성 ('골대 옮기기')",
-      "summary": "최근 PCE 지표가 높게 나왔으나, 차기 연준 의장 후보인 케빈 워시가 선호하는 '절사 평균 PCE'는 목표치에 근접해 있습니다. 이는 향후 연준이 인플레이션 목표 달성을 위해 주요 지표를 변경하며 예상보다 완화적인 통화정책을 펼칠 가능성을 시사합니다.",
-      "investment_implication": "고금리 장기화에 대한 시장의 우려를 완화시켜, 금리에 민감한 성장주 및 위험자산에 긍정적으로 작용할 수 있습니다.",
+      "id": "INSIGHT-20260627-1",
+      "title": "외국인 반기말 리밸런싱으로 인한 국내 증시 단기 변동성 확대",
+      "summary": "글로벌 연기금 및 패시브 펀드의 반기말 리밸런싱으로 인해 삼성전자, SK하이닉스 등 주가가 상승한 국내 주식에 대한 기계적인 매도 압력이 6월 말까지 지속될 것으로 분석됩니다. 이는 펀더멘털 훼손이 아닌 기술적 수급 요인에 따른 단기 변동성입니다.",
+      "investment_implication": "최근 국내 증시 하락은 단기 수급 이슈일 가능성이 높으므로, 펀더멘털이 견고한 종목에 대한 저가 매수 기회로 작용할 수 있습니다.",
       "evidence_posts": [
         {
-          "title": "PCE가 4.1%로 나왔다. 이런데도 금리 인하 시나리오가 있다면?",
-          "url": "https://blog.naver.com/ranto28/224327359398?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-25"
+          "title": "26일 국장은 왜 빠졌을까 A/S (feat 리벨런싱이 끝났다고?)",
+          "url": "https://blog.naver.com/ranto28/224328348822?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-26"
         }
       ],
       "related_decision_codes": [
-        "454910",
-        "AA",
-        "011070"
+        "005930",
+        "000660"
       ]
     },
     {
-      "id": "INSIGHT-20260626-2",
-      "title": "SK하이닉스 나스닥 ADR 상장, '코리아 디스카운트' 해소 및 성장 재원 확보",
-      "summary": "SK하이닉스가 ADR 발행을 통해 나스닥에 상장하여 약 300억 달러의 대규모 자금을 조달합니다. 이는 용인 반도체 클러스터 등 핵심 시설 투자를 가속화하고, 미국 시장 직접 상장을 통해 기업가치 재평가를 이끌어낼 중요한 모멘텀입니다.",
-      "investment_implication": "대규모 투자 재원 확보로 HBM 시장 리더십이 공고해지고, '코리아 디스카운트' 해소 기대감으로 주가 상승 동력이 강화될 것입니다.",
+      "id": "INSIGHT-20260627-2",
+      "title": "중동 신규 무역 회랑 경쟁: IMEC 대항 '헤자즈 철도' 부상",
+      "summary": "미국 주도의 IMEC 프로젝트가 지연되는 가운데, 터키가 주도하고 사우디아라비아가 참여하는 '헤자즈 철도' 프로젝트가 호르무즈 해협의 대안 경로로 부상하고 있습니다. 이는 중동 내 무역 경로를 둘러싼 새로운 지정학적 경쟁을 촉발하고 있습니다.",
+      "investment_implication": "새로운 육상 무역로 개발은 장기적으로 글로벌 물류 지형을 바꾸고 관련 철도 및 인프라 산업에 새로운 기회를 창출할 수 있습니다.",
       "evidence_posts": [
         {
-          "title": "SK하이닉스가 7월 10일 나스닥에 상장(ADR)한다. 어떤 영향이?",
-          "url": "https://blog.naver.com/ranto28/224326515853?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-24"
+          "title": "중동에서 시작되는 철도 노선 전쟁 (feat 네타냐후가 바빠진 이유)",
+          "url": "https://blog.naver.com/ranto28/224327635026?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-25"
         }
       ],
-      "related_decision_codes": [
-        "000660"
-      ]
+      "related_decision_codes": []
     }
   ],
-  "portfolio_decisions": [
+  "portfolio_decisions": [],
+  "watchlist": [
     {
-      "name": "SK하이닉스",
-      "code": "000660",
-      "market": "KR",
-      "asset_type": "stock",
+      "name": "해상운송 섹터",
+      "code": "",
+      "market": "",
+      "asset_type": "sector",
       "decision_actor": "AI",
-      "action": "보유",
-      "basis": "종목 분석",
-      "decision_date": "2026-06-26",
+      "basis": "섹터 분석",
+      "decision_date": "2026-06-27",
       "evidence_posts": [
         {
-          "title": "SK하이닉스가 7월 10일 나스닥에 상장(ADR)한다. 어떤 영향이?",
-          "url": "https://blog.naver.com/ranto28/224326515853?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-24"
+          "title": "중동에서 시작되는 철도 노선 전쟁 (feat 네타냐후가 바빠진 이유)",
+          "url": "https://blog.naver.com/ranto28/224327635026?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-25"
         },
         {
-          "title": "삼성전자와 SK하이닉스가 긴급 공급망 점검을 하는 이유",
-          "url": "https://blog.naver.com/ranto28/224322350093?fromRss=true&trackingCode=rss",
+          "title": "호르무즈해협 재봉쇄 상황과 통행료 관련 새로운 국면 근황",
+          "url": "https://blog.naver.com/ranto28/224322627044?fromRss=true&trackingCode=rss",
           "published_date": "2026-06-21"
+        },
+        {
+          "title": "트럼프, 이란과 MOU 전문 공개, 해협이 열리기는 하는데...",
+          "url": "https://blog.naver.com/ranto28/224319486464?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-17"
         }
       ],
-      "source_mentioned": true,
-      "previous_weight": 4.0,
-      "proposed_weight": 4.0,
-      "weight_source": "AI 제안",
-      "change_reason": "기존 보유. 나스닥 ADR 상장을 통해 대규모 투자 재원을 확보하고 '코리아 디스카운트' 해소의 발판을 마련함. 이는 HBM 시장 리더십을 공고히 하고 기업가치 재평가를 이끌어낼 매우 강력한 긍정적 모멘텀으로, 기존 투자 근거를 대폭 강화하여 보유 의견을 유지함.",
-      "allocation_role": "satellite",
-      "source_scope": "source_named_security",
-      "investment_rationale": "중국발 공급망 리스크 해소에 더해, 나스닥 상장을 통한 대규모 자금 조달로 용인 클러스터 등 미래 성장 동력을 확보하고, 기업가치 재평가 가능성이 높아져 HBM 시장 리더십이 더욱 공고해질 것으로 기대됨.",
-      "current_entry_reason": "기존 보유 포지션에 대해, 나스닥 상장이라는 중대한 긍정적 이벤트가 발생하여 장기 성장성과 투자 매력이 크게 강화되었음을 확인함.",
-      "key_risks": [
-        "HBM 시장 경쟁 심화",
-        "글로벌 메모리 반도체 업황 변동성",
-        "신규 텅스텐 분말 공장 가동 지연 가능성",
-        "미국 시장의 집단소송 리스크"
+      "source_mentioned": false,
+      "watchlist_entry_date": "2026-06-16",
+      "latest_evidence_date": "2026-06-25",
+      "watchlist_duration_days": 11,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "sector_only",
+      "observation_reason": "기존 파나마 운하 및 호르무즈 통행료 리스크에 더해, 이란의 호르무즈 해협 재봉쇄 위협과 이를 우회하려는 대규모 육상 철도 프로젝트(헤자즈 철도) 경쟁이 심화되고 있음. 이는 장기적으로 글로벌 해상 운임 및 무역 경로의 구조적 변화를 야기할 수 있어 관련 기업 식별을 위해 관찰을 지속함."
+    },
+    {
+      "name": "중동 철도 인프라 섹터",
+      "code": "",
+      "market": "",
+      "asset_type": "sector",
+      "decision_actor": "AI",
+      "basis": "섹터 분석",
+      "decision_date": "2026-06-27",
+      "evidence_posts": [
+        {
+          "title": "중동에서 시작되는 철도 노선 전쟁 (feat 네타냐후가 바빠진 이유)",
+          "url": "https://blog.naver.com/ranto28/224327635026?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-25"
+        }
       ],
-      "linked_insight_ids": [
-        "INSIGHT-20260626-2"
-      ]
+      "source_mentioned": false,
+      "watchlist_entry_date": "2026-06-27",
+      "latest_evidence_date": "2026-06-25",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "sector_only",
+      "observation_reason": "중국의 일대일로에 대항하는 IMEC과 호르무즈 해협을 우회하는 터키 주도 '헤자즈 철도' 등 중동 지역에서 지정학적 중요성을 띤 대규모 철도 프로젝트 경쟁이 본격화되고 있음. 이는 관련 인프라, 건설, 철도 장비 기업에 장기적인 기회가 될 수 있으나, 프로젝트의 실현 가능성과 구체적인 수혜 기업이 불확실하여 관찰이 필요함."
     }
-  ],
-  "watchlist": []
+  ]
 }
