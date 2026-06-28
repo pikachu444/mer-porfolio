@@ -1,8 +1,8 @@
 {
-  "updated": "2026-06-28",
-  "portfolio_return_krw": -11.44931475,
-  "cash": 14.67910894,
-  "realized_pnl": -0.31368961,
+  "updated": "2026-06-29",
+  "portfolio_return_krw": -11.44931476,
+  "cash": 15.03699091,
+  "realized_pnl": -0.62112138,
   "active_positions": [
     {
       "key": "stock:KR:006220",
@@ -113,8 +113,8 @@
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
       "target_weight": 5.0,
-      "current_price": 767546.0499999999,
-      "return_pct_krw": -6.1193713729204795
+      "current_price": 767546.0481262207,
+      "return_pct_krw": -6.119371602107471
     },
     {
       "key": "stock:KR:011070",
@@ -122,7 +122,7 @@
       "code": "011070",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 3.831246773763583e-06,
+      "quantity": 3.804540719114336e-06,
       "average_cost": 1095000.0,
       "decision_actor": "미분류",
       "opened_date": "2026-06-09",
@@ -150,7 +150,7 @@
       "code": "454910",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 4.786260575208059e-05,
+      "quantity": 4.167091069994644e-05,
       "average_cost": 127200.0,
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
@@ -164,13 +164,13 @@
       "code": "005380",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 1.2291306831078082e-05,
-      "average_cost": 639000.0,
-      "decision_actor": "미분류",
+      "quantity": 1.290020388473888e-05,
+      "average_cost": 631518.7087066578,
+      "decision_actor": "AI",
       "opened_date": "2026-06-09",
-      "target_weight": 10.0,
+      "target_weight": 7.0,
       "current_price": 480500.0,
-      "return_pct_krw": -24.80438184663537
+      "return_pct_krw": -23.91357637146525
     },
     {
       "key": "stock:KR:035420",
@@ -178,7 +178,7 @@
       "code": "035420",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 3.206643354720774e-05,
+      "quantity": 3.156083486057552e-05,
       "average_cost": 279000.0,
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
@@ -334,6 +334,10 @@
     {
       "date": "2026-06-28",
       "avg_return_krw": -11.44931475
+    },
+    {
+      "date": "2026-06-29",
+      "avg_return_krw": -11.44931476
     }
   ]
 }
