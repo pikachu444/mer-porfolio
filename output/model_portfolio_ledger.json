@@ -1,8 +1,8 @@
 {
   "schema_version": "3.0",
   "starting_value": 100.0,
-  "cash": 15.03699090730356,
-  "realized_pnl": -0.621121384022161,
+  "cash": 17.196483411336462,
+  "realized_pnl": -0.7075149112239854,
   "positions": [
     {
       "key": "stock:KR:006220",
@@ -202,7 +202,7 @@
       "code": "005930",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 1.4332796143204298e-05,
+      "quantity": 1.0850813033748439e-05,
       "average_cost": 346500.0,
       "decision_actor": "AI",
       "opened_date": "2026-06-18",
@@ -214,7 +214,7 @@
       "code": "000660",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 1.4017504945013688e-06,
+      "quantity": 1.0257089301713147e-06,
       "average_cost": 2764000.0,
       "decision_actor": "AI",
       "opened_date": "2026-06-22",
@@ -654,6 +654,30 @@
       "value": -0.024863336878448994,
       "target_weight": 4.0,
       "reason": "리밸런싱 실행. 로봇 부품 공급 등 장기 성장성은 유효하나, 국내 증시의 단기 수급 악화에 대응하고 목표 현금 비중(20%)을 확보하기 위해 위성(satellite) 자산의 비중을 일부 축소합니다."
+    },
+    {
+      "date": "2026-07-01",
+      "type": "일부 매도",
+      "key": "stock:KR:005930",
+      "name": "삼성전자",
+      "decision_actor": "AI",
+      "price": 334000.0,
+      "quantity": 3.48198310945586e-06,
+      "value": -1.1629823585582573,
+      "target_weight": 4.0,
+      "reason": "미국에서 제기된 D램 가격 담합 혐의 집단소송으로 인해 법적, 재무적 불확실성이 크게 증가했습니다. 투자 근거의 핵심인 AI 반도체 사업과는 별개이나, 잠재적 리스크 관리를 위해 선제적으로 비중을 축소합니다."
+    },
+    {
+      "date": "2026-07-01",
+      "type": "일부 매도",
+      "key": "stock:KR:000660",
+      "name": "SK하이닉스",
+      "decision_actor": "AI",
+      "price": 2650000.0,
+      "quantity": 3.760415643300542e-07,
+      "value": -0.9965101454746437,
+      "target_weight": 3.0,
+      "reason": "삼성전자와 함께 D램 가격 담합 혐의로 미국에서 집단소송을 당해 상당한 법적 리스크에 노출되었습니다. 나스닥 상장이라는 긍정적 모멘텀이 있지만, 소송 리스크의 심각성을 고려하여 방어적 관점에서 비중을 축소합니다."
     }
   ],
   "snapshots": [
@@ -816,6 +840,14 @@
       "total_value": 88.55068524,
       "return_pct": -11.44931476,
       "realized_pnl": -0.62112138
+    },
+    {
+      "date": "2026-07-01",
+      "cash": 17.19648341,
+      "invested_value": 73.40780542,
+      "total_value": 90.60428883,
+      "return_pct": -9.39571117,
+      "realized_pnl": -0.70751491
     }
   ]
 }

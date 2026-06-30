@@ -1,255 +1,73 @@
 {
-  "analysis_date": "2026-06-29",
-  "run_type": "rebalance",
+  "analysis_date": "2026-07-01",
+  "run_type": "regular",
   "insights": [
     {
-      "id": "INSIGHT-20260629-1",
-      "title": "국내 증시 단기 수급 부담 가중",
-      "summary": "국민연금의 7월 리밸런싱 매도(약 13조원 추정)와 외국인 투자자들의 반기말 포트폴리오 조정이 겹치면서 국내 증시, 특히 대형주를 중심으로 단기적인 수급 부담이 커지고 있습니다. 은행권의 신용대출 규제 강화 또한 개인 투자자의 매수 여력을 제한하는 요인입니다.",
-      "investment_implication": "국내 주식 비중이 높은 포트폴리오는 단기 변동성 확대에 대비한 위험 관리가 필요하며, 현금 비중 확보를 고려해야 합니다.",
+      "id": "INSIGHT-20260701-1",
+      "title": "한국 부동산 시장 규제 강화 및 추가 보유세 인상 가능성",
+      "summary": "정부가 화성 동탄 등 수도권 일부 지역을 토지거래허가구역 등 3중 규제지역으로 지정하고 대출 규제를 강화했습니다. 향후 종부세 및 재산세 등 보유세 인상 가능성도 제기되어 부동산 시장 및 내수 경기에 부담으로 작용할 수 있습니다.",
+      "investment_implication": "부동산 시장 냉각 및 가계부채 부담 증가는 국내 소비 심리 위축으로 이어져 내수 관련 기업에 부정적 영향을 줄 수 있습니다.",
       "evidence_posts": [
         {
-          "title": "7월에 국민연금은 국내주식을 어느정도 처분할까?",
-          "url": "https://blog.naver.com/ranto28/224329357905?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-28"
-        },
-        {
-          "title": "26일 국장은 왜 빠졌을까 A/S (feat 리벨런싱이 끝났다고?)",
-          "url": "https://blog.naver.com/ranto28/224328348822?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-26"
-        },
-        {
-          "title": "오늘 국장은 왜 빠졌을까? 내일은?",
-          "url": "https://blog.naver.com/ranto28/224324723728?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-23"
-        }
-      ],
-      "related_decision_codes": [
-        "035420",
-        "005380",
-        "454910",
-        "011070"
-      ]
-    },
-    {
-      "id": "INSIGHT-20260629-2",
-      "title": "SK하이닉스, 나스닥 상장으로 성장 가속화 및 기업가치 재평가 기대",
-      "summary": "SK하이닉스가 7월 10일 나스닥에 ADR 형태로 상장하여 약 300억 달러의 대규모 자금을 조달할 계획입니다. 이는 용인 반도체 클러스터 등 핵심 시설투자를 가속화하고, '코리아 디스카운트'를 해소하여 기업가치가 재평가될 수 있는 중요한 모멘텀입니다.",
-      "investment_implication": "SK하이닉스의 장기 성장성과 HBM 시장 리더십이 더욱 공고해질 것으로 예상되어 투자 매력이 크게 증대되었습니다.",
-      "evidence_posts": [
-        {
-          "title": "SK하이닉스가 7월 10일 나스닥에 상장(ADR)한다. 어떤 영향이?",
-          "url": "https://blog.naver.com/ranto28/224326515853?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-24"
-        }
-      ],
-      "related_decision_codes": [
-        "000660"
-      ]
-    },
-    {
-      "id": "INSIGHT-20260629-3",
-      "title": "미 연준, 잠재적 통화정책 지표 변경 가능성",
-      "summary": "최근 PCE 지표가 높게 나왔음에도, 신임 연준 의장이 선호하는 '절사 평균 PCE'는 목표치에 근접해 있습니다. 이는 향후 연준이 인플레이션 판단 기준을 변경하여 통화정책 완화의 명분을 찾으려는 '골대 옮기기' 전략을 사용할 수 있음을 시사합니다.",
-      "investment_implication": "단기적으로는 점도표의 매파적 기조가 시장에 부담을 주지만, 중장기적으로는 예상보다 빠른 금리 인하 가능성도 존재하여 불확실성이 높습니다.",
-      "evidence_posts": [
-        {
-          "title": "PCE가 4.1%로 나왔다. 이런데도 금리 인하 시나리오가 있다면?",
-          "url": "https://blog.naver.com/ranto28/224327359398?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-25"
+          "title": "규제(토허,조정대상,투기과열지구)지역 확대와 보유세 인상 동향",
+          "url": "https://blog.naver.com/ranto28/224331870172?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-30"
         }
       ],
       "related_decision_codes": []
     },
     {
-      "id": "INSIGHT-20260629-4",
-      "title": "미국 정부, 양자컴퓨팅 산업 육성 본격화",
-      "summary": "트럼프 대통령이 양자내성암호(PQC) 전환 시한을 단축하고 국가 차원의 양자컴퓨터 개발 프로젝트를 지시하는 행정명령에 서명했습니다. 이는 관련 기술을 국가 안보 자산으로 격상시키고, 대규모 정부 투자를 통해 산업 성장을 가속화하는 강력한 신호입니다.",
-      "investment_implication": "양자컴퓨팅 및 PQC 관련 기업들은 정부의 정책적 지원과 투자에 힘입어 본격적인 성장기에 진입할 것으로 기대됩니다.",
+      "id": "INSIGHT-20260701-2",
+      "title": "삼성전자·SK하이닉스, 미국서 D램 가격 담합 집단소송 피소",
+      "summary": "삼성전자, SK하이닉스, 마이크론이 HBM을 핑계로 범용 D램 생산을 줄여 가격을 담합했다는 혐의로 미국에서 집단소송을 당했습니다. 과거 유죄 판결 사례가 있어, 소송이 증거개시 단계로 진행될 경우 상당한 법적, 재무적 리스크에 직면할 수 있습니다.",
+      "investment_implication": "소송 결과에 따라 막대한 배상금이 부과될 수 있으며, 소송 과정의 불확실성 자체가 주가에 부정적인 요인으로 작용할 것입니다.",
       "evidence_posts": [
         {
-          "title": "트럼프, 새로운 행정명령에 서명하다. (feat 양자내성암호,양자컴)",
-          "url": "https://blog.naver.com/ranto28/224324165623?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-22"
+          "title": "삼성전자, SK하이닉스, 마이크론 집단소송 당함, 영향은?",
+          "url": "https://blog.naver.com/ranto28/224331285266?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-29"
         }
       ],
       "related_decision_codes": [
-        "IBM",
-        "GFS",
-        "RGTI",
-        "QBTS"
-      ]
-    },
-    {
-      "id": "INSIGHT-20260629-5",
-      "title": "한국 외환시장 리스크 관리 강화 필요성",
-      "summary": "정부가 1500원대 환율 방어를 위해 외환건전성 부담금 면제, 외화유동성 스트레스 테스트 유예 등 단기적인 달러 공급 확대 조치를 시행하고 있습니다. 이는 단기적인 환율 안정에 기여할 수 있으나, 장기적인 외환 건전성을 훼손할 수 있는 위험을 내포하고 있습니다.",
-      "investment_implication": "원화 자산 투자 시 환율 변동성 및 잠재적 외환 리스크에 대한 주의가 필요하며, 이는 국내 증시에 대한 매크로 불확실성을 증가시키는 요인입니다.",
-      "evidence_posts": [
-        {
-          "title": "환율을 잡기위해 외환당국이 하고있는 일들",
-          "url": "https://blog.naver.com/ranto28/224325245303?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-27"
-        }
-      ],
-      "related_decision_codes": [
-        "035420",
-        "005380",
-        "454910",
-        "011070"
+        "005930",
+        "000660"
       ]
     }
   ],
   "portfolio_decisions": [
     {
-      "name": "네이버",
-      "code": "035420",
+      "name": "삼성전자",
+      "code": "005930",
       "market": "KR",
       "asset_type": "stock",
       "decision_actor": "AI",
       "action": "비중축소",
-      "basis": "이전 판단 유지",
-      "decision_date": "2026-06-29",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-01",
       "evidence_posts": [
         {
-          "title": "7월에 국민연금은 국내주식을 어느정도 처분할까?",
-          "url": "https://blog.naver.com/ranto28/224329357905?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-28"
-        },
-        {
-          "title": "26일 국장은 왜 빠졌을까 A/S (feat 리벨런싱이 끝났다고?)",
-          "url": "https://blog.naver.com/ranto28/224328348822?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-26"
+          "title": "삼성전자, SK하이닉스, 마이크론 집단소송 당함, 영향은?",
+          "url": "https://blog.naver.com/ranto28/224331285266?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-29"
         }
       ],
       "source_mentioned": true,
-      "previous_weight": 8.0,
-      "proposed_weight": 7.0,
+      "previous_weight": 5,
+      "proposed_weight": 4,
       "weight_source": "AI 제안",
-      "change_reason": "리밸런싱 실행. '소버린 AI' 핵심 파트너로서의 장기 성장성은 유효하나, 국민연금 및 외국인의 리밸런싱 매도 물량 등 단기적인 국내 증시 수급 악화에 대응하고 목표 현금 비중(20%)을 확보하기 위해 비중을 축소합니다.",
+      "change_reason": "미국에서 제기된 D램 가격 담합 혐의 집단소송으로 인해 법적, 재무적 불확실성이 크게 증가했습니다. 투자 근거의 핵심인 AI 반도체 사업과는 별개이나, 잠재적 리스크 관리를 위해 선제적으로 비중을 축소합니다.",
       "allocation_role": "core",
-      "source_scope": "previous_decision",
-      "investment_rationale": "자체 LLM과 클라우드 인프라를 갖춘 'AI 풀스택' 사업자로서, 각국의 데이터 주권 강화 추세 속에서 엔비디아와 함께 '소버린 AI' 시장을 개척하며 새로운 성장 기회를 맞이할 것으로 기대됨.",
-      "current_entry_reason": "리밸런싱을 통해 국내 증시의 단기 수급 리스크에 대응하고 포트폴리오 안정성을 높이기 위함.",
+      "source_scope": "source_named_security",
+      "investment_rationale": "뉴럴링크/테슬라향 파운드리 수주에 이어, 반도체 핵심 소재인 텅스텐 분말의 국내 공급망 확보로 생산 안정성이 강화되어 AI 반도체 시장에서의 경쟁력이 더욱 공고해질 것으로 기대됨.",
+      "current_entry_reason": "기존 보유 종목에 대해 중대한 외부 리스크(집단소송)가 발생하여 포트폴리오 방어 차원에서 비중을 조정함.",
       "key_risks": [
-        "글로벌 빅테크와의 AI 기술 경쟁",
-        "국내 광고 및 커머스 시장 성장 둔화",
-        "단기적 기관 및 외국인 수급 악화"
+        "파운드리 수율 문제 발생 가능성",
+        "글로벌 반도체 업황 변동성",
+        "TSMC와의 기술 격차",
+        "미국 내 D램 가격 담합 관련 집단소송 리스크"
       ],
       "linked_insight_ids": [
-        "INSIGHT-20260629-1",
-        "INSIGHT-20260629-5"
-      ]
-    },
-    {
-      "name": "현대차",
-      "code": "005380",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "action": "비중축소",
-      "basis": "이전 판단 유지",
-      "decision_date": "2026-06-29",
-      "evidence_posts": [
-        {
-          "title": "7월에 국민연금은 국내주식을 어느정도 처분할까?",
-          "url": "https://blog.naver.com/ranto28/224329357905?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-28"
-        },
-        {
-          "title": "26일 국장은 왜 빠졌을까 A/S (feat 리벨런싱이 끝났다고?)",
-          "url": "https://blog.naver.com/ranto28/224328348822?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-26"
-        }
-      ],
-      "source_mentioned": true,
-      "previous_weight": 8.0,
-      "proposed_weight": 7.0,
-      "weight_source": "AI 제안",
-      "change_reason": "리밸런싱 실행. '피지컬 AI' 핵심 제조사로서의 장기 성장성은 유효하나, 국민연금 및 외국인의 리밸런싱 매도 물량 등 단기적인 국내 증시 수급 악화에 대응하고 목표 현금 비중(20%)을 확보하기 위해 비중을 축소합니다.",
-      "allocation_role": "core",
-      "source_scope": "previous_decision",
-      "investment_rationale": "보스턴 다이내믹스, 제미나이 로보틱스 결합, 휴머노이드 생산 계획을 통해 피지컬 AI 시대의 핵심 제조 플레이어로 부상할 가능성이 높음.",
-      "current_entry_reason": "리밸런싱을 통해 국내 증시의 단기 수급 리스크에 대응하고 포트폴리오 안정성을 높이기 위함.",
-      "key_risks": [
-        "로봇 상용화 지연",
-        "자동차 본업의 경기 둔화",
-        "단기적 기관 및 외국인 수급 악화"
-      ],
-      "linked_insight_ids": [
-        "INSIGHT-20260629-1",
-        "INSIGHT-20260629-5"
-      ]
-    },
-    {
-      "name": "두산로보틱스",
-      "code": "454910",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "action": "비중축소",
-      "basis": "이전 판단 유지",
-      "decision_date": "2026-06-29",
-      "evidence_posts": [
-        {
-          "title": "7월에 국민연금은 국내주식을 어느정도 처분할까?",
-          "url": "https://blog.naver.com/ranto28/224329357905?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-28"
-        }
-      ],
-      "source_mentioned": true,
-      "previous_weight": 5.0,
-      "proposed_weight": 4.0,
-      "weight_source": "AI 제안",
-      "change_reason": "리밸런싱 실행. '피지컬 AI' 성장 스토리는 유효하나, 고밸류에이션 위험(risk) 자산으로서 국내 증시의 단기 수급 악화에 더 민감하게 반응할 수 있습니다. 목표 현금 비중(20%) 확보 및 위험 관리 차원에서 비중을 축소합니다.",
-      "allocation_role": "risk",
-      "source_scope": "previous_decision",
-      "investment_rationale": "엔비디아와의 긴밀한 협력을 통해 로봇 기술에 AI를 접목하는 '피지컬 AI' 시장을 선도할 것으로 기대됨.",
-      "current_entry_reason": "리밸런싱을 통해 국내 증시의 단기 수급 리스크에 대응하고 포트폴리오 안정성을 높이기 위함.",
-      "key_risks": [
-        "로봇 시장의 경쟁 심화",
-        "글로벌 경기 둔화에 따른 설비 투자 위축",
-        "높은 밸류에이션 부담",
-        "단기적 기관 및 외국인 수급 악화"
-      ],
-      "linked_insight_ids": [
-        "INSIGHT-20260629-1",
-        "INSIGHT-20260629-5"
-      ]
-    },
-    {
-      "name": "LG이노텍",
-      "code": "011070",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "action": "비중축소",
-      "basis": "이전 판단 유지",
-      "decision_date": "2026-06-29",
-      "evidence_posts": [
-        {
-          "title": "7월에 국민연금은 국내주식을 어느정도 처분할까?",
-          "url": "https://blog.naver.com/ranto28/224329357905?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-28"
-        }
-      ],
-      "source_mentioned": true,
-      "previous_weight": 5.0,
-      "proposed_weight": 4.0,
-      "weight_source": "AI 제안",
-      "change_reason": "리밸런싱 실행. 로봇 부품 공급 등 장기 성장성은 유효하나, 국내 증시의 단기 수급 악화에 대응하고 목표 현금 비중(20%)을 확보하기 위해 위성(satellite) 자산의 비중을 일부 축소합니다.",
-      "allocation_role": "satellite",
-      "source_scope": "previous_decision",
-      "investment_rationale": "Figure AI 투자와 휴머노이드 로봇 부품 공급 가능성을 통해 피지컬 AI 하드웨어 생태계의 수혜가 기대됨.",
-      "current_entry_reason": "리밸런싱을 통해 국내 증시의 단기 수급 리스크에 대응하고 포트폴리오 안정성을 높이기 위함.",
-      "key_risks": [
-        "휴머노이드 로봇 상용화 지연",
-        "주요 고객사(애플)의 스마트폰 판매 둔화",
-        "단기적 기관 및 외국인 수급 악화"
-      ],
-      "linked_insight_ids": [
-        "INSIGHT-20260629-1",
-        "INSIGHT-20260629-5"
+        "INSIGHT-20260701-2"
       ]
     },
     {
@@ -258,161 +76,34 @@
       "market": "KR",
       "asset_type": "stock",
       "decision_actor": "AI",
-      "action": "보유",
+      "action": "비중축소",
       "basis": "종목 분석",
-      "decision_date": "2026-06-29",
+      "decision_date": "2026-07-01",
       "evidence_posts": [
         {
-          "title": "SK하이닉스가 7월 10일 나스닥에 상장(ADR)한다. 어떤 영향이?",
-          "url": "https://blog.naver.com/ranto28/224326515853?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-24"
+          "title": "삼성전자, SK하이닉스, 마이크론 집단소송 당함, 영향은?",
+          "url": "https://blog.naver.com/ranto28/224331285266?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-29"
         }
       ],
       "source_mentioned": true,
-      "previous_weight": 4.0,
-      "proposed_weight": 4.0,
+      "previous_weight": 4,
+      "proposed_weight": 3,
       "weight_source": "AI 제안",
-      "change_reason": "리밸런싱 검토 결과, 나스닥 ADR 상장이라는 매우 강력한 긍정적 모멘텀이 발생하여 단기적인 국내 증시 수급 부담을 상쇄하고도 남을 것으로 판단됩니다. 이는 장기 성장 동력 확보와 기업가치 재평가로 이어질 것이므로 기존 비중을 유지합니다.",
+      "change_reason": "삼성전자와 함께 D램 가격 담합 혐의로 미국에서 집단소송을 당해 상당한 법적 리스크에 노출되었습니다. 나스닥 상장이라는 긍정적 모멘텀이 있지만, 소송 리스크의 심각성을 고려하여 방어적 관점에서 비중을 축소합니다.",
       "allocation_role": "satellite",
       "source_scope": "source_named_security",
       "investment_rationale": "나스닥 상장을 통한 대규모 자금 조달로 용인 클러스터 등 미래 성장 동력을 확보하고, 기업가치 재평가 가능성이 높아져 HBM 시장 리더십이 더욱 공고해질 것으로 기대됨.",
-      "current_entry_reason": "기존 보유 포지션에 대해, 나스닥 상장이라는 중대한 긍정적 이벤트가 발생하여 장기 성장성과 투자 매력이 크게 강화되었음을 확인함.",
+      "current_entry_reason": "기존 보유 종목에 대해 중대한 외부 리스크(집단소송)가 발생하여 포트폴리오 방어 차원에서 비중을 조정함.",
       "key_risks": [
         "HBM 시장 경쟁 심화",
         "글로벌 메모리 반도체 업황 변동성",
-        "미국 시장의 집단소송 리스크",
-        "단기적 외국인 리밸런싱 매도 압력"
+        "단기적 외국인 리밸런싱 매도 압력",
+        "미국 내 D램 가격 담합 관련 집단소송 리스크"
       ],
       "linked_insight_ids": [
-        "INSIGHT-20260629-2"
+        "INSIGHT-20260701-2"
       ]
-    },
-    {
-      "name": "Google (Alphabet)",
-      "code": "GOOGL",
-      "market": "US",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "action": "보유",
-      "basis": "이전 판단 유지",
-      "decision_date": "2026-06-29",
-      "evidence_posts": [
-        {
-          "title": "구글 초대형 유상증자의 속사정(feat OpenAI,스페이스X,엔트로픽)",
-          "url": "https://blog.naver.com/ranto28/224308296478?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-06"
-        }
-      ],
-      "source_mentioned": true,
-      "previous_weight": 8.0,
-      "proposed_weight": 8.0,
-      "weight_source": "AI 제안",
-      "change_reason": "리밸런싱 검토 결과, AI 패권 경쟁에서 우위를 점하기 위한 '자금 전쟁' 전략의 유효성이 여전히 강력하다고 판단합니다. 핵심(core) 포지션으로서 8% 비중은 AI 플랫폼 시장에서의 독보적 지위와 성장성을 반영하며, 이는 포트폴리오의 핵심 성장 동력이므로 현금 비중 20% 확보를 위한 추가 비중 축소보다 우선하여 유지합니다.",
-      "allocation_role": "core",
-      "source_scope": "previous_decision",
-      "investment_rationale": "초대형 유상증자를 통해 AI 설비투자 자금을 확보하고 경쟁사들을 견제함으로써 AI 시장에서의 장기적인 지배력을 강화할 것으로 기대됨.",
-      "current_entry_reason": "리밸런싱 검토 과정에서 핵심 성장 동력으로서의 역할이 재확인됨.",
-      "key_risks": [
-        "AI 기술 경쟁 심화",
-        "각국 정부의 반독점 규제 강화"
-      ],
-      "linked_insight_ids": []
-    },
-    {
-      "name": "LS",
-      "code": "006220",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "action": "보유",
-      "basis": "이전 판단 유지",
-      "decision_date": "2026-06-29",
-      "evidence_posts": [
-        {
-          "title": "트럼프는 풍력발전을 왜 이렇게 싫어할까?",
-          "url": "https://blog.naver.com/ranto28/224321684736?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-20"
-        }
-      ],
-      "source_mentioned": true,
-      "previous_weight": 3.0,
-      "proposed_weight": 3.0,
-      "weight_source": "AI 제안",
-      "change_reason": "리밸런싱 검토 결과, AI 데이터센터 및 노후 전력망 교체라는 강력한 수요가 정치적 리스크를 상쇄한다는 투자 논리가 유효합니다. 비중이 낮아 포트폴리오 위험에 미치는 영향이 제한적이므로 기존 비중을 유지합니다.",
-      "allocation_role": "satellite",
-      "source_scope": "previous_decision",
-      "investment_rationale": "폭증하는 AI 데이터센터 및 노후 전력망 교체 수요가 미국 내 해저/송배전 케이블 수요를 견인하여 직접적인 수혜를 입을 것으로 전망됨.",
-      "current_entry_reason": "리밸런싱 검토 과정에서 핵심 투자 논리가 유효함을 재확인함.",
-      "key_risks": [
-        "전력 인프라 투자 지연",
-        "구리 등 원자재 가격 변동",
-        "수주 경쟁 심화"
-      ],
-      "linked_insight_ids": []
-    },
-    {
-      "name": "대한전선",
-      "code": "001440",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "action": "보유",
-      "basis": "이전 판단 유지",
-      "decision_date": "2026-06-29",
-      "evidence_posts": [
-        {
-          "title": "트럼프는 풍력발전을 왜 이렇게 싫어할까?",
-          "url": "https://blog.naver.com/ranto28/224321684736?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-20"
-        }
-      ],
-      "source_mentioned": false,
-      "previous_weight": 3.0,
-      "proposed_weight": 3.0,
-      "weight_source": "AI 제안",
-      "change_reason": "리밸런싱 검토 결과, AI 데이터센터와 노후 전력망 교체로 인한 전력 케이블 수요 증가라는 강력한 섹터 논리가 유효합니다. 비중이 낮아 포트폴리오 위험에 미치는 영향이 제한적이므로 기존 비중을 유지합니다.",
-      "allocation_role": "satellite",
-      "source_scope": "previous_decision",
-      "investment_rationale": "미국의 AI 데이터센터발 전력 수요 급증과 노후 전력망 교체 사업은 전력 인프라 수요를 지속적으로 창출할 것임.",
-      "current_entry_reason": "리밸런싱 검토 과정에서 핵심 투자 논리가 유효함을 재확인함.",
-      "key_risks": [
-        "전력 인프라 투자 지연",
-        "원자재 가격 변동",
-        "국내외 케이블 업체 경쟁"
-      ],
-      "linked_insight_ids": []
-    },
-    {
-      "name": "Microsoft",
-      "code": "MSFT",
-      "market": "US",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "action": "보유",
-      "basis": "이전 판단 유지",
-      "decision_date": "2026-06-29",
-      "evidence_posts": [
-        {
-          "title": "DNA 데이터 저장장치가 삼성전자와 SK하이닉스를 위협할까?",
-          "url": "https://blog.naver.com/ranto28/224296522850?fromRss=true&trackingCode=rss",
-          "published_date": "2026-05-26"
-        }
-      ],
-      "source_mentioned": true,
-      "previous_weight": 3.0,
-      "proposed_weight": 3.0,
-      "weight_source": "AI 제안",
-      "change_reason": "리밸런싱 검토 결과, AI, 클라우드, 장기 데이터 저장 기술 확장 흐름에서 Microsoft의 AI 생태계와 인프라 경쟁력이 여전히 유효하다고 판단하여 기존 비중을 유지합니다.",
-      "allocation_role": "core",
-      "source_scope": "previous_decision",
-      "investment_rationale": "AI, 클라우드, 장기 데이터 저장 기술 확장 흐름에서 Microsoft의 AI 생태계와 인프라 경쟁력이 확인됨.",
-      "current_entry_reason": "리밸런싱 검토 과정에서 핵심 투자 논리가 유효함을 재확인함.",
-      "key_risks": [
-        "AI 서비스 수익성 압박",
-        "클라우드 경쟁 심화",
-        "각국 정부의 반독점 규제 리스크"
-      ],
-      "linked_insight_ids": []
     }
   ],
   "watchlist": [
@@ -423,8 +114,13 @@
       "asset_type": "stock",
       "decision_actor": "AI",
       "basis": "종목 분석",
-      "decision_date": "2026-06-29",
+      "decision_date": "2026-07-01",
       "evidence_posts": [
+        {
+          "title": "미래에셋증권이 스페이스X 주식을 1주도 못받은 비밀 A/S",
+          "url": "https://blog.naver.com/ranto28/224332115126?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-30"
+        },
         {
           "title": "스페이스X의 우주 데이터센터, 새로 알려진 사실",
           "url": "https://blog.naver.com/ranto28/224323682143?fromRss=true&trackingCode=rss",
@@ -438,163 +134,43 @@
       ],
       "source_mentioned": true,
       "watchlist_entry_date": "2026-06-12",
-      "latest_evidence_date": "2026-06-24",
-      "watchlist_duration_days": 17,
+      "latest_evidence_date": "2026-06-30",
+      "watchlist_duration_days": 19,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
       "source_scope": "source_named_security",
-      "observation_reason": "상장 초기 기업. 테라와트급 우주 데이터센터라는 구체적이고 거대한 비전이 확인되었으며, 7월 6일 나스닥 100 지수 편입에 따른 패시브 자금 유입이 예상됨. 상장 초기 변동성과 향후 보호예수 물량 출회 가능성을 고려하여 관찰을 지속함."
+      "observation_reason": "상장 초기 기업. 테라와트급 우주 데이터센터라는 비전과 IPO 과정에서 확인된 높은 시장 수요는 긍정적. 상장 초기 변동성과 향후 보호예수 물량 출회 가능성을 고려하여 관찰을 지속함."
     },
     {
-      "name": "양자컴퓨팅 및 양자내성암호(PQC) 섹터",
-      "code": "",
-      "market": "",
-      "asset_type": "sector",
-      "decision_actor": "AI",
-      "basis": "섹터 분석",
-      "decision_date": "2026-06-29",
-      "evidence_posts": [
-        {
-          "title": "트럼프, 새로운 행정명령에 서명하다. (feat 양자내성암호,양자컴)",
-          "url": "https://blog.naver.com/ranto28/224324165623?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-22"
-        }
-      ],
-      "source_mentioned": false,
-      "watchlist_entry_date": "2026-06-24",
-      "latest_evidence_date": "2026-06-22",
-      "watchlist_duration_days": 5,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "sector_only",
-      "observation_reason": "미국 정부의 행정명령 서명으로 PQC 전환 가속화 및 양자컴퓨터 개발에 대한 대규모 투자가 시작됨. 이는 관련 산업의 본격적인 성장 신호탄으로, 핵심 수혜 기업을 식별하기 위한 관찰이 필요합니다."
-    },
-    {
-      "name": "IBM",
-      "code": "IBM",
+      "name": "Goldman Sachs",
+      "code": "GS",
       "market": "US",
       "asset_type": "stock",
       "decision_actor": "AI",
       "basis": "종목 분석",
-      "decision_date": "2026-06-29",
+      "decision_date": "2026-07-01",
       "evidence_posts": [
         {
-          "title": "트럼프, 새로운 행정명령에 서명하다. (feat 양자내성암호,양자컴)",
-          "url": "https://blog.naver.com/ranto28/224324165623?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-22"
+          "title": "미래에셋증권이 스페이스X 주식을 1주도 못받은 비밀 A/S",
+          "url": "https://blog.naver.com/ranto28/224332115126?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-30"
+        },
+        {
+          "title": "미래에셋증권이 스페이스 X 주식을 1주도 못 받은 비밀",
+          "url": "https://blog.naver.com/ranto28/224315627964?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-14"
         }
       ],
       "source_mentioned": true,
-      "watchlist_entry_date": "2026-06-24",
-      "latest_evidence_date": "2026-06-22",
-      "watchlist_duration_days": 5,
+      "watchlist_entry_date": "2026-06-15",
+      "latest_evidence_date": "2026-06-30",
+      "watchlist_duration_days": 16,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
       "source_scope": "source_named_security",
-      "observation_reason": "미국 정부의 'QC-ADDS' 프로젝트와 관련하여 분사기업이 10억 달러의 대규모 투자를 유치하는 등 양자컴퓨팅 분야의 핵심 플레이어로 부상함. 정부와의 긴밀한 협력 관계와 기술 리더십을 관찰할 필요가 있습니다."
-    },
-    {
-      "name": "GlobalFoundries",
-      "code": "GFS",
-      "market": "US",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-06-29",
-      "evidence_posts": [
-        {
-          "title": "트럼프, 새로운 행정명령에 서명하다. (feat 양자내성암호,양자컴)",
-          "url": "https://blog.naver.com/ranto28/224324165623?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-22"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-06-24",
-      "latest_evidence_date": "2026-06-22",
-      "watchlist_duration_days": 5,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "미국 정부의 양자컴퓨팅 관련 투자에서 3억 7,500만 달러를 배정받은 반도체 파운드리 기업. 양자컴퓨터 하드웨어 생산 생태계에서 차지할 역할을 관찰할 필요가 있습니다."
-    },
-    {
-      "name": "Rigetti Computing",
-      "code": "RGTI",
-      "market": "US",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-06-29",
-      "evidence_posts": [
-        {
-          "title": "트럼프, 새로운 행정명령에 서명하다. (feat 양자내성암호,양자컴)",
-          "url": "https://blog.naver.com/ranto28/224324165623?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-22"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-06-24",
-      "latest_evidence_date": "2026-06-22",
-      "watchlist_duration_days": 5,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "미국 정부의 양자컴퓨팅 관련 투자에서 1억 달러를 배정받은 기업 중 하나. 정부 지원을 통한 기술 개발 및 상용화 가능성을 관찰할 필요가 있습니다."
-    },
-    {
-      "name": "D-Wave Quantum",
-      "code": "QBTS",
-      "market": "US",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-06-29",
-      "evidence_posts": [
-        {
-          "title": "트럼프, 새로운 행정명령에 서명하다. (feat 양자내성암호,양자컴)",
-          "url": "https://blog.naver.com/ranto28/224324165623?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-22"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-06-24",
-      "latest_evidence_date": "2026-06-22",
-      "watchlist_duration_days": 5,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "미국 정부의 양자컴퓨팅 관련 투자에서 1억 달러를 배정받은 기업 중 하나. 정부 지원을 통한 기술 개발 및 상용화 가능성을 관찰할 필요가 있습니다."
-    },
-    {
-      "name": "중동 철도 인프라 섹터",
-      "code": "",
-      "market": "",
-      "asset_type": "sector",
-      "decision_actor": "AI",
-      "basis": "섹터 분석",
-      "decision_date": "2026-06-29",
-      "evidence_posts": [
-        {
-          "title": "중동에서 시작되는 철도 노선 전쟁 (feat 네타냐후가 바빠진 이유)",
-          "url": "https://blog.naver.com/ranto28/224327635026?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-25"
-        }
-      ],
-      "source_mentioned": false,
-      "watchlist_entry_date": "2026-06-27",
-      "latest_evidence_date": "2026-06-25",
-      "watchlist_duration_days": 2,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "sector_only",
-      "observation_reason": "중국의 일대일로에 대항하는 IMEC과 호르무즈 해협을 우회하는 터키 주도 '헤자즈 철도' 등 중동 지역에서 지정학적 중요성을 띤 대규모 철도 프로젝트 경쟁이 본격화되고 있음. 이는 관련 인프라, 건설, 철도 장비 기업에 장기적인 기회가 될 수 있으나, 프로젝트의 실현 가능성과 구체적인 수혜 기업이 불확실하여 관찰이 필요함."
+      "observation_reason": "스페이스X IPO 주관사로서 보여준 막강한 딜 소싱 및 배정 능력은 동사의 핵심 경쟁력임을 재확인. 글로벌 자본시장에서의 독점적 지위가 어떻게 수익으로 연결되는지 관찰할 필요가 있음."
     }
   ]
 }

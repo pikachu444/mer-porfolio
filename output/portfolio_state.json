@@ -598,33 +598,33 @@
       "market": "KR",
       "asset_type": "stock",
       "decision_actor": "AI",
-      "action": "보유",
+      "action": "비중축소",
       "basis": "종목 분석",
-      "decision_date": "2026-06-22",
+      "decision_date": "2026-07-01",
       "evidence_posts": [
         {
-          "title": "삼성전자와 SK하이닉스가 긴급 공급망 점검을 하는 이유",
-          "url": "https://blog.naver.com/ranto28/224322350093?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-21"
+          "title": "삼성전자, SK하이닉스, 마이크론 집단소송 당함, 영향은?",
+          "url": "https://blog.naver.com/ranto28/224331285266?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-29"
         }
       ],
       "source_mentioned": true,
-      "previous_weight": 5.0,
-      "proposed_weight": 5.0,
+      "previous_weight": 5,
+      "proposed_weight": 4,
       "weight_source": "AI 제안",
-      "change_reason": "기존 보유. 중국발 텅스텐 공급 위기라는 중대한 리스크가 부각되었으나, 동시에 버크셔 해서웨이 자회사의 국내 공장 건설이라는 강력한 해결책이 제시되어 공급망 안정성이 오히려 강화될 것으로 판단. 기존 투자 논리를 지지하여 보유 의견을 유지함.",
+      "change_reason": "미국에서 제기된 D램 가격 담합 혐의 집단소송으로 인해 법적, 재무적 불확실성이 크게 증가했습니다. 투자 근거의 핵심인 AI 반도체 사업과는 별개이나, 잠재적 리스크 관리를 위해 선제적으로 비중을 축소합니다.",
       "allocation_role": "core",
       "source_scope": "source_named_security",
       "investment_rationale": "뉴럴링크/테슬라향 파운드리 수주에 이어, 반도체 핵심 소재인 텅스텐 분말의 국내 공급망 확보로 생산 안정성이 강화되어 AI 반도체 시장에서의 경쟁력이 더욱 공고해질 것으로 기대됨.",
-      "current_entry_reason": "기존 보유 종목의 핵심 리스크(공급망)가 해소되는 긍정적인 근거가 발생하여 보유를 지속함.",
+      "current_entry_reason": "기존 보유 종목에 대해 중대한 외부 리스크(집단소송)가 발생하여 포트폴리오 방어 차원에서 비중을 조정함.",
       "key_risks": [
         "파운드리 수율 문제 발생 가능성",
         "글로벌 반도체 업황 변동성",
-        "TSMC와의 기술 격차"
+        "TSMC와의 기술 격차",
+        "미국 내 D램 가격 담합 관련 집단소송 리스크"
       ],
       "linked_insight_ids": [
-        "INSIGHT-20260622-1",
-        "INSIGHT-20260622-2"
+        "INSIGHT-20260701-2"
       ]
     },
     {
@@ -633,33 +633,33 @@
       "market": "KR",
       "asset_type": "stock",
       "decision_actor": "AI",
-      "action": "보유",
+      "action": "비중축소",
       "basis": "종목 분석",
-      "decision_date": "2026-06-29",
+      "decision_date": "2026-07-01",
       "evidence_posts": [
         {
-          "title": "SK하이닉스가 7월 10일 나스닥에 상장(ADR)한다. 어떤 영향이?",
-          "url": "https://blog.naver.com/ranto28/224326515853?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-24"
+          "title": "삼성전자, SK하이닉스, 마이크론 집단소송 당함, 영향은?",
+          "url": "https://blog.naver.com/ranto28/224331285266?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-29"
         }
       ],
       "source_mentioned": true,
-      "previous_weight": 4.0,
-      "proposed_weight": 4.0,
+      "previous_weight": 4,
+      "proposed_weight": 3,
       "weight_source": "AI 제안",
-      "change_reason": "리밸런싱 검토 결과, 나스닥 ADR 상장이라는 매우 강력한 긍정적 모멘텀이 발생하여 단기적인 국내 증시 수급 부담을 상쇄하고도 남을 것으로 판단됩니다. 이는 장기 성장 동력 확보와 기업가치 재평가로 이어질 것이므로 기존 비중을 유지합니다.",
+      "change_reason": "삼성전자와 함께 D램 가격 담합 혐의로 미국에서 집단소송을 당해 상당한 법적 리스크에 노출되었습니다. 나스닥 상장이라는 긍정적 모멘텀이 있지만, 소송 리스크의 심각성을 고려하여 방어적 관점에서 비중을 축소합니다.",
       "allocation_role": "satellite",
       "source_scope": "source_named_security",
       "investment_rationale": "나스닥 상장을 통한 대규모 자금 조달로 용인 클러스터 등 미래 성장 동력을 확보하고, 기업가치 재평가 가능성이 높아져 HBM 시장 리더십이 더욱 공고해질 것으로 기대됨.",
-      "current_entry_reason": "기존 보유 포지션에 대해, 나스닥 상장이라는 중대한 긍정적 이벤트가 발생하여 장기 성장성과 투자 매력이 크게 강화되었음을 확인함.",
+      "current_entry_reason": "기존 보유 종목에 대해 중대한 외부 리스크(집단소송)가 발생하여 포트폴리오 방어 차원에서 비중을 조정함.",
       "key_risks": [
         "HBM 시장 경쟁 심화",
         "글로벌 메모리 반도체 업황 변동성",
-        "미국 시장의 집단소송 리스크",
-        "단기적 외국인 리밸런싱 매도 압력"
+        "단기적 외국인 리밸런싱 매도 압력",
+        "미국 내 D램 가격 담합 관련 집단소송 리스크"
       ],
       "linked_insight_ids": [
-        "INSIGHT-20260629-2"
+        "INSIGHT-20260701-2"
       ]
     }
   ],
@@ -946,8 +946,13 @@
       "asset_type": "stock",
       "decision_actor": "AI",
       "basis": "종목 분석",
-      "decision_date": "2026-06-29",
+      "decision_date": "2026-07-01",
       "evidence_posts": [
+        {
+          "title": "미래에셋증권이 스페이스X 주식을 1주도 못받은 비밀 A/S",
+          "url": "https://blog.naver.com/ranto28/224332115126?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-30"
+        },
         {
           "title": "스페이스X의 우주 데이터센터, 새로 알려진 사실",
           "url": "https://blog.naver.com/ranto28/224323682143?fromRss=true&trackingCode=rss",
@@ -961,13 +966,13 @@
       ],
       "source_mentioned": true,
       "watchlist_entry_date": "2026-06-12",
-      "latest_evidence_date": "2026-06-24",
-      "watchlist_duration_days": 17,
+      "latest_evidence_date": "2026-06-30",
+      "watchlist_duration_days": 19,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
       "source_scope": "source_named_security",
-      "observation_reason": "상장 초기 기업. 테라와트급 우주 데이터센터라는 구체적이고 거대한 비전이 확인되었으며, 7월 6일 나스닥 100 지수 편입에 따른 패시브 자금 유입이 예상됨. 상장 초기 변동성과 향후 보호예수 물량 출회 가능성을 고려하여 관찰을 지속함."
+      "observation_reason": "상장 초기 기업. 테라와트급 우주 데이터센터라는 비전과 IPO 과정에서 확인된 높은 시장 수요는 긍정적. 상장 초기 변동성과 향후 보호예수 물량 출회 가능성을 고려하여 관찰을 지속함."
     },
     {
       "name": "가스 터빈 / 분산 발전 섹터",
@@ -1001,8 +1006,13 @@
       "asset_type": "stock",
       "decision_actor": "AI",
       "basis": "종목 분석",
-      "decision_date": "2026-06-15",
+      "decision_date": "2026-07-01",
       "evidence_posts": [
+        {
+          "title": "미래에셋증권이 스페이스X 주식을 1주도 못받은 비밀 A/S",
+          "url": "https://blog.naver.com/ranto28/224332115126?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-30"
+        },
         {
           "title": "미래에셋증권이 스페이스 X 주식을 1주도 못 받은 비밀",
           "url": "https://blog.naver.com/ranto28/224315627964?fromRss=true&trackingCode=rss",
@@ -1011,13 +1021,13 @@
       ],
       "source_mentioned": true,
       "watchlist_entry_date": "2026-06-15",
-      "latest_evidence_date": "2026-06-14",
-      "watchlist_duration_days": 0,
+      "latest_evidence_date": "2026-06-30",
+      "watchlist_duration_days": 16,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
       "source_scope": "source_named_security",
-      "observation_reason": "스페이스X IPO 주관사로서 보여준 막강한 딜 소싱 및 배정 능력은 동사의 핵심 경쟁력입니다. 글로벌 자본시장에서의 독점적 지위가 어떻게 수익으로 연결되는지 관찰할 필요가 있습니다."
+      "observation_reason": "스페이스X IPO 주관사로서 보여준 막강한 딜 소싱 및 배정 능력은 동사의 핵심 경쟁력임을 재확인. 글로벌 자본시장에서의 독점적 지위가 어떻게 수익으로 연결되는지 관찰할 필요가 있음."
     },
     {
       "name": "농산물/곡물 섹터",
@@ -4335,104 +4345,108 @@
         "각국 정부의 반독점 규제 리스크"
       ],
       "linked_insight_ids": []
+    },
+    {
+      "name": "삼성전자",
+      "code": "005930",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "비중축소",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-01",
+      "evidence_posts": [
+        {
+          "title": "삼성전자, SK하이닉스, 마이크론 집단소송 당함, 영향은?",
+          "url": "https://blog.naver.com/ranto28/224331285266?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-29"
+        }
+      ],
+      "source_mentioned": true,
+      "previous_weight": 5,
+      "proposed_weight": 4,
+      "weight_source": "AI 제안",
+      "change_reason": "미국에서 제기된 D램 가격 담합 혐의 집단소송으로 인해 법적, 재무적 불확실성이 크게 증가했습니다. 투자 근거의 핵심인 AI 반도체 사업과는 별개이나, 잠재적 리스크 관리를 위해 선제적으로 비중을 축소합니다.",
+      "allocation_role": "core",
+      "source_scope": "source_named_security",
+      "investment_rationale": "뉴럴링크/테슬라향 파운드리 수주에 이어, 반도체 핵심 소재인 텅스텐 분말의 국내 공급망 확보로 생산 안정성이 강화되어 AI 반도체 시장에서의 경쟁력이 더욱 공고해질 것으로 기대됨.",
+      "current_entry_reason": "기존 보유 종목에 대해 중대한 외부 리스크(집단소송)가 발생하여 포트폴리오 방어 차원에서 비중을 조정함.",
+      "key_risks": [
+        "파운드리 수율 문제 발생 가능성",
+        "글로벌 반도체 업황 변동성",
+        "TSMC와의 기술 격차",
+        "미국 내 D램 가격 담합 관련 집단소송 리스크"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260701-2"
+      ]
+    },
+    {
+      "name": "SK하이닉스",
+      "code": "000660",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "비중축소",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-01",
+      "evidence_posts": [
+        {
+          "title": "삼성전자, SK하이닉스, 마이크론 집단소송 당함, 영향은?",
+          "url": "https://blog.naver.com/ranto28/224331285266?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-29"
+        }
+      ],
+      "source_mentioned": true,
+      "previous_weight": 4,
+      "proposed_weight": 3,
+      "weight_source": "AI 제안",
+      "change_reason": "삼성전자와 함께 D램 가격 담합 혐의로 미국에서 집단소송을 당해 상당한 법적 리스크에 노출되었습니다. 나스닥 상장이라는 긍정적 모멘텀이 있지만, 소송 리스크의 심각성을 고려하여 방어적 관점에서 비중을 축소합니다.",
+      "allocation_role": "satellite",
+      "source_scope": "source_named_security",
+      "investment_rationale": "나스닥 상장을 통한 대규모 자금 조달로 용인 클러스터 등 미래 성장 동력을 확보하고, 기업가치 재평가 가능성이 높아져 HBM 시장 리더십이 더욱 공고해질 것으로 기대됨.",
+      "current_entry_reason": "기존 보유 종목에 대해 중대한 외부 리스크(집단소송)가 발생하여 포트폴리오 방어 차원에서 비중을 조정함.",
+      "key_risks": [
+        "HBM 시장 경쟁 심화",
+        "글로벌 메모리 반도체 업황 변동성",
+        "단기적 외국인 리밸런싱 매도 압력",
+        "미국 내 D램 가격 담합 관련 집단소송 리스크"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260701-2"
+      ]
     }
   ],
   "insights": [
     {
-      "id": "INSIGHT-20260629-1",
-      "title": "국내 증시 단기 수급 부담 가중",
-      "summary": "국민연금의 7월 리밸런싱 매도(약 13조원 추정)와 외국인 투자자들의 반기말 포트폴리오 조정이 겹치면서 국내 증시, 특히 대형주를 중심으로 단기적인 수급 부담이 커지고 있습니다. 은행권의 신용대출 규제 강화 또한 개인 투자자의 매수 여력을 제한하는 요인입니다.",
-      "investment_implication": "국내 주식 비중이 높은 포트폴리오는 단기 변동성 확대에 대비한 위험 관리가 필요하며, 현금 비중 확보를 고려해야 합니다.",
+      "id": "INSIGHT-20260701-1",
+      "title": "한국 부동산 시장 규제 강화 및 추가 보유세 인상 가능성",
+      "summary": "정부가 화성 동탄 등 수도권 일부 지역을 토지거래허가구역 등 3중 규제지역으로 지정하고 대출 규제를 강화했습니다. 향후 종부세 및 재산세 등 보유세 인상 가능성도 제기되어 부동산 시장 및 내수 경기에 부담으로 작용할 수 있습니다.",
+      "investment_implication": "부동산 시장 냉각 및 가계부채 부담 증가는 국내 소비 심리 위축으로 이어져 내수 관련 기업에 부정적 영향을 줄 수 있습니다.",
       "evidence_posts": [
         {
-          "title": "7월에 국민연금은 국내주식을 어느정도 처분할까?",
-          "url": "https://blog.naver.com/ranto28/224329357905?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-28"
-        },
-        {
-          "title": "26일 국장은 왜 빠졌을까 A/S (feat 리벨런싱이 끝났다고?)",
-          "url": "https://blog.naver.com/ranto28/224328348822?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-26"
-        },
-        {
-          "title": "오늘 국장은 왜 빠졌을까? 내일은?",
-          "url": "https://blog.naver.com/ranto28/224324723728?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-23"
-        }
-      ],
-      "related_decision_codes": [
-        "035420",
-        "005380",
-        "454910",
-        "011070"
-      ]
-    },
-    {
-      "id": "INSIGHT-20260629-2",
-      "title": "SK하이닉스, 나스닥 상장으로 성장 가속화 및 기업가치 재평가 기대",
-      "summary": "SK하이닉스가 7월 10일 나스닥에 ADR 형태로 상장하여 약 300억 달러의 대규모 자금을 조달할 계획입니다. 이는 용인 반도체 클러스터 등 핵심 시설투자를 가속화하고, '코리아 디스카운트'를 해소하여 기업가치가 재평가될 수 있는 중요한 모멘텀입니다.",
-      "investment_implication": "SK하이닉스의 장기 성장성과 HBM 시장 리더십이 더욱 공고해질 것으로 예상되어 투자 매력이 크게 증대되었습니다.",
-      "evidence_posts": [
-        {
-          "title": "SK하이닉스가 7월 10일 나스닥에 상장(ADR)한다. 어떤 영향이?",
-          "url": "https://blog.naver.com/ranto28/224326515853?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-24"
-        }
-      ],
-      "related_decision_codes": [
-        "000660"
-      ]
-    },
-    {
-      "id": "INSIGHT-20260629-3",
-      "title": "미 연준, 잠재적 통화정책 지표 변경 가능성",
-      "summary": "최근 PCE 지표가 높게 나왔음에도, 신임 연준 의장이 선호하는 '절사 평균 PCE'는 목표치에 근접해 있습니다. 이는 향후 연준이 인플레이션 판단 기준을 변경하여 통화정책 완화의 명분을 찾으려는 '골대 옮기기' 전략을 사용할 수 있음을 시사합니다.",
-      "investment_implication": "단기적으로는 점도표의 매파적 기조가 시장에 부담을 주지만, 중장기적으로는 예상보다 빠른 금리 인하 가능성도 존재하여 불확실성이 높습니다.",
-      "evidence_posts": [
-        {
-          "title": "PCE가 4.1%로 나왔다. 이런데도 금리 인하 시나리오가 있다면?",
-          "url": "https://blog.naver.com/ranto28/224327359398?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-25"
+          "title": "규제(토허,조정대상,투기과열지구)지역 확대와 보유세 인상 동향",
+          "url": "https://blog.naver.com/ranto28/224331870172?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-30"
         }
       ],
       "related_decision_codes": []
     },
     {
-      "id": "INSIGHT-20260629-4",
-      "title": "미국 정부, 양자컴퓨팅 산업 육성 본격화",
-      "summary": "트럼프 대통령이 양자내성암호(PQC) 전환 시한을 단축하고 국가 차원의 양자컴퓨터 개발 프로젝트를 지시하는 행정명령에 서명했습니다. 이는 관련 기술을 국가 안보 자산으로 격상시키고, 대규모 정부 투자를 통해 산업 성장을 가속화하는 강력한 신호입니다.",
-      "investment_implication": "양자컴퓨팅 및 PQC 관련 기업들은 정부의 정책적 지원과 투자에 힘입어 본격적인 성장기에 진입할 것으로 기대됩니다.",
+      "id": "INSIGHT-20260701-2",
+      "title": "삼성전자·SK하이닉스, 미국서 D램 가격 담합 집단소송 피소",
+      "summary": "삼성전자, SK하이닉스, 마이크론이 HBM을 핑계로 범용 D램 생산을 줄여 가격을 담합했다는 혐의로 미국에서 집단소송을 당했습니다. 과거 유죄 판결 사례가 있어, 소송이 증거개시 단계로 진행될 경우 상당한 법적, 재무적 리스크에 직면할 수 있습니다.",
+      "investment_implication": "소송 결과에 따라 막대한 배상금이 부과될 수 있으며, 소송 과정의 불확실성 자체가 주가에 부정적인 요인으로 작용할 것입니다.",
       "evidence_posts": [
         {
-          "title": "트럼프, 새로운 행정명령에 서명하다. (feat 양자내성암호,양자컴)",
-          "url": "https://blog.naver.com/ranto28/224324165623?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-22"
+          "title": "삼성전자, SK하이닉스, 마이크론 집단소송 당함, 영향은?",
+          "url": "https://blog.naver.com/ranto28/224331285266?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-29"
         }
       ],
       "related_decision_codes": [
-        "IBM",
-        "GFS",
-        "RGTI",
-        "QBTS"
-      ]
-    },
-    {
-      "id": "INSIGHT-20260629-5",
-      "title": "한국 외환시장 리스크 관리 강화 필요성",
-      "summary": "정부가 1500원대 환율 방어를 위해 외환건전성 부담금 면제, 외화유동성 스트레스 테스트 유예 등 단기적인 달러 공급 확대 조치를 시행하고 있습니다. 이는 단기적인 환율 안정에 기여할 수 있으나, 장기적인 외환 건전성을 훼손할 수 있는 위험을 내포하고 있습니다.",
-      "investment_implication": "원화 자산 투자 시 환율 변동성 및 잠재적 외환 리스크에 대한 주의가 필요하며, 이는 국내 증시에 대한 매크로 불확실성을 증가시키는 요인입니다.",
-      "evidence_posts": [
-        {
-          "title": "환율을 잡기위해 외환당국이 하고있는 일들",
-          "url": "https://blog.naver.com/ranto28/224325245303?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-27"
-        }
-      ],
-      "related_decision_codes": [
-        "035420",
-        "005380",
-        "454910",
-        "011070"
+        "005930",
+        "000660"
       ]
     }
   ],
