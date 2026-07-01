@@ -1,176 +1,58 @@
 {
-  "analysis_date": "2026-07-01",
+  "analysis_date": "2026-07-02",
   "run_type": "regular",
   "insights": [
     {
-      "id": "INSIGHT-20260701-1",
-      "title": "한국 부동산 시장 규제 강화 및 추가 보유세 인상 가능성",
-      "summary": "정부가 화성 동탄 등 수도권 일부 지역을 토지거래허가구역 등 3중 규제지역으로 지정하고 대출 규제를 강화했습니다. 향후 종부세 및 재산세 등 보유세 인상 가능성도 제기되어 부동산 시장 및 내수 경기에 부담으로 작용할 수 있습니다.",
-      "investment_implication": "부동산 시장 냉각 및 가계부채 부담 증가는 국내 소비 심리 위축으로 이어져 내수 관련 기업에 부정적 영향을 줄 수 있습니다.",
+      "id": "INSIGHT-20260702-1",
+      "title": "국민연금의 국내 주식 리밸런싱 규칙 변경: 단기 충격 완화, 장기 부담 가중",
+      "summary": "국민연금이 국내 주식 비중 조절 규칙을 변경하여 일일 및 월간 매도 한도를 대폭 축소했습니다. 이는 단기적인 시장 충격은 완화시키지만, 매도 압력이 수개월에서 1년 이상 장기화될 수 있음을 의미합니다.",
+      "investment_implication": "국내 증시, 특히 국민연금 보유 비중이 높은 대형주에 대한 장기적인 수급 부담으로 작용하여 지수 상승을 제한할 가능성이 높습니다.",
       "evidence_posts": [
         {
-          "title": "규제(토허,조정대상,투기과열지구)지역 확대와 보유세 인상 동향",
-          "url": "https://blog.naver.com/ranto28/224331870172?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-30"
-        }
-      ],
-      "related_decision_codes": []
-    },
-    {
-      "id": "INSIGHT-20260701-2",
-      "title": "삼성전자·SK하이닉스, 미국서 D램 가격 담합 집단소송 피소",
-      "summary": "삼성전자, SK하이닉스, 마이크론이 HBM을 핑계로 범용 D램 생산을 줄여 가격을 담합했다는 혐의로 미국에서 집단소송을 당했습니다. 과거 유죄 판결 사례가 있어, 소송이 증거개시 단계로 진행될 경우 상당한 법적, 재무적 리스크에 직면할 수 있습니다.",
-      "investment_implication": "소송 결과에 따라 막대한 배상금이 부과될 수 있으며, 소송 과정의 불확실성 자체가 주가에 부정적인 요인으로 작용할 것입니다.",
-      "evidence_posts": [
-        {
-          "title": "삼성전자, SK하이닉스, 마이크론 집단소송 당함, 영향은?",
-          "url": "https://blog.naver.com/ranto28/224331285266?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-29"
+          "title": "국민연금이 국장을 어떻게 팔것인지 딱 걸린듯 (feat 리밸런싱)",
+          "url": "https://blog.naver.com/ranto28/224333132194?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-01"
         }
       ],
       "related_decision_codes": [
+        "005380",
+        "035420",
+        "454910",
+        "011070",
         "005930",
-        "000660"
-      ]
-    }
-  ],
-  "portfolio_decisions": [
-    {
-      "name": "삼성전자",
-      "code": "005930",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "action": "비중축소",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-01",
-      "evidence_posts": [
-        {
-          "title": "삼성전자, SK하이닉스, 마이크론 집단소송 당함, 영향은?",
-          "url": "https://blog.naver.com/ranto28/224331285266?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-29"
-        }
-      ],
-      "source_mentioned": true,
-      "previous_weight": 5,
-      "proposed_weight": 4,
-      "weight_source": "AI 제안",
-      "change_reason": "미국에서 제기된 D램 가격 담합 혐의 집단소송으로 인해 법적, 재무적 불확실성이 크게 증가했습니다. 투자 근거의 핵심인 AI 반도체 사업과는 별개이나, 잠재적 리스크 관리를 위해 선제적으로 비중을 축소합니다.",
-      "allocation_role": "core",
-      "source_scope": "source_named_security",
-      "investment_rationale": "뉴럴링크/테슬라향 파운드리 수주에 이어, 반도체 핵심 소재인 텅스텐 분말의 국내 공급망 확보로 생산 안정성이 강화되어 AI 반도체 시장에서의 경쟁력이 더욱 공고해질 것으로 기대됨.",
-      "current_entry_reason": "기존 보유 종목에 대해 중대한 외부 리스크(집단소송)가 발생하여 포트폴리오 방어 차원에서 비중을 조정함.",
-      "key_risks": [
-        "파운드리 수율 문제 발생 가능성",
-        "글로벌 반도체 업황 변동성",
-        "TSMC와의 기술 격차",
-        "미국 내 D램 가격 담합 관련 집단소송 리스크"
-      ],
-      "linked_insight_ids": [
-        "INSIGHT-20260701-2"
+        "000660",
+        "010140",
+        "042660",
+        "006220",
+        "001440"
       ]
     },
     {
-      "name": "SK하이닉스",
-      "code": "000660",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "action": "비중축소",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-01",
+      "id": "INSIGHT-20260702-2",
+      "title": "원화 약세 지속과 외환 당국의 개입 한계, 금리 인상 가능성 부상",
+      "summary": "한국은행이 역대급 규모의 달러를 매도하며 외환시장에 개입했음에도 원화 약세가 지속되고 있습니다. 외환보유고 소진 부담이 커지면서, 근본적인 환율 안정을 위해 한국은행이 기준금리를 인상할 수 있다는 전망이 나옵니다.",
+      "investment_implication": "기준금리 인상은 국내 증시의 유동성을 축소하고 기업 밸류에이션에 부담을 주어, 투자 심리를 위축시킬 수 있는 부정적 요인입니다.",
       "evidence_posts": [
         {
-          "title": "삼성전자, SK하이닉스, 마이크론 집단소송 당함, 영향은?",
-          "url": "https://blog.naver.com/ranto28/224331285266?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-29"
+          "title": "한국은행의 시장개입 내용과 환율 근황",
+          "url": "https://blog.naver.com/ranto28/224332562925?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-30"
         }
       ],
-      "source_mentioned": true,
-      "previous_weight": 4,
-      "proposed_weight": 3,
-      "weight_source": "AI 제안",
-      "change_reason": "삼성전자와 함께 D램 가격 담합 혐의로 미국에서 집단소송을 당해 상당한 법적 리스크에 노출되었습니다. 나스닥 상장이라는 긍정적 모멘텀이 있지만, 소송 리스크의 심각성을 고려하여 방어적 관점에서 비중을 축소합니다.",
-      "allocation_role": "satellite",
-      "source_scope": "source_named_security",
-      "investment_rationale": "나스닥 상장을 통한 대규모 자금 조달로 용인 클러스터 등 미래 성장 동력을 확보하고, 기업가치 재평가 가능성이 높아져 HBM 시장 리더십이 더욱 공고해질 것으로 기대됨.",
-      "current_entry_reason": "기존 보유 종목에 대해 중대한 외부 리스크(집단소송)가 발생하여 포트폴리오 방어 차원에서 비중을 조정함.",
-      "key_risks": [
-        "HBM 시장 경쟁 심화",
-        "글로벌 메모리 반도체 업황 변동성",
-        "단기적 외국인 리밸런싱 매도 압력",
-        "미국 내 D램 가격 담합 관련 집단소송 리스크"
-      ],
-      "linked_insight_ids": [
-        "INSIGHT-20260701-2"
+      "related_decision_codes": [
+        "005380",
+        "035420",
+        "454910",
+        "011070",
+        "005930",
+        "000660",
+        "010140",
+        "042660",
+        "006220",
+        "001440"
       ]
     }
   ],
-  "watchlist": [
-    {
-      "name": "SpaceX",
-      "code": "",
-      "market": "US",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-01",
-      "evidence_posts": [
-        {
-          "title": "미래에셋증권이 스페이스X 주식을 1주도 못받은 비밀 A/S",
-          "url": "https://blog.naver.com/ranto28/224332115126?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-30"
-        },
-        {
-          "title": "스페이스X의 우주 데이터센터, 새로 알려진 사실",
-          "url": "https://blog.naver.com/ranto28/224323682143?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-24"
-        },
-        {
-          "title": "스페이스X를 공모가에 못샀다면 언제쯤 사는게 좋을까?",
-          "url": "https://blog.naver.com/ranto28/224323794586?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-22"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-06-12",
-      "latest_evidence_date": "2026-06-30",
-      "watchlist_duration_days": 19,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "상장 초기 기업. 테라와트급 우주 데이터센터라는 비전과 IPO 과정에서 확인된 높은 시장 수요는 긍정적. 상장 초기 변동성과 향후 보호예수 물량 출회 가능성을 고려하여 관찰을 지속함."
-    },
-    {
-      "name": "Goldman Sachs",
-      "code": "GS",
-      "market": "US",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-01",
-      "evidence_posts": [
-        {
-          "title": "미래에셋증권이 스페이스X 주식을 1주도 못받은 비밀 A/S",
-          "url": "https://blog.naver.com/ranto28/224332115126?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-30"
-        },
-        {
-          "title": "미래에셋증권이 스페이스 X 주식을 1주도 못 받은 비밀",
-          "url": "https://blog.naver.com/ranto28/224315627964?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-14"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-06-15",
-      "latest_evidence_date": "2026-06-30",
-      "watchlist_duration_days": 16,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "스페이스X IPO 주관사로서 보여준 막강한 딜 소싱 및 배정 능력은 동사의 핵심 경쟁력임을 재확인. 글로벌 자본시장에서의 독점적 지위가 어떻게 수익으로 연결되는지 관찰할 필요가 있음."
-    }
-  ]
+  "portfolio_decisions": [],
+  "watchlist": []
 }
