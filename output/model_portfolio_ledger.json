@@ -856,6 +856,14 @@
       "total_value": 89.98332056,
       "return_pct": -10.01667944,
       "realized_pnl": -0.70751491
+    },
+    {
+      "date": "2026-07-03",
+      "cash": 17.19648341,
+      "invested_value": 71.00423058,
+      "total_value": 88.20071399,
+      "return_pct": -11.79928601,
+      "realized_pnl": -0.70751491
     }
   ]
 }
