@@ -1,122 +1,73 @@
 {
-  "analysis_date": "2026-07-04",
+  "analysis_date": "2026-07-05",
   "run_type": "regular",
   "insights": [
     {
-      "id": "INSIGHT-20260704-1",
-      "title": "일본은행의 '스퀴즈' 전략 전환 가능성에 따른 엔화 환율 변동성 확대",
-      "summary": "일본은행이 예측 가능한 시장 개입에서 벗어나, 엔 숏 세력의 불확실성을 극대화하여 손절을 유도하는 '스퀴즈' 전략으로 전환할 가능성이 시사되었습니다. 이는 엔화 환율의 급격한 변동성을 초래할 수 있습니다.",
-      "investment_implication": "엔화 가치의 급격한 반등 리스크가 부상했으며, 이는 엔 캐리 트레이드 청산 및 글로벌 자산시장의 변동성 확대로 이어질 수 있는 주요 거시경제 변수입니다.",
+      "id": "INSIGHT-20260705-1",
+      "title": "천연 다이아몬드와 랩그로운 다이아몬드 간의 구조적 충돌 심화",
+      "summary": "랩그로운 다이아몬드가 기술 발전과 압도적인 가격 경쟁력을 바탕으로 시장을 빠르게 잠식하면서, 벨기에 안트베르펜 중심의 전통적인 천연 다이아몬드 산업이 큰 위기에 직면했습니다. 트럼프의 관세 면제 조치는 이러한 산업 지형 변화에 정치적 변수가 개입하고 있음을 보여줍니다.",
+      "investment_implication": "천연 다이아몬드 관련 기업의 장기 리스크가 부각되는 반면, 랩그로운 다이아몬드 기술 및 생산 관련 기업은 새로운 성장 기회를 맞이할 수 있습니다.",
       "evidence_posts": [
         {
-          "title": "일본은행이 엔화약세를 돌리기위해 엔숏세력 타격에 나서나?",
-          "url": "https://blog.naver.com/ranto28/224335754009?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-03"
+          "title": "벨기에 다이아몬드 협회가 트럼프에게 보석반지를 선물한 비밀",
+          "url": "https://blog.naver.com/ranto28/224336241433?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-04"
         }
       ],
       "related_decision_codes": []
-    },
-    {
-      "id": "INSIGHT-20260704-2",
-      "title": "DRAM 수출단가 하락 '착시' 논란과 반도체주 단기 불확실성",
-      "summary": "6월 DRAM 수출단가가 9개월 만에 하락 전환하며 삼성전자와 SK하이닉스에 대한 투자심리가 악화되었습니다. 그러나 이는 제품 믹스 변화에 따른 통계적 착시일 수 있으며, 핵심 제품인 DDR5 고정가는 상승세를 유지하고 있어 펀더멘털 훼손으로 보기 어렵습니다.",
-      "investment_implication": "반도체 주가에 단기적인 불확실성이 증대되었으나, 7월 7일 삼성전자 잠정실적 발표가 업황에 대한 우려를 해소할 중요한 분기점이 될 것입니다.",
-      "evidence_posts": [
-        {
-          "title": "삼성전자와 SK하이닉스가 힘이 없는 이유와 전환점은?",
-          "url": "https://blog.naver.com/ranto28/224334922024?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-02"
-        }
-      ],
-      "related_decision_codes": [
-        "005930",
-        "000660"
-      ]
     }
   ],
-  "portfolio_decisions": [
+  "portfolio_decisions": [],
+  "watchlist": [
     {
-      "name": "삼성전자",
-      "code": "005930",
-      "market": "KR",
-      "asset_type": "stock",
+      "name": "천연 다이아몬드 섹터",
+      "code": "",
+      "market": "",
+      "asset_type": "sector",
       "decision_actor": "AI",
-      "action": "보유",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-04",
+      "basis": "섹터 분석",
+      "decision_date": "2026-07-05",
       "evidence_posts": [
         {
-          "title": "삼성전자와 SK하이닉스가 힘이 없는 이유와 전환점은?",
-          "url": "https://blog.naver.com/ranto28/224334922024?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-02"
-        },
-        {
-          "title": "삼성전자, SK하이닉스, 마이크론 집단소송 당함, 영향은?",
-          "url": "https://blog.naver.com/ranto28/224331285266?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-29"
+          "title": "벨기에 다이아몬드 협회가 트럼프에게 보석반지를 선물한 비밀",
+          "url": "https://blog.naver.com/ranto28/224336241433?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-04"
         }
       ],
-      "source_mentioned": true,
-      "previous_weight": 4,
-      "proposed_weight": 4,
-      "weight_source": "AI 제안",
-      "change_reason": "기존 보유. D램 가격 담합 소송 리스크에 이어, 6월 수출단가 하락 데이터로 인한 단기 투자심리 악화라는 추가적인 불확실성이 발생했습니다. 그러나 블로거는 이것이 제품 믹스에 따른 '착시'일 가능성을 제시하며 7월 7일 잠정실적 발표가 중요한 분기점이 될 것으로 분석합니다. 따라서 기존의 비중 축소 판단을 유지하며, 실적 발표를 통해 펀더멘털을 확인할 때까지 현재 비중으로 보유합니다.",
-      "allocation_role": "core",
-      "source_scope": "source_named_security",
-      "investment_rationale": "뉴럴링크/테슬라향 파운드리 수주에 이어, 반도체 핵심 소재인 텅스텐 분말의 국내 공급망 확보로 생산 안정성이 강화되어 AI 반도체 시장에서의 경쟁력이 더욱 공고해질 것으로 기대됨.",
-      "current_entry_reason": "단기적인 시장 노이즈(수출단가 데이터)에도 불구하고, 블로거가 제시한 펀더멘털(DDR5 고정가 상승) 유지 가능성을 확인하고, 핵심 분기점이 될 실적 발표를 앞두고 포지션을 유지함.",
-      "key_risks": [
-        "파운드리 수율 문제 발생 가능성",
-        "글로벌 반도체 업황 변동성",
-        "TSMC와의 기술 격차",
-        "미국 내 D램 가격 담합 관련 집단소송 리스크",
-        "단기 메모리 가격 데이터에 대한 시장의 부정적 해석"
-      ],
-      "linked_insight_ids": [
-        "INSIGHT-20260704-2"
-      ]
+      "source_mentioned": false,
+      "watchlist_entry_date": "2026-07-05",
+      "latest_evidence_date": "2026-07-04",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "sector_only",
+      "observation_reason": "랩그로운 다이아몬드의 부상으로 인한 구조적 위협에 직면해 있으며, 정치적 지원에 의존하는 등 장기적인 산업 리스크가 매우 큽니다. 관련 기업들의 대응 전략과 시장 점유율 변화를 관찰할 필요가 있습니다."
     },
     {
-      "name": "SK하이닉스",
-      "code": "000660",
-      "market": "KR",
-      "asset_type": "stock",
+      "name": "랩그로운 다이아몬드 섹터",
+      "code": "",
+      "market": "",
+      "asset_type": "sector",
       "decision_actor": "AI",
-      "action": "보유",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-04",
+      "basis": "섹터 분석",
+      "decision_date": "2026-07-05",
       "evidence_posts": [
         {
-          "title": "삼성전자와 SK하이닉스가 힘이 없는 이유와 전환점은?",
-          "url": "https://blog.naver.com/ranto28/224334922024?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-02"
-        },
-        {
-          "title": "삼성전자, SK하이닉스, 마이크론 집단소송 당함, 영향은?",
-          "url": "https://blog.naver.com/ranto28/224331285266?fromRss=true&trackingCode=rss",
-          "published_date": "2026-06-29"
+          "title": "벨기에 다이아몬드 협회가 트럼프에게 보석반지를 선물한 비밀",
+          "url": "https://blog.naver.com/ranto28/224336241433?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-04"
         }
       ],
-      "source_mentioned": true,
-      "previous_weight": 3,
-      "proposed_weight": 3,
-      "weight_source": "AI 제안",
-      "change_reason": "기존 보유. 삼성전자와 마찬가지로 D램 수출단가 데이터로 인한 단기 투자심리 악화에 노출되어 있습니다. 블로거가 제기한 '착시' 가능성과 삼성전자 실적 발표라는 업황 바로미터를 앞두고, 섣부른 추가 판단보다 현재의 축소된 비중을 유지하며 상황을 관망하는 것이 합리적입니다.",
-      "allocation_role": "satellite",
-      "source_scope": "source_named_security",
-      "investment_rationale": "나스닥 상장을 통한 대규모 자금 조달로 용인 클러스터 등 미래 성장 동력을 확보하고, 기업가치 재평가 가능성이 높아져 HBM 시장 리더십이 더욱 공고해질 것으로 기대됨.",
-      "current_entry_reason": "업황에 대한 단기적 우려가 부각되었으나, 블로거의 분석처럼 '착시'일 가능성이 존재하며, 삼성전자 실적 발표를 통해 업황을 재확인할 필요가 있어 현재 비중을 유지함.",
-      "key_risks": [
-        "HBM 시장 경쟁 심화",
-        "글로벌 메모리 반도체 업황 변동성",
-        "단기적 외국인 리밸런싱 매도 압력",
-        "미국 내 D램 가격 담합 관련 집단소송 리스크",
-        "단기 메모리 가격 데이터에 대한 시장의 부정적 해석"
-      ],
-      "linked_insight_ids": [
-        "INSIGHT-20260704-2"
-      ]
+      "source_mentioned": false,
+      "watchlist_entry_date": "2026-07-05",
+      "latest_evidence_date": "2026-07-04",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "sector_only",
+      "observation_reason": "기술 발전을 통한 가격 경쟁력과 인도 등 국가적 지원을 바탕으로 전통적인 보석 시장을 파괴적으로 혁신하고 있습니다. 시장의 성장성과 주요 상장 기업을 식별하기 위해 관찰이 필요합니다."
     }
-  ],
-  "watchlist": []
+  ]
 }
