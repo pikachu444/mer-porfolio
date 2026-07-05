@@ -641,8 +641,13 @@
       "decision_actor": "AI",
       "action": "보유",
       "basis": "종목 분석",
-      "decision_date": "2026-07-04",
+      "decision_date": "2026-07-06",
       "evidence_posts": [
+        {
+          "title": "SK하이닉스 상장으로 인한 환율안정 효과가 이미 끝났나?",
+          "url": "https://blog.naver.com/ranto28/224336319183?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-05"
+        },
         {
           "title": "삼성전자와 SK하이닉스가 힘이 없는 이유와 전환점은?",
           "url": "https://blog.naver.com/ranto28/224334922024?fromRss=true&trackingCode=rss",
@@ -658,11 +663,11 @@
       "previous_weight": 3,
       "proposed_weight": 3,
       "weight_source": "AI 제안",
-      "change_reason": "기존 보유. 삼성전자와 마찬가지로 D램 수출단가 데이터로 인한 단기 투자심리 악화에 노출되어 있습니다. 블로거가 제기한 '착시' 가능성과 삼성전자 실적 발표라는 업황 바로미터를 앞두고, 섣부른 추가 판단보다 현재의 축소된 비중을 유지하며 상황을 관망하는 것이 합리적입니다.",
+      "change_reason": "최신 글에서 ADR 상장을 통한 약 290억 달러 규모의 자금 조달 계획과 그 거시경제적 영향력이 재확인되었습니다. 이는 용인 클러스터 등 미래 성장 동력 확보라는 핵심 투자 논리를 더욱 강화하는 근거이므로 기존 보유 의견과 비중을 유지합니다.",
       "allocation_role": "satellite",
       "source_scope": "source_named_security",
       "investment_rationale": "나스닥 상장을 통한 대규모 자금 조달로 용인 클러스터 등 미래 성장 동력을 확보하고, 기업가치 재평가 가능성이 높아져 HBM 시장 리더십이 더욱 공고해질 것으로 기대됨.",
-      "current_entry_reason": "업황에 대한 단기적 우려가 부각되었으나, 블로거의 분석처럼 '착시'일 가능성이 존재하며, 삼성전자 실적 발표를 통해 업황을 재확인할 필요가 있어 현재 비중을 유지함.",
+      "current_entry_reason": "대규모 자금 조달 계획의 구체성과 실행이 임박했음을 재확인하며, 단기적인 환율 영향보다 장기 투자 재원 확보라는 긍정적 측면에 집중하여 보유를 지속합니다.",
       "key_risks": [
         "HBM 시장 경쟁 심화",
         "글로벌 메모리 반도체 업황 변동성",
@@ -671,7 +676,7 @@
         "단기 메모리 가격 데이터에 대한 시장의 부정적 해석"
       ],
       "linked_insight_ids": [
-        "INSIGHT-20260704-2"
+        "INSIGHT-20260706-1"
       ]
     }
   ],
@@ -1375,6 +1380,31 @@
       "status": "관심",
       "source_scope": "sector_only",
       "observation_reason": "기술 발전을 통한 가격 경쟁력과 인도 등 국가적 지원을 바탕으로 전통적인 보석 시장을 파괴적으로 혁신하고 있습니다. 시장의 성장성과 주요 상장 기업을 식별하기 위해 관찰이 필요합니다."
+    },
+    {
+      "name": "이마트",
+      "code": "139480",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-06",
+      "evidence_posts": [
+        {
+          "title": "홈플러스 사태 근황",
+          "url": "https://blog.naver.com/ranto28/224336684901?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-04"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-06",
+      "latest_evidence_date": "2026-07-04",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "경쟁사 홈플러스의 몰락 과정에서 트레이더스(창고형 할인점)를 통해 생존 전략을 모색하는 기업으로 간략히 언급되었습니다. 대형마트 산업의 구조적 위기 속에서 차별화 가능성이 있는지 관찰이 필요하나, 투자 논리가 구체화되지 않아 Watchlist에 편입합니다."
     }
   ],
   "closed_positions": [
@@ -4593,22 +4623,86 @@
       "linked_insight_ids": [
         "INSIGHT-20260704-2"
       ]
+    },
+    {
+      "name": "SK하이닉스",
+      "code": "000660",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "보유",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-06",
+      "evidence_posts": [
+        {
+          "title": "SK하이닉스 상장으로 인한 환율안정 효과가 이미 끝났나?",
+          "url": "https://blog.naver.com/ranto28/224336319183?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-05"
+        },
+        {
+          "title": "삼성전자와 SK하이닉스가 힘이 없는 이유와 전환점은?",
+          "url": "https://blog.naver.com/ranto28/224334922024?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-02"
+        },
+        {
+          "title": "삼성전자, SK하이닉스, 마이크론 집단소송 당함, 영향은?",
+          "url": "https://blog.naver.com/ranto28/224331285266?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-29"
+        }
+      ],
+      "source_mentioned": true,
+      "previous_weight": 3,
+      "proposed_weight": 3,
+      "weight_source": "AI 제안",
+      "change_reason": "최신 글에서 ADR 상장을 통한 약 290억 달러 규모의 자금 조달 계획과 그 거시경제적 영향력이 재확인되었습니다. 이는 용인 클러스터 등 미래 성장 동력 확보라는 핵심 투자 논리를 더욱 강화하는 근거이므로 기존 보유 의견과 비중을 유지합니다.",
+      "allocation_role": "satellite",
+      "source_scope": "source_named_security",
+      "investment_rationale": "나스닥 상장을 통한 대규모 자금 조달로 용인 클러스터 등 미래 성장 동력을 확보하고, 기업가치 재평가 가능성이 높아져 HBM 시장 리더십이 더욱 공고해질 것으로 기대됨.",
+      "current_entry_reason": "대규모 자금 조달 계획의 구체성과 실행이 임박했음을 재확인하며, 단기적인 환율 영향보다 장기 투자 재원 확보라는 긍정적 측면에 집중하여 보유를 지속합니다.",
+      "key_risks": [
+        "HBM 시장 경쟁 심화",
+        "글로벌 메모리 반도체 업황 변동성",
+        "단기적 외국인 리밸런싱 매도 압력",
+        "미국 내 D램 가격 담합 관련 집단소송 리스크",
+        "단기 메모리 가격 데이터에 대한 시장의 부정적 해석"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260706-1"
+      ]
     }
   ],
   "insights": [
     {
-      "id": "INSIGHT-20260705-1",
-      "title": "천연 다이아몬드와 랩그로운 다이아몬드 간의 구조적 충돌 심화",
-      "summary": "랩그로운 다이아몬드가 기술 발전과 압도적인 가격 경쟁력을 바탕으로 시장을 빠르게 잠식하면서, 벨기에 안트베르펜 중심의 전통적인 천연 다이아몬드 산업이 큰 위기에 직면했습니다. 트럼프의 관세 면제 조치는 이러한 산업 지형 변화에 정치적 변수가 개입하고 있음을 보여줍니다.",
-      "investment_implication": "천연 다이아몬드 관련 기업의 장기 리스크가 부각되는 반면, 랩그로운 다이아몬드 기술 및 생산 관련 기업은 새로운 성장 기회를 맞이할 수 있습니다.",
+      "id": "INSIGHT-20260706-1",
+      "title": "SK하이닉스 ADR 상장 자금 유입, 선물환 계약 통해 환율에 선반영",
+      "summary": "SK하이닉스의 약 290억 달러 규모 ADR 상장 자금 유입이 선물환 매도 계약을 통해 실제 자금 유입일(7월 15일) 이전에 이미 원/달러 환율 하락에 영향을 미치고 있습니다. 이는 단기적인 환율 안정 요인이지만, 그 효과는 일시적일 수 있습니다.",
+      "investment_implication": "SK하이닉스의 대규모 자금 조달 능력과 국내 투자 계획의 구체성을 재확인시켜주나, 환율 안정 효과에 기반한 투자는 신중해야 합니다.",
       "evidence_posts": [
         {
-          "title": "벨기에 다이아몬드 협회가 트럼프에게 보석반지를 선물한 비밀",
-          "url": "https://blog.naver.com/ranto28/224336241433?fromRss=true&trackingCode=rss",
+          "title": "SK하이닉스 상장으로 인한 환율안정 효과가 이미 끝났나?",
+          "url": "https://blog.naver.com/ranto28/224336319183?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-05"
+        }
+      ],
+      "related_decision_codes": [
+        "000660"
+      ]
+    },
+    {
+      "id": "INSIGHT-20260706-2",
+      "title": "홈플러스 사태로 본 대형마트 산업의 구조적 위기와 PF 리스크 전이 가능성",
+      "summary": "홈플러스의 회생절차 폐지 결정은 이커머스 확대로 인한 국내 대형마트 산업의 구조적 위기를 보여주는 상징적 사건입니다. 이는 롯데건설 등 관련 기업에 대규모 PF 보증 리스크를 전이시킬 수 있습니다.",
+      "investment_implication": "대형마트 및 관련 부동산 PF에 노출된 기업에 대한 투자 위험이 부각되며, 업계 내 생존 전략(해외 진출, 창고형 매장 등)에 따른 차별화가 심화될 것입니다.",
+      "evidence_posts": [
+        {
+          "title": "홈플러스 사태 근황",
+          "url": "https://blog.naver.com/ranto28/224336684901?fromRss=true&trackingCode=rss",
           "published_date": "2026-07-04"
         }
       ],
-      "related_decision_codes": []
+      "related_decision_codes": [
+        "139480"
+      ]
     }
   ],
   "last_rebalanced_date": "2026-06-29"
