@@ -4673,36 +4673,32 @@
   ],
   "insights": [
     {
-      "id": "INSIGHT-20260706-1",
-      "title": "SK하이닉스 ADR 상장 자금 유입, 선물환 계약 통해 환율에 선반영",
-      "summary": "SK하이닉스의 약 290억 달러 규모 ADR 상장 자금 유입이 선물환 매도 계약을 통해 실제 자금 유입일(7월 15일) 이전에 이미 원/달러 환율 하락에 영향을 미치고 있습니다. 이는 단기적인 환율 안정 요인이지만, 그 효과는 일시적일 수 있습니다.",
-      "investment_implication": "SK하이닉스의 대규모 자금 조달 능력과 국내 투자 계획의 구체성을 재확인시켜주나, 환율 안정 효과에 기반한 투자는 신중해야 합니다.",
+      "id": "INSIGHT-20260707-1",
+      "title": "켈리 공식을 통해 본 정보의 가치와 개인 투자자의 한계",
+      "summary": "켈리 공식은 정보의 양과 질이 부의 성장 속도를 결정함을 보여줍니다. 트럼프 전 대통령의 사례는 정책 결정자로서 가진 압도적인 정보 우위가 어떻게 투자 수익으로 연결될 수 있는지 보여주며, 이는 정보 접근성이 낮은 개인 투자자의 구조적 불리함을 시사합니다.",
+      "investment_implication": "개인 투자자는 내부자 정보에 의존하기보다, 공개된 정보를 바탕으로 장기적인 펀더멘털에 집중하는 전략이 중요함을 시사합니다.",
       "evidence_posts": [
         {
-          "title": "SK하이닉스 상장으로 인한 환율안정 효과가 이미 끝났나?",
-          "url": "https://blog.naver.com/ranto28/224336319183?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-05"
+          "title": "어떻게 베팅해야, 안전하면서도 빨리 불릴수 있는가?(feat 켈리공식)",
+          "url": "https://blog.naver.com/ranto28/224337675312?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-06"
         }
       ],
-      "related_decision_codes": [
-        "000660"
-      ]
+      "related_decision_codes": []
     },
     {
-      "id": "INSIGHT-20260706-2",
-      "title": "홈플러스 사태로 본 대형마트 산업의 구조적 위기와 PF 리스크 전이 가능성",
-      "summary": "홈플러스의 회생절차 폐지 결정은 이커머스 확대로 인한 국내 대형마트 산업의 구조적 위기를 보여주는 상징적 사건입니다. 이는 롯데건설 등 관련 기업에 대규모 PF 보증 리스크를 전이시킬 수 있습니다.",
-      "investment_implication": "대형마트 및 관련 부동산 PF에 노출된 기업에 대한 투자 위험이 부각되며, 업계 내 생존 전략(해외 진출, 창고형 매장 등)에 따른 차별화가 심화될 것입니다.",
+      "id": "INSIGHT-20260707-2",
+      "title": "원금 보존과 장기 복리 투자의 중요성",
+      "summary": "청년미래적금 분석을 통해, 단기적인 고수익 추구보다 원금을 잃지 않고 꾸준히 복리 수익을 쌓아가는 것이 장기적인 자산 형성에 매우 효과적임을 알 수 있습니다. 워렌 버핏의 사례처럼, 장기간에 걸친 복리의 힘은 초기 투자금의 크기를 압도할 수 있습니다.",
+      "investment_implication": "포트폴리오 구성 시, 위험 자산뿐만 아니라 원금 손실 위험이 없는 안정적인 자산의 역할을 인지하고 장기적인 관점을 유지하는 것이 중요합니다.",
       "evidence_posts": [
         {
-          "title": "홈플러스 사태 근황",
-          "url": "https://blog.naver.com/ranto28/224336684901?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-04"
+          "title": "청년미래적금 정말 괜찮을까? 예산이 남는다는데",
+          "url": "https://blog.naver.com/ranto28/224337546731?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-06"
         }
       ],
-      "related_decision_codes": [
-        "139480"
-      ]
+      "related_decision_codes": []
     }
   ],
   "last_rebalanced_date": "2026-06-29"
