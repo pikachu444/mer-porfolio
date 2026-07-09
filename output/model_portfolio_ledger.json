@@ -1,7 +1,7 @@
 {
   "schema_version": "3.0",
   "starting_value": 100.0,
-  "cash": 19.350132736143433,
+  "cash": 18.61770272505974,
   "realized_pnl": -1.9822769799211026,
   "positions": [
     {
@@ -214,11 +214,11 @@
       "code": "000660",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 8.089856060156e-07,
-      "average_cost": 2764000.0,
+      "quantity": 1.144040505870904e-06,
+      "average_cost": 2594721.2628202005,
       "decision_actor": "AI",
       "opened_date": "2026-06-22",
-      "target_weight": 4.0
+      "target_weight": 3.0
     }
   ],
   "closed_positions": [],
@@ -750,6 +750,18 @@
       "value": -0.20437143885793763,
       "target_weight": 5.0,
       "reason": "국민연금의 리밸런싱 전략 변경으로 인한 국내 대형주 수급 불안정성 증대 리스크가 구체적으로 확인됨에 따라, 포트폴리오 방어 차원에서 비중을 축소합니다."
+    },
+    {
+      "date": "2026-07-10",
+      "type": "추가 매수",
+      "key": "stock:KR:000660",
+      "name": "SK하이닉스",
+      "decision_actor": "AI",
+      "price": 2186000.0,
+      "quantity": 3.35054899855304e-07,
+      "value": 0.7324300110836945,
+      "target_weight": 3.0,
+      "reason": "나스닥 ADR 상장에 대한 '폭발적 수요'가 확인되어, 이는 AI 메모리 시장에서의 리더십을 재확인하는 강력한 펀더멘털 모멘텀입니다. 이 긍정적 촉매제가 국민연금 수급 및 단일종목 ETF 등 최근의 국내 시장 리스크를 상쇄하기에 충분하다고 판단하여, 최근 축소했던 비중을 다시 확대합니다."
     }
   ],
   "snapshots": [
@@ -983,6 +995,14 @@
       "invested_value": 64.62257317,
       "total_value": 83.9727059,
       "return_pct": -16.0272941,
+      "realized_pnl": -1.98227698
+    },
+    {
+      "date": "2026-07-10",
+      "cash": 18.61770273,
+      "invested_value": 64.74471547,
+      "total_value": 83.36241819,
+      "return_pct": -16.63758181,
       "realized_pnl": -1.98227698
     }
   ]

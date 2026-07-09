@@ -632,30 +632,25 @@
       "market": "KR",
       "asset_type": "stock",
       "decision_actor": "AI",
-      "action": "비중축소",
-      "basis": "섹터 분석",
-      "decision_date": "2026-07-09",
+      "action": "비중확대",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-10",
       "evidence_posts": [
         {
-          "title": "국민연금 리밸런싱은 끝난것 같다. 그런데 국장은",
-          "url": "https://blog.naver.com/ranto28/224340495410?fromRss=true&trackingCode=rss",
+          "title": "오늘 우리 국장은? 오랜만에..",
+          "url": "https://blog.naver.com/ranto28/224341049009?fromRss=true&trackingCode=rss",
           "published_date": "2026-07-08"
-        },
-        {
-          "title": "SK하이닉스와 삼성전자 2배짜리를 금융당국이 승인한 비밀",
-          "url": "https://blog.naver.com/ranto28/224339898546?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-07"
         }
       ],
       "source_mentioned": true,
-      "previous_weight": 3.0,
-      "proposed_weight": 2.0,
+      "previous_weight": 2.0,
+      "proposed_weight": 3.0,
       "weight_source": "AI 제안",
-      "change_reason": "국민연금의 잠재적 매도 물량 부담과 단일종목 레버리지 ETF로 인한 변동성 확대라는 이중 리스크에 노출되었습니다. 포트폴리오의 국내 증시 위험 노출도를 관리하기 위해 비중을 소폭 축소합니다.",
+      "change_reason": "나스닥 ADR 상장에 대한 '폭발적 수요'가 확인되어, 이는 AI 메모리 시장에서의 리더십을 재확인하는 강력한 펀더멘털 모멘텀입니다. 이 긍정적 촉매제가 국민연금 수급 및 단일종목 ETF 등 최근의 국내 시장 리스크를 상쇄하기에 충분하다고 판단하여, 최근 축소했던 비중을 다시 확대합니다.",
       "allocation_role": "satellite",
-      "source_scope": "previous_decision",
+      "source_scope": "source_named_security",
       "investment_rationale": "나스닥 상장을 통한 대규모 자금 조달과 HBM 시장 리더십에 더해, 강력한 메모리 업사이클이 실적을 견인할 것으로 기대됩니다. 용인 클러스터의 인프라 리스크 완화도 긍정적입니다.",
-      "current_entry_reason": "국민연금의 수급 악화 및 단일종목 ETF로 인한 변동성 등 국내 증시의 구조적 위험이 구체화됨에 따라 포트폴리오 방어 차원에서 비중을 조정합니다.",
+      "current_entry_reason": "ADR 상장 흥행이라는 중대한 긍정적 이벤트가 구체적으로 확인되어, 단기적인 국내 증시 위험에도 불구하고 비중을 다시 늘릴 명확한 근거가 발생했습니다.",
       "key_risks": [
         "HBM 시장 경쟁 심화",
         "글로벌 메모리 반도체 업황 변동성",
@@ -664,8 +659,7 @@
         "단일종목 레버리지/인버스 ETF로 인한 변동성 확대"
       ],
       "linked_insight_ids": [
-        "INSIGHT-20260709-1",
-        "INSIGHT-20260709-2"
+        "INSIGHT-20260710-2"
       ]
     }
   ],
@@ -1042,8 +1036,13 @@
       "asset_type": "sector",
       "decision_actor": "AI",
       "basis": "섹터 분석",
-      "decision_date": "2026-06-16",
+      "decision_date": "2026-07-10",
       "evidence_posts": [
+        {
+          "title": "트럼프가 비료부족에 대응하는 보법",
+          "url": "https://blog.naver.com/ranto28/224341638501?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-09"
+        },
         {
           "title": "올해 여름, 수퍼엘니뇨가 돌아온다. 투자 포인트는 뭘까?",
           "url": "https://blog.naver.com/ranto28/224316751515?fromRss=true&trackingCode=rss",
@@ -1052,13 +1051,13 @@
       ],
       "source_mentioned": false,
       "watchlist_entry_date": "2026-06-16",
-      "latest_evidence_date": "2026-06-15",
-      "watchlist_duration_days": 0,
+      "latest_evidence_date": "2026-07-09",
+      "watchlist_duration_days": 24,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
       "source_scope": "sector_only",
-      "observation_reason": "슈퍼 엘니뇨 현상으로 인해 옥수수, 밀, 대두 등 주요 곡물 가격의 변동성이 커질 것으로 예상됨. 풍작과 가뭄, 비료 문제 등이 복합적으로 작용하여 투자 기회가 발생할 수 있으나, 구체적인 수혜/피해 종목 특정이 필요하여 관찰 대상으로 편입."
+      "observation_reason": "기존 엘니뇨 현상에 더해, 호르무즈 해협 봉쇄와 같은 지정학적 리스크에 대응하는 미국 정부의 정책 개입이 비료 및 곡물 가격에 극심한 변동성을 야기하고 있음이 확인되었습니다. 복잡한 변수들로 인해 구체적인 수혜/피해 종목 특정이 어려워 관찰을 지속합니다."
     },
     {
       "name": "해상운송 섹터",
@@ -1394,6 +1393,31 @@
       "status": "관심",
       "source_scope": "source_named_security",
       "observation_reason": "경쟁사 홈플러스의 몰락 과정에서 트레이더스(창고형 할인점)를 통해 생존 전략을 모색하는 기업으로 간략히 언급되었습니다. 대형마트 산업의 구조적 위기 속에서 차별화 가능성이 있는지 관찰이 필요하나, 투자 논리가 구체화되지 않아 Watchlist에 편입합니다."
+    },
+    {
+      "name": "CF Industries Holdings",
+      "code": "CF",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-10",
+      "evidence_posts": [
+        {
+          "title": "트럼프가 비료부족에 대응하는 보법",
+          "url": "https://blog.naver.com/ranto28/224341638501?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-09"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-10",
+      "latest_evidence_date": "2026-07-09",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "미국의 4대 비료 과점 기업 중 하나로 언급되었으나, 정부의 반독점 조사 및 국내 공급 확대 압박을 받는 부정적인 맥락에서 등장했습니다. 비료 시장의 핵심 플레이어이지만, 투자 논리로 삼기에는 정부 규제 리스크가 있어 관찰이 필요합니다."
     }
   ],
   "closed_positions": [
@@ -4965,43 +4989,72 @@
       "linked_insight_ids": [
         "INSIGHT-20260709-1"
       ]
+    },
+    {
+      "name": "SK하이닉스",
+      "code": "000660",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "비중확대",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-10",
+      "evidence_posts": [
+        {
+          "title": "오늘 우리 국장은? 오랜만에..",
+          "url": "https://blog.naver.com/ranto28/224341049009?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-08"
+        }
+      ],
+      "source_mentioned": true,
+      "previous_weight": 2.0,
+      "proposed_weight": 3.0,
+      "weight_source": "AI 제안",
+      "change_reason": "나스닥 ADR 상장에 대한 '폭발적 수요'가 확인되어, 이는 AI 메모리 시장에서의 리더십을 재확인하는 강력한 펀더멘털 모멘텀입니다. 이 긍정적 촉매제가 국민연금 수급 및 단일종목 ETF 등 최근의 국내 시장 리스크를 상쇄하기에 충분하다고 판단하여, 최근 축소했던 비중을 다시 확대합니다.",
+      "allocation_role": "satellite",
+      "source_scope": "source_named_security",
+      "investment_rationale": "나스닥 상장을 통한 대규모 자금 조달과 HBM 시장 리더십에 더해, 강력한 메모리 업사이클이 실적을 견인할 것으로 기대됩니다. 용인 클러스터의 인프라 리스크 완화도 긍정적입니다.",
+      "current_entry_reason": "ADR 상장 흥행이라는 중대한 긍정적 이벤트가 구체적으로 확인되어, 단기적인 국내 증시 위험에도 불구하고 비중을 다시 늘릴 명확한 근거가 발생했습니다.",
+      "key_risks": [
+        "HBM 시장 경쟁 심화",
+        "글로벌 메모리 반도체 업황 변동성",
+        "미국 내 D램 가격 담합 관련 집단소송 리스크",
+        "국민연금의 잠재적 매도 물량 부담",
+        "단일종목 레버리지/인버스 ETF로 인한 변동성 확대"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260710-2"
+      ]
     }
   ],
   "insights": [
     {
-      "id": "INSIGHT-20260709-1",
-      "title": "국민연금의 리밸런싱 전략 변경으로 인한 국내 증시 수급 불안정성 증대",
-      "summary": "국민연금은 내부 지침 변경을 통해 국내 주식 목표 비중 상향 및 리밸런싱을 유예했으나, 이로 인해 비중이 허용 상단에 근접하게 되었습니다. 이는 과거와 달리 시장 하락 시 매수를 통한 지지 역할을 어렵게 만들고 오히려 매도 압력으로 작용할 수 있는 구조적 위험을 초래했습니다.",
-      "investment_implication": "국내 대형주에 대한 잠재적 매도 물량 부담(오버행)이 상존하며, 시장의 하방 경직성이 약화될 수 있습니다.",
+      "id": "INSIGHT-20260710-1",
+      "title": "미국 정부의 시장 개입에 따른 비료 및 곡물 시장 변동성 심화",
+      "summary": "호르무즈 해협 봉쇄로 촉발된 비료 부족 사태에 대응해, 미국 정부는 관세 중단, 제재 완화, 반독점 조사 등 다각적인 조치를 단행했습니다. 이로 인해 요소(urea) 가격이 급락했으며, 농가 재배 면적 결정에 영향을 미쳐 대두 가격 상승과 옥수수 가격 하락을 유발했습니다.",
+      "investment_implication": "지정학적 리스크와 정부 정책이 비료 및 농산물 가격에 극심한 변동성을 초래할 수 있음을 시사합니다.",
       "evidence_posts": [
         {
-          "title": "국민연금 리밸런싱은 끝난것 같다. 그런데 국장은",
-          "url": "https://blog.naver.com/ranto28/224340495410?fromRss=true&trackingCode=rss",
+          "title": "트럼프가 비료부족에 대응하는 보법",
+          "url": "https://blog.naver.com/ranto28/224341638501?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-09"
+        }
+      ],
+      "related_decision_codes": []
+    },
+    {
+      "id": "INSIGHT-20260710-2",
+      "title": "SK하이닉스 나스닥 ADR 상장 수요 폭발, AI 메모리 시장 신뢰도 반증",
+      "summary": "SK하이닉스의 나스닥 ADR 상장 예정 소식에 폭발적인 수요가 몰리면서, 미국 시장 혼조세에도 불구하고 코스피200 야간선물이 4% 이상 급등했습니다. 이는 시장이 SK하이닉스를 AI 메모리 분야의 핵심 플레이어로 인식하고 있음을 보여주는 강력한 신호입니다.",
+      "investment_implication": "성공적인 ADR 상장은 대규모 투자 재원 확보와 기업가치 재평가로 이어져, HBM 시장 리더십을 더욱 공고히 할 것입니다.",
+      "evidence_posts": [
+        {
+          "title": "오늘 우리 국장은? 오랜만에..",
+          "url": "https://blog.naver.com/ranto28/224341049009?fromRss=true&trackingCode=rss",
           "published_date": "2026-07-08"
         }
       ],
       "related_decision_codes": [
-        "005930",
-        "000660",
-        "005380",
-        "035420",
-        "010140"
-      ]
-    },
-    {
-      "id": "INSIGHT-20260709-2",
-      "title": "단일종목 레버리지/인버스 ETF 도입으로 인한 삼성전자/SK하이닉스 변동성 확대 위험",
-      "summary": "금융당국은 해외 자금 유치를 목적으로 단일종목 레버리지/인버스 ETF를 허용했으나, 데이터 오독으로 인해 정책 목표 달성에 실패했습니다. 결과적으로 펀더멘털과 무관하게 삼성전자와 SK하이닉스의 주가 변동성을 증폭시킬 수 있는 상품이 시장에 추가되었습니다.",
-      "investment_implication": "해당 종목들은 단기적으로 펀더멘털 외적인 요인에 의한 주가 급등락에 더 쉽게 노출될 수 있습니다.",
-      "evidence_posts": [
-        {
-          "title": "SK하이닉스와 삼성전자 2배짜리를 금융당국이 승인한 비밀",
-          "url": "https://blog.naver.com/ranto28/224339898546?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-07"
-        }
-      ],
-      "related_decision_codes": [
-        "005930",
         "000660"
       ]
     }
