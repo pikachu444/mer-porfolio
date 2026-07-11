@@ -1,47 +1,151 @@
 {
-  "analysis_date": "2026-07-11",
+  "analysis_date": "2026-07-12",
   "run_type": "regular",
   "insights": [
     {
-      "id": "INSIGHT-20260711-1",
-      "title": "바이오 기업의 파트너 리스크: HLB 사례로 본 FDA 승인 실패 요인",
-      "summary": "HLB의 간암 신약이 FDA 승인에 반복적으로 실패한 핵심 원인은 신약 자체의 문제가 아닌, 중국 파트너사 항서제약의 제조시설 품질관리(cGMP) 문제였습니다. 이는 바이오 투자 시, 파트너사의 제조 및 품질관리 역량에 대한 실사가 매우 중요함을 보여줍니다.",
-      "investment_implication": "바이오/제약 기업 투자 시, 임상 데이터뿐만 아니라 협력사의 제조 및 규제 대응 능력까지 포함한 종합적인 리스크 평가가 필수적입니다.",
+      "id": "INSIGHT-20260712-1",
+      "title": "글로벌 헬륨 공급망 붕괴, 반도체 생산에 중대 위협",
+      "summary": "중국의 헬륨 수출 금지 조치와 세계 1위 수출국 카타르의 생산 중단, 러시아의 수출 통제가 겹치며 반도체 생산에 필수적인 헬륨의 글로벌 공급망이 사실상 붕괴 상태에 직면했습니다. 헬륨 가격은 이미 3배 급등했으며, 장기 비축이 불가능해 공급 안정성 확보가 반도체 기업의 핵심 과제로 부상했습니다.",
+      "investment_implication": "반도체 섹터에 대한 투자 리스크가 크게 증가했으며, 안정적인 헬륨 공급망을 확보하는 능력이 기업의 생산성과 경쟁력을 좌우할 핵심 변수가 되었습니다.",
       "evidence_posts": [
         {
-          "title": "HLB 간암신약 미국FDA승인 불발의 비밀 A/S",
-          "url": "https://blog.naver.com/ranto28/224342169959?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-10"
-        }
-      ],
-      "related_decision_codes": []
-    },
-    {
-      "id": "INSIGHT-20260711-2",
-      "title": "국내 은행권 주택담보대출 축소로 인한 하반기 유동성 위축 우려",
-      "summary": "KB국민은행을 시작으로 국내 주요 은행들이 금융당국의 가계대출 총량 규제에 따라 주택담보대출 및 신용대출 한도를 축소하고 있습니다. 이는 하반기 부동산 및 주식 시장의 유동성을 감소시키는 주요한 거시적 위험 요인으로 작용할 전망입니다.",
-      "investment_implication": "국내 증시에 대한 단기적 투자심리 위축과 수급 악화가 예상되므로, 국내 주식 비중 확대에 신중한 접근이 필요합니다.",
-      "evidence_posts": [
-        {
-          "title": "KB국민은행에서 시작되는 주담대 축소의 속사정",
-          "url": "https://blog.naver.com/ranto28/224341770099?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-09"
+          "title": "중국이 반도체에 사용되는 헬륨을 수출금지한 속사정",
+          "url": "https://blog.naver.com/ranto28/224343061316?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-11"
         }
       ],
       "related_decision_codes": [
         "005930",
-        "000660",
-        "005380",
-        "035420",
-        "010140",
-        "454910",
-        "011070",
-        "042660",
-        "006220",
-        "001440"
+        "000660"
+      ]
+    },
+    {
+      "id": "INSIGHT-20260712-2",
+      "title": "조류 인플루엔자, 계란보다 치킨 가격에 장기적 충격 전망",
+      "summary": "조류 인플루엔자(AI) 확산으로 인한 살처분 규모가 급증하며 계란 가격이 상승했으나, 육용종계 농장 피해가 더 심각해 치킨 가격 정상화가 더 오래 걸릴 전망입니다. 복잡한 사육 주기와 높은 사료비, 환율 부담이 가격 하락을 제약하는 요인으로 작용하고 있습니다.",
+      "investment_implication": "식품 인플레이션 압력이 지속될 수 있으며, 특히 육계 관련 기업들의 원가 부담 및 수익성 변동성이 커질 수 있습니다.",
+      "evidence_posts": [
+        {
+          "title": "계란가격은 왜 이리 비싼가?",
+          "url": "https://blog.naver.com/ranto28/224343106209?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-11"
+        }
+      ],
+      "related_decision_codes": []
+    }
+  ],
+  "portfolio_decisions": [
+    {
+      "name": "삼성전자",
+      "code": "005930",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "보유",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-12",
+      "evidence_posts": [
+        {
+          "title": "중국이 반도체에 사용되는 헬륨을 수출금지한 속사정",
+          "url": "https://blog.naver.com/ranto28/224343061316?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-11"
+        }
+      ],
+      "source_mentioned": true,
+      "previous_weight": 4.0,
+      "proposed_weight": 4.0,
+      "weight_source": "AI 제안",
+      "change_reason": "기존 보유. 기록적인 2분기 실적이라는 강력한 펀더멘털에도 불구하고, D램 가격 담합 소송, 국민연금 수급 이슈에 더해, 반도체 생산에 필수적인 헬륨의 글로벌 공급망 붕괴라는 새로운 중대 리스크가 발생했습니다. 리스크가 누적되고 있으나, 실적 모멘텀이 강해 매도보다는 현재 비중을 유지하며 상황을 관찰합니다.",
+      "allocation_role": "core",
+      "source_scope": "source_named_security",
+      "investment_rationale": "기록적인 2분기 실적은 메모리 반도체 상승 사이클의 강력함을 증명하며, 파운드리 부문의 성장성과 더불어 메모리 사업의 압도적인 실적은 주가 상승의 핵심 동력이 될 것입니다.",
+      "current_entry_reason": "기존 보유 종목에 대해 중대한 외부 리스크(헬륨 공급망)가 추가로 발생했으나, 강력한 실적 모멘텀을 고려하여 포지션을 유지하며 리스크 전개 과정을 관찰합니다.",
+      "key_risks": [
+        "파운드리 수율 문제 발생 가능성",
+        "글로벌 반도체 업황 변동성",
+        "TSMC와의 기술 격차",
+        "미국 내 D램 가격 담합 관련 집단소송 리스크",
+        "국민연금의 잠재적 매도 물량 부담",
+        "단일종목 레버리지/인버스 ETF로 인한 변동성 확대",
+        "헬륨 등 핵심 원자재 공급망 불안정"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260712-1"
+      ]
+    },
+    {
+      "name": "SK하이닉스",
+      "code": "000660",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "보유",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-12",
+      "evidence_posts": [
+        {
+          "title": "중국이 반도체에 사용되는 헬륨을 수출금지한 속사정",
+          "url": "https://blog.naver.com/ranto28/224343061316?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-11"
+        }
+      ],
+      "source_mentioned": true,
+      "previous_weight": 3.0,
+      "proposed_weight": 3.0,
+      "weight_source": "AI 제안",
+      "change_reason": "기존 보유. 나스닥 ADR 상장 흥행이라는 강력한 모멘텀이 있지만, 반도체 생산에 필수적인 헬륨의 글로벌 공급망 붕괴라는 새로운 운영 리스크가 발생했습니다. 이는 기존의 소송 및 국내 수급 리스크에 더해지는 부담입니다. 긍정적 촉매제와 부정적 리스크가 공존하므로, 최근 확대한 비중을 유지하며 리스크 전개 과정을 면밀히 관찰합니다.",
+      "allocation_role": "satellite",
+      "source_scope": "source_named_security",
+      "investment_rationale": "나스닥 상장을 통한 대규모 자금 조달과 HBM 시장 리더십에 더해, 강력한 메모리 업사이클이 실적을 견인할 것으로 기대됩니다. 용인 클러스터의 인프라 리스크 완화도 긍정적입니다.",
+      "current_entry_reason": "기존 보유 종목에 대해 중대한 외부 리스크(헬륨 공급망)가 추가로 발생했으나, ADR 상장이라는 강력한 모멘텀을 고려하여 포지션을 유지하며 리스크 전개 과정을 관찰합니다.",
+      "key_risks": [
+        "HBM 시장 경쟁 심화",
+        "글로벌 메모리 반도체 업황 변동성",
+        "미국 내 D램 가격 담합 관련 집단소송 리스크",
+        "국민연금의 잠재적 매도 물량 부담",
+        "단일종목 레버리지/인버스 ETF로 인한 변동성 확대",
+        "헬륨 등 핵심 원자재 공급망 불안정"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260712-1"
       ]
     }
   ],
-  "portfolio_decisions": [],
-  "watchlist": []
+  "watchlist": [
+    {
+      "name": "농산물/곡물 섹터",
+      "code": "",
+      "market": "",
+      "asset_type": "sector",
+      "decision_actor": "AI",
+      "basis": "섹터 분석",
+      "decision_date": "2026-07-12",
+      "evidence_posts": [
+        {
+          "title": "계란가격은 왜 이리 비싼가?",
+          "url": "https://blog.naver.com/ranto28/224343106209?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-11"
+        },
+        {
+          "title": "트럼프가 비료부족에 대응하는 보법",
+          "url": "https://blog.naver.com/ranto28/224341638501?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-09"
+        },
+        {
+          "title": "올해 여름, 수퍼엘니뇨가 돌아온다. 투자 포인트는 뭘까?",
+          "url": "https://blog.naver.com/ranto28/224316751515?fromRss=true&trackingCode=rss",
+          "published_date": "2026-06-15"
+        }
+      ],
+      "source_mentioned": false,
+      "watchlist_entry_date": "2026-06-16",
+      "latest_evidence_date": "2026-07-11",
+      "watchlist_duration_days": 26,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "sector_only",
+      "observation_reason": "기존 엘니뇨 및 지정학적 리스크에 더해, 국내 조류 인플루엔자 사태로 인한 사료 수요 변화와 높은 환율이 곡물 가격에 미치는 영향이 확인되었습니다. 복합적인 변수들이 가격 변동성을 키우고 있어 구체적인 투자 대상을 특정하기 어려워 관찰을 지속합니다."
+    }
+  ]
 }
