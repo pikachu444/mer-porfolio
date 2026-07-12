@@ -1,8 +1,8 @@
 {
-  "updated": "2026-07-12",
+  "updated": "2026-07-13",
   "portfolio_return_krw": -15.8096277,
-  "cash": 18.61770273,
-  "realized_pnl": -1.98227698,
+  "cash": 20.91061059,
+  "realized_pnl": -3.48852579,
   "active_positions": [
     {
       "key": "stock:KR:006220",
@@ -38,7 +38,7 @@
       "code": "010140",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 0.00019851703523503377,
+      "quantity": 0.0001506762815165175,
       "average_cost": 26100.0,
       "decision_actor": "미분류",
       "opened_date": "2026-06-09",
@@ -122,7 +122,7 @@
       "code": "011070",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 3.804540719114336e-06,
+      "quantity": 3.40392340824882e-06,
       "average_cost": 1095000.0,
       "decision_actor": "미분류",
       "opened_date": "2026-06-09",
@@ -150,7 +150,7 @@
       "code": "454910",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 4.167091069994644e-05,
+      "quantity": 3.3902163341216436e-05,
       "average_cost": 127200.0,
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
@@ -164,7 +164,7 @@
       "code": "005380",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 1.0893756441654394e-05,
+      "quantity": 9.20113358441029e-06,
       "average_cost": 631518.7087066578,
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
@@ -178,7 +178,7 @@
       "code": "035420",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 2.61461461041264e-05,
+      "quantity": 2.2004801959580278e-05,
       "average_cost": 279000.0,
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
@@ -220,7 +220,7 @@
       "code": "042660",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 3.6164453140117444e-05,
+      "quantity": 3.1066558043304116e-05,
       "average_cost": 104500.0,
       "decision_actor": "AI",
       "opened_date": "2026-06-12",
@@ -234,13 +234,13 @@
       "code": "005930",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 1.2104173824060436e-05,
-      "average_cost": 327195.3098017432,
+      "quantity": 1.4770240753921779e-05,
+      "average_cost": 319578.94647145615,
       "decision_actor": "AI",
       "opened_date": "2026-06-18",
-      "target_weight": 6.0,
+      "target_weight": 5.0,
       "current_price": 285000.0,
-      "return_pct_krw": -12.896061935395863
+      "return_pct_krw": -10.820157852464984
     },
     {
       "key": "stock:KR:000660",
@@ -248,13 +248,13 @@
       "code": "000660",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 1.144040505870904e-06,
-      "average_cost": 2594721.2628202005,
+      "quantity": 1.5447774733459475e-06,
+      "average_cost": 2487136.743963892,
       "decision_actor": "AI",
       "opened_date": "2026-06-22",
-      "target_weight": 3.0,
+      "target_weight": 4.0,
       "current_price": 2180000.0,
-      "return_pct_krw": -15.983268367309723
+      "return_pct_krw": -12.349009145126077
     }
   ],
   "closed_positions": [],
@@ -385,6 +385,10 @@
     },
     {
       "date": "2026-07-12",
+      "avg_return_krw": -15.8096277
+    },
+    {
+      "date": "2026-07-13",
       "avg_return_krw": -15.8096277
     }
   ]

@@ -1,8 +1,8 @@
 {
   "schema_version": "3.0",
   "starting_value": 100.0,
-  "cash": 18.61770272505974,
-  "realized_pnl": -1.9822769799211026,
+  "cash": 20.91061059286188,
+  "realized_pnl": -3.488525794573894,
   "positions": [
     {
       "key": "stock:KR:006220",
@@ -34,7 +34,7 @@
       "code": "010140",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 0.00019851703523503377,
+      "quantity": 0.0001506762815165175,
       "average_cost": 26100.0,
       "decision_actor": "미분류",
       "opened_date": "2026-06-09",
@@ -106,7 +106,7 @@
       "code": "011070",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 3.804540719114336e-06,
+      "quantity": 3.40392340824882e-06,
       "average_cost": 1095000.0,
       "decision_actor": "미분류",
       "opened_date": "2026-06-09",
@@ -130,7 +130,7 @@
       "code": "454910",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 4.167091069994644e-05,
+      "quantity": 3.3902163341216436e-05,
       "average_cost": 127200.0,
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
@@ -142,7 +142,7 @@
       "code": "005380",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 1.0893756441654394e-05,
+      "quantity": 9.20113358441029e-06,
       "average_cost": 631518.7087066578,
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
@@ -154,7 +154,7 @@
       "code": "035420",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 2.61461461041264e-05,
+      "quantity": 2.2004801959580278e-05,
       "average_cost": 279000.0,
       "decision_actor": "AI",
       "opened_date": "2026-06-09",
@@ -190,7 +190,7 @@
       "code": "042660",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 3.6164453140117444e-05,
+      "quantity": 3.1066558043304116e-05,
       "average_cost": 104500.0,
       "decision_actor": "AI",
       "opened_date": "2026-06-12",
@@ -202,11 +202,11 @@
       "code": "005930",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 1.2104173824060436e-05,
-      "average_cost": 327195.3098017432,
+      "quantity": 1.4770240753921779e-05,
+      "average_cost": 319578.94647145615,
       "decision_actor": "AI",
       "opened_date": "2026-06-18",
-      "target_weight": 6.0
+      "target_weight": 5.0
     },
     {
       "key": "stock:KR:000660",
@@ -214,11 +214,11 @@
       "code": "000660",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 1.144040505870904e-06,
-      "average_cost": 2594721.2628202005,
+      "quantity": 1.5447774733459475e-06,
+      "average_cost": 2487136.743963892,
       "decision_actor": "AI",
       "opened_date": "2026-06-22",
-      "target_weight": 3.0
+      "target_weight": 4.0
     }
   ],
   "closed_positions": [],
@@ -762,6 +762,102 @@
       "value": 0.7324300110836945,
       "target_weight": 3.0,
       "reason": "나스닥 ADR 상장에 대한 '폭발적 수요'가 확인되어, 이는 AI 메모리 시장에서의 리더십을 재확인하는 강력한 펀더멘털 모멘텀입니다. 이 긍정적 촉매제가 국민연금 수급 및 단일종목 ETF 등 최근의 국내 시장 리스크를 상쇄하기에 충분하다고 판단하여, 최근 축소했던 비중을 다시 확대합니다."
+    },
+    {
+      "date": "2026-07-13",
+      "type": "추가 매수",
+      "key": "stock:KR:005930",
+      "name": "삼성전자",
+      "decision_actor": "AI",
+      "price": 285000.0,
+      "quantity": 2.666066929861344e-06,
+      "value": 0.759829075010483,
+      "target_weight": 5.0,
+      "reason": "리밸런싱 실행. 시장 예상을 압도하는 2분기 잠정 실적 발표는 메모리 슈퍼사이클의 강력함을 증명하는 결정적 근거입니다. 헬륨 공급망, 소송, 국내 수급 등 다수의 리스크가 존재하지만, 압도적인 펀더멘털 모멘텀이 이를 상쇄할 것으로 판단하여 비중을 확대합니다."
+    },
+    {
+      "date": "2026-07-13",
+      "type": "추가 매수",
+      "key": "stock:KR:000660",
+      "name": "SK하이닉스",
+      "decision_actor": "AI",
+      "price": 2180000.0,
+      "quantity": 4.0073696747504343e-07,
+      "value": 0.8736065890955946,
+      "target_weight": 4.0,
+      "reason": "리밸런싱 실행. 나스닥 ADR 상장에 대한 '폭발적 수요'가 확인되어, AI 메모리 시장에서의 리더십을 재확인하는 강력한 펀더멘털 모멘텀입니다. 이 긍정적 촉매제가 헬륨 공급망, 국내 수급 등 최근의 리스크를 상쇄하기에 충분하다고 판단하여 비중을 확대합니다."
+    },
+    {
+      "date": "2026-07-13",
+      "type": "일부 매도",
+      "key": "stock:KR:035420",
+      "name": "네이버",
+      "decision_actor": "AI",
+      "price": 191300.0,
+      "quantity": 4.1413441445461225e-06,
+      "value": -0.7922391348516732,
+      "target_weight": 5.0,
+      "reason": "리밸런싱 실행. '소버린 AI'라는 장기 성장 동력은 유효하나, 국민연금의 구조적 매도 압력과 국내 금융시장 유동성 축소라는 거시경제적 악재에 직접적으로 노출되어 있습니다. 포트폴리오의 방어적 스탠스를 강화하기 위해 비중을 축소합니다."
+    },
+    {
+      "date": "2026-07-13",
+      "type": "일부 매도",
+      "key": "stock:KR:005380",
+      "name": "현대차",
+      "decision_actor": "AI",
+      "price": 457500.0,
+      "quantity": 1.692622857244104e-06,
+      "value": -0.7743749571891776,
+      "target_weight": 5.0,
+      "reason": "리밸런싱 실행. '피지컬 AI'라는 장기 성장 스토리는 유효하나, 국내 대표 대형주로서 국민연금의 매도 압력과 국내 유동성 축소 리스크에 노출되어 있습니다. 포트폴리오의 한국 시장 위험 노출도를 관리하기 위해 비중을 축소합니다."
+    },
+    {
+      "date": "2026-07-13",
+      "type": "일부 매도",
+      "key": "stock:KR:010140",
+      "name": "삼성중공업",
+      "decision_actor": "AI",
+      "price": 22350.0,
+      "quantity": 4.784075371851629e-05,
+      "value": -1.0692408456088391,
+      "target_weight": 4.0,
+      "reason": "리밸런싱 실행. 미국 MRO 시장 진출 등 긍정적 전망은 유효하나, 국내 증시의 구조적 리스크(국민연금 매도, 유동성 축소)에 대응하여 포트폴리오 방어력을 높이기 위해 비중을 축소합니다."
+    },
+    {
+      "date": "2026-07-13",
+      "type": "일부 매도",
+      "key": "stock:KR:011070",
+      "name": "LG이노텍",
+      "decision_actor": "AI",
+      "price": 742000.0,
+      "quantity": 4.00617310865516e-07,
+      "value": -0.29725804466221284,
+      "target_weight": 3.0,
+      "reason": "리밸런싱 실행. 로봇 부품 공급 등 장기 성장성은 유효하나, 국내 증시의 단기 수급 악화 및 유동성 축소 리스크에 대응하고 포트폴리오의 방어적 현금 비중을 확대하기 위해 비중을 축소합니다."
+    },
+    {
+      "date": "2026-07-13",
+      "type": "일부 매도",
+      "key": "stock:KR:042660",
+      "name": "한화오션",
+      "decision_actor": "AI",
+      "price": 81300.0,
+      "quantity": 5.097895096813329e-06,
+      "value": -0.41445887137092363,
+      "target_weight": 3.0,
+      "reason": "리밸런싱 실행. 캐나다 잠수함 수주 실패는 지정학적 요인이 크지만, 해외 수주에 대한 불확실성을 높였습니다. 국내 증시의 전반적인 리스크가 커지는 상황에서, 부정적 뉴스가 발생한 종목의 비중을 축소하여 위험을 관리합니다."
+    },
+    {
+      "date": "2026-07-13",
+      "type": "일부 매도",
+      "key": "stock:KR:454910",
+      "name": "두산로보틱스",
+      "decision_actor": "AI",
+      "price": 74500.0,
+      "quantity": 7.768747358730004e-06,
+      "value": -0.5787716782253853,
+      "target_weight": 3.0,
+      "reason": "리밸런싱 실행. '피지컬 AI' 성장 스토리는 유효하나, 고밸류에이션 위험(risk) 자산으로서 국내 증시의 유동성 축소에 가장 민감하게 반응할 수 있습니다. 포트폴리오 위험 관리 및 방어적 현금 비중 확대를 위해 비중을 축소합니다."
     }
   ],
   "snapshots": [
@@ -1020,6 +1116,14 @@
       "total_value": 84.1903723,
       "return_pct": -15.8096277,
       "realized_pnl": -1.98227698
+    },
+    {
+      "date": "2026-07-13",
+      "cash": 20.91061059,
+      "invested_value": 63.2797617,
+      "total_value": 84.1903723,
+      "return_pct": -15.8096277,
+      "realized_pnl": -3.48852579
     }
   ]
 }
