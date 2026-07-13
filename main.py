@@ -514,6 +514,20 @@ def _deferred_status_note(posts: list[dict]) -> str:
     titles = ", ".join(_short_title(post.get("title", "")) for post in posts[:2])
     if len(posts) > 2:
         titles += f" 외 {len(posts) - 2}건"
+    upgrade_waiting = sum(
+        "업그레이드 대기" in str(post.get("reason") or "")
+        for post in posts
+    )
+    if upgrade_waiting == len(posts):
+        return (
+            f"기존 출처 요약 {len(posts)}건 v4 업그레이드 진행으로 "
+            f"전체 리밸런싱 보류: {titles}"
+        )
+    if upgrade_waiting:
+        return (
+            f"출처 요약 업그레이드 대기 {upgrade_waiting}건과 요약 보류 "
+            f"{len(posts) - upgrade_waiting}건으로 투자 분석 보류: {titles}"
+        )
     return f"새 글 {len(posts)}건 요약 실패/없음으로 투자 분석 보류: {titles}"
 
 

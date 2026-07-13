@@ -277,6 +277,17 @@ class FetchMerTest(unittest.TestCase):
         self.assertIn("새 글 1건 요약 실패", note)
         self.assertIn("코스트코와 이마트", note)
 
+    def test_deferred_status_note_labels_legacy_upgrade_without_calling_it_a_failure(self):
+        note = main._deferred_status_note([
+            {
+                "title": "기존 글",
+                "reason": "최신 출처 요약(v4) 업그레이드 대기",
+            }
+        ])
+
+        self.assertIn("v4 업그레이드 진행", note)
+        self.assertNotIn("요약 실패", note)
+
     def test_fetch_recent_posts_persists_deferred_summary(self):
         entry = FeedEntry(
             title="신규 글",
