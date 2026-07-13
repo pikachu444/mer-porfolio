@@ -6,10 +6,14 @@ concurrency:
   cancel-in-progress: false
 
 on:
-  # 00:17 KST (15:17 UTC). Avoid the top of the hour, where GitHub can delay
-  # or drop scheduled jobs under load.
+  # 00:17 KST (15:17 UTC) primary. Avoid the top of the hour, where GitHub
+  # can delay or drop scheduled jobs under load.
   schedule:
     - cron: "17 15 * * *"
+    # 09:17 KST (00:17 UTC) recovery. It is safe because a KST-day delivery
+    # receipt below makes scheduled reports at-most-once, even if GitHub
+    # delivers the primary very late.
+    - cron: "17 0 * * *"
 
   workflow_dispatch:
     inputs:
@@ -57,6 +61,108 @@ jobs:
           # Required for a safe rebase when a human push overlaps a report push.
           fetch-depth: 0
 
+      - name: Guard scheduled report delivery
+        id: schedule_guard
+        if: ${{ github.event_name == 'schedule' }}
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          # A queued schedule event can still checkout an older SHA. Always
+          # inspect the latest remote receipt after acquiring workflow
+          # concurrency, rather than trusting the working tree.
+          set -euo pipefail
+          git fetch origin "refs/heads/$TARGET_BRANCH:refs/remotes/origin/$TARGET_BRANCH"
+          python - <<'PY'
+          import json
+          import os
+          import subprocess
+          from datetime import datetime
+          from pathlib import Path
+          from zoneinfo import ZoneInfo
+
+          branch = os.environ["TARGET_BRANCH"]
+          today = datetime.now(ZoneInfo("Asia/Seoul")).date().isoformat()
+
+          def remote_json(path: str):
+              result = subprocess.run(
+                  ["git", "show", f"origin/{branch}:{path}"],
+                  check=False,
+                  capture_output=True,
+                  text=True,
+                  encoding="utf-8",
+              )
+              if result.returncode:
+                  return None, False
+              try:
+                  return json.loads(result.stdout), True
+              except (TypeError, json.JSONDecodeError):
+                  return None, True
+
+          def kst_date(value: object) -> str | None:
+              if not isinstance(value, str) or not value:
+                  return None
+              try:
+                  parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+              except ValueError:
+                  return None
+              if parsed.tzinfo is None:
+                  parsed = parsed.replace(tzinfo=ZoneInfo("Asia/Seoul"))
+              return parsed.astimezone(ZoneInfo("Asia/Seoul")).date().isoformat()
+
+          decision = "run"
+          reason = "no_delivery_receipt_for_kst_day"
+          receipt, receipt_exists = remote_json("output/scheduled_delivery_receipt.json")
+          if receipt_exists:
+              if not isinstance(receipt, dict):
+                  decision = "block"
+                  reason = "invalid_scheduled_delivery_receipt"
+              elif receipt.get("kst_date") == today:
+                  status = receipt.get("delivery_status")
+                  if status == "delivered":
+                      decision = "skip"
+                      reason = "scheduled_report_already_delivered"
+                  else:
+                      # A prepared receipt means either delivery failed, or
+                      # Telegram accepted it before its final receipt push.
+                      # Resending would risk a duplicate report.
+                      decision = "block"
+                      reason = "scheduled_delivery_status_unconfirmed"
+
+          # Compatibility guard for a primary run queued on the pre-receipt
+          # workflow revision. A same-day scheduled receipt without a marker
+          # is not evidence that a manual rebalance ran, so only this mode
+          # blocks recovery delivery.
+          if decision == "run":
+              run_status, status_exists = remote_json("output/run_status.json")
+              if status_exists:
+                  if not isinstance(run_status, dict):
+                      decision = "block"
+                      reason = "invalid_run_status_for_delivery_guard"
+                  else:
+                      mode = run_status.get("mode")
+                      completed_date = kst_date(run_status.get("completed_at"))
+                      valid_modes = {"scheduled", "rebalance", "verify", "full_verify", "test"}
+                      if mode not in valid_modes or completed_date is None:
+                          decision = "block"
+                          reason = "invalid_run_status_for_delivery_guard"
+                      elif mode == "scheduled" and completed_date == today:
+                          decision = "block"
+                          reason = "legacy_scheduled_delivery_status_unknown"
+
+          output = Path(os.environ["GITHUB_OUTPUT"])
+          with output.open("a", encoding="utf-8") as handle:
+              handle.write(f"decision={decision}\n")
+              handle.write(f"reason={reason}\n")
+          level = "notice" if decision in {"run", "skip"} else "warning"
+          print(f"::{level}::Scheduled delivery guard: {decision} ({reason})")
+          PY
+
+      - name: Stop unknown scheduled delivery from being resent
+        if: ${{ github.event_name == 'schedule' && steps.schedule_guard.outputs.decision == 'block' }}
+        run: |
+          echo "::error::A same-day scheduled report may already have been delivered; automatic resend is intentionally blocked."
+          exit 1
+
       - name: Guard live branch
         if: ${{ (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && github.ref != 'refs/heads/main' }}
         run: |
@@ -64,23 +170,27 @@ jobs:
           exit 1
 
       - name: Set up Python
+        if: ${{ github.event_name != 'schedule' || steps.schedule_guard.outputs.decision == 'run' }}
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: "pip"
 
       - name: Install Korean fonts
+        if: ${{ github.event_name != 'schedule' || steps.schedule_guard.outputs.decision == 'run' }}
         run: sudo apt-get install -y -q fonts-nanum && fc-cache -fv
 
       - name: Install dependencies
+        if: ${{ github.event_name != 'schedule' || steps.schedule_guard.outputs.decision == 'run' }}
         run: pip install --disable-pip-version-check -r requirements.txt
 
       - name: Run automated tests
+        if: ${{ github.event_name != 'schedule' || steps.schedule_guard.outputs.decision == 'run' }}
         run: python -m unittest discover -s tests -v
 
       - name: Run portfolio analysis
         id: analyze
-        if: ${{ github.event_name == 'schedule' || github.event.inputs.run_mode != 'test' }}
+        if: ${{ (github.event_name == 'schedule' && steps.schedule_guard.outputs.decision == 'run') || (github.event_name != 'schedule' && github.event.inputs.run_mode != 'test') }}
         # Live Telegram delivery is deferred until after the report/state commit.
         continue-on-error: true
         env:
@@ -100,7 +210,7 @@ jobs:
 
       - name: Validate safe live output
         id: live_output
-        if: ${{ always() && (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') }}
+        if: ${{ always() && (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && (github.event_name != 'schedule' || steps.schedule_guard.outputs.decision == 'run') }}
         env:
           EXPECTED_RUN_ID: ${{ github.run_id }}
           EXPECTED_MODE: ${{ github.event_name == 'schedule' && 'scheduled' || 'rebalance' }}
@@ -165,9 +275,58 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+      - name: Mark scheduled report delivery as prepared
+        id: scheduled_delivery_prepare
+        if: ${{ always() && github.event_name == 'schedule' && steps.live_output.outputs.safe_operating_output == 'true' }}
+        env:
+          EXPECTED_RUN_ID: ${{ github.run_id }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from datetime import datetime
+          from pathlib import Path
+          from zoneinfo import ZoneInfo
+
+          output_root = Path("output")
+          run_status_path = output_root / "run_status.json"
+          try:
+              run_status = json.loads(run_status_path.read_text(encoding="utf-8"))
+              if run_status.get("github_run_id") != os.environ["EXPECTED_RUN_ID"]:
+                  raise ValueError("wrong_run_id")
+              if run_status.get("mode") != "scheduled":
+                  raise ValueError("wrong_mode")
+              report_path = run_status.get("report_path")
+              if not isinstance(report_path, str) or not report_path:
+                  raise ValueError("missing_report_path")
+          except (OSError, ValueError, TypeError, json.JSONDecodeError) as error:
+              print(f"::error::Cannot create scheduled delivery receipt: {type(error).__name__}")
+              raise SystemExit(1)
+
+          now = datetime.now(ZoneInfo("Asia/Seoul"))
+          receipt = {
+              "schema_version": 1,
+              "kst_date": now.date().isoformat(),
+              "report_path": report_path,
+              "prepared_at": now.isoformat(),
+              "prepared_by_run_id": os.environ["EXPECTED_RUN_ID"],
+              "delivery_status": "prepared",
+              "delivered_at": None,
+              "delivered_by_run_id": None,
+          }
+          receipt_path = output_root / "scheduled_delivery_receipt.json"
+          temporary = receipt_path.with_suffix(".json.tmp")
+          temporary.write_text(
+              json.dumps(receipt, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          temporary.replace(receipt_path)
+          print(f"Scheduled delivery receipt prepared for {receipt['kst_date']}")
+          PY
+
       - name: Commit and push live report
         id: persist
-        if: ${{ always() && (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && steps.live_output.outputs.safe_operating_output == 'true' }}
+        if: ${{ always() && (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && steps.live_output.outputs.safe_operating_output == 'true' && (github.event_name != 'schedule' || steps.scheduled_delivery_prepare.outcome == 'success') }}
         env:
           TARGET_BRANCH: ${{ github.ref_name }}
         run: |
@@ -263,6 +422,64 @@ jobs:
           print("Persisted Telegram report delivery accepted.")
           PY
 
+      - name: Record scheduled Telegram delivery
+        id: scheduled_delivery_receipt
+        if: ${{ always() && github.event_name == 'schedule' && steps.live_output.outputs.safe_operating_output == 'true' && steps.persist.outcome == 'success' && steps.telegram_delivery.outcome == 'success' }}
+        # A post-send push can fail after Telegram accepted the report. Keep
+        # the earlier prepared receipt in that case so a recovery run alerts
+        # rather than risking a duplicate message.
+        continue-on-error: true
+        env:
+          EXPECTED_RUN_ID: ${{ github.run_id }}
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from datetime import datetime
+          from pathlib import Path
+          from zoneinfo import ZoneInfo
+
+          receipt_path = Path("output/scheduled_delivery_receipt.json")
+          try:
+              receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+              today = datetime.now(ZoneInfo("Asia/Seoul")).date().isoformat()
+              if receipt.get("schema_version") != 1:
+                  raise ValueError("unsupported_schema")
+              if receipt.get("kst_date") != today:
+                  raise ValueError("wrong_kst_date")
+              if receipt.get("prepared_by_run_id") != os.environ["EXPECTED_RUN_ID"]:
+                  raise ValueError("wrong_run_id")
+              if receipt.get("delivery_status") != "prepared":
+                  raise ValueError("unexpected_delivery_status")
+          except (OSError, ValueError, TypeError, json.JSONDecodeError) as error:
+              print(f"::error::Cannot record scheduled Telegram delivery: {type(error).__name__}")
+              raise SystemExit(1)
+
+          now = datetime.now(ZoneInfo("Asia/Seoul"))
+          receipt["delivery_status"] = "delivered"
+          receipt["delivered_at"] = now.isoformat()
+          receipt["delivered_by_run_id"] = os.environ["EXPECTED_RUN_ID"]
+          temporary = receipt_path.with_suffix(".json.tmp")
+          temporary.write_text(
+              json.dumps(receipt, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          temporary.replace(receipt_path)
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add output/scheduled_delivery_receipt.json
+          if git diff --cached --quiet; then
+            echo "::error::Scheduled delivery receipt did not change after accepted delivery."
+            exit 1
+          fi
+          git commit -m "Record scheduled Telegram delivery"
+          git fetch origin "refs/heads/$TARGET_BRANCH:refs/remotes/origin/$TARGET_BRANCH"
+          git rebase "origin/$TARGET_BRANCH"
+          git push origin "HEAD:$TARGET_BRANCH"
+
       - name: Upload live run snapshot
         if: ${{ always() && (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && steps.live_output.outputs.safe_operating_output == 'true' && steps.persist.outcome == 'success' }}
         continue-on-error: true
@@ -278,12 +495,13 @@ jobs:
             output/dashboard.html
             output/chart_latest.png
             output/run_status.json
+            output/scheduled_delivery_receipt.json
             output/report_*.md
           if-no-files-found: warn
           retention-days: 14
 
       - name: Upload live failure diagnostics
-        if: ${{ always() && (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && (steps.analyze.outcome == 'failure' || steps.live_output.outputs.safe_operating_output != 'true' || steps.persist.outcome == 'failure' || steps.telegram_delivery.outcome == 'failure') }}
+        if: ${{ always() && (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && (github.event_name != 'schedule' || steps.schedule_guard.outputs.decision == 'run') && (steps.analyze.outcome == 'failure' || steps.live_output.outputs.safe_operating_output != 'true' || steps.scheduled_delivery_prepare.outcome == 'failure' || steps.persist.outcome == 'failure' || steps.telegram_delivery.outcome == 'failure' || steps.scheduled_delivery_receipt.outcome == 'failure') }}
         continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
@@ -298,12 +516,13 @@ jobs:
             output/dashboard.html
             output/chart_latest.png
             output/report_*.md
+            output/scheduled_delivery_receipt.json
             output/error_*.log
           if-no-files-found: warn
           retention-days: 21
 
       - name: Enforce validated live output
-        if: ${{ always() && (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && steps.live_output.outputs.safe_operating_output != 'true' }}
+        if: ${{ always() && (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && (github.event_name != 'schedule' || steps.schedule_guard.outputs.decision == 'run') && steps.live_output.outputs.safe_operating_output != 'true' }}
         run: |
           echo "::error::No validated deferred-delivery receipt was produced; report/state were not persisted or delivered."
           exit 1
@@ -318,6 +537,12 @@ jobs:
         if: ${{ always() && (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && steps.live_output.outputs.safe_operating_output == 'true' && steps.persist.outcome == 'success' && steps.telegram_delivery.outcome != 'success' }}
         run: |
           echo "::error::The report/state was persisted, but the post-persist Telegram delivery was not accepted."
+          exit 1
+
+      - name: Enforce scheduled delivery receipt
+        if: ${{ always() && github.event_name == 'schedule' && steps.live_output.outputs.safe_operating_output == 'true' && steps.persist.outcome == 'success' && steps.telegram_delivery.outcome == 'success' && steps.scheduled_delivery_receipt.outcome != 'success' }}
+        run: |
+          echo "::error::Telegram accepted the report, but its durable scheduled-delivery receipt was not persisted; automatic retry is blocked to prevent duplicates."
           exit 1
 
       - name: Enforce analysis outcome
@@ -341,6 +566,9 @@ jobs:
           SAFE_OPERATING_OUTPUT: ${{ steps.live_output.outputs.safe_operating_output }}
           PERSIST_OUTCOME: ${{ steps.persist.outcome }}
           TELEGRAM_DELIVERY_OUTCOME: ${{ steps.telegram_delivery.outcome }}
+          SCHEDULE_GUARD_DECISION: ${{ steps.schedule_guard.outputs.decision }}
+          SCHEDULE_GUARD_REASON: ${{ steps.schedule_guard.outputs.reason }}
+          SCHEDULED_DELIVERY_RECEIPT_OUTCOME: ${{ steps.scheduled_delivery_receipt.outcome }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           {
@@ -349,6 +577,9 @@ jobs:
             echo "- Mode: \`$EFFECTIVE_RUN_MODE\`"
             echo "- Status: \`$JOB_STATUS\`"
             echo "- Analysis step: \`$ANALYZE_OUTCOME\`"
+            if [ -n "$SCHEDULE_GUARD_DECISION" ]; then
+              echo "- Scheduled delivery guard: \`$SCHEDULE_GUARD_DECISION\` ($SCHEDULE_GUARD_REASON)"
+            fi
             if [ -n "$SAFE_OPERATING_OUTPUT" ]; then
               echo "- Safe live output receipt: \`$SAFE_OPERATING_OUTPUT\`"
             fi
@@ -357,6 +588,9 @@ jobs:
             fi
             if [ -n "$TELEGRAM_DELIVERY_OUTCOME" ]; then
               echo "- Post-persist Telegram delivery: \`$TELEGRAM_DELIVERY_OUTCOME\`"
+            fi
+            if [ -n "$SCHEDULED_DELIVERY_RECEIPT_OUTCOME" ]; then
+              echo "- Scheduled delivery receipt persistence: \`$SCHEDULED_DELIVERY_RECEIPT_OUTCOME\`"
             fi
             echo "- Run: $RUN_URL"
             if [ -f output/portfolio_state.json ]; then
