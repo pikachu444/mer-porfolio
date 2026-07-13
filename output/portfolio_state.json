@@ -1,5 +1,5 @@
 {
-  "schema_version": "2.0",
+  "schema_version": "2.1",
   "portfolio": [
     {
       "name": "LS",
@@ -34,7 +34,12 @@
         "수주 경쟁 심화"
       ],
       "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15",
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-59c981e68670980ad7ff",
+      "linked_signal_ids": []
     },
     {
       "name": "대한전선",
@@ -69,7 +74,12 @@
         "국내외 케이블 업체 경쟁"
       ],
       "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15",
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-420ba1945f8f92389dec",
+      "linked_signal_ids": []
     },
     {
       "name": "삼성중공업",
@@ -106,7 +116,12 @@
       ],
       "allocation_role": "core",
       "allocation_role_source": "rebalance_review_2026-06-15",
-      "allocation_role_reason": "조선/MRO 수혜 보조 성장 포지션"
+      "allocation_role_reason": "조선/MRO 수혜 보조 성장 포지션",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-8c0fdf3c9009132956ed",
+      "linked_signal_ids": []
     },
     {
       "name": "Google (Alphabet)",
@@ -141,7 +156,12 @@
       ],
       "allocation_role": "core",
       "allocation_role_source": "rebalance_review_2026-06-15",
-      "allocation_role_reason": "AI 플랫폼 핵심 포지션"
+      "allocation_role_reason": "AI 플랫폼 핵심 포지션",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-d806126ad8089283dc21",
+      "linked_signal_ids": []
     },
     {
       "name": "Microsoft",
@@ -176,7 +196,12 @@
         "각국 정부의 반독점 규제 리스크"
       ],
       "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15",
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-b1d3a4c22e82b8d4e33f",
+      "linked_signal_ids": []
     },
     {
       "name": "Alcoa",
@@ -217,7 +242,12 @@
       ],
       "allocation_role": "risk",
       "allocation_role_source": "rebalance_review_2026-06-15",
-      "allocation_role_reason": "알루미늄/원자재 사이클 포지션"
+      "allocation_role_reason": "알루미늄/원자재 사이클 포지션",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-b1323e337eded3e63cd1",
+      "linked_signal_ids": []
     },
     {
       "name": "Recursion Pharmaceuticals",
@@ -251,7 +281,12 @@
       "linked_insight_ids": [],
       "allocation_role": "risk",
       "allocation_role_source": "rebalance_review_2026-06-15",
-      "allocation_role_reason": "AI 신약 고위험 소형 성장 포지션"
+      "allocation_role_reason": "AI 신약 고위험 소형 성장 포지션",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-45b7a54e825194be7b11",
+      "linked_signal_ids": []
     },
     {
       "name": "Northrop Grumman",
@@ -292,7 +327,12 @@
       ],
       "allocation_role": "satellite",
       "allocation_role_source": "rebalance_review_2026-06-15",
-      "allocation_role_reason": "방산/우주 방어 성장 포지션"
+      "allocation_role_reason": "방산/우주 방어 성장 포지션",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-4514c6853d610e8dd3da",
+      "linked_signal_ids": []
     },
     {
       "name": "LG이노텍",
@@ -329,7 +369,12 @@
       "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15",
       "linked_insight_ids": [
         "INSIGHT-20260713-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-710450943a31ea6bd491",
+      "linked_signal_ids": []
     },
     {
       "name": "Wabtec",
@@ -362,7 +407,12 @@
       "linked_insight_ids": [],
       "allocation_role": "satellite",
       "allocation_role_source": "rebalance_review_2026-06-15",
-      "allocation_role_reason": "철도/물류 인프라 성장 포지션"
+      "allocation_role_reason": "철도/물류 인프라 성장 포지션",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-6bc4b0f1402dd4862936",
+      "linked_signal_ids": []
     },
     {
       "name": "두산로보틱스",
@@ -399,7 +449,12 @@
       ],
       "allocation_role": "risk",
       "allocation_role_source": "rebalance_review_2026-06-15",
-      "allocation_role_reason": "피지컬 AI 고위험 성장 포지션"
+      "allocation_role_reason": "피지컬 AI 고위험 성장 포지션",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-cddd1a8a9a9a65801f11",
+      "linked_signal_ids": []
     },
     {
       "name": "현대차",
@@ -443,7 +498,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260713-1",
         "INSIGHT-20260713-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-0737c646a9916f3e364d",
+      "linked_signal_ids": []
     },
     {
       "name": "네이버",
@@ -486,7 +546,12 @@
       ],
       "allocation_role": "core",
       "allocation_role_source": "rebalance_review_2026-06-15",
-      "allocation_role_reason": "소버린 AI 핵심 포지션"
+      "allocation_role_reason": "소버린 AI 핵심 포지션",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-a79f5aa73f6f492fda4d",
+      "linked_signal_ids": []
     },
     {
       "name": "일라이 릴리",
@@ -520,7 +585,12 @@
       "linked_insight_ids": [],
       "allocation_role": "core",
       "allocation_role_source": "rebalance_review_2026-06-15",
-      "allocation_role_reason": "제약/AI 신약 방어 성장 포지션"
+      "allocation_role_reason": "제약/AI 신약 방어 성장 포지션",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-fcd607cc3af061275e3c",
+      "linked_signal_ids": []
     },
     {
       "name": "Marvell Technology",
@@ -556,7 +626,12 @@
       ],
       "allocation_role": "satellite",
       "allocation_role_source": "rebalance_review_2026-06-15",
-      "allocation_role_reason": "AI 반도체 보조 성장 포지션"
+      "allocation_role_reason": "AI 반도체 보조 성장 포지션",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-dafbd0ef6eb41ec802d4",
+      "linked_signal_ids": []
     },
     {
       "name": "한화오션",
@@ -593,7 +668,12 @@
       ],
       "allocation_role": "satellite",
       "allocation_role_source": "rebalance_review_2026-06-15",
-      "allocation_role_reason": "조선/MRO 수혜 보조 성장 포지션"
+      "allocation_role_reason": "조선/MRO 수혜 보조 성장 포지션",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-6334f2a88e6e2224095b",
+      "linked_signal_ids": []
     },
     {
       "name": "삼성전자",
@@ -631,7 +711,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260713-3"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-1e554f3fec3667f01057",
+      "linked_signal_ids": []
     },
     {
       "name": "SK하이닉스",
@@ -668,10 +753,459 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260713-4"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-5f626b73bbb18d2a232e",
+      "linked_signal_ids": []
     }
   ],
   "watchlist": [
+    {
+      "name": "HD현대중공업",
+      "code": "329180",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-03",
+      "evidence_posts": [
+        {
+          "title": "한화오션, 차기 구축함 우선협상대상자 선정(feat 복잡한 히스토리)",
+          "url": "https://blog.naver.com/ranto28/224333859654?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-02"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-06-12",
+      "latest_evidence_date": "2026-07-02",
+      "watchlist_duration_days": 32,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "기존 관찰 사유였던 미국 HII 파트너십 전략과 대비되는 KDDX 사업 수주 실패는 국내 특수선 시장에서의 경쟁력에 대한 의문을 제기합니다. 이로 인한 영향과 향후 수주 전략 변화를 관찰할 필요가 있습니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-0d9d042931f8f3ac513e",
+      "linked_signal_ids": [],
+      "lifecycle_status": "active",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-07-02",
+      "expires_on": "2026-07-16",
+      "archived_date": null,
+      "archive_reason": null
+    },
+    {
+      "name": "농산물/곡물 섹터",
+      "code": "",
+      "market": "",
+      "asset_type": "sector",
+      "decision_actor": "AI",
+      "basis": "섹터 분석",
+      "decision_date": "2026-07-13",
+      "evidence_posts": [
+        {
+          "title": "계란가격은 왜 이리 비싼가?",
+          "url": "https://blog.naver.com/ranto28/224343106209?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-11"
+        },
+        {
+          "title": "트럼프가 비료부족에 대응하는 보법",
+          "url": "https://blog.naver.com/ranto28/224341638501?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-09"
+        }
+      ],
+      "source_mentioned": false,
+      "watchlist_entry_date": "2026-06-16",
+      "latest_evidence_date": "2026-07-11",
+      "watchlist_duration_days": 28,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "sector_only",
+      "observation_reason": "기존 엘니뇨 및 지정학적 리스크에 더해, 국내 조류 인플루엔자 사태, 높은 환율, 정부의 시장 개입(비료 관세 중단 등) 등 복합적인 변수들이 가격 변동성을 키우고 있습니다. 구체적인 투자 대상을 특정하기 어려워 관찰을 지속합니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-ab0dd2c9fa1f844bb6af",
+      "linked_signal_ids": [],
+      "lifecycle_status": "active",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-07-11",
+      "expires_on": "2026-07-24",
+      "archived_date": null,
+      "archive_reason": null
+    },
+    {
+      "name": "천연 다이아몬드 섹터",
+      "code": "",
+      "market": "",
+      "asset_type": "sector",
+      "decision_actor": "AI",
+      "basis": "섹터 분석",
+      "decision_date": "2026-07-05",
+      "evidence_posts": [
+        {
+          "title": "벨기에 다이아몬드 협회가 트럼프에게 보석반지를 선물한 비밀",
+          "url": "https://blog.naver.com/ranto28/224336241433?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-04"
+        }
+      ],
+      "source_mentioned": false,
+      "watchlist_entry_date": "2026-07-05",
+      "latest_evidence_date": "2026-07-04",
+      "watchlist_duration_days": 9,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "sector_only",
+      "observation_reason": "랩그로운 다이아몬드의 부상으로 인한 구조적 위협에 직면해 있으며, 정치적 지원에 의존하는 등 장기적인 산업 리스크가 매우 큽니다. 관련 기업들의 대응 전략과 시장 점유율 변화를 관찰할 필요가 있습니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-c812e544e77c0f9c4c2c",
+      "linked_signal_ids": [],
+      "lifecycle_status": "active",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-07-04",
+      "expires_on": "2026-07-17",
+      "archived_date": null,
+      "archive_reason": null
+    },
+    {
+      "name": "랩그로운 다이아몬드 섹터",
+      "code": "",
+      "market": "",
+      "asset_type": "sector",
+      "decision_actor": "AI",
+      "basis": "섹터 분석",
+      "decision_date": "2026-07-05",
+      "evidence_posts": [
+        {
+          "title": "벨기에 다이아몬드 협회가 트럼프에게 보석반지를 선물한 비밀",
+          "url": "https://blog.naver.com/ranto28/224336241433?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-04"
+        }
+      ],
+      "source_mentioned": false,
+      "watchlist_entry_date": "2026-07-05",
+      "latest_evidence_date": "2026-07-04",
+      "watchlist_duration_days": 9,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "sector_only",
+      "observation_reason": "기술 발전을 통한 가격 경쟁력과 인도 등 국가적 지원을 바탕으로 전통적인 보석 시장을 파괴적으로 혁신하고 있습니다. 시장의 성장성과 주요 상장 기업을 식별하기 위해 관찰이 필요합니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-b1f9ac33b31e27a2b192",
+      "linked_signal_ids": [],
+      "lifecycle_status": "active",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-07-04",
+      "expires_on": "2026-07-17",
+      "archived_date": null,
+      "archive_reason": null
+    },
+    {
+      "name": "이마트",
+      "code": "139480",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-13",
+      "evidence_posts": [
+        {
+          "title": "홈플러스 사태 근황",
+          "url": "https://blog.naver.com/ranto28/224336684901?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-04"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-06",
+      "latest_evidence_date": "2026-07-04",
+      "watchlist_duration_days": 8,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "경쟁사 홈플러스의 몰락 과정에서 트레이더스(창고형 할인점)를 통해 생존 전략을 모색하는 기업으로 언급되었습니다. 대형마트 산업의 구조적 위기 속에서 반사 이익 및 차별화 가능성이 있는지 관찰이 필요하나, 투자 논리가 구체화되지 않아 Watchlist에 유지합니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-c810b85c6b5beefe67d3",
+      "linked_signal_ids": [],
+      "lifecycle_status": "active",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-07-04",
+      "expires_on": "2026-07-17",
+      "archived_date": null,
+      "archive_reason": null
+    },
+    {
+      "name": "CF Industries Holdings",
+      "code": "CF",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-10",
+      "evidence_posts": [
+        {
+          "title": "트럼프가 비료부족에 대응하는 보법",
+          "url": "https://blog.naver.com/ranto28/224341638501?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-09"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-10",
+      "latest_evidence_date": "2026-07-09",
+      "watchlist_duration_days": 4,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "미국의 4대 비료 과점 기업 중 하나로 언급되었으나, 정부의 반독점 조사 및 국내 공급 확대 압박을 받는 부정적인 맥락에서 등장했습니다. 비료 시장의 핵심 플레이어이지만, 투자 논리로 삼기에는 정부 규제 리스크가 있어 관찰이 필요합니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-a19c6332d66b60bb7faa",
+      "linked_signal_ids": [],
+      "lifecycle_status": "active",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-07-09",
+      "expires_on": "2026-07-23",
+      "archived_date": null,
+      "archive_reason": null
+    },
+    {
+      "name": "Visa",
+      "code": "V",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-13",
+      "evidence_posts": [
+        {
+          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
+          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-12"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-13",
+      "latest_evidence_date": "2026-07-12",
+      "watchlist_duration_days": 1,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "신규 스테이블코인 'Open USD' 컨소시엄에 참여하여 블록체인 기반 결제 시장으로의 확장성을 보여주었습니다. 기존 결제 네트워크의 강자와 신기술의 결합이 어떤 시너지를 낼지 관찰할 필요가 있습니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-ec1d68e7764d2537d182",
+      "linked_signal_ids": [],
+      "lifecycle_status": "active",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-07-12",
+      "expires_on": "2026-07-24",
+      "archived_date": null,
+      "archive_reason": null
+    },
+    {
+      "name": "Mastercard",
+      "code": "MA",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-13",
+      "evidence_posts": [
+        {
+          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
+          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-12"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-13",
+      "latest_evidence_date": "2026-07-12",
+      "watchlist_duration_days": 1,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "신규 스테이블코인 'Open USD' 컨소시엄에 참여하여 블록체인 기반 결제 시장으로의 확장성을 보여주었습니다. 기존 결제 네트워크의 강자와 신기술의 결합이 어떤 시너지를 낼지 관찰할 필요가 있습니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-5eb0de4d56b7b299bc62",
+      "linked_signal_ids": [],
+      "lifecycle_status": "active",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-07-12",
+      "expires_on": "2026-07-24",
+      "archived_date": null,
+      "archive_reason": null
+    },
+    {
+      "name": "두나무",
+      "code": "",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-13",
+      "evidence_posts": [
+        {
+          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
+          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-12"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-13",
+      "latest_evidence_date": "2026-07-12",
+      "watchlist_duration_days": 1,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "비상장 기업. 신규 스테이블코인 'Open USD' 컨소시엄 참여사로 언급되었습니다. 국내 최대 가상자산 거래소로서 글로벌 블록체인 생태계에서의 역할을 확대할 가능성이 있어 관찰이 필요합니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-9a129e7fdc120bae6f4b",
+      "linked_signal_ids": [],
+      "lifecycle_status": "active",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-07-12",
+      "expires_on": "2026-07-24",
+      "archived_date": null,
+      "archive_reason": null
+    },
+    {
+      "name": "신한금융지주",
+      "code": "055550",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-13",
+      "evidence_posts": [
+        {
+          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
+          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-12"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-13",
+      "latest_evidence_date": "2026-07-12",
+      "watchlist_duration_days": 1,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "신규 스테이블코인 'Open USD' 컨소시엄 참여사로 언급되었습니다. 전통 금융사의 디지털 자산 시장 진출 사례로, 향후 사업 전개 방향을 관찰할 필요가 있습니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-5e862fb8f7dc9ce21bcf",
+      "linked_signal_ids": [],
+      "lifecycle_status": "active",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-07-12",
+      "expires_on": "2026-07-24",
+      "archived_date": null,
+      "archive_reason": null
+    },
+    {
+      "name": "카카오뱅크",
+      "code": "323410",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-13",
+      "evidence_posts": [
+        {
+          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
+          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-12"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-13",
+      "latest_evidence_date": "2026-07-12",
+      "watchlist_duration_days": 1,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "신규 스테이블코인 'Open USD' 컨소시엄 참여사로 언급되었습니다. 인터넷 은행의 블록체인 기술 도입 및 글로벌 핀테크 생태계 참여 가능성을 관찰할 필요가 있습니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-1c7400c86f89a974a6cf",
+      "linked_signal_ids": [],
+      "lifecycle_status": "active",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-07-12",
+      "expires_on": "2026-07-24",
+      "archived_date": null,
+      "archive_reason": null
+    },
+    {
+      "name": "HLB",
+      "code": "028300",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-13",
+      "evidence_posts": [
+        {
+          "title": "항서제약의 비밀",
+          "url": "https://blog.naver.com/ranto28/224343832057?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-12"
+        },
+        {
+          "title": "HLB 간암신약 미국FDA승인 불발의 비밀 A/S",
+          "url": "https://blog.naver.com/ranto28/224342169959?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-10"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-13",
+      "latest_evidence_date": "2026-07-12",
+      "watchlist_duration_days": 1,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "파트너사인 중국 항서제약의 제조품질관리(cGMP) 및 데이터 무결성 문제로 인해 간암 신약의 FDA 승인이 반복적으로 지연되고 있습니다. 이는 HLB 자체의 문제가 아닌 파트너 리스크로, 해결 시점이 불투명하여 투자 불확실성이 매우 높습니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-c6169227304e2fe124f4",
+      "linked_signal_ids": [],
+      "lifecycle_status": "active",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-07-12",
+      "expires_on": "2026-07-24",
+      "archived_date": null,
+      "archive_reason": null
+    }
+  ],
+  "watchlist_archive": [
     {
       "name": "삼성전자",
       "code": "005930",
@@ -695,7 +1229,18 @@
       "watchlist_closed_date": "2026-06-18",
       "status": "포트폴리오 편입",
       "source_scope": "source_named_security",
-      "observation_reason": "포트폴리오 편입 결정. 뉴럴링크 및 테슬라향 차세대 칩 파운드리 수주로 비메모리 부문 AI 성장성이 확인되어 편입 결정."
+      "observation_reason": "포트폴리오 편입 결정. 뉴럴링크 및 테슬라향 차세대 칩 파운드리 수주로 비메모리 부문 AI 성장성이 확인되어 편입 결정.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-1e554f3fec3667f01057",
+      "linked_signal_ids": [],
+      "lifecycle_status": "promoted",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-17",
+      "expires_on": "2026-07-01",
+      "archived_date": "2026-06-18",
+      "archive_reason": null
     },
     {
       "name": "SK하이닉스",
@@ -720,7 +1265,18 @@
       "watchlist_closed_date": "2026-06-22",
       "status": "포트폴리오 편입",
       "source_scope": "source_named_security",
-      "observation_reason": "포트폴리오 편입 결정. WF₆ 공급망 위기에도 불구하고 버크셔 해서웨이 자회사의 국내 텅스텐 분말 공장 건설로 핵심 리스크가 해소되어 편입 결정."
+      "observation_reason": "포트폴리오 편입 결정. WF₆ 공급망 위기에도 불구하고 버크셔 해서웨이 자회사의 국내 텅스텐 분말 공장 건설로 핵심 리스크가 해소되어 편입 결정.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-5f626b73bbb18d2a232e",
+      "linked_signal_ids": [],
+      "lifecycle_status": "promoted",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-21",
+      "expires_on": "2026-07-03",
+      "archived_date": "2026-06-22",
+      "archive_reason": null
     },
     {
       "name": "HD현대건설기계",
@@ -742,10 +1298,21 @@
       "latest_evidence_date": "2026-06-10",
       "watchlist_duration_days": 4,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "source_named_security",
-      "observation_reason": "코스피200 지수 신규 편입 종목으로 언급되었으나, 블로거의 구체적인 투자 논리가 없어 수급 효과 및 펀더멘털 변화를 관찰할 필요가 있음."
+      "observation_reason": "코스피200 지수 신규 편입 종목으로 언급되었으나, 블로거의 구체적인 투자 논리가 없어 수급 효과 및 펀더멘털 변화를 관찰할 필요가 있음.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-8a531ea2622853280267",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-10",
+      "expires_on": "2026-06-24",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "DB하이텍",
@@ -767,10 +1334,21 @@
       "latest_evidence_date": "2026-06-10",
       "watchlist_duration_days": 4,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "source_named_security",
-      "observation_reason": "코스피200 지수 신규 편입 종목으로 언급되었으나, 블로거의 구체적인 투자 논리가 없어 수급 효과 및 펀더멘털 변화를 관찰할 필요가 있음."
+      "observation_reason": "코스피200 지수 신규 편입 종목으로 언급되었으나, 블로거의 구체적인 투자 논리가 없어 수급 효과 및 펀더멘털 변화를 관찰할 필요가 있음.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-2b5fb11806f71a09b0a1",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-10",
+      "expires_on": "2026-06-24",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "달바글로벌",
@@ -792,10 +1370,21 @@
       "latest_evidence_date": "2026-06-10",
       "watchlist_duration_days": 4,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "source_named_security",
-      "observation_reason": "코스피200 지수 신규 편입 종목으로 언급되었으나, 상장 코드가 불명확하여 관찰 대상으로 분류함."
+      "observation_reason": "코스피200 지수 신규 편입 종목으로 언급되었으나, 상장 코드가 불명확하여 관찰 대상으로 분류함.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-93c7d9d3204607bda9ac",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-10",
+      "expires_on": "2026-06-24",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "OCI",
@@ -817,10 +1406,21 @@
       "latest_evidence_date": "2026-06-10",
       "watchlist_duration_days": 4,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "source_named_security",
-      "observation_reason": "코스피200 지수 신규 편입 종목으로 언급되었으나, 블로거의 구체적인 투자 논리가 없어 수급 효과 및 펀더멘털 변화를 관찰할 필요가 있음."
+      "observation_reason": "코스피200 지수 신규 편입 종목으로 언급되었으나, 블로거의 구체적인 투자 논리가 없어 수급 효과 및 펀더멘털 변화를 관찰할 필요가 있음.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-1b0b28ece0a6d8e87773",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-10",
+      "expires_on": "2026-06-24",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "GS건설",
@@ -842,10 +1442,21 @@
       "latest_evidence_date": "2026-06-10",
       "watchlist_duration_days": 4,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "source_named_security",
-      "observation_reason": "코스피200 지수 편출 종목으로 언급. 패시브 자금 이탈 가능성이 있으나, 펀더멘털과 무관한 수급 이슈일 수 있어 주가 추이 관찰 필요."
+      "observation_reason": "코스피200 지수 편출 종목으로 언급. 패시브 자금 이탈 가능성이 있으나, 펀더멘털과 무관한 수급 이슈일 수 있어 주가 추이 관찰 필요.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-b547f8c75b6589d805e2",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-10",
+      "expires_on": "2026-06-24",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "세방전지",
@@ -867,10 +1478,21 @@
       "latest_evidence_date": "2026-06-10",
       "watchlist_duration_days": 4,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "source_named_security",
-      "observation_reason": "코스피200 지수 편출 종목으로 언급. 패시브 자금 이탈 가능성이 있으나, 펀더멘털과 무관한 수급 이슈일 수 있어 주가 추이 관찰 필요."
+      "observation_reason": "코스피200 지수 편출 종목으로 언급. 패시브 자금 이탈 가능성이 있으나, 펀더멘털과 무관한 수급 이슈일 수 있어 주가 추이 관찰 필요.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-6fa30c7a676c20d28986",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-10",
+      "expires_on": "2026-06-24",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "GKL",
@@ -892,10 +1514,21 @@
       "latest_evidence_date": "2026-06-10",
       "watchlist_duration_days": 4,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "source_named_security",
-      "observation_reason": "코스피200 지수 편출 종목으로 언급. 패시브 자금 이탈 가능성이 있으나, 펀더멘털과 무관한 수급 이슈일 수 있어 주가 추이 관찰 필요."
+      "observation_reason": "코스피200 지수 편출 종목으로 언급. 패시브 자금 이탈 가능성이 있으나, 펀더멘털과 무관한 수급 이슈일 수 있어 주가 추이 관찰 필요.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-bf1f4ee62983d1c19924",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-10",
+      "expires_on": "2026-06-24",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "녹십자홀딩스",
@@ -917,35 +1550,21 @@
       "latest_evidence_date": "2026-06-10",
       "watchlist_duration_days": 4,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "source_named_security",
-      "observation_reason": "코스피200 지수 편출 종목으로 언급. 패시브 자금 이탈 가능성이 있으나, 펀더멘털과 무관한 수급 이슈일 수 있어 주가 추이 관찰 필요."
-    },
-    {
-      "name": "HD현대중공업",
-      "code": "329180",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-03",
-      "evidence_posts": [
-        {
-          "title": "한화오션, 차기 구축함 우선협상대상자 선정(feat 복잡한 히스토리)",
-          "url": "https://blog.naver.com/ranto28/224333859654?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-02"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-06-12",
-      "latest_evidence_date": "2026-07-02",
-      "watchlist_duration_days": 21,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "기존 관찰 사유였던 미국 HII 파트너십 전략과 대비되는 KDDX 사업 수주 실패는 국내 특수선 시장에서의 경쟁력에 대한 의문을 제기합니다. 이로 인한 영향과 향후 수주 전략 변화를 관찰할 필요가 있습니다."
+      "observation_reason": "코스피200 지수 편출 종목으로 언급. 패시브 자금 이탈 가능성이 있으나, 펀더멘털과 무관한 수급 이슈일 수 있어 주가 추이 관찰 필요.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-decd7e78d20a1513284e",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-10",
+      "expires_on": "2026-06-24",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "SpaceX",
@@ -977,10 +1596,21 @@
       "latest_evidence_date": "2026-06-30",
       "watchlist_duration_days": 19,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "source_named_security",
-      "observation_reason": "상장 초기 기업. 테라와트급 우주 데이터센터라는 비전과 IPO 과정에서 확인된 높은 시장 수요는 긍정적. 상장 초기 변동성과 향후 보호예수 물량 출회 가능성을 고려하여 관찰을 지속함."
+      "observation_reason": "상장 초기 기업. 테라와트급 우주 데이터센터라는 비전과 IPO 과정에서 확인된 높은 시장 수요는 긍정적. 상장 초기 변동성과 향후 보호예수 물량 출회 가능성을 고려하여 관찰을 지속함.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-9875fbb78bfeeb2b51e6",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-30",
+      "expires_on": "2026-07-14",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "가스 터빈 / 분산 발전 섹터",
@@ -1002,10 +1632,21 @@
       "latest_evidence_date": "2026-06-12",
       "watchlist_duration_days": 0,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "sector_only",
-      "observation_reason": "xAI의 데이터센터 건설 사례에서 확인된 바와 같이, AI 데이터센터의 전력난 해결책으로 현장 가스 터빈 설치가 새로운 강력한 트렌드로 부상했습니다. 이 트렌드의 수혜를 입을 수 있는 대표 상장기업을 식별하기 위해 추가적인 분석이 필요합니다."
+      "observation_reason": "xAI의 데이터센터 건설 사례에서 확인된 바와 같이, AI 데이터센터의 전력난 해결책으로 현장 가스 터빈 설치가 새로운 강력한 트렌드로 부상했습니다. 이 트렌드의 수혜를 입을 수 있는 대표 상장기업을 식별하기 위해 추가적인 분석이 필요합니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-85c4aa39f72fd10aca3a",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-12",
+      "expires_on": "2026-06-26",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "Goldman Sachs",
@@ -1032,40 +1673,21 @@
       "latest_evidence_date": "2026-06-30",
       "watchlist_duration_days": 16,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "source_named_security",
-      "observation_reason": "스페이스X IPO 주관사로서 보여준 막강한 딜 소싱 및 배정 능력은 동사의 핵심 경쟁력임을 재확인. 글로벌 자본시장에서의 독점적 지위가 어떻게 수익으로 연결되는지 관찰할 필요가 있음."
-    },
-    {
-      "name": "농산물/곡물 섹터",
-      "code": "",
-      "market": "",
-      "asset_type": "sector",
-      "decision_actor": "AI",
-      "basis": "섹터 분석",
-      "decision_date": "2026-07-13",
-      "evidence_posts": [
-        {
-          "title": "계란가격은 왜 이리 비싼가?",
-          "url": "https://blog.naver.com/ranto28/224343106209?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-11"
-        },
-        {
-          "title": "트럼프가 비료부족에 대응하는 보법",
-          "url": "https://blog.naver.com/ranto28/224341638501?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-09"
-        }
-      ],
-      "source_mentioned": false,
-      "watchlist_entry_date": "2026-06-16",
-      "latest_evidence_date": "2026-07-11",
-      "watchlist_duration_days": 27,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "sector_only",
-      "observation_reason": "기존 엘니뇨 및 지정학적 리스크에 더해, 국내 조류 인플루엔자 사태, 높은 환율, 정부의 시장 개입(비료 관세 중단 등) 등 복합적인 변수들이 가격 변동성을 키우고 있습니다. 구체적인 투자 대상을 특정하기 어려워 관찰을 지속합니다."
+      "observation_reason": "스페이스X IPO 주관사로서 보여준 막강한 딜 소싱 및 배정 능력은 동사의 핵심 경쟁력임을 재확인. 글로벌 자본시장에서의 독점적 지위가 어떻게 수익으로 연결되는지 관찰할 필요가 있음.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-8d14d834beeeb7cf3f69",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-30",
+      "expires_on": "2026-07-14",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "해상운송 섹터",
@@ -1097,10 +1719,21 @@
       "latest_evidence_date": "2026-06-25",
       "watchlist_duration_days": 11,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "sector_only",
-      "observation_reason": "기존 파나마 운하 및 호르무즈 통행료 리스크에 더해, 이란의 호르무즈 해협 재봉쇄 위협과 이를 우회하려는 대규모 육상 철도 프로젝트(헤자즈 철도) 경쟁이 심화되고 있음. 이는 장기적으로 글로벌 해상 운임 및 무역 경로의 구조적 변화를 야기할 수 있어 관련 기업 식별을 위해 관찰을 지속함."
+      "observation_reason": "기존 파나마 운하 및 호르무즈 통행료 리스크에 더해, 이란의 호르무즈 해협 재봉쇄 위협과 이를 우회하려는 대규모 육상 철도 프로젝트(헤자즈 철도) 경쟁이 심화되고 있음. 이는 장기적으로 글로벌 해상 운임 및 무역 경로의 구조적 변화를 야기할 수 있어 관련 기업 식별을 위해 관찰을 지속함.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-32c54bb989e6f17be923",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-25",
+      "expires_on": "2026-07-09",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "한국 여름 소비재 섹터",
@@ -1122,10 +1755,21 @@
       "latest_evidence_date": "2026-06-15",
       "watchlist_duration_days": 0,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "sector_only",
-      "observation_reason": "슈퍼 엘니뇨로 인한 한국의 찜통더위가 예상되어 빙과, 음료 등 관련 소비재 기업의 계절적 수혜가 기대됨. 단기 테마 성격이 강해 구체적인 투자 대상과 진입 시점을 판단하기 위해 관찰함."
+      "observation_reason": "슈퍼 엘니뇨로 인한 한국의 찜통더위가 예상되어 빙과, 음료 등 관련 소비재 기업의 계절적 수혜가 기대됨. 단기 테마 성격이 강해 구체적인 투자 대상과 진입 시점을 판단하기 위해 관찰함.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-32a6d2507b4078d0bfd7",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-15",
+      "expires_on": "2026-06-29",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "Neuralink",
@@ -1147,10 +1791,21 @@
       "latest_evidence_date": "2026-06-17",
       "watchlist_duration_days": 0,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "source_named_security",
-      "observation_reason": "비상장 기업. 뇌-컴퓨터 인터페이스(BCI) 분야의 선두주자로, 성공적인 임상과 상용화 계획을 통해 막대한 성장 잠재력을 보여줌. 삼성전자와의 칩 개발 협력으로 기술 구현 가시성이 높아짐. 향후 IPO 추진 시 주목해야 할 기업."
+      "observation_reason": "비상장 기업. 뇌-컴퓨터 인터페이스(BCI) 분야의 선두주자로, 성공적인 임상과 상용화 계획을 통해 막대한 성장 잠재력을 보여줌. 삼성전자와의 칩 개발 협력으로 기술 구현 가시성이 높아짐. 향후 IPO 추진 시 주목해야 할 기업.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-cbfe46a0d0f624377974",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-17",
+      "expires_on": "2026-07-01",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "Berkshire Hathaway",
@@ -1172,10 +1827,21 @@
       "latest_evidence_date": "2026-06-21",
       "watchlist_duration_days": 0,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "source_named_security",
-      "observation_reason": "자회사 대구텍을 통해 반도체 공급망의 핵심 병목인 텅스텐 분말 국내 생산에 투자하는 등, 지정학적 리스크를 기회로 활용하는 탁월한 산업 통찰력을 보여줌. 향후 유사한 전략적 투자를 관찰할 필요가 있음."
+      "observation_reason": "자회사 대구텍을 통해 반도체 공급망의 핵심 병목인 텅스텐 분말 국내 생산에 투자하는 등, 지정학적 리스크를 기회로 활용하는 탁월한 산업 통찰력을 보여줌. 향후 유사한 전략적 투자를 관찰할 필요가 있음.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-d608a77f74623a8dd3d0",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-21",
+      "expires_on": "2026-07-03",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "양자컴퓨팅 및 양자내성암호(PQC) 섹터",
@@ -1197,10 +1863,21 @@
       "latest_evidence_date": "2026-06-22",
       "watchlist_duration_days": 5,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "sector_only",
-      "observation_reason": "미국 정부의 행정명령 서명으로 PQC 전환 가속화 및 양자컴퓨터 개발에 대한 대규모 투자가 시작됨. 이는 관련 산업의 본격적인 성장 신호탄으로, 핵심 수혜 기업을 식별하기 위한 관찰이 필요합니다."
+      "observation_reason": "미국 정부의 행정명령 서명으로 PQC 전환 가속화 및 양자컴퓨터 개발에 대한 대규모 투자가 시작됨. 이는 관련 산업의 본격적인 성장 신호탄으로, 핵심 수혜 기업을 식별하기 위한 관찰이 필요합니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-ec9ef90f8ffaa7b09290",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-22",
+      "expires_on": "2026-07-06",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "IBM",
@@ -1222,10 +1899,21 @@
       "latest_evidence_date": "2026-06-22",
       "watchlist_duration_days": 5,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "source_named_security",
-      "observation_reason": "미국 정부의 'QC-ADDS' 프로젝트와 관련하여 분사기업이 10억 달러의 대규모 투자를 유치하는 등 양자컴퓨팅 분야의 핵심 플레이어로 부상함. 정부와의 긴밀한 협력 관계와 기술 리더십을 관찰할 필요가 있습니다."
+      "observation_reason": "미국 정부의 'QC-ADDS' 프로젝트와 관련하여 분사기업이 10억 달러의 대규모 투자를 유치하는 등 양자컴퓨팅 분야의 핵심 플레이어로 부상함. 정부와의 긴밀한 협력 관계와 기술 리더십을 관찰할 필요가 있습니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-8ee451c3ef222ad15c1e",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-22",
+      "expires_on": "2026-07-06",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "GlobalFoundries",
@@ -1247,10 +1935,21 @@
       "latest_evidence_date": "2026-06-22",
       "watchlist_duration_days": 5,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "source_named_security",
-      "observation_reason": "미국 정부의 양자컴퓨팅 관련 투자에서 3억 7,500만 달러를 배정받은 반도체 파운드리 기업. 양자컴퓨터 하드웨어 생산 생태계에서 차지할 역할을 관찰할 필요가 있습니다."
+      "observation_reason": "미국 정부의 양자컴퓨팅 관련 투자에서 3억 7,500만 달러를 배정받은 반도체 파운드리 기업. 양자컴퓨터 하드웨어 생산 생태계에서 차지할 역할을 관찰할 필요가 있습니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-33f0d9fb48dbb133d892",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-22",
+      "expires_on": "2026-07-06",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "Rigetti Computing",
@@ -1272,10 +1971,21 @@
       "latest_evidence_date": "2026-06-22",
       "watchlist_duration_days": 5,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "source_named_security",
-      "observation_reason": "미국 정부의 양자컴퓨팅 관련 투자에서 1억 달러를 배정받은 기업 중 하나. 정부 지원을 통한 기술 개발 및 상용화 가능성을 관찰할 필요가 있습니다."
+      "observation_reason": "미국 정부의 양자컴퓨팅 관련 투자에서 1억 달러를 배정받은 기업 중 하나. 정부 지원을 통한 기술 개발 및 상용화 가능성을 관찰할 필요가 있습니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-938db5d1589f4faf0c28",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-22",
+      "expires_on": "2026-07-06",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "D-Wave Quantum",
@@ -1297,10 +2007,21 @@
       "latest_evidence_date": "2026-06-22",
       "watchlist_duration_days": 5,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "source_named_security",
-      "observation_reason": "미국 정부의 양자컴퓨팅 관련 투자에서 1억 달러를 배정받은 기업 중 하나. 정부 지원을 통한 기술 개발 및 상용화 가능성을 관찰할 필요가 있습니다."
+      "observation_reason": "미국 정부의 양자컴퓨팅 관련 투자에서 1억 달러를 배정받은 기업 중 하나. 정부 지원을 통한 기술 개발 및 상용화 가능성을 관찰할 필요가 있습니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-9de764541687e8f8f841",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-22",
+      "expires_on": "2026-07-06",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     },
     {
       "name": "중동 철도 인프라 섹터",
@@ -1322,265 +2043,21 @@
       "latest_evidence_date": "2026-06-25",
       "watchlist_duration_days": 2,
       "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
+      "watchlist_closed_date": "2026-07-14",
+      "status": "종료",
       "source_scope": "sector_only",
-      "observation_reason": "중국의 일대일로에 대항하는 IMEC과 호르무즈 해협을 우회하는 터키 주도 '헤자즈 철도' 등 중동 지역에서 지정학적 중요성을 띤 대규모 철도 프로젝트 경쟁이 본격화되고 있음. 이는 관련 인프라, 건설, 철도 장비 기업에 장기적인 기회가 될 수 있으나, 프로젝트의 실현 가능성과 구체적인 수혜 기업이 불확실하여 관찰이 필요함."
-    },
-    {
-      "name": "천연 다이아몬드 섹터",
-      "code": "",
-      "market": "",
-      "asset_type": "sector",
-      "decision_actor": "AI",
-      "basis": "섹터 분석",
-      "decision_date": "2026-07-05",
-      "evidence_posts": [
-        {
-          "title": "벨기에 다이아몬드 협회가 트럼프에게 보석반지를 선물한 비밀",
-          "url": "https://blog.naver.com/ranto28/224336241433?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-04"
-        }
-      ],
-      "source_mentioned": false,
-      "watchlist_entry_date": "2026-07-05",
-      "latest_evidence_date": "2026-07-04",
-      "watchlist_duration_days": 0,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "sector_only",
-      "observation_reason": "랩그로운 다이아몬드의 부상으로 인한 구조적 위협에 직면해 있으며, 정치적 지원에 의존하는 등 장기적인 산업 리스크가 매우 큽니다. 관련 기업들의 대응 전략과 시장 점유율 변화를 관찰할 필요가 있습니다."
-    },
-    {
-      "name": "랩그로운 다이아몬드 섹터",
-      "code": "",
-      "market": "",
-      "asset_type": "sector",
-      "decision_actor": "AI",
-      "basis": "섹터 분석",
-      "decision_date": "2026-07-05",
-      "evidence_posts": [
-        {
-          "title": "벨기에 다이아몬드 협회가 트럼프에게 보석반지를 선물한 비밀",
-          "url": "https://blog.naver.com/ranto28/224336241433?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-04"
-        }
-      ],
-      "source_mentioned": false,
-      "watchlist_entry_date": "2026-07-05",
-      "latest_evidence_date": "2026-07-04",
-      "watchlist_duration_days": 0,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "sector_only",
-      "observation_reason": "기술 발전을 통한 가격 경쟁력과 인도 등 국가적 지원을 바탕으로 전통적인 보석 시장을 파괴적으로 혁신하고 있습니다. 시장의 성장성과 주요 상장 기업을 식별하기 위해 관찰이 필요합니다."
-    },
-    {
-      "name": "이마트",
-      "code": "139480",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-13",
-      "evidence_posts": [
-        {
-          "title": "홈플러스 사태 근황",
-          "url": "https://blog.naver.com/ranto28/224336684901?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-04"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-07-06",
-      "latest_evidence_date": "2026-07-04",
-      "watchlist_duration_days": 2,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "경쟁사 홈플러스의 몰락 과정에서 트레이더스(창고형 할인점)를 통해 생존 전략을 모색하는 기업으로 언급되었습니다. 대형마트 산업의 구조적 위기 속에서 반사 이익 및 차별화 가능성이 있는지 관찰이 필요하나, 투자 논리가 구체화되지 않아 Watchlist에 유지합니다."
-    },
-    {
-      "name": "CF Industries Holdings",
-      "code": "CF",
-      "market": "US",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-10",
-      "evidence_posts": [
-        {
-          "title": "트럼프가 비료부족에 대응하는 보법",
-          "url": "https://blog.naver.com/ranto28/224341638501?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-09"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-07-10",
-      "latest_evidence_date": "2026-07-09",
-      "watchlist_duration_days": 0,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "미국의 4대 비료 과점 기업 중 하나로 언급되었으나, 정부의 반독점 조사 및 국내 공급 확대 압박을 받는 부정적인 맥락에서 등장했습니다. 비료 시장의 핵심 플레이어이지만, 투자 논리로 삼기에는 정부 규제 리스크가 있어 관찰이 필요합니다."
-    },
-    {
-      "name": "Visa",
-      "code": "V",
-      "market": "US",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-13",
-      "evidence_posts": [
-        {
-          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
-          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-12"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-07-13",
-      "latest_evidence_date": "2026-07-12",
-      "watchlist_duration_days": 0,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "신규 스테이블코인 'Open USD' 컨소시엄에 참여하여 블록체인 기반 결제 시장으로의 확장성을 보여주었습니다. 기존 결제 네트워크의 강자와 신기술의 결합이 어떤 시너지를 낼지 관찰할 필요가 있습니다."
-    },
-    {
-      "name": "Mastercard",
-      "code": "MA",
-      "market": "US",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-13",
-      "evidence_posts": [
-        {
-          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
-          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-12"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-07-13",
-      "latest_evidence_date": "2026-07-12",
-      "watchlist_duration_days": 0,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "신규 스테이블코인 'Open USD' 컨소시엄에 참여하여 블록체인 기반 결제 시장으로의 확장성을 보여주었습니다. 기존 결제 네트워크의 강자와 신기술의 결합이 어떤 시너지를 낼지 관찰할 필요가 있습니다."
-    },
-    {
-      "name": "두나무",
-      "code": "",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-13",
-      "evidence_posts": [
-        {
-          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
-          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-12"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-07-13",
-      "latest_evidence_date": "2026-07-12",
-      "watchlist_duration_days": 0,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "비상장 기업. 신규 스테이블코인 'Open USD' 컨소시엄 참여사로 언급되었습니다. 국내 최대 가상자산 거래소로서 글로벌 블록체인 생태계에서의 역할을 확대할 가능성이 있어 관찰이 필요합니다."
-    },
-    {
-      "name": "신한금융지주",
-      "code": "055550",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-13",
-      "evidence_posts": [
-        {
-          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
-          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-12"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-07-13",
-      "latest_evidence_date": "2026-07-12",
-      "watchlist_duration_days": 0,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "신규 스테이블코인 'Open USD' 컨소시엄 참여사로 언급되었습니다. 전통 금융사의 디지털 자산 시장 진출 사례로, 향후 사업 전개 방향을 관찰할 필요가 있습니다."
-    },
-    {
-      "name": "카카오뱅크",
-      "code": "323410",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-13",
-      "evidence_posts": [
-        {
-          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
-          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-12"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-07-13",
-      "latest_evidence_date": "2026-07-12",
-      "watchlist_duration_days": 0,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "신규 스테이블코인 'Open USD' 컨소시엄 참여사로 언급되었습니다. 인터넷 은행의 블록체인 기술 도입 및 글로벌 핀테크 생태계 참여 가능성을 관찰할 필요가 있습니다."
-    },
-    {
-      "name": "HLB",
-      "code": "028300",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-13",
-      "evidence_posts": [
-        {
-          "title": "항서제약의 비밀",
-          "url": "https://blog.naver.com/ranto28/224343832057?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-12"
-        },
-        {
-          "title": "HLB 간암신약 미국FDA승인 불발의 비밀 A/S",
-          "url": "https://blog.naver.com/ranto28/224342169959?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-10"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-07-13",
-      "latest_evidence_date": "2026-07-12",
-      "watchlist_duration_days": 0,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "파트너사인 중국 항서제약의 제조품질관리(cGMP) 및 데이터 무결성 문제로 인해 간암 신약의 FDA 승인이 반복적으로 지연되고 있습니다. 이는 HLB 자체의 문제가 아닌 파트너 리스크로, 해결 시점이 불투명하여 투자 불확실성이 매우 높습니다."
+      "observation_reason": "중국의 일대일로에 대항하는 IMEC과 호르무즈 해협을 우회하는 터키 주도 '헤자즈 철도' 등 중동 지역에서 지정학적 중요성을 띤 대규모 철도 프로젝트 경쟁이 본격화되고 있음. 이는 관련 인프라, 건설, 철도 장비 기업에 장기적인 기회가 될 수 있으나, 프로젝트의 실현 가능성과 구체적인 수혜 기업이 불확실하여 관찰이 필요함.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-dc2a44bb85056d65d57c",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-06-25",
+      "expires_on": "2026-07-09",
+      "archived_date": "2026-07-14",
+      "archive_reason": "Watchlist 유효기간 만료"
     }
   ],
   "closed_positions": [
@@ -1601,7 +2078,12 @@
       "change_reason": "초기 생성 시 매도 시그널 감지",
       "closed_date": "2026-05-12",
       "close_reason": "초기 생성 시 매도 시그널 감지",
-      "closed_performance": null
+      "closed_performance": null,
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-9c69a4c0c4323bb9bd2c",
+      "linked_signal_ids": []
     },
     {
       "name": "NVIDIA",
@@ -1620,7 +2102,12 @@
       "change_reason": "매도 시그널 감지 (Avoid 판단 또는 주의종목 섹션)",
       "closed_date": "2026-05-30",
       "close_reason": "매도 시그널 감지 (Avoid 판단 또는 주의종목 섹션)",
-      "closed_performance": null
+      "closed_performance": null,
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-ba8b692a06117f813f3d",
+      "linked_signal_ids": []
     },
     {
       "name": "Comfort Systems USA",
@@ -1639,7 +2126,12 @@
       "change_reason": "매도 시그널 감지 (Avoid 판단 또는 주의종목 섹션)",
       "closed_date": "2026-05-30",
       "close_reason": "매도 시그널 감지 (Avoid 판단 또는 주의종목 섹션)",
-      "closed_performance": null
+      "closed_performance": null,
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-4f85c85d2a12a903b9d0",
+      "linked_signal_ids": []
     },
     {
       "name": "GOP ETF",
@@ -1658,7 +2150,12 @@
       "change_reason": "리밸런싱 결과 최신 검증 리포트에서 제외",
       "closed_date": "2026-05-28",
       "close_reason": "리밸런싱 결과 최신 검증 리포트에서 제외",
-      "closed_performance": null
+      "closed_performance": null,
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-0da03cbefb4e964c596c",
+      "linked_signal_ids": []
     }
   ],
   "decision_history": [
@@ -1692,7 +2189,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-d806126ad8089283dc21",
+      "linked_signal_ids": []
     },
     {
       "name": "Alcoa",
@@ -1724,7 +2226,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-4"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-b1323e337eded3e63cd1",
+      "linked_signal_ids": []
     },
     {
       "name": "Recursion Pharmaceuticals",
@@ -1757,7 +2264,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-3"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-45b7a54e825194be7b11",
+      "linked_signal_ids": []
     },
     {
       "name": "Northrop Grumman",
@@ -1788,7 +2300,12 @@
         "기술 개발 지연 및 실패 위험",
         "우주 개발 관련 지정학적 리스크"
       ],
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-4514c6853d610e8dd3da",
+      "linked_signal_ids": []
     },
     {
       "name": "Wabtec",
@@ -1820,7 +2337,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-4"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-6bc4b0f1402dd4862936",
+      "linked_signal_ids": []
     },
     {
       "name": "두산로보틱스",
@@ -1857,7 +2379,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-cddd1a8a9a9a65801f11",
+      "linked_signal_ids": []
     },
     {
       "name": "네이버",
@@ -1889,7 +2416,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-a79f5aa73f6f492fda4d",
+      "linked_signal_ids": []
     },
     {
       "name": "일라이 릴리",
@@ -1927,7 +2459,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-3"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-fcd607cc3af061275e3c",
+      "linked_signal_ids": []
     },
     {
       "name": "Marvell Technology",
@@ -1960,7 +2497,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-5"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-dafbd0ef6eb41ec802d4",
+      "linked_signal_ids": []
     },
     {
       "name": "삼성중공업",
@@ -1993,7 +2535,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260612-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-8c0fdf3c9009132956ed",
+      "linked_signal_ids": []
     },
     {
       "name": "한화오션",
@@ -2026,7 +2573,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260612-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-6334f2a88e6e2224095b",
+      "linked_signal_ids": []
     },
     {
       "name": "Northrop Grumman",
@@ -2059,7 +2611,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260612-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-4514c6853d610e8dd3da",
+      "linked_signal_ids": []
     },
     {
       "name": "LS",
@@ -2095,7 +2652,12 @@
         "수주 경쟁 심화"
       ],
       "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15",
-      "backfill_note": "과거 보고서/글 DB에서 누락된 근거를 복구한 1회성 데이터 보정"
+      "backfill_note": "과거 보고서/글 DB에서 누락된 근거를 복구한 1회성 데이터 보정",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-59c981e68670980ad7ff",
+      "linked_signal_ids": []
     },
     {
       "name": "대한전선",
@@ -2131,7 +2693,12 @@
         "국내외 케이블 업체 경쟁"
       ],
       "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15",
-      "backfill_note": "과거 보고서/글 DB에서 누락된 근거를 복구한 1회성 데이터 보정"
+      "backfill_note": "과거 보고서/글 DB에서 누락된 근거를 복구한 1회성 데이터 보정",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-420ba1945f8f92389dec",
+      "linked_signal_ids": []
     },
     {
       "name": "Microsoft",
@@ -2167,7 +2734,12 @@
         "규제 리스크"
       ],
       "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15",
-      "backfill_note": "과거 보고서/글 DB에서 누락된 근거를 복구한 1회성 데이터 보정"
+      "backfill_note": "과거 보고서/글 DB에서 누락된 근거를 복구한 1회성 데이터 보정",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-b1d3a4c22e82b8d4e33f",
+      "linked_signal_ids": []
     },
     {
       "name": "LG이노텍",
@@ -2203,7 +2775,12 @@
         "고객사 투자 속도 변화"
       ],
       "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15",
-      "backfill_note": "과거 보고서/글 DB에서 누락된 근거를 복구한 1회성 데이터 보정"
+      "backfill_note": "과거 보고서/글 DB에서 누락된 근거를 복구한 1회성 데이터 보정",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-710450943a31ea6bd491",
+      "linked_signal_ids": []
     },
     {
       "name": "현대차",
@@ -2239,7 +2816,12 @@
         "AI 로보틱스 투자 회수 지연"
       ],
       "legacy_backfill_source": "legacy_evidence_backfill_2026-06-15",
-      "backfill_note": "과거 보고서/글 DB에서 누락된 근거를 복구한 1회성 데이터 보정"
+      "backfill_note": "과거 보고서/글 DB에서 누락된 근거를 복구한 1회성 데이터 보정",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-0737c646a9916f3e364d",
+      "linked_signal_ids": []
     },
     {
       "name": "LS",
@@ -2272,7 +2854,12 @@
         "구리 등 원자재 가격 변동",
         "수주 경쟁 심화"
       ],
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-59c981e68670980ad7ff",
+      "linked_signal_ids": []
     },
     {
       "name": "대한전선",
@@ -2305,7 +2892,12 @@
         "원자재 가격 변동",
         "국내외 케이블 업체 경쟁"
       ],
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-420ba1945f8f92389dec",
+      "linked_signal_ids": []
     },
     {
       "name": "삼성중공업",
@@ -2339,7 +2931,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260615-4"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-8c0fdf3c9009132956ed",
+      "linked_signal_ids": []
     },
     {
       "name": "Google (Alphabet)",
@@ -2372,7 +2969,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-d806126ad8089283dc21",
+      "linked_signal_ids": []
     },
     {
       "name": "Microsoft",
@@ -2405,7 +3007,12 @@
         "클라우드 경쟁 심화",
         "규제 리스크"
       ],
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-b1d3a4c22e82b8d4e33f",
+      "linked_signal_ids": []
     },
     {
       "name": "Alcoa",
@@ -2438,7 +3045,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-4"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-b1323e337eded3e63cd1",
+      "linked_signal_ids": []
     },
     {
       "name": "Recursion Pharmaceuticals",
@@ -2472,7 +3084,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-3"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-45b7a54e825194be7b11",
+      "linked_signal_ids": []
     },
     {
       "name": "Northrop Grumman",
@@ -2506,7 +3123,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260615-6"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-4514c6853d610e8dd3da",
+      "linked_signal_ids": []
     },
     {
       "name": "LG이노텍",
@@ -2539,7 +3161,12 @@
         "부품 공급 계약 불확실성",
         "고객사 투자 속도 변화"
       ],
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-710450943a31ea6bd491",
+      "linked_signal_ids": []
     },
     {
       "name": "Wabtec",
@@ -2572,7 +3199,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-4"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-6bc4b0f1402dd4862936",
+      "linked_signal_ids": []
     },
     {
       "name": "두산로보틱스",
@@ -2610,7 +3242,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-cddd1a8a9a9a65801f11",
+      "linked_signal_ids": []
     },
     {
       "name": "현대차",
@@ -2643,7 +3280,12 @@
         "자동차 경기 둔화",
         "AI 로보틱스 투자 회수 지연"
       ],
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-0737c646a9916f3e364d",
+      "linked_signal_ids": []
     },
     {
       "name": "네이버",
@@ -2676,7 +3318,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-a79f5aa73f6f492fda4d",
+      "linked_signal_ids": []
     },
     {
       "name": "일라이 릴리",
@@ -2715,7 +3362,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-3"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-fcd607cc3af061275e3c",
+      "linked_signal_ids": []
     },
     {
       "name": "Marvell Technology",
@@ -2749,7 +3401,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260609-5"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-dafbd0ef6eb41ec802d4",
+      "linked_signal_ids": []
     },
     {
       "name": "한화오션",
@@ -2783,7 +3440,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260615-4"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-6334f2a88e6e2224095b",
+      "linked_signal_ids": []
     },
     {
       "name": "두산로보틱스",
@@ -2817,7 +3479,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260615-5"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-cddd1a8a9a9a65801f11",
+      "linked_signal_ids": []
     },
     {
       "name": "Alcoa",
@@ -2851,7 +3518,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260615-5"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-b1323e337eded3e63cd1",
+      "linked_signal_ids": []
     },
     {
       "name": "Google (Alphabet)",
@@ -2882,7 +3554,12 @@
         "AI 기술 경쟁 심화",
         "각국 정부의 반독점 규제 강화"
       ],
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-d806126ad8089283dc21",
+      "linked_signal_ids": []
     },
     {
       "name": "현대차",
@@ -2914,7 +3591,12 @@
         "자동차 본업의 경기 둔화",
         "AI 로보틱스 투자 회수 기간 장기화"
       ],
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-0737c646a9916f3e364d",
+      "linked_signal_ids": []
     },
     {
       "name": "네이버",
@@ -2946,7 +3628,12 @@
         "국내 광고 및 커머스 시장 성장 둔화",
         "라인야후 지분 매각 관련 불확실성"
       ],
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-a79f5aa73f6f492fda4d",
+      "linked_signal_ids": []
     },
     {
       "name": "삼성중공업",
@@ -2980,7 +3667,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260615-4"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-8c0fdf3c9009132956ed",
+      "linked_signal_ids": []
     },
     {
       "name": "LG이노텍",
@@ -3012,7 +3704,12 @@
         "부품 공급 계약 불확실성",
         "주요 고객사(애플)의 스마트폰 판매 둔화"
       ],
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-710450943a31ea6bd491",
+      "linked_signal_ids": []
     },
     {
       "name": "일라이 릴리",
@@ -3044,7 +3741,12 @@
         "비만 치료제 시장의 가격 경쟁 심화",
         "특허 만료 리스크"
       ],
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-fcd607cc3af061275e3c",
+      "linked_signal_ids": []
     },
     {
       "name": "Northrop Grumman",
@@ -3078,7 +3780,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260615-6"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-4514c6853d610e8dd3da",
+      "linked_signal_ids": []
     },
     {
       "name": "Marvell Technology",
@@ -3110,7 +3817,12 @@
         "특정 대형 고객사에 대한 높은 매출 의존도",
         "반도체 산업의 경기 변동성"
       ],
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-dafbd0ef6eb41ec802d4",
+      "linked_signal_ids": []
     },
     {
       "name": "한화오션",
@@ -3144,7 +3856,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260615-4"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-6334f2a88e6e2224095b",
+      "linked_signal_ids": []
     },
     {
       "name": "LS",
@@ -3178,7 +3895,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260615-3"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-59c981e68670980ad7ff",
+      "linked_signal_ids": []
     },
     {
       "name": "대한전선",
@@ -3212,7 +3934,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260615-3"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-420ba1945f8f92389dec",
+      "linked_signal_ids": []
     },
     {
       "name": "Microsoft",
@@ -3244,7 +3971,12 @@
         "클라우드 경쟁 심화",
         "각국 정부의 반독점 규제 리스크"
       ],
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-b1d3a4c22e82b8d4e33f",
+      "linked_signal_ids": []
     },
     {
       "name": "Recursion Pharmaceuticals",
@@ -3276,7 +4008,12 @@
         "AI 모델의 예측 정확도 한계",
         "장기적인 수익화 모델의 불확실성"
       ],
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-45b7a54e825194be7b11",
+      "linked_signal_ids": []
     },
     {
       "name": "Wabtec",
@@ -3307,7 +4044,12 @@
         "글로벌 인프라 투자 둔화",
         "신흥국 시장의 정치적 불확실성"
       ],
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-6bc4b0f1402dd4862936",
+      "linked_signal_ids": []
     },
     {
       "name": "LS",
@@ -3340,7 +4082,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260615-3"
       ],
-      "source_scope": "previous_decision"
+      "source_scope": "previous_decision",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-59c981e68670980ad7ff",
+      "linked_signal_ids": []
     },
     {
       "name": "대한전선",
@@ -3373,7 +4120,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260615-3"
       ],
-      "source_scope": "previous_decision"
+      "source_scope": "previous_decision",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-420ba1945f8f92389dec",
+      "linked_signal_ids": []
     },
     {
       "name": "삼성중공업",
@@ -3407,7 +4159,12 @@
         "INSIGHT-20260615-4",
         "INSIGHT-20260615-5"
       ],
-      "source_scope": "sector_only"
+      "source_scope": "sector_only",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-8c0fdf3c9009132956ed",
+      "linked_signal_ids": []
     },
     {
       "name": "Google (Alphabet)",
@@ -3439,7 +4196,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260615-5"
       ],
-      "source_scope": "source_named_security"
+      "source_scope": "source_named_security",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-d806126ad8089283dc21",
+      "linked_signal_ids": []
     },
     {
       "name": "Microsoft",
@@ -3470,7 +4232,12 @@
         "각국 정부의 반독점 규제 리스크"
       ],
       "linked_insight_ids": [],
-      "source_scope": "source_named_security"
+      "source_scope": "source_named_security",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-b1d3a4c22e82b8d4e33f",
+      "linked_signal_ids": []
     },
     {
       "name": "Alcoa",
@@ -3503,7 +4270,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260615-5"
       ],
-      "source_scope": "previous_decision"
+      "source_scope": "previous_decision",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-b1323e337eded3e63cd1",
+      "linked_signal_ids": []
     },
     {
       "name": "Recursion Pharmaceuticals",
@@ -3534,7 +4306,12 @@
         "장기적인 수익화 모델의 불확실성"
       ],
       "linked_insight_ids": [],
-      "source_scope": "source_named_security"
+      "source_scope": "source_named_security",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-45b7a54e825194be7b11",
+      "linked_signal_ids": []
     },
     {
       "name": "Northrop Grumman",
@@ -3568,7 +4345,12 @@
         "INSIGHT-20260615-6",
         "INSIGHT-20260615-5"
       ],
-      "source_scope": "previous_decision"
+      "source_scope": "previous_decision",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-4514c6853d610e8dd3da",
+      "linked_signal_ids": []
     },
     {
       "name": "LG이노텍",
@@ -3601,7 +4383,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260615-5"
       ],
-      "source_scope": "source_named_security"
+      "source_scope": "source_named_security",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-710450943a31ea6bd491",
+      "linked_signal_ids": []
     },
     {
       "name": "Wabtec",
@@ -3631,7 +4418,12 @@
         "신흥국 시장의 정치적 불확실성"
       ],
       "linked_insight_ids": [],
-      "source_scope": "source_named_security"
+      "source_scope": "source_named_security",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-6bc4b0f1402dd4862936",
+      "linked_signal_ids": []
     },
     {
       "name": "두산로보틱스",
@@ -3664,7 +4456,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260615-5"
       ],
-      "source_scope": "previous_decision"
+      "source_scope": "previous_decision",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-cddd1a8a9a9a65801f11",
+      "linked_signal_ids": []
     },
     {
       "name": "현대차",
@@ -3697,7 +4494,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260615-5"
       ],
-      "source_scope": "source_named_security"
+      "source_scope": "source_named_security",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-0737c646a9916f3e364d",
+      "linked_signal_ids": []
     },
     {
       "name": "네이버",
@@ -3730,7 +4532,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260615-5"
       ],
-      "source_scope": "source_named_security"
+      "source_scope": "source_named_security",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-a79f5aa73f6f492fda4d",
+      "linked_signal_ids": []
     },
     {
       "name": "일라이 릴리",
@@ -3761,7 +4568,12 @@
         "특허 만료 리스크"
       ],
       "linked_insight_ids": [],
-      "source_scope": "source_named_security"
+      "source_scope": "source_named_security",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-fcd607cc3af061275e3c",
+      "linked_signal_ids": []
     },
     {
       "name": "Marvell Technology",
@@ -3794,7 +4606,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260615-5"
       ],
-      "source_scope": "source_named_security"
+      "source_scope": "source_named_security",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-dafbd0ef6eb41ec802d4",
+      "linked_signal_ids": []
     },
     {
       "name": "한화오션",
@@ -3827,7 +4644,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260615-4"
       ],
-      "source_scope": "source_named_security"
+      "source_scope": "source_named_security",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-6334f2a88e6e2224095b",
+      "linked_signal_ids": []
     },
     {
       "name": "LS",
@@ -3861,7 +4683,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260616-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-59c981e68670980ad7ff",
+      "linked_signal_ids": []
     },
     {
       "name": "대한전선",
@@ -3895,7 +4722,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260616-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-420ba1945f8f92389dec",
+      "linked_signal_ids": []
     },
     {
       "name": "Alcoa",
@@ -3929,7 +4761,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260616-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-b1323e337eded3e63cd1",
+      "linked_signal_ids": []
     },
     {
       "name": "삼성전자",
@@ -3963,7 +4800,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260618-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-1e554f3fec3667f01057",
+      "linked_signal_ids": []
     },
     {
       "name": "두산로보틱스",
@@ -4003,7 +4845,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260619-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-cddd1a8a9a9a65801f11",
+      "linked_signal_ids": []
     },
     {
       "name": "Alcoa",
@@ -4042,7 +4889,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260619-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-b1323e337eded3e63cd1",
+      "linked_signal_ids": []
     },
     {
       "name": "LG이노텍",
@@ -4081,7 +4933,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260619-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-710450943a31ea6bd491",
+      "linked_signal_ids": []
     },
     {
       "name": "LS",
@@ -4116,7 +4973,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260621-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-59c981e68670980ad7ff",
+      "linked_signal_ids": []
     },
     {
       "name": "대한전선",
@@ -4150,7 +5012,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260621-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-420ba1945f8f92389dec",
+      "linked_signal_ids": []
     },
     {
       "name": "삼성전자",
@@ -4185,7 +5052,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260622-1",
         "INSIGHT-20260622-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-1e554f3fec3667f01057",
+      "linked_signal_ids": []
     },
     {
       "name": "SK하이닉스",
@@ -4220,7 +5092,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260622-1",
         "INSIGHT-20260622-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-5f626b73bbb18d2a232e",
+      "linked_signal_ids": []
     },
     {
       "name": "Northrop Grumman",
@@ -4259,7 +5136,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260625-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-4514c6853d610e8dd3da",
+      "linked_signal_ids": []
     },
     {
       "name": "SK하이닉스",
@@ -4299,7 +5181,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260626-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-5f626b73bbb18d2a232e",
+      "linked_signal_ids": []
     },
     {
       "name": "네이버",
@@ -4339,7 +5226,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260629-1",
         "INSIGHT-20260629-5"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-a79f5aa73f6f492fda4d",
+      "linked_signal_ids": []
     },
     {
       "name": "현대차",
@@ -4379,7 +5271,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260629-1",
         "INSIGHT-20260629-5"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-0737c646a9916f3e364d",
+      "linked_signal_ids": []
     },
     {
       "name": "두산로보틱스",
@@ -4415,7 +5312,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260629-1",
         "INSIGHT-20260629-5"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-cddd1a8a9a9a65801f11",
+      "linked_signal_ids": []
     },
     {
       "name": "LG이노텍",
@@ -4450,7 +5352,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260629-1",
         "INSIGHT-20260629-5"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-710450943a31ea6bd491",
+      "linked_signal_ids": []
     },
     {
       "name": "SK하이닉스",
@@ -4485,7 +5392,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260629-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-5f626b73bbb18d2a232e",
+      "linked_signal_ids": []
     },
     {
       "name": "Google (Alphabet)",
@@ -4516,7 +5428,12 @@
         "AI 기술 경쟁 심화",
         "각국 정부의 반독점 규제 강화"
       ],
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-d806126ad8089283dc21",
+      "linked_signal_ids": []
     },
     {
       "name": "LS",
@@ -4548,7 +5465,12 @@
         "구리 등 원자재 가격 변동",
         "수주 경쟁 심화"
       ],
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-59c981e68670980ad7ff",
+      "linked_signal_ids": []
     },
     {
       "name": "대한전선",
@@ -4580,7 +5502,12 @@
         "원자재 가격 변동",
         "국내외 케이블 업체 경쟁"
       ],
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-420ba1945f8f92389dec",
+      "linked_signal_ids": []
     },
     {
       "name": "Microsoft",
@@ -4612,7 +5539,12 @@
         "클라우드 경쟁 심화",
         "각국 정부의 반독점 규제 리스크"
       ],
-      "linked_insight_ids": []
+      "linked_insight_ids": [],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-b1d3a4c22e82b8d4e33f",
+      "linked_signal_ids": []
     },
     {
       "name": "삼성전자",
@@ -4647,7 +5579,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260701-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-1e554f3fec3667f01057",
+      "linked_signal_ids": []
     },
     {
       "name": "SK하이닉스",
@@ -4682,7 +5619,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260701-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-5f626b73bbb18d2a232e",
+      "linked_signal_ids": []
     },
     {
       "name": "한화오션",
@@ -4716,7 +5658,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260703-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-6334f2a88e6e2224095b",
+      "linked_signal_ids": []
     },
     {
       "name": "삼성전자",
@@ -4757,7 +5704,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260704-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-1e554f3fec3667f01057",
+      "linked_signal_ids": []
     },
     {
       "name": "SK하이닉스",
@@ -4798,7 +5750,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260704-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-5f626b73bbb18d2a232e",
+      "linked_signal_ids": []
     },
     {
       "name": "SK하이닉스",
@@ -4844,7 +5801,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260706-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-5f626b73bbb18d2a232e",
+      "linked_signal_ids": []
     },
     {
       "name": "삼성전자",
@@ -4885,7 +5847,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260708-1",
         "INSIGHT-20260708-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-1e554f3fec3667f01057",
+      "linked_signal_ids": []
     },
     {
       "name": "SK하이닉스",
@@ -4926,7 +5893,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260708-1",
         "INSIGHT-20260708-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-5f626b73bbb18d2a232e",
+      "linked_signal_ids": []
     },
     {
       "name": "한화오션",
@@ -4961,7 +5933,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260708-3"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-6334f2a88e6e2224095b",
+      "linked_signal_ids": []
     },
     {
       "name": "삼성전자",
@@ -5004,7 +5981,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260709-1",
         "INSIGHT-20260709-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-1e554f3fec3667f01057",
+      "linked_signal_ids": []
     },
     {
       "name": "SK하이닉스",
@@ -5046,7 +6028,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260709-1",
         "INSIGHT-20260709-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-5f626b73bbb18d2a232e",
+      "linked_signal_ids": []
     },
     {
       "name": "현대차",
@@ -5081,7 +6068,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260709-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-0737c646a9916f3e364d",
+      "linked_signal_ids": []
     },
     {
       "name": "네이버",
@@ -5116,7 +6108,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260709-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-a79f5aa73f6f492fda4d",
+      "linked_signal_ids": []
     },
     {
       "name": "삼성중공업",
@@ -5151,7 +6148,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260709-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-8c0fdf3c9009132956ed",
+      "linked_signal_ids": []
     },
     {
       "name": "SK하이닉스",
@@ -5187,7 +6189,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260710-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-5f626b73bbb18d2a232e",
+      "linked_signal_ids": []
     },
     {
       "name": "삼성전자",
@@ -5225,7 +6232,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260712-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-1e554f3fec3667f01057",
+      "linked_signal_ids": []
     },
     {
       "name": "SK하이닉스",
@@ -5262,7 +6274,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260712-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-5f626b73bbb18d2a232e",
+      "linked_signal_ids": []
     },
     {
       "name": "Google (Alphabet)",
@@ -5295,7 +6312,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260713-5"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-d806126ad8089283dc21",
+      "linked_signal_ids": []
     },
     {
       "name": "삼성전자",
@@ -5333,7 +6355,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260713-3"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-1e554f3fec3667f01057",
+      "linked_signal_ids": []
     },
     {
       "name": "SK하이닉스",
@@ -5370,7 +6397,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260713-4"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-5f626b73bbb18d2a232e",
+      "linked_signal_ids": []
     },
     {
       "name": "네이버",
@@ -5411,7 +6443,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260713-1",
         "INSIGHT-20260713-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-a79f5aa73f6f492fda4d",
+      "linked_signal_ids": []
     },
     {
       "name": "현대차",
@@ -5452,7 +6489,12 @@
       "linked_insight_ids": [
         "INSIGHT-20260713-1",
         "INSIGHT-20260713-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-0737c646a9916f3e364d",
+      "linked_signal_ids": []
     },
     {
       "name": "삼성중공업",
@@ -5487,7 +6529,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260713-2"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-8c0fdf3c9009132956ed",
+      "linked_signal_ids": []
     },
     {
       "name": "LG이노텍",
@@ -5521,7 +6568,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260713-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-710450943a31ea6bd491",
+      "linked_signal_ids": []
     },
     {
       "name": "한화오션",
@@ -5556,7 +6608,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260713-6"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-6334f2a88e6e2224095b",
+      "linked_signal_ids": []
     },
     {
       "name": "두산로보틱스",
@@ -5591,7 +6648,12 @@
       ],
       "linked_insight_ids": [
         "INSIGHT-20260713-1"
-      ]
+      ],
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-cddd1a8a9a9a65801f11",
+      "linked_signal_ids": []
     }
   ],
   "insights": [
@@ -5711,5 +6773,37 @@
       ]
     }
   ],
-  "last_rebalanced_date": "2026-07-13"
+  "signal_events": [],
+  "last_watchlist_changes": {
+    "date": "2026-07-14",
+    "added": [],
+    "updated": [],
+    "promoted": [],
+    "rejected": [],
+    "expired": [
+      "legacy-8a531ea2622853280267",
+      "legacy-2b5fb11806f71a09b0a1",
+      "legacy-93c7d9d3204607bda9ac",
+      "legacy-1b0b28ece0a6d8e87773",
+      "legacy-b547f8c75b6589d805e2",
+      "legacy-6fa30c7a676c20d28986",
+      "legacy-bf1f4ee62983d1c19924",
+      "legacy-decd7e78d20a1513284e",
+      "legacy-9875fbb78bfeeb2b51e6",
+      "legacy-85c4aa39f72fd10aca3a",
+      "legacy-8d14d834beeeb7cf3f69",
+      "legacy-32c54bb989e6f17be923",
+      "legacy-32a6d2507b4078d0bfd7",
+      "legacy-cbfe46a0d0f624377974",
+      "legacy-d608a77f74623a8dd3d0",
+      "legacy-ec9ef90f8ffaa7b09290",
+      "legacy-8ee451c3ef222ad15c1e",
+      "legacy-33f0d9fb48dbb133d892",
+      "legacy-938db5d1589f4faf0c28",
+      "legacy-9de764541687e8f8f841",
+      "legacy-dc2a44bb85056d65d57c"
+    ],
+    "archived": []
+  },
+  "last_rebalanced_date": null
 }
