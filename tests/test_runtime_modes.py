@@ -25,6 +25,16 @@ from track_returns import create_model_ledger
 
 
 class RuntimeModesTest(unittest.TestCase):
+    def setUp(self):
+        # GitHub Actions exposes GITHUB_ACTIONS=true to the test process too.
+        # Runtime receipts belong to a real main.py invocation, never to mocked
+        # unit-test report paths.  Individual receipt tests opt in explicitly.
+        self._run_status_enabled = main.RUN_STATUS_ENABLED
+        main.RUN_STATUS_ENABLED = False
+
+    def tearDown(self):
+        main.RUN_STATUS_ENABLED = self._run_status_enabled
+
     def test_verify_sends_telegram_without_persisting_operating_state(self):
         policy = get_run_policy("verify")
 
