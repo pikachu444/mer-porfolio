@@ -4,9 +4,14 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from portfolio_schema import (
+    SCHEMA_VERSION,
     PortfolioSchemaError,
+    add_business_days,
+    advance_watchlist_lifecycle,
     apply_analysis_decision,
     apply_portfolio_decisions,
+    append_signal_events,
+    evidence_sha256,
     load_portfolio_state_file,
     load_or_migrate_portfolio_state,
     migrate_legacy_state,
@@ -16,6 +21,9 @@ from portfolio_schema import (
     parse_portfolio_state_json,
     save_analysis_decision_file,
     save_portfolio_state_file,
+    signal_event_id,
+    validate_signal_ledger_append_only,
+    watchlist_expiry_date,
 )
 from system_prompt import (
     DECISION_SYSTEM_PROMPT,
@@ -68,6 +76,36 @@ def insight(**overrides):
         "related_decision_codes": ["AA"],
     }
     value.update(overrides)
+    return value
+
+
+def signal_event(**overrides):
+    value = {
+        "signal_type": "MER_DIRECT",
+        "post_id": "224300000001",
+        "post_title": "메르 직접 보유 공개",
+        "post_url": "https://blog.naver.com/ranto28/224300000001",
+        "published_date": "2026-05-29",
+        "evidence_text": "나는 Alcoa를 보유하고 있다.",
+        "entity": {
+            "name": "Alcoa",
+            "code": "AA",
+            "market": "US",
+            "asset_type": "stock",
+        },
+        "direction": "bullish",
+        "horizon": {"min_days": 60, "max_days": 240},
+        "catalysts": ["알루미늄 공급 제한"],
+        "invalidation_conditions": ["공급 제한 해소"],
+        "thesis_id": "alcoa-direct",
+        "parent_signal_ids": [],
+        "created_by": "summary_model",
+        "model_id": "gemini-test",
+        "created_at": "2026-05-29T09:00:00+09:00",
+    }
+    value.update(overrides)
+    value["evidence_sha256"] = evidence_sha256(value["evidence_text"])
+    value["signal_id"] = signal_event_id(value)
     return value
 
 
@@ -151,6 +189,25 @@ class PortfolioSchemaTest(unittest.TestCase):
         with self.assertRaisesRegex(PortfolioSchemaError, "overlaps with active portfolio"):
             parse_portfolio_state_json(json.dumps(payload, ensure_ascii=False))
 
+    def test_allows_reentry_after_a_prior_closed_episode(self):
+        state = parse_portfolio_state(state_payload())
+        sold = apply_portfolio_decisions(state, [decision(
+            action="매도",
+            previous_weight=8.0,
+            proposed_weight=0.0,
+            decision_date="2026-06-01",
+        )])
+
+        reentered = apply_portfolio_decisions(sold, [decision(
+            action="매수",
+            previous_weight=None,
+            proposed_weight=8.0,
+            decision_date="2026-06-02",
+        )])
+
+        self.assertEqual(len(reentered.portfolio), 1)
+        self.assertEqual(len(reentered.closed_positions), 2)
+
     def test_rejects_unknown_first_call_run_type(self):
         payload = {
             "analysis_date": "2026-06-01",
@@ -206,7 +263,7 @@ class PortfolioSchemaTest(unittest.TestCase):
             json.dumps(state_payload(), ensure_ascii=False)
         )
 
-        self.assertEqual(parsed.schema_version, "2.0")
+        self.assertEqual(parsed.schema_version, SCHEMA_VERSION)
         self.assertEqual(parsed.portfolio[0]["decision_actor"], "AI")
         self.assertEqual(parsed.watchlist[0]["status"], "관심")
         self.assertEqual(parsed.closed_positions[0]["action"], "매도")
@@ -464,7 +521,11 @@ class PortfolioSchemaTest(unittest.TestCase):
             apply_portfolio_decisions(state, [sell])
 
     def test_transition_keeps_rebalance_date_for_regular_analysis(self):
-        state = parse_portfolio_state_json(json.dumps(state_payload(), ensure_ascii=False))
+        payload = state_payload()
+        # The test covers a normal v2.1 operating state.  A v2.0 payload is
+        # deliberately normalized to a fresh rebalance baseline on migration.
+        payload["schema_version"] = SCHEMA_VERSION
+        state = parse_portfolio_state_json(json.dumps(payload, ensure_ascii=False))
 
         updated = apply_portfolio_decisions(state, [decision(proposed_weight=9.0)])
 
@@ -688,12 +749,29 @@ class PortfolioSchemaTest(unittest.TestCase):
         self.assertEqual(migrated.closed_positions[0]["close_reason"], "기존 종료 사유")
         self.assertEqual(migrated.closed_positions[0]["previous_weight"], 15.0)
 
-    def test_loads_existing_v2_state_without_migration(self):
+    def test_loads_existing_v2_state_with_conservative_upgrade(self):
         payload = state_payload()
 
         loaded = load_or_migrate_portfolio_state(payload)
 
-        self.assertEqual(loaded.to_dict(), payload)
+        self.assertEqual(loaded.schema_version, SCHEMA_VERSION)
+        self.assertEqual(loaded.portfolio[0]["proposed_weight"], 8.0)
+        self.assertEqual(loaded.portfolio[0]["provenance_status"], "legacy_unvalidated")
+        self.assertEqual(loaded.portfolio[0]["origin_signal_type"], "LEGACY_UNVALIDATED")
+        self.assertEqual(loaded.signal_events, [])
+        self.assertEqual(loaded.watchlist_archive, [])
+
+    def test_v20_upgrade_resets_only_legacy_rebalance_baseline(self):
+        legacy = state_payload()
+
+        upgraded = parse_portfolio_state(legacy)
+        self.assertIsNone(upgraded.last_rebalanced_date)
+
+        current = upgraded.to_dict()
+        current["last_rebalanced_date"] = "2026-06-01"
+        preserved = parse_portfolio_state(current)
+
+        self.assertEqual(preserved.last_rebalanced_date, "2026-06-01")
 
     def test_rejects_unclassified_actor_in_new_gemini_decision(self):
         payload = {
@@ -740,7 +818,7 @@ class PortfolioSchemaTest(unittest.TestCase):
             save_portfolio_state_file(migrated, source)
             saved = json.loads(source.read_text(encoding="utf-8"))
 
-        self.assertEqual(saved["schema_version"], "2.0")
+        self.assertEqual(saved["schema_version"], SCHEMA_VERSION)
         self.assertEqual(saved["portfolio"][0]["decision_actor"], "미분류")
 
     def test_applies_first_reevaluation_and_adds_watchlist_update(self):
@@ -799,7 +877,8 @@ class PortfolioSchemaTest(unittest.TestCase):
         updated = apply_analysis_decision(state, analysis)
 
         self.assertEqual(updated.portfolio, state.portfolio)
-        self.assertEqual(updated.watchlist, state.watchlist)
+        self.assertEqual(updated.watchlist[0]["name"], state.watchlist[0]["name"])
+        self.assertEqual(updated.watchlist[0]["watchlist_duration_days"], 3)
 
     def test_watchlist_delta_updates_one_item_without_dropping_others(self):
         payload = state_payload()
@@ -826,6 +905,208 @@ class PortfolioSchemaTest(unittest.TestCase):
         self.assertEqual(len(updated.watchlist), 2)
         self.assertEqual(updated.watchlist[0]["status"], "재검토 필요")
         self.assertEqual(updated.watchlist[1]["name"], "헬륨")
+
+    def test_v2_upgrade_is_idempotent_and_quarantines_unknown_provenance(self):
+        first = parse_portfolio_state(state_payload())
+        second = parse_portfolio_state(first.to_dict())
+
+        self.assertEqual(second.to_dict(), first.to_dict())
+        self.assertEqual(first.schema_version, SCHEMA_VERSION)
+        self.assertEqual(first.portfolio[0]["provenance_status"], "legacy_unvalidated")
+        self.assertEqual(first.portfolio[0]["origin_signal_ids"], [])
+        self.assertTrue(first.portfolio[0]["thesis_id"].startswith("legacy-"))
+        self.assertIn("expires_on", first.watchlist[0])
+
+    def test_v2_upgrade_moves_terminal_watchlist_item_to_archive(self):
+        payload = state_payload()
+        payload["watchlist"][0]["status"] = "포트폴리오 편입"
+
+        upgraded = parse_portfolio_state(payload)
+
+        self.assertEqual(upgraded.watchlist, [])
+        self.assertEqual(len(upgraded.watchlist_archive), 1)
+        self.assertEqual(upgraded.watchlist_archive[0]["lifecycle_status"], "promoted")
+
+    def test_v2_upgrade_deduplicates_same_watchlist_thesis(self):
+        payload = state_payload()
+        payload["watchlist"].append(dict(payload["watchlist"][0]))
+
+        upgraded = parse_portfolio_state(payload)
+
+        self.assertEqual(len(upgraded.watchlist), 1)
+
+    def test_signal_ledger_append_is_content_addressed_and_idempotent(self):
+        state = parse_portfolio_state(state_payload())
+        event = signal_event()
+
+        once = append_signal_events(state, [event])
+        twice = append_signal_events(once, [event])
+
+        self.assertEqual(len(once.signal_events), 1)
+        self.assertEqual(twice.signal_events, once.signal_events)
+
+    def test_signal_ledger_rejects_attempted_event_mutation(self):
+        state = append_signal_events(
+            parse_portfolio_state(state_payload()),
+            [signal_event()],
+        )
+        mutated = dict(state.signal_events[0])
+        mutated["direction"] = "bearish"
+
+        with self.assertRaisesRegex(PortfolioSchemaError, "content-addressed id"):
+            append_signal_events(state, [mutated])
+
+    def test_signal_ledger_append_only_validator_rejects_deletion(self):
+        event = signal_event()
+
+        with self.assertRaisesRegex(PortfolioSchemaError, "missing prior signal_id"):
+            validate_signal_ledger_append_only([event], [])
+
+    def test_state_file_save_cannot_delete_persisted_signal(self):
+        state = append_signal_events(parse_portfolio_state(state_payload()), [signal_event()])
+        without_signal = parse_portfolio_state(state_payload())
+        with TemporaryDirectory() as tmp:
+            path = Path(tmp) / "portfolio_state.json"
+            save_portfolio_state_file(state, path)
+
+            with self.assertRaisesRegex(PortfolioSchemaError, "missing prior signal_id"):
+                save_portfolio_state_file(without_signal, path)
+
+    def test_signal_ledger_requires_known_parent_for_ai_inference(self):
+        source = signal_event()
+        inferred = signal_event(
+            signal_type="AI_INFERRED",
+            evidence_text="공급 제한의 수혜가 Alcoa 이익으로 이어질 수 있다.",
+            parent_signal_ids=["sig_unknown"],
+            created_by="decision_model",
+        )
+
+        with self.assertRaisesRegex(PortfolioSchemaError, "unknown ids"):
+            append_signal_events(parse_portfolio_state(state_payload()), [source, inferred])
+
+    def test_verified_mer_origin_survives_later_ai_management(self):
+        event = signal_event()
+        state = append_signal_events(parse_portfolio_state(state_payload()), [event])
+        payload = state.to_dict()
+        payload["portfolio"][0].update({
+            "provenance_status": "verified",
+            "origin_signal_type": "MER_DIRECT",
+            "origin_signal_ids": [event["signal_id"]],
+            "linked_signal_ids": [event["signal_id"]],
+            "thesis_id": event["thesis_id"],
+        })
+        state = parse_portfolio_state(payload)
+        ai_update = decision(
+            action="보유",
+            previous_weight=8.0,
+            proposed_weight=8.0,
+            decision_date="2026-06-01",
+        )
+
+        updated = apply_portfolio_decisions(state, [ai_update])
+
+        self.assertEqual(updated.portfolio[0]["decision_actor"], "AI")
+        self.assertEqual(updated.portfolio[0]["origin_signal_type"], "MER_DIRECT")
+        self.assertEqual(updated.portfolio[0]["origin_signal_ids"], [event["signal_id"]])
+        self.assertEqual(updated.decision_history[-1]["origin_signal_type"], "MER_DIRECT")
+
+    def test_incompatible_new_signal_cannot_expand_existing_verified_long(self):
+        bullish = signal_event()
+        bearish = signal_event(
+            evidence_text="Alcoa는 공급 정상화로 피해를 받을 수 있다.",
+            direction="bearish",
+            thesis_id="alcoa-bearish",
+        )
+        state = append_signal_events(
+            parse_portfolio_state(state_payload()),
+            [bullish, bearish],
+        )
+        payload = state.to_dict()
+        payload["portfolio"][0].update({
+            "provenance_status": "verified",
+            "origin_signal_type": "MER_DIRECT",
+            "origin_signal_ids": [bullish["signal_id"]],
+            "linked_signal_ids": [bullish["signal_id"]],
+            "thesis_id": bullish["thesis_id"],
+        })
+        state = parse_portfolio_state(payload)
+        incompatible = decision(
+            action="비중확대",
+            previous_weight=8.0,
+            proposed_weight=9.0,
+            linked_signal_ids=[bearish["signal_id"]],
+        )
+
+        with self.assertRaisesRegex(PortfolioSchemaError, "signals incompatible"):
+            apply_portfolio_decisions(state, [incompatible])
+
+        discarded_link = decision(
+            action="비중확대",
+            previous_weight=8.0,
+            proposed_weight=9.0,
+            linked_signal_ids=[],
+            rejected_linked_signal_ids=[bearish["signal_id"]],
+        )
+        with self.assertRaisesRegex(PortfolioSchemaError, "signals incompatible"):
+            apply_portfolio_decisions(state, [discarded_link])
+
+    def test_business_day_ttl_skips_weekends_for_all_watchlist_kinds(self):
+        self.assertEqual(add_business_days("2026-05-29", 1), "2026-06-01")
+        self.assertEqual(watchlist_expiry_date("2026-05-29", "mention"), "2026-06-12")
+        self.assertEqual(watchlist_expiry_date("2026-05-29", "event"), "2026-06-26")
+        self.assertEqual(watchlist_expiry_date("2026-05-29", "cyclical"), "2026-08-21")
+        self.assertEqual(watchlist_expiry_date("2026-05-29", "structural"), "2026-11-13")
+
+    def test_watchlist_expires_on_business_day_boundary(self):
+        state = parse_portfolio_state(state_payload())
+
+        before = advance_watchlist_lifecycle(state, "2026-06-11")
+        expired = advance_watchlist_lifecycle(before, "2026-06-12")
+
+        self.assertEqual(len(before.watchlist), 1)
+        self.assertEqual(expired.watchlist, [])
+        self.assertEqual(expired.watchlist_archive[0]["lifecycle_status"], "expired")
+        self.assertEqual(
+            expired.last_watchlist_changes["expired"],
+            [state.watchlist[0]["thesis_id"]],
+        )
+
+    def test_repeated_watchlist_evidence_does_not_extend_expiry(self):
+        state = parse_portfolio_state(state_payload())
+        update = dict(state_payload()["watchlist"][0])
+        update["latest_evidence_date"] = "2026-06-01"
+        analysis = parse_analysis_decision({
+            "analysis_date": "2026-06-01",
+            "run_type": "regular",
+            "insights": [],
+            "portfolio_decisions": [],
+            "watchlist": [update],
+        })
+
+        updated = apply_analysis_decision(state, analysis)
+
+        self.assertEqual(updated.watchlist[0]["expires_on"], "2026-06-12")
+        self.assertEqual(
+            updated.watchlist[0]["latest_material_signal_date"],
+            "2026-05-29",
+        )
+
+    def test_watchlist_is_promoted_when_security_enters_portfolio(self):
+        payload = state_payload()
+        watch = payload["watchlist"][0]
+        watch.update({
+            "name": "Alcoa",
+            "code": "AA",
+            "market": "US",
+            "asset_type": "stock",
+        })
+        state = parse_portfolio_state(payload)
+
+        updated = advance_watchlist_lifecycle(state, "2026-06-01")
+
+        self.assertEqual(updated.watchlist, [])
+        self.assertEqual(updated.watchlist_archive[0]["lifecycle_status"], "promoted")
+        self.assertEqual(updated.watchlist_archive[0]["portfolio_entry_date"], "2026-06-01")
 
     def test_saves_validated_analysis_decision_file(self):
         analysis = parse_analysis_decision(

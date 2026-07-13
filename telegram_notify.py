@@ -16,9 +16,12 @@ telegram_notify.py
      → result[0].message.chat.id 값이 TELEGRAM_CHAT_ID
 """
 
+import hashlib
 import os
 import re
 import time
+from dataclasses import dataclass
+from typing import Any, Callable
 
 import requests
 
@@ -26,10 +29,24 @@ from portfolio_output import build_output_model
 
 TELEGRAM_API = "https://api.telegram.org/bot{token}/{method}"
 MAX_MSG_LEN = 4000
+MESSAGE_TIMEOUT_SECONDS = 15
+PHOTO_TIMEOUT_SECONDS = 30
+MAX_RATE_LIMIT_RETRY_SECONDS = 30
 
 DEFAULT_DASHBOARD_URL = (
     "https://pikachu444.github.io/mer-portfolio/output/dashboard.html"
 )
+
+
+@dataclass(frozen=True)
+class _TelegramAttempt:
+    """A single Telegram API attempt, with no request URL or secrets retained."""
+
+    success: bool
+    status_code: int | None
+    response_json: dict[str, Any] | None
+    exception_type: str | None = None
+    invalid_json: bool = False
 
 
 # ─── 환경변수 ─────────────────────────────────────────────────────────────────
@@ -45,6 +62,178 @@ def _get_dashboard_url() -> str:
     if not url or "mer-porfolio" in url:
         return DEFAULT_DASHBOARD_URL
     return url
+
+
+def _target_fingerprint(chat_id: str | None) -> str:
+    """Return a stable opaque log label without exposing a chat ID."""
+    normalized = str(chat_id or "").strip()
+    if not normalized:
+        return "missing"
+    digest = hashlib.sha256(normalized.encode("utf-8")).hexdigest()[:12]
+    return f"sha256:{digest}"
+
+
+def _execution_context_label(run_label: str | None = None) -> str:
+    """Turn the run mode into a user-facing, non-secret execution label."""
+    raw_label = str(run_label if run_label is not None else os.environ.get("RUN_MODE", "")).strip()
+    if not raw_label:
+        return ""
+
+    known_labels = {
+        "scheduled": "GitHub Actions · 정기 점검",
+        "scheduled_rebalance": "GitHub Actions · 정기 리밸런싱",
+        "rebalance": "GitHub Actions · 운영 리밸런싱",
+        "verify": "GitHub Actions · 출력 검증",
+        "full_verify": "GitHub Actions · 전체 흐름 검증",
+        "test": "테스트 실행",
+    }
+    return known_labels.get(raw_label.lower(), raw_label[:80])
+
+
+def _safe_api_description(value: object, chat_id: str | None = None) -> str:
+    """Keep Telegram error logs useful without allowing an accidental token echo."""
+    description = " ".join(str(value or "응답 설명 없음").split())
+    if chat_id:
+        description = description.replace(str(chat_id), "chat<redacted>")
+    description = re.sub(r"(?:bot)?\d{5,}:[A-Za-z0-9_-]+", "<redacted>", description)
+    return description[:200]
+
+
+def _message_id_from_response(response_json: dict[str, Any] | None) -> str | None:
+    if not isinstance(response_json, dict):
+        return None
+    result = response_json.get("result")
+    if not isinstance(result, dict):
+        return None
+    message_id = result.get("message_id")
+    if isinstance(message_id, int) and not isinstance(message_id, bool):
+        return str(message_id)
+    if isinstance(message_id, str) and message_id.isdigit():
+        return message_id
+    return None
+
+
+def _is_success_response(status_code: int | None, response_json: dict[str, Any] | None) -> bool:
+    """A 200 alone is insufficient: Telegram must acknowledge a concrete Message."""
+    return (
+        status_code == 200
+        and isinstance(response_json, dict)
+        and response_json.get("ok") is True
+        and _message_id_from_response(response_json) is not None
+    )
+
+
+def _post_telegram(
+    method: str,
+    token: str,
+    *,
+    timeout: int,
+    **request_kwargs: Any,
+) -> _TelegramAttempt:
+    """Execute one request without logging a URL, token, or raw response body."""
+    url = TELEGRAM_API.format(token=token, method=method)
+    try:
+        response = requests.post(url, timeout=timeout, **request_kwargs)
+    except requests.RequestException as exc:
+        return _TelegramAttempt(False, None, None, exception_type=type(exc).__name__)
+    except Exception as exc:  # Keep notification failures from masking the analysis result.
+        return _TelegramAttempt(False, None, None, exception_type=type(exc).__name__)
+
+    try:
+        response_json = response.json()
+    except (ValueError, TypeError):
+        return _TelegramAttempt(False, response.status_code, None, invalid_json=True)
+    if not isinstance(response_json, dict):
+        return _TelegramAttempt(False, response.status_code, None, invalid_json=True)
+    return _TelegramAttempt(
+        _is_success_response(response.status_code, response_json),
+        response.status_code,
+        response_json,
+    )
+
+
+def _is_rate_limited(attempt: _TelegramAttempt) -> bool:
+    return (
+        attempt.status_code == 429
+        and isinstance(attempt.response_json, dict)
+        and attempt.response_json.get("error_code") == 429
+    )
+
+
+def _retry_delay_seconds(attempt: _TelegramAttempt) -> int:
+    parameters = (attempt.response_json or {}).get("parameters", {})
+    retry_after = parameters.get("retry_after") if isinstance(parameters, dict) else None
+    try:
+        seconds = int(float(retry_after))
+    except (TypeError, ValueError):
+        seconds = 1
+    return max(1, min(seconds, MAX_RATE_LIMIT_RETRY_SECONDS))
+
+
+def _attempt_with_rate_limit_retry(
+    method: str,
+    token: str,
+    chat_id: str,
+    *,
+    timeout: int,
+    before_retry: Callable[[], None] | None = None,
+    **request_kwargs: Any,
+) -> _TelegramAttempt:
+    """Retry once only when Telegram explicitly says no message was accepted yet."""
+    attempt = _post_telegram(method, token, timeout=timeout, **request_kwargs)
+    if not _is_rate_limited(attempt):
+        return attempt
+
+    delay = _retry_delay_seconds(attempt)
+    print(
+        f"  Telegram {method} rate limited: target={_target_fingerprint(chat_id)} "
+        f"retry_in={delay}s"
+    )
+    time.sleep(delay)
+    if before_retry is not None:
+        before_retry()
+    return _post_telegram(method, token, timeout=timeout, **request_kwargs)
+
+
+def _log_attempt(method: str, chat_id: str, attempt: _TelegramAttempt) -> None:
+    """Write a delivery receipt or a bounded, secret-safe failure diagnostic."""
+    target = _target_fingerprint(chat_id)
+    if attempt.success:
+        print(
+            f"  Telegram {method} accepted: target={target} "
+            f"message_id={_message_id_from_response(attempt.response_json)}"
+        )
+        return
+
+    if attempt.exception_type:
+        print(
+            f"  !! Telegram {method} request exception: target={target} "
+            f"exception={attempt.exception_type}"
+        )
+        return
+    if attempt.invalid_json:
+        print(
+            f"  !! Telegram {method} invalid JSON response: target={target} "
+            f"http_status={attempt.status_code}"
+        )
+        return
+
+    response_json = attempt.response_json or {}
+    error_code = response_json.get("error_code", "없음")
+    api_ok = response_json.get("ok", "없음")
+    description = _safe_api_description(response_json.get("description"), chat_id)
+    print(
+        f"  !! Telegram {method} delivery rejected: target={target} "
+        f"http_status={attempt.status_code} api_ok={api_ok} "
+        f"error_code={error_code} description={description}"
+    )
+
+
+def _is_markdown_parse_error(attempt: _TelegramAttempt) -> bool:
+    if attempt.status_code != 400 or not isinstance(attempt.response_json, dict):
+        return False
+    description = str(attempt.response_json.get("description") or "").lower()
+    return "parse entities" in description or "can't parse" in description
 
 
 # ─── 요약 추출 ────────────────────────────────────────────────────────────────
@@ -135,29 +324,45 @@ def extract_summary(report: str) -> str:
 
 def _send_message(token: str, chat_id: str, text: str,
                   parse_mode: str = "Markdown") -> bool:
-    url = TELEGRAM_API.format(token=token, method="sendMessage")
     payload = {
         "chat_id": chat_id,
         "text": text,
-        "parse_mode": parse_mode,
         "disable_web_page_preview": False,
     }
-    try:
-        resp = requests.post(url, json=payload, timeout=15)
-        if resp.status_code == 200:
-            return True
-        if resp.status_code == 400 and parse_mode:
-            payload.pop("parse_mode", None)
-            resp2 = requests.post(url, json=payload, timeout=15)
-            if resp2.status_code == 200:
-                return True
-            print(f"  !! Telegram message fallback error {resp2.status_code}: {resp2.text[:200]}")
-            return False
-        print(f"  !! 텔레그램 메시지 오류 {resp.status_code}: {resp.text[:200]}")
-        return False
-    except Exception as e:
-        print(f"  !! 텔레그램 예외: {e}")
-        return False
+    if parse_mode:
+        payload["parse_mode"] = parse_mode
+    attempt = _attempt_with_rate_limit_retry(
+        "sendMessage",
+        token,
+        chat_id,
+        timeout=MESSAGE_TIMEOUT_SECONDS,
+        json=payload,
+    )
+    if attempt.success:
+        _log_attempt("sendMessage", chat_id, attempt)
+        return True
+
+    # A failed Markdown parse is safe to retry without formatting: Telegram did
+    # not accept the original message. Other 400 errors must not be retried.
+    if parse_mode and _is_markdown_parse_error(attempt):
+        print(
+            f"  Telegram sendMessage Markdown fallback: "
+            f"target={_target_fingerprint(chat_id)}"
+        )
+        fallback_payload = dict(payload)
+        fallback_payload.pop("parse_mode", None)
+        fallback = _attempt_with_rate_limit_retry(
+            "sendMessage",
+            token,
+            chat_id,
+            timeout=MESSAGE_TIMEOUT_SECONDS,
+            json=fallback_payload,
+        )
+        _log_attempt("sendMessage", chat_id, fallback)
+        return fallback.success
+
+    _log_attempt("sendMessage", chat_id, attempt)
+    return False
 
 
 # ─── 이미지 전송 ──────────────────────────────────────────────────────────────
@@ -166,12 +371,18 @@ def send_status(title: str, body: str = "") -> bool:
     """Send a short operational status message to Telegram."""
     token, chat_id = _get_credentials()
     if not token or not chat_id:
-        print("  !! TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID missing -> status notification skipped")
+        print(
+            "  !! TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID missing -> "
+            f"status notification skipped: target={_target_fingerprint(chat_id)}"
+        )
         return False
 
     lines = [f"*{title}*"]
     if body:
         lines.append(body)
+    execution_context = _execution_context_label()
+    if execution_context:
+        lines.append(f"⚙ 실행: {execution_context}")
     lines.append(f"[Dashboard]({_get_dashboard_url()})")
     return _send_message(token, chat_id, "\n\n".join(lines))
 
@@ -180,28 +391,34 @@ def send_photo(image_path: str, caption: str = "") -> bool:
     """PNG/JPG 이미지 파일을 텔레그램으로 전송."""
     token, chat_id = _get_credentials()
     if not token or not chat_id:
-        print("  !! TELEGRAM 환경변수 미설정 -> 이미지 전송 스킵")
+        print(
+            "  !! TELEGRAM 환경변수 미설정 -> 이미지 전송 스킵: "
+            f"target={_target_fingerprint(chat_id)}"
+        )
         return False
 
-    url = TELEGRAM_API.format(token=token, method="sendPhoto")
     try:
         with open(image_path, "rb") as f:
-            resp = requests.post(
-                url,
+            attempt = _attempt_with_rate_limit_retry(
+                "sendPhoto",
+                token,
+                chat_id,
+                timeout=PHOTO_TIMEOUT_SECONDS,
+                before_retry=lambda: f.seek(0),
                 data={"chat_id": chat_id, "caption": caption},
                 files={"photo": f},
-                timeout=30,
             )
-        if resp.status_code == 200:
+        if attempt.success:
+            _log_attempt("sendPhoto", chat_id, attempt)
             print("  차트 이미지 전송 완료")
             return True
-        print(f"  !! 이미지 전송 오류 {resp.status_code}: {resp.text[:200]}")
+        _log_attempt("sendPhoto", chat_id, attempt)
         return False
     except FileNotFoundError:
         print(f"  !! 이미지 파일 없음: {image_path}")
         return False
-    except Exception as e:
-        print(f"  !! 이미지 전송 예외: {e}")
+    except Exception as exc:
+        print(f"  !! 이미지 전송 예외: exception={type(exc).__name__}")
         return False
 
 
@@ -215,7 +432,7 @@ def _is_valid_report(report: str) -> bool:
     return any(keyword in report for keyword in ("인사이트", "포트폴리오", "국내주식", "해외주식"))
 
 
-def send_report(report: str, today_str: str) -> bool:
+def send_report(report: str, today_str: str, *, run_label: str | None = None) -> bool:
     """
     리포트 요약 + 대시보드 URL을 텔레그램으로 전송.
     헤더와 요약을 하나의 메시지로 결합해 전송합니다.
@@ -225,7 +442,10 @@ def send_report(report: str, today_str: str) -> bool:
     """
     token, chat_id = _get_credentials()
     if not token or not chat_id:
-        print("  !! TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID 미설정 -> 텔레그램 알림 스킵")
+        print(
+            "  !! TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID 미설정 -> "
+            f"텔레그램 알림 스킵: target={_target_fingerprint(chat_id)}"
+        )
         return False
 
     # 빈/테스트 리포트 가드
@@ -237,8 +457,11 @@ def send_report(report: str, today_str: str) -> bool:
     header = (
         f"\U0001f4ca *메르AI 포트폴리오 리포트*\n"
         f"\U0001f4c5 {today_str}\n"
-        f"{'─' * 22}\n"
     )
+    execution_context = _execution_context_label(run_label)
+    if execution_context:
+        header += f"⚙ 실행: {execution_context}\n"
+    header += f"{'─' * 22}\n"
     summary = extract_summary(report)
     combined = header + summary
 
@@ -256,6 +479,7 @@ def build_structured_summary(
     no_changes: bool = False,
     status_note: str = "",
     include_dashboard_link: bool = True,
+    run_label: str | None = None,
 ) -> str:
     """Build a user-facing summary from validated structured state."""
     performance = performance or {}
@@ -276,15 +500,32 @@ def build_structured_summary(
         "※ 메르 블로거의 실제 보유 내역이 아닙니다.",
         "※ 블로그 직접 판단과 AI 해석을 구분해 표시합니다.",
     ]
+    execution_context = _execution_context_label(run_label)
+    if execution_context:
+        lines.insert(2, f"⚙ 실행: {execution_context}")
     lines += [
         "",
         "*오늘의 성과 요약*",
         f"• 모델 포트폴리오 수익률: {output['portfolio_return_label']}",
-        f"• 주식 노출: {output.get('stock_weight', 0):g}%",
-        f"• 현금성 비중: {output.get('cash_weight', 0):g}% / 방어 기준 {output.get('defensive_cash_target', 20):g}%",
+        f"• 주식 노출 목표: {output.get('stock_weight', 0):g}% / 실제: "
+        + (
+            f"{output.get('actual_stock_weight'):g}%"
+            if output.get("actual_stock_weight") is not None
+            else "집계 전"
+        ),
+        f"• 현금성 목표: {output.get('cash_weight', 0):g}% / 실제: "
+        + (f"{output.get('actual_cash_weight'):g}%" if output.get("actual_cash_weight") is not None else "집계 전")
+        + f" / 방어 기준 {output.get('defensive_cash_target', 20):g}%",
     ]
     if output.get("defensive_alert"):
         lines.append("• 방어 기준 미달: 다음 리밸런싱에서 현금성 비중 재검토 필요")
+    risk_metrics = output.get("performance", {}).get("risk_metrics", {}) or {}
+    if risk_metrics.get("max_drawdown") is not None:
+        lines.append(f"• clean epoch MDD: {risk_metrics['max_drawdown'] * 100:+.2f}%")
+    if risk_metrics.get("excess_return") is not None:
+        lines.append(f"• 벤치마크 대비: {risk_metrics['excess_return'] * 100:+.2f}%")
+    if output.get("performance", {}).get("cumulative_costs") is not None:
+        lines.append(f"• 누적 추정비용: {output['performance']['cumulative_costs']:.4f}")
     if status_note:
         lines.append(f"• {status_note}")
     if no_changes:
@@ -311,7 +552,7 @@ def build_structured_summary(
         lines.append("• 표시할 인사이트 없음")
 
     def recommendation_action(item: dict) -> str:
-        action = str(item.get("action") or item.get("action_label") or "보유")
+        action = str(item.get("policy_action") or item.get("action_label") or item.get("action") or "보유")
         market = str(item.get("market") or "").upper()
         if market.startswith("KR"):
             return action
@@ -331,6 +572,12 @@ def build_structured_summary(
             return name
         return f"{name} ({code})"
 
+    def recommendation_weight(item: dict) -> str:
+        target = float(item.get("target_weight", item.get("weight", 0)) or 0)
+        actual = item.get("actual_weight")
+        actual_label = f"{float(actual):g}%" if actual is not None else "집계 전"
+        return f"목표 {target:g}% / 실제 {actual_label}"
+
     def append_recommendations(title: str, rows: list[dict]) -> None:
         lines.extend(["", title])
         if not rows:
@@ -340,7 +587,7 @@ def build_structured_summary(
             lines.append(
                 f"• {recommendation_name(item)}"
                 f" — {recommendation_action(item)}"
-                f" ({item.get('weight', 0):g}%)"
+                f" ({recommendation_weight(item)})"
             )
 
     append_recommendations("*국내주식 추천*", output["domestic"])
@@ -352,7 +599,7 @@ def build_structured_summary(
             lines.append(
                 f"• {recommendation_name(item)}"
                 f" — {recommendation_action(item)}"
-                f" ({item.get('weight', 0):g}%)"
+                f" ({recommendation_weight(item)})"
             )
         if len(review_required) > 5:
             lines.append(f"• 외 {len(review_required) - 5}건은 HTML에서 확인")
@@ -363,8 +610,17 @@ def build_structured_summary(
     if watchlist:
         for item in watchlist:
             lines.append(f"• {item.get('name', '')} | {item.get('observation_reason', '')}")
+        if output.get("watchlist_hidden_count"):
+            lines.append(f"• 외 {output.get('watchlist_hidden_count')}건은 HTML에서 확인")
     else:
         lines.append("• 표시할 항목 없음")
+    changes = output.get("watchlist_changes", {}) or {}
+    changed_labels = []
+    for key, label in (("added", "신규"), ("promoted", "편입"), ("expired", "만료")):
+        if changes.get(key):
+            changed_labels.append(f"{label} {len(changes[key])}건")
+    if changed_labels:
+        lines.append("• 변화: " + ", ".join(changed_labels))
     lines += ["", f"• 종료 포지션: {len(closed)}건"]
     if include_dashboard_link:
         lines += ["", f"🌐 [대시보드 전체 보기]({_get_dashboard_url()})"]
@@ -404,10 +660,14 @@ def send_structured_summary(
     no_changes: bool = False,
     status_note: str = "",
     include_dashboard_link: bool = True,
+    run_label: str | None = None,
 ) -> bool:
     token, chat_id = _get_credentials()
     if not token or not chat_id:
-        print("  !! TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID 미설정 -> 텔레그램 알림 스킵")
+        print(
+            "  !! TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID 미설정 -> "
+            f"텔레그램 알림 스킵: target={_target_fingerprint(chat_id)}"
+        )
         return False
     messages = split_telegram_message(
         build_structured_summary(
@@ -417,6 +677,7 @@ def send_structured_summary(
             no_changes=no_changes,
             status_note=status_note,
             include_dashboard_link=include_dashboard_link,
+            run_label=run_label,
         )
     )
     ok = all(_send_message(token, chat_id, message) for message in messages)

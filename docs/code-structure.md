@@ -7,8 +7,8 @@
 | 1 | 실행 모드 결정 | `runtime_modes.py`, `main.py` |
 | 2 | 상태 로드 | `portfolio_schema.py`, `output/portfolio_state.json` |
 | 3 | 블로그 글 수집 | `fetch_mer.py`, `output/posts_db.json` |
-| 4 | 신규 글 요약 | `fetch_mer.py`, Gemini Flash |
-| 5 | 포트폴리오 판단 | `analyze.py`, Gemini Pro 전용 |
+| 4 | 신규 글 요약·원문 신호 추출 | `fetch_mer.py`, Gemini 3.1 Flash-Lite |
+| 5 | 포트폴리오 판단 | `analyze.py`, Gemini 3.5 Flash |
 | 6 | 판단 검증과 상태 반영 | `portfolio_schema.py`, `portfolio_validation.py` |
 | 7 | 수익률 계산 | `track_returns.py`, `output/performance_cache.json` |
 | 8 | 사용자 출력 기준 자료 생성 | `portfolio_output.py` |
@@ -24,11 +24,15 @@
 |---|---|
 | `main.py` | 전체 실행 순서 제어, no-change/분석 보류/분석 성공 경로 연결 |
 | `fetch_mer.py` | RSS 수집, 본문 저장, 글별 요약, 요약 실패 보류 |
-| `analyze.py` | Gemini 호출, Pro 전용 구조화 판단 JSON과 보고서 생성 시도 |
+| `analyze.py` | Gemini 3.5 Flash 호출과 구조화 판단 JSON 검증, 결정론적 보고서 생성 |
 | `system_prompt.py` | Gemini 입력 프롬프트와 출력 계약 |
-| `portfolio_schema.py` | 상태 파일 스키마, 판단 검증, 현금성 20% 하회와 리밸런싱 현금성 개선 검증, 상태 갱신 |
+| `portfolio_schema.py` | 상태 2.1, 불변 신호원장, 출처 보존, Watchlist 수명주기와 판단 검증 |
+| `portfolio_allocator.py` | 20/40/20/20 슬리브, 품질·변동성 비중과 종목/테마/국가 상한 |
+| `portfolio_provenance.py` | 원문 검증 후보를 신호 이벤트로 변환하고 판단의 최초 출처 연결 |
+| `portfolio_runtime.py` | 전 종목 커버리지, 레거시 격리, 운영 allocator 안전 게이트 |
+| `run_bundle.py` | 상태·판단·원장·성과 캐시의 체크섬 기반 장애 복구 묶음 저장 |
 | `portfolio_validation.py` | 보고서/판단 보조 검증 |
-| `track_returns.py` | 모델 포트폴리오 거래 원장, 종목 코드 정규화, 수익률 계산 |
+| `track_returns.py` | 모델 포트폴리오 거래 원장, 실제 NAV, 배당·분할, 20거래일 KRW 변동성과 수익률 계산 |
 | `portfolio_output.py` | Telegram, HTML, Markdown이 함께 쓰는 사용자 출력 기준 자료 생성 |
 | `generate_dashboard.py` | HTML 대시보드와 Telegram용 PNG 차트 생성 |
 | `telegram_notify.py` | Telegram 메시지와 이미지 전송 |
@@ -40,7 +44,7 @@
 |---|---|
 | `output/portfolio_state.json` | 현재 모델 포트폴리오, Watchlist, 종료 포지션, 핵심 인사이트 |
 | `output/performance_cache.json` | 수익률 계산 자료. 현재 포트폴리오보다 항목이 적을 수 있다 |
-| `output/model_portfolio_ledger.json` | 거래 원장. 수익률 계산의 기준 |
+| `output/model_portfolio_ledger.json` | clean v4 거래 원장. 과거 v3는 legacy epoch로 분리 보존 |
 | `output/report_YYYYMMDD.md` | 실행일 기준 사용자용 Markdown 보고서 |
 | `output/dashboard.html` | HTML 대시보드 |
 | `output/chart_latest.png` | Telegram 첨부용 현재 차트 이미지 |
@@ -62,7 +66,7 @@
 - 핵심 인사이트
 - 국내주식 추천
 - 해외주식 추천
-- 현재 모델 포트폴리오 목표 비중
+- 현재 모델 포트폴리오 목표/실제 비중
 - 주식 노출과 현금성 비중
 - 재검증 필요 포지션
 - Watchlist
@@ -71,8 +75,8 @@
 
 수익률 계산 자료에 현재 종목이 없으면 종목을 제거하지 않고 `집계 전`으로 표시한다.
 전체 포트폴리오 수익률도 현재 종목 전체가 계산된 경우에만 표시한다.
-현재 모델 포트폴리오 종목과 종료 포지션 종목이 겹치면 성과 기록을 정리한다. 대한전선처럼 과거
-코드 오기(`011440`)가 있으면 실제 코드(`001440`) 기준으로 정규화한 뒤 비교한다.
+동일 종목을 청산 후 재편입한 경우 현재 포지션과 과거 종료 episode를 함께 보존한다. 대한전선처럼
+과거 코드 오기(`011440`)가 있으면 실제 코드(`001440`) 기준으로 정규화하되 과거 이력은 삭제하지 않는다.
 
 기존 상태 마이그레이션, `미분류` 보유 종목, `allocation_role`이 없는 AI 포지션은 국내/해외
 추천 목록에서 제외하고 `재검증 필요 포지션`으로 표시한다. 신규 매수 판단에는

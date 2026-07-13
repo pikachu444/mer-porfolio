@@ -101,6 +101,8 @@ Markdown을 작성하지 말고 JSON 객체 하나만 출력하십시오.
 - 단, `rebalance` 실행에서는 과거 근거 보강 종목과 목표비중 8% 이상 종목을 검토 대상에서
   생략하지 마십시오. 비중을 유지하더라도 `보유` 판단으로 출력하고, 유지 사유와 현금성 20%
   기준보다 우선하는 이유를 `change_reason`에 기록하십시오.
+- `rebalance` 실행에서는 현재 포트폴리오의 모든 종목을 정확히 한 번씩 출력하십시오. 하나라도
+  누락되면 리밸런싱 전체가 거부되고 날짜도 갱신되지 않습니다.
 - `보유`는 이번 입력 글에 메르의 직접 보유 발언 또는 기존 판단을 실질적으로 갱신하는 새
   근거가 있을 때만 기록하십시오.
 - 포트폴리오 변경이 없으면 `portfolio_decisions`를 빈 배열로 출력하십시오.
@@ -112,6 +114,16 @@ Markdown을 작성하지 말고 JSON 객체 하나만 출력하십시오.
   두 문장 이내, `investment_implication`은 한 문장 이내로 작성하고 같은 내용을 반복하지
   마십시오.
 - `evidence_posts`에는 해당 판단이나 인사이트를 직접 뒷받침하는 글만 기록하십시오.
+- 입력의 `호스트 검증 원문 신호 후보`는 `exact_text`가 원문에 실제 포함되는지 코드에서 검증한
+  후보입니다. `MER_DIRECT`는 메르 본인의 명시적 거래·보유·관심 공개에만 사용할 수 있으며,
+  `DIRECTIONAL_THESIS`와 `MENTION_ONLY`를 메르의 직접 매매 판단으로 바꾸지 마십시오.
+- 후보를 판단 근거로 사용할 때 `signal_id`, `evidence_sha256`, `exact_text`, `classification`을
+  함께 확인하십시오. 후보가 비어 있으면 요약문만으로 메르 직접 발언을 새로 만들지 마십시오.
+- 판단과 직접 연결된 호스트 신호 ID를 `linked_signal_ids`에 그대로 기록하십시오. ID를 새로
+  만들거나 수정하지 마십시오. 연결할 검증 신호가 없으면 신규 편입 대신 Watchlist에 두십시오.
+- `quality_components`는 명시성, 인과관계, 촉매, 독립 재확인, 무효화 조건, 최신성을 각각
+  0~1로 평가합니다. 점수를 올리기 위해 없는 근거를 만들지 마십시오. 최종 비중은 코드가
+  결정하므로 `proposed_weight`는 기존 계약 호환용 제안일 뿐입니다.
 
 `insights` 각 항목:
 {
@@ -144,7 +156,20 @@ Markdown을 작성하지 말고 JSON 객체 하나만 출력하십시오.
   "investment_rationale": "수혜 또는 피해 인과관계",
   "current_entry_reason": "Watchlist가 아니라 지금 편입하거나 변경하는 이유",
   "key_risks": ["주요 위험"],
-  "linked_insight_ids": ["연결된 insights.id"]
+  "linked_insight_ids": ["연결된 insights.id"],
+  "linked_signal_ids": ["호스트 검증 signal_id"],
+  "thesis_id": "동일 논지를 묶는 짧고 안정적인 ID",
+  "issuer_id": "동일 발행사 식별자",
+  "theme_ids": ["테마 식별자"],
+  "country_code": "KR 또는 US 등 국가 코드",
+  "quality_components": {
+    "explicitness": 0,
+    "causality": 0,
+    "catalyst": 0,
+    "confirmation": 0,
+    "invalidation": 0,
+    "recency": 0
+  }
 }
 
 `watchlist` 각 항목:
@@ -165,7 +190,10 @@ Markdown을 작성하지 말고 JSON 객체 하나만 출력하십시오.
   "watchlist_closed_date": null,
   "status": "관심 또는 재검토 필요 또는 포트폴리오 편입 또는 종료",
   "source_scope": "blogger_trade_disclosure 또는 source_named_security 또는 sector_only 또는 previous_decision",
-  "observation_reason": "즉시 편입하지 않고 관찰하는 이유"
+  "observation_reason": "즉시 편입하지 않고 관찰하는 이유",
+  "linked_signal_ids": ["호스트 검증 signal_id"],
+  "thesis_id": "동일 논지를 묶는 ID",
+  "watchlist_kind": "mention 또는 event 또는 cyclical 또는 structural"
 }
 
 ## 핵심 인사이트 규칙

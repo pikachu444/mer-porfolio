@@ -1,10 +1,9 @@
 """
 analyze.py
-Google AI Studio (Gemini) 무료 API를 이용한 메르AI 분석 모듈
+Google AI Studio (Gemini) 무료 API를 이용한 메르AI 분석 모듈.
 
-무료 티어 한도 (2026년 기준):
-  - gemini-2.5-pro:   1차 포트폴리오 판단 전용 모델
-  - gemini-2.5-flash: 글별 요약 및 2차 보고서 보조 모델
+투자 판단은 무료 티어의 안정 모델인 gemini-3.5-flash를 사용한다.
+글별 요약 모델은 fetch_mer.py에서 별도로 설정한다.
 
 API 키 발급: https://aistudio.google.com/app/apikey
 환경변수: GEMINI_API_KEY
@@ -29,36 +28,251 @@ from portfolio_schema import (
 )
 from system_prompt import (
     DECISION_SYSTEM_PROMPT,
-    REPORT_SYSTEM_PROMPT,
     SYSTEM_PROMPT,
     build_decision_user_message,
-    build_report_user_message,
     build_user_message,
 )
 from gemini_utils import (
     DEFAULT_HTTP_TIMEOUT_MS,
+    RETRY_BUDGET_SECONDS,
     generate_content_with_retry,
     is_daily_quota_error,
-    is_server_busy_error,
 )
 
 
 # ─── 모델 설정 ────────────────────────────────────────────────────────────────
 #
-# 투자 판단은 Pro 전용이다. 보고서 작성 단계만 일반 fallback 순서를 사용한다.
-# GEMINI_MODEL을 지정해도 1차 포트폴리오 판단은 Pro 계열 모델만 허용한다.
+# 역할별 모델을 명시해 모델 이름에 따른 암묵적 라우팅을 금지한다.
+DECISION_MODEL = os.environ.get(
+    "GEMINI_DECISION_MODEL",
+    "gemini-3.5-flash",
+).strip()
+DECISION_MAX_ATTEMPTS = int(os.environ.get("GEMINI_DECISION_MAX_ATTEMPTS", "3"))
+MODEL_INPUT_TOKEN_LIMIT = 65_536
+MODEL_INPUT_SAFE_RATIO = 1.0
+DECISION_OUTPUT_TOKEN_LIMIT = 24_576
 
-_gemini_model_env = os.environ.get("GEMINI_MODEL", "").strip()
-PRIMARY_MODEL = _gemini_model_env if _gemini_model_env else "gemini-2.5-pro"
-FALLBACK_MODEL = os.environ.get("GEMINI_FALLBACK_MODEL", "gemini-2.5-flash").strip()
-DECISION_MODEL = PRIMARY_MODEL if "pro" in PRIMARY_MODEL.lower() else "gemini-2.5-pro"
-PRO_SERVER_BUSY_MAX_ATTEMPTS = int(os.environ.get("GEMINI_PRO_BUSY_MAX_ATTEMPTS", "6"))
-PRO_SERVER_BUSY_RETRY_DELAY_SECONDS = float(
-    os.environ.get("GEMINI_PRO_BUSY_RETRY_DELAY_SECONDS", "300")
-)
-MODEL_INPUT_TOKEN_LIMIT = 1_048_576
-MODEL_INPUT_SAFE_RATIO = 0.8
-MODEL_OUTPUT_TOKEN_LIMIT = 65_536
+_EVIDENCE_POST_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "title": {"type": "string"},
+        "url": {"type": "string"},
+        "published_date": {"type": "string", "format": "date"},
+    },
+    "required": ["title", "url", "published_date"],
+}
+
+_INSIGHT_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "id": {"type": "string"},
+        "title": {"type": "string"},
+        "summary": {"type": "string"},
+        "investment_implication": {"type": "string"},
+        "evidence_posts": {"type": "array", "items": _EVIDENCE_POST_SCHEMA},
+        "related_decision_codes": {"type": "array", "items": {"type": "string"}},
+    },
+    "required": [
+        "id",
+        "title",
+        "summary",
+        "investment_implication",
+        "evidence_posts",
+        "related_decision_codes",
+    ],
+}
+
+_PORTFOLIO_DECISION_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "name": {"type": "string"},
+        "code": {"type": "string"},
+        "market": {"type": "string"},
+        "asset_type": {"type": "string", "enum": ["stock", "etf"]},
+        "decision_actor": {"type": "string", "enum": ["메르", "AI"]},
+        "action": {
+            "type": "string",
+            "enum": ["매수", "보유", "비중확대", "비중축소", "매도"],
+        },
+        "basis": {
+            "type": "string",
+            "enum": ["직접 발언", "종목 분석", "섹터 분석", "이전 판단 유지"],
+        },
+        "decision_date": {"type": "string", "format": "date"},
+        "evidence_posts": {"type": "array", "items": _EVIDENCE_POST_SCHEMA},
+        "source_mentioned": {"type": "boolean"},
+        "previous_weight": {
+            "anyOf": [{"type": "number"}, {"type": "null"}],
+        },
+        "proposed_weight": {"type": "number", "minimum": 0, "maximum": 100},
+        "weight_source": {
+            "type": "string",
+            "enum": ["메르 직접 발언 기반", "AI 제안"],
+        },
+        "change_reason": {"type": "string"},
+        "allocation_role": {
+            "type": "string",
+            "enum": ["core", "satellite", "risk", "defensive", "watch"],
+        },
+        "source_scope": {
+            "type": "string",
+            "enum": [
+                "blogger_trade_disclosure",
+                "source_named_security",
+                "sector_only",
+                "previous_decision",
+            ],
+        },
+        "investment_rationale": {"type": "string"},
+        "current_entry_reason": {"type": "string"},
+        "key_risks": {"type": "array", "items": {"type": "string"}},
+        "linked_insight_ids": {"type": "array", "items": {"type": "string"}},
+        "linked_signal_ids": {"type": "array", "items": {"type": "string"}},
+        "thesis_id": {"type": "string"},
+        "issuer_id": {"type": "string"},
+        "theme_ids": {"type": "array", "items": {"type": "string"}},
+        "country_code": {"type": "string"},
+        "quality_components": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "explicitness": {"type": "number", "minimum": 0, "maximum": 1},
+                "causality": {"type": "number", "minimum": 0, "maximum": 1},
+                "catalyst": {"type": "number", "minimum": 0, "maximum": 1},
+                "confirmation": {"type": "number", "minimum": 0, "maximum": 1},
+                "invalidation": {"type": "number", "minimum": 0, "maximum": 1},
+                "recency": {"type": "number", "minimum": 0, "maximum": 1},
+            },
+            "required": [
+                "explicitness", "causality", "catalyst", "confirmation",
+                "invalidation", "recency",
+            ],
+        },
+    },
+    "required": [
+        "name",
+        "code",
+        "market",
+        "asset_type",
+        "decision_actor",
+        "action",
+        "basis",
+        "decision_date",
+        "evidence_posts",
+        "source_mentioned",
+        "previous_weight",
+        "proposed_weight",
+        "weight_source",
+        "change_reason",
+        "allocation_role",
+        "source_scope",
+        "investment_rationale",
+        "current_entry_reason",
+        "key_risks",
+        "linked_insight_ids",
+        "linked_signal_ids",
+        "thesis_id",
+        "issuer_id",
+        "theme_ids",
+        "country_code",
+        "quality_components",
+    ],
+}
+
+_WATCHLIST_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "name": {"type": "string"},
+        "code": {"type": "string"},
+        "market": {"type": "string"},
+        "asset_type": {"type": "string", "enum": ["stock", "etf", "sector"]},
+        "decision_actor": {"type": "string", "enum": ["메르", "AI"]},
+        "basis": {
+            "type": "string",
+            "enum": ["직접 발언", "종목 분석", "섹터 분석", "이전 판단 유지"],
+        },
+        "decision_date": {"type": "string", "format": "date"},
+        "evidence_posts": {"type": "array", "items": _EVIDENCE_POST_SCHEMA},
+        "source_mentioned": {"type": "boolean"},
+        "watchlist_entry_date": {"type": "string", "format": "date"},
+        "latest_evidence_date": {"type": "string", "format": "date"},
+        "watchlist_duration_days": {"type": "integer", "minimum": 0},
+        "portfolio_entry_date": {
+            "anyOf": [{"type": "string", "format": "date"}, {"type": "null"}],
+        },
+        "watchlist_closed_date": {
+            "anyOf": [{"type": "string", "format": "date"}, {"type": "null"}],
+        },
+        "status": {
+            "type": "string",
+            "enum": ["관심", "재검토 필요", "포트폴리오 편입", "종료"],
+        },
+        "source_scope": {
+            "type": "string",
+            "enum": [
+                "blogger_trade_disclosure",
+                "source_named_security",
+                "sector_only",
+                "previous_decision",
+            ],
+        },
+        "observation_reason": {"type": "string"},
+        "linked_signal_ids": {"type": "array", "items": {"type": "string"}},
+        "thesis_id": {"type": "string"},
+        "watchlist_kind": {
+            "type": "string",
+            "enum": ["mention", "event", "cyclical", "structural"],
+        },
+    },
+    "required": [
+        "name",
+        "code",
+        "market",
+        "asset_type",
+        "decision_actor",
+        "basis",
+        "decision_date",
+        "evidence_posts",
+        "source_mentioned",
+        "watchlist_entry_date",
+        "latest_evidence_date",
+        "watchlist_duration_days",
+        "portfolio_entry_date",
+        "watchlist_closed_date",
+        "status",
+        "source_scope",
+        "observation_reason",
+        "linked_signal_ids",
+        "thesis_id",
+        "watchlist_kind",
+    ],
+}
+
+DECISION_RESPONSE_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "analysis_date": {"type": "string", "format": "date"},
+        "run_type": {"type": "string", "enum": ["regular", "rebalance"]},
+        "insights": {"type": "array", "items": _INSIGHT_SCHEMA},
+        "portfolio_decisions": {
+            "type": "array",
+            "items": _PORTFOLIO_DECISION_SCHEMA,
+        },
+        "watchlist": {"type": "array", "items": _WATCHLIST_SCHEMA},
+    },
+    "required": [
+        "analysis_date",
+        "run_type",
+        "insights",
+        "portfolio_decisions",
+        "watchlist",
+    ],
+}
 
 # 투자 분석 특성상 안전 필터 완화 (주식 분석 용어 오탐 방지)
 SAFETY_SETTINGS = [
@@ -85,6 +299,10 @@ SAFETY_SETTINGS = [
 class StructuredAnalysisResult:
     decision: AnalysisDecisionV2
     report: str
+    decision_model_version: str
+
+
+_MODEL_VERSION_BY_ID: dict[str, str] = {}
 
 
 # ─── API 클라이언트 초기화 ────────────────────────────────────────────────────
@@ -99,13 +317,24 @@ def _get_client() -> genai.Client:
         )
     return genai.Client(
         api_key=api_key,
-        http_options=types.HttpOptions(timeout=DEFAULT_HTTP_TIMEOUT_MS),
+        http_options=types.HttpOptions(
+            timeout=DEFAULT_HTTP_TIMEOUT_MS,
+            retry_options=types.HttpRetryOptions(attempts=1),
+        ),
     )
 
 
 # ─── API 호출 재시도 헬퍼 ────────────────────────────────────────────────────
 
-def call_gemini_with_retry(client: genai.Client, model: str, contents, config, max_retries: int = 3):
+def call_gemini_with_retry(
+    client: genai.Client,
+    model: str,
+    contents,
+    config,
+    max_retries: int = 3,
+    *,
+    retry_budget_seconds: float | None = None,
+):
     """
     Gemini API 호출 시 rate limit 계열 오류가 발생하면 대기 후 재시도한다.
     """
@@ -115,20 +344,20 @@ def call_gemini_with_retry(client: genai.Client, model: str, contents, config, m
         contents=contents,
         config=config,
         max_retries=max_retries,
+        http_timeout_ms=DEFAULT_HTTP_TIMEOUT_MS,
+        retry_budget_seconds=retry_budget_seconds,
     )
 
 
 # ─── 모델별 분석 시도 ─────────────────────────────────────────────────────────
 
 def _model_sequence() -> list[str]:
-    sequence = [PRIMARY_MODEL]
-    if FALLBACK_MODEL and FALLBACK_MODEL not in sequence:
-        sequence.append(FALLBACK_MODEL)
-    return sequence
+    """Legacy Markdown analysis also uses the explicit decision model only."""
+    return [DECISION_MODEL]
 
 
 def _retry_count_for_model(model_name: str) -> int:
-    return 1 if "pro" in model_name.lower() else 5
+    return DECISION_MAX_ATTEMPTS
 
 
 def _decision_model() -> str:
@@ -150,10 +379,11 @@ def _try_model(
 
         config = types.GenerateContentConfig(
             system_instruction=SYSTEM_PROMPT,
-            temperature=0.3,
-            top_p=0.85,
-            max_output_tokens=MODEL_OUTPUT_TOKEN_LIMIT,
+            max_output_tokens=DECISION_OUTPUT_TOKEN_LIMIT,
             safety_settings=SAFETY_SETTINGS,
+            thinking_config=types.ThinkingConfig(
+                thinking_level=types.ThinkingLevel.MEDIUM,
+            ),
         )
 
         # Rate limit 재시도 헬퍼를 경유하여 API 호출
@@ -209,15 +439,19 @@ def _call_model_text(
     system_instruction: str,
     response_mime_type: str | None = None,
     max_retries: int | None = None,
+    response_json_schema: dict | None = None,
+    retry_budget_seconds: float | None = None,
 ) -> str:
     """Call one Gemini model and require a non-empty text response."""
     config = types.GenerateContentConfig(
         system_instruction=system_instruction,
-        temperature=0.2,
-        top_p=0.85,
-        max_output_tokens=MODEL_OUTPUT_TOKEN_LIMIT,
+        max_output_tokens=DECISION_OUTPUT_TOKEN_LIMIT,
         safety_settings=SAFETY_SETTINGS,
         response_mime_type=response_mime_type,
+        response_json_schema=response_json_schema,
+        thinking_config=types.ThinkingConfig(
+            thinking_level=types.ThinkingLevel.MEDIUM,
+        ),
     )
     response = call_gemini_with_retry(
         client=client,
@@ -225,140 +459,81 @@ def _call_model_text(
         contents=user_message,
         config=config,
         max_retries=max_retries if max_retries is not None else _retry_count_for_model(model_name),
+        retry_budget_seconds=retry_budget_seconds,
     )
+    response_model_version = getattr(response, "model_version", None)
+    if isinstance(response_model_version, str) and response_model_version.strip():
+        _MODEL_VERSION_BY_ID[model_name] = response_model_version.strip()
     text = response.text
     if not text or not text.strip():
         raise RuntimeError("응답이 완전히 비어 있음")
     return text
 
 
-def _call_stage_with_fallback(
-    client: genai.Client,
-    user_message: str,
-    system_instruction: str,
-    validator: Callable[[str], object],
-    stage_name: str,
-    response_mime_type: str | None = None,
-) -> object:
-    """Run one structured-analysis stage with the configured model fallback."""
-    errors: list[str] = []
-    for model_name in _model_sequence():
-        try:
-            print(f"  {stage_name} 모델 시도: {model_name}")
-            text = _call_model_text(
-                client,
-                model_name,
-                user_message,
-                system_instruction,
-                response_mime_type,
-            )
-            for correction_attempt in range(3):
-                try:
-                    return validator(text)
-                except Exception as validation_error:
-                    if correction_attempt == 2:
-                        raise
-                    print(
-                        f"    {stage_name} 형식 교정 재시도 "
-                        f"{correction_attempt + 1}/2: {model_name} — "
-                        f"{str(validation_error)[:180]}"
-                    )
-                    text = _call_model_text(
-                        client,
-                        model_name,
-                        user_message
-                        + "\n\n직전 응답은 다음 검증 오류가 있었습니다:\n"
-                        + str(validation_error)
-                        + "\n누락된 근거와 필수 필드를 보완하여 요구 형식의 전체 응답을 다시 출력하십시오.",
-                        system_instruction,
-                        response_mime_type,
-                    )
-        except Exception as exc:
-            errors.append(f"{model_name}: {exc}")
-            print(f"    {stage_name} 실패: {model_name} — {str(exc)[:180]}")
-    raise RuntimeError(f"{stage_name} 실패. " + " | ".join(errors))
-
-
-def _call_investment_decision_with_pro_only(
+def _call_investment_decision(
     client: genai.Client,
     user_message: str,
     validator: Callable[[str], object],
 ) -> object:
-    """Run the investment decision stage with Gemini Pro only."""
+    """Run a fail-closed investment decision with one explicit model."""
     stage_name = "1차 포트폴리오 판단"
     model_name = _decision_model()
-    attempts = max(1, PRO_SERVER_BUSY_MAX_ATTEMPTS)
-    errors: list[str] = []
+    started_at = time.monotonic()
 
-    for attempt in range(attempts):
+    def remaining_budget() -> float:
+        return max(0.0, RETRY_BUDGET_SECONDS - (time.monotonic() - started_at))
+
+    try:
+        print(f"  {stage_name} 모델 시도: {model_name}")
+        text = _call_model_text(
+            client,
+            model_name,
+            user_message,
+            DECISION_SYSTEM_PROMPT,
+            response_mime_type="application/json",
+            max_retries=DECISION_MAX_ATTEMPTS,
+            response_json_schema=DECISION_RESPONSE_SCHEMA,
+            retry_budget_seconds=remaining_budget(),
+        )
         try:
-            print(f"  {stage_name} 모델 시도: {model_name} ({attempt + 1}/{attempts})")
-            text = _call_model_text(
+            return validator(text)
+        except Exception as validation_error:
+            print(
+                f"    {stage_name} 형식 교정 재시도 1/1: {model_name} - "
+                f"{str(validation_error)[:180]}"
+            )
+            repaired_text = _call_model_text(
                 client,
                 model_name,
-                user_message,
+                user_message
+                + "\n\n직전 응답은 다음 검증 오류가 있었습니다:\n"
+                + str(validation_error)
+                + "\n누락된 근거와 필수 필드를 보완하여 요구 형식의 전체 응답을 다시 출력하십시오.",
                 DECISION_SYSTEM_PROMPT,
                 response_mime_type="application/json",
-                max_retries=1,
+                max_retries=DECISION_MAX_ATTEMPTS,
+                response_json_schema=DECISION_RESPONSE_SCHEMA,
+                retry_budget_seconds=remaining_budget(),
             )
-            for correction_attempt in range(3):
-                try:
-                    return validator(text)
-                except Exception as validation_error:
-                    if correction_attempt == 2:
-                        raise
-                    print(
-                        f"    {stage_name} 형식 교정 재시도 "
-                        f"{correction_attempt + 1}/2: {model_name} — "
-                        f"{str(validation_error)[:180]}"
-                    )
-                    text = _call_model_text(
-                        client,
-                        model_name,
-                        user_message
-                        + "\n\n직전 응답은 다음 검증 오류가 있었습니다:\n"
-                        + str(validation_error)
-                        + "\n누락된 근거와 필수 필드를 보완하여 요구 형식의 전체 응답을 다시 출력하십시오.",
-                        DECISION_SYSTEM_PROMPT,
-                        response_mime_type="application/json",
-                        max_retries=1,
-                    )
-        except Exception as exc:
-            message = str(exc)
-            errors.append(f"{model_name}: {message}")
-            print(f"    {stage_name} 실패: {model_name} — {message[:180]}")
-            if is_server_busy_error(message):
-                if attempt < attempts - 1:
-                    print(
-                        "    Gemini Pro 서버가 혼잡합니다. "
-                        f"{PRO_SERVER_BUSY_RETRY_DELAY_SECONDS:.0f}초 뒤 다시 시도합니다."
-                    )
-                    time.sleep(PRO_SERVER_BUSY_RETRY_DELAY_SECONDS)
-                    continue
-                raise RuntimeError(
-                    "Gemini Pro 서버 혼잡으로 투자 판단 보류. "
-                    "Flash로 투자 판단을 대체하지 않습니다. "
-                    + " | ".join(errors)
-                ) from exc
-            raise RuntimeError(f"{stage_name} 실패. " + " | ".join(errors)) from exc
-
-    raise RuntimeError(
-        "Gemini Pro 서버 혼잡으로 투자 판단 보류. "
-        "Flash로 투자 판단을 대체하지 않습니다. "
-        + " | ".join(errors)
-    )
+            return validator(repaired_text)
+    except Exception as exc:
+        message = str(exc)
+        print(f"    {stage_name} 보류: {model_name} - {message[:180]}")
+        raise RuntimeError(
+            f"Gemini 투자 판단 보류. model={model_name}. {message}"
+        ) from exc
 
 
 # ─── 입력 구성 헬퍼 ──────────────────────────────────────────────────────────
 
 def _analysis_text_for_post(post: Dict) -> tuple[str, str]:
-    """Use only the per-post summary as the final Pro-analysis input."""
+    """Use only the per-post summary as the final decision-model input."""
     summary = post.get("summary", "").strip()
     if summary:
         return "1차 요약", summary
 
     title = post.get("title", "제목 없음")
-    raise ValueError(f"요약 없는 글은 Pro 분석 입력으로 사용할 수 없습니다: {title}")
+    raise ValueError(f"요약 없는 글은 투자 판단 입력으로 사용할 수 없습니다: {title}")
 
 
 def _format_report_date(today_str: str) -> str:
@@ -398,11 +573,24 @@ def _structured_context(posts: List[Dict]) -> str:
     blocks = []
     for index, post in enumerate(posts, 1):
         label, text = _analysis_text_for_post(post)
+        signal_candidates = [
+            candidate
+            for candidate in post.get("signal_candidates", [])
+            if isinstance(candidate, dict)
+            and candidate.get("signal_id")
+            and candidate.get("evidence_sha256")
+        ]
+        signal_payload = json.dumps(
+            signal_candidates,
+            ensure_ascii=False,
+            separators=(",", ":"),
+        )
         blocks.append(
             f"[{index}/{len(posts)}] 제목: {post['title']}\n"
             f"날짜: {post['date']}\n"
             f"URL: {post.get('url', '')}\n"
             f"{label}:\n{text}\n"
+            f"호스트 검증 원문 신호 후보(JSON):\n{signal_payload}\n"
             f"{'─' * 50}"
         )
     return "\n\n".join(blocks)
@@ -423,7 +611,7 @@ def _fit_context_to_budget(
     message_builder: Callable[[str], str],
 ) -> str:
     """Keep stored inputs intact and trim only an abnormal transmitted context tail."""
-    model = PRIMARY_MODEL
+    model = DECISION_MODEL
     safe_limit = int(MODEL_INPUT_TOKEN_LIMIT * MODEL_INPUT_SAFE_RATIO)
     message = message_builder(context)
     tokens = _count_tokens(client, model, message)
@@ -440,7 +628,45 @@ def _fit_context_to_budget(
             low = middle
         else:
             high = middle - 1
-    return context[:low] + suffix
+    fitted = context[:low] + suffix
+    fitted_tokens = _count_tokens(client, model, message_builder(fitted))
+    if fitted_tokens is not None and fitted_tokens > safe_limit:
+        raise ValueError(
+            f"압축된 포트폴리오 상태만으로 모델 입력 예산을 초과합니다: {fitted_tokens} tokens"
+        )
+    return fitted
+
+
+def _compact_state_for_inference(current_state: dict | None) -> dict:
+    """Keep active decisions and referenced signals; exclude unbounded archives."""
+    if not current_state:
+        return {}
+    state = dict(current_state)
+    portfolio = list(state.get("portfolio", []) or [])
+    watchlist = list(state.get("watchlist", []) or [])
+    referenced_ids = {
+        str(signal_id)
+        for item in portfolio + watchlist
+        for key in ("origin_signal_ids", "linked_signal_ids")
+        for signal_id in (item.get(key, []) or [])
+        if str(signal_id)
+    }
+    signals = [
+        item
+        for item in state.get("signal_events", []) or []
+        if item.get("signal_id") in referenced_ids
+    ]
+    return {
+        "schema_version": state.get("schema_version"),
+        "portfolio": portfolio,
+        "watchlist": watchlist,
+        "closed_positions": list(state.get("closed_positions", []) or [])[-10:],
+        "decision_history": list(state.get("decision_history", []) or [])[-20:],
+        "signal_events": signals,
+        "insights": list(state.get("insights", []) or []),
+        "last_watchlist_changes": state.get("last_watchlist_changes", {}),
+        "last_rebalanced_date": state.get("last_rebalanced_date"),
+    }
 
 
 def analyze_posts_structured(
@@ -458,58 +684,56 @@ def analyze_posts_structured(
     context = _structured_context(posts)
     run_type = "rebalance" if is_rebalance else "regular"
     client = _get_client()
+    inference_state = _compact_state_for_inference(current_state)
 
     decision_builder = lambda request_context: build_decision_user_message(
         context=request_context,
         analysis_date=analysis_date,
         run_type=run_type,
-        current_state=current_state,
+        current_state=inference_state,
     )
     context = _fit_context_to_budget(client, context, decision_builder)
     decision_message = decision_builder(context)
-    decision = _call_investment_decision_with_pro_only(
+    decision = _call_investment_decision(
         client,
         decision_message,
         lambda text: _parse_and_validate_model_decision_json(
             text,
             current_state,
             decision_validator,
+            expected_analysis_date=analysis_date,
+            expected_run_type=run_type,
         ),
     )
     assert isinstance(decision, AnalysisDecisionV2)
+    decision_model_version = _MODEL_VERSION_BY_ID.get(
+        _decision_model(),
+        _decision_model(),
+    )
+    decision_payload = decision.to_dict()
+    for item in decision_payload["portfolio_decisions"]:
+        item["decision_model_id"] = decision_model_version
+    decision = parse_analysis_decision(decision_payload)
 
     projected_state = current_state or {}
-    if current_state and current_state.get("schema_version") == "2.0":
+    if current_state and current_state.get("schema_version") in {"2.0", "2.1"}:
         projected_state = apply_analysis_decision(
             parse_portfolio_state(current_state),
             decision,
         ).to_dict()
 
-    report_builder = lambda request_context: build_report_user_message(
-        context=request_context,
-        decision_payload=decision.to_dict(),
-        projected_state=projected_state,
-        analysis_date=analysis_date,
+    # main.py는 구조화 결과로 최종 사용자 보고서를 다시 생성한다. 여기서는
+    # 검증된 판단으로 결정론적 보고서만 만들어 불필요한 두 번째 LLM 호출을 막는다.
+    report = _build_deterministic_report(
+        decision,
+        projected_state,
+        analysis_date,
     )
-    report_context = _fit_context_to_budget(client, context, report_builder)
-    report_message = report_builder(report_context)
-    try:
-        report = _call_stage_with_fallback(
-            client,
-            report_message,
-            REPORT_SYSTEM_PROMPT,
-            _validate_markdown_report,
-            "2차 사용자용 보고서",
-        )
-    except RuntimeError as exc:
-        print(f"  2차 사용자용 보고서 LLM 실패 -> 구조화 판단 기반 보고서 생성: {str(exc)[:180]}")
-        report = _build_deterministic_report(
-            decision,
-            projected_state,
-            analysis_date,
-        )
-    assert isinstance(report, str)
-    return StructuredAnalysisResult(decision=decision, report=report)
+    return StructuredAnalysisResult(
+        decision=decision,
+        report=report,
+        decision_model_version=decision_model_version,
+    )
 
 
 def _build_deterministic_report(
@@ -676,15 +900,59 @@ def _parse_and_validate_model_decision_json(
     text: str,
     current_state: dict | None,
     decision_validator: Callable[[AnalysisDecisionV2], object] | None = None,
+    *,
+    expected_analysis_date: str | None = None,
+    expected_run_type: str | None = None,
 ) -> AnalysisDecisionV2:
     """Require the model decision to produce an applicable target portfolio."""
     decision = _parse_model_decision_json(text)
+    if expected_analysis_date is not None and decision.analysis_date != expected_analysis_date:
+        raise ValueError(
+            f"analysis_date must be {expected_analysis_date}, got {decision.analysis_date}"
+        )
+    if expected_run_type is not None and decision.run_type != expected_run_type:
+        raise ValueError(f"run_type must be {expected_run_type}, got {decision.run_type}")
     if decision_validator is not None:
         validated = decision_validator(decision)
         if isinstance(validated, AnalysisDecisionV2):
             decision = validated
     if current_state and "schema_version" in current_state:
         state = parse_portfolio_state(current_state)
+        current_by_key = {
+            (
+                str(item.get("asset_type") or "").lower(),
+                str(item.get("market") or "").upper(),
+                str(item.get("code") or "").upper(),
+            ): item
+            for item in state.portfolio
+        }
+        for item in decision.portfolio_decisions:
+            key = (
+                str(item.get("asset_type") or "").lower(),
+                str(item.get("market") or "").upper(),
+                str(item.get("code") or "").upper(),
+            )
+            current = current_by_key.get(key)
+            previous = item.get("previous_weight")
+            if current is None:
+                if previous not in (None, 0, 0.0):
+                    raise ValueError(f"new position {key} previous_weight must be null or 0")
+            elif previous is None or abs(float(previous) - float(current["proposed_weight"])) > 1e-9:
+                raise ValueError(
+                    f"existing position {key} previous_weight must equal current target "
+                    f"{current['proposed_weight']}"
+                )
+            proposed = float(item.get("proposed_weight") or 0.0)
+            previous_value = float(previous or 0.0)
+            action = item.get("action")
+            if action == "비중확대" and proposed <= previous_value:
+                raise ValueError(f"{key} 비중확대 must increase proposed_weight")
+            if action == "비중축소" and proposed >= previous_value:
+                raise ValueError(f"{key} 비중축소 must decrease proposed_weight")
+            if action == "보유" and abs(proposed - previous_value) > 1e-9:
+                raise ValueError(f"{key} 보유 must keep proposed_weight unchanged")
+            if action == "매도" and proposed != 0.0:
+                raise ValueError(f"{key} 매도 must set proposed_weight to 0")
         apply_analysis_decision(state, decision)
     return decision
 

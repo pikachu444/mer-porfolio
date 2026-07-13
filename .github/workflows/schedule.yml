@@ -1,15 +1,20 @@
 name: 메르AI 포트폴리오 분석
 
-on:
-  # ── 자동 스케줄 (매일 자정 KST = UTC 15:00) ───────────────────────────────
-  schedule:
-    - cron: "0 15 * * *"
+concurrency:
+  # A live portfolio state must never be updated by two runs at once.
+  group: mer-ai-portfolio-${{ github.ref }}
+  cancel-in-progress: false
 
-  # ── 수동 실행 (GitHub Actions 탭에서 직접 버튼 클릭 가능) ───────────────────
+on:
+  # 00:17 KST (15:17 UTC). Avoid the top of the hour, where GitHub can delay
+  # or drop scheduled jobs under load.
+  schedule:
+    - cron: "17 15 * * *"
+
   workflow_dispatch:
     inputs:
       run_mode:
-        description: "실행 모드 (verify=출력 검증, full_verify=전체 흐름 검증, rebalance=운영 리밸런싱, test=mock 테스트)"
+        description: "verify=output, full_verify=live flow, rebalance=live portfolio, test=mock only"
         required: true
         default: "verify"
         type: choice
@@ -19,52 +24,65 @@ on:
           - rebalance
           - test
       fetch_days:
-        description: "수집 기간 (일) — 비워두면 모드 기본값 사용"
+        description: "Optional RSS collection window in days"
         required: false
         default: ""
         type: string
-      gemini_model:
-        description: "Gemini 분석 우선 모델명 (비워두면 기본값 gemini-2.5-pro)"
+      gemini_summary_model:
+        description: "Optional post-summary model; default is gemini-3.1-flash-lite"
+        required: false
+        default: ""
+        type: string
+      gemini_decision_model:
+        description: "Optional investment-decision model; default is gemini-3.5-flash"
         required: false
         default: ""
         type: string
 
-# Node.js 24 강제 사용 (Node.js 20 deprecation 경고 해결)
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   analyze:
     runs-on: ubuntu-latest
+    # Prevent a stuck external call from blocking a later scheduled portfolio run.
+    timeout-minutes: 30
     permissions:
-      contents: write  # 리포트 파일 커밋을 위해 필요
+      contents: write
 
     steps:
-      # ── 코드 체크아웃 ──────────────────────────────────────────────────────
-      - name: 코드 체크아웃
+      - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # Required for a safe rebase when a human push overlaps a report push.
+          fetch-depth: 0
 
-      # ── Python 설치 ────────────────────────────────────────────────────────
-      - name: Python 3.11 설치
+      - name: Guard live branch
+        if: ${{ (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && github.ref != 'refs/heads/main' }}
+        run: |
+          echo "::error::Live scheduled/rebalance runs are allowed only on main."
+          exit 1
+
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: "pip"
 
-      # ── 한글 폰트 설치 (matplotlib 차트 한글 깨짐 방지) ────────────────────
-      - name: 한글 폰트 설치
+      - name: Install Korean fonts
         run: sudo apt-get install -y -q fonts-nanum && fc-cache -fv
 
-      # ── 패키지 설치 ────────────────────────────────────────────────────────
-      - name: 패키지 설치
-        run: pip install -r requirements.txt
+      - name: Install dependencies
+        run: pip install --disable-pip-version-check -r requirements.txt
 
-      - name: 자동 테스트
+      - name: Run automated tests
         run: python -m unittest discover -s tests -v
 
-      # ── 분석 실행 ──────────────────────────────────────────────────────────
-      - name: 메르AI 포트폴리오 분석 실행
+      - name: Run portfolio analysis
+        id: analyze
         if: ${{ github.event_name == 'schedule' || github.event.inputs.run_mode != 'test' }}
+        # Live Telegram delivery is deferred until after the report/state commit.
+        continue-on-error: true
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -73,50 +91,289 @@ jobs:
           OUTPUT_DIR: output
           RUN_MODE: ${{ github.event_name == 'schedule' && 'scheduled' || github.event.inputs.run_mode || 'verify' }}
           FETCH_DAYS: ${{ github.event.inputs.fetch_days || '' }}
-          GEMINI_MODEL: ${{ github.event.inputs.gemini_model || '' }}
+          GEMINI_SUMMARY_MODEL: ${{ github.event.inputs.gemini_summary_model || 'gemini-3.1-flash-lite' }}
+          GEMINI_DECISION_MODEL: ${{ github.event.inputs.gemini_decision_model || 'gemini-3.5-flash' }}
           ENABLE_POST_SUMMARIES: ${{ (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance' || github.event.inputs.run_mode == 'full_verify') && 'true' || 'false' }}
+          # Live reports are delivered only after their state/report commit succeeds.
+          DEFER_TELEGRAM_DELIVERY_TO_WORKFLOW: ${{ (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && 'true' || 'false' }}
         run: python main.py
 
-      - name: verify 결과물 업로드
+      - name: Validate safe live output
+        id: live_output
+        if: ${{ always() && (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') }}
+        env:
+          EXPECTED_RUN_ID: ${{ github.run_id }}
+          EXPECTED_MODE: ${{ github.event_name == 'schedule' && 'scheduled' || 'rebalance' }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          output_file = Path(os.environ["GITHUB_OUTPUT"])
+
+          def emit(safe: bool, reason: str) -> None:
+              with output_file.open("a", encoding="utf-8") as handle:
+                  handle.write(f"safe_operating_output={'true' if safe else 'false'}\n")
+                  handle.write(f"validation_reason={reason}\n")
+              level = "notice" if safe else "warning"
+              print(f"::{level}::Live output receipt: {reason}")
+
+          receipt_path = Path("output/run_status.json")
+          try:
+              receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+              output_root = Path("output").resolve()
+              report_name = receipt.get("report_path")
+              if receipt.get("schema_version") != 1:
+                  raise ValueError("unsupported_schema")
+              if receipt.get("github_run_id") != os.environ["EXPECTED_RUN_ID"]:
+                  raise ValueError("wrong_run_id")
+              if receipt.get("mode") != os.environ["EXPECTED_MODE"]:
+                  raise ValueError("wrong_mode")
+              if receipt.get("mode") not in {"scheduled", "rebalance"}:
+                  raise ValueError("not_live_mode")
+              if receipt.get("state_bundle_committed") is not True:
+                  raise ValueError("bundle_not_committed")
+              if receipt.get("telegram_delivery_deferred") is not True:
+                  raise ValueError("delivery_not_deferred")
+              if not isinstance(report_name, str) or not report_name:
+                  raise ValueError("missing_report_path")
+              report_path = (output_root / report_name).resolve()
+              if report_path.parent != output_root or not report_path.is_file():
+                  raise ValueError("report_not_under_output")
+          except (OSError, ValueError, TypeError, json.JSONDecodeError) as error:
+              emit(False, str(error).replace(" ", "_")[:120])
+          else:
+              emit(True, "validated")
+          PY
+
+      - name: Upload verify artifact
         if: ${{ always() && github.event_name == 'workflow_dispatch' && github.event.inputs.run_mode == 'verify' }}
         uses: actions/upload-artifact@v4
         with:
           name: mer-ai-verify-${{ github.run_id }}
           path: output/verify
+          if-no-files-found: warn
+          retention-days: 14
 
-      - name: full_verify 결과물 업로드
+      - name: Upload full verification artifact
         if: ${{ always() && github.event_name == 'workflow_dispatch' && github.event.inputs.run_mode == 'full_verify' }}
         uses: actions/upload-artifact@v4
         with:
           name: mer-ai-full-verify-${{ github.run_id }}
           path: output/full_verify
+          if-no-files-found: warn
+          retention-days: 14
 
-      - name: scheduled 실패 진단 업로드
-        if: ${{ failure() && github.event_name == 'schedule' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: mer-ai-scheduled-failure-${{ github.run_id }}
-          path: |
-            output/error_*.log
-            output/posts_db.json
-          if-no-files-found: ignore
-
-      # ── 운영 결과 커밋 및 푸시 ─────────────────────────────────────────────
-      - name: 리포트 커밋 및 푸시
-        if: ${{ github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance' }}
+      - name: Commit and push live report
+        id: persist
+        if: ${{ always() && (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && steps.live_output.outputs.safe_operating_output == 'true' }}
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
         run: |
-          git config user.name  "github-actions[bot]"
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add output
           if git diff --cached --quiet; then
             echo "No report changes to commit."
-          else
-            git commit -m "Update MerAI report"
-            git push
+            exit 0
           fi
+          git commit -m "Update MerAI report"
+          # Do not overwrite an overlapping human push; replay the report commit instead.
+          git fetch origin "refs/heads/$TARGET_BRANCH:refs/remotes/origin/$TARGET_BRANCH"
+          git rebase "origin/$TARGET_BRANCH"
+          git push origin "HEAD:$TARGET_BRANCH"
+
+      - name: Deliver persisted Telegram report
+        id: telegram_delivery
+        if: ${{ always() && (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && steps.live_output.outputs.safe_operating_output == 'true' && steps.persist.outcome == 'success' }}
+        # Keep collecting diagnostic artifacts, then make a rejected delivery red
+        # in the explicit final gate below.
+        continue-on-error: true
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DASHBOARD_URL: https://pikachu444.github.io/mer-portfolio/output/dashboard.html
+          OUTPUT_DIR: output
+          RUN_MODE: ${{ github.event_name == 'schedule' && 'scheduled' || 'rebalance' }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import sys
+          from datetime import datetime
+          from pathlib import Path
+
+          from telegram_notify import send_photo, send_structured_summary
+
+          output_root = Path(os.environ["OUTPUT_DIR"]).resolve()
+
+          def output_file(name: object, label: str) -> Path:
+              if not isinstance(name, str) or not name:
+                  raise ValueError(f"missing_{label}")
+              path = (output_root / name).resolve()
+              if path.parent != output_root or not path.is_file():
+                  raise ValueError(f"invalid_{label}")
+              return path
+
+          try:
+              receipt = json.loads(output_file("run_status.json", "receipt").read_text(encoding="utf-8"))
+              if receipt.get("telegram_delivery_deferred") is not True:
+                  raise ValueError("delivery_not_deferred")
+              chart_path = output_file(receipt.get("chart_path"), "chart_path")
+              state = json.loads(output_file("portfolio_state.json", "state").read_text(encoding="utf-8"))
+              performance = json.loads(
+                  output_file("performance_cache.json", "performance_cache").read_text(encoding="utf-8")
+              )
+              if not isinstance(state, dict) or not isinstance(performance, dict):
+                  raise ValueError("invalid_delivery_payload")
+              completed_at = str(receipt.get("completed_at") or "")
+              try:
+                  today_label = datetime.fromisoformat(completed_at.replace("Z", "+00:00")).strftime(
+                      "%Y-%m-%d"
+                  )
+              except ValueError:
+                  today_label = completed_at[:10] or "today"
+              run_label = str(receipt.get("run_label") or receipt.get("mode") or os.environ["RUN_MODE"])
+              no_changes = receipt.get("no_changes") is True
+              status_note = str(receipt.get("status_note") or "")
+          except (OSError, ValueError, TypeError, json.JSONDecodeError) as error:
+              print(f"::error::Persisted Telegram delivery inputs invalid: {type(error).__name__}")
+              sys.exit(1)
+
+          photo_ok = send_photo(str(chart_path), f"MerAI model portfolio | {today_label}")
+          summary_ok = send_structured_summary(
+              state,
+              today_label,
+              performance,
+              no_changes=no_changes,
+              status_note=status_note,
+              include_dashboard_link=True,
+              run_label=run_label,
+          )
+          if not (photo_ok and summary_ok):
+              missing = []
+              if not photo_ok:
+                  missing.append("chart")
+              if not summary_ok:
+                  missing.append("structured_summary")
+              print("::error::Persisted Telegram report delivery incomplete: " + ",".join(missing))
+              sys.exit(1)
+          print("Persisted Telegram report delivery accepted.")
+          PY
+
+      - name: Upload live run snapshot
+        if: ${{ always() && (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && steps.live_output.outputs.safe_operating_output == 'true' && steps.persist.outcome == 'success' }}
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: mer-ai-operating-${{ github.run_id }}
+          path: |
+            output/portfolio_state.json
+            output/decision_latest.json
+            output/model_portfolio_ledger.json
+            output/performance_cache.json
+            output/posts_db.json
+            output/dashboard.html
+            output/chart_latest.png
+            output/run_status.json
+            output/report_*.md
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload live failure diagnostics
+        if: ${{ always() && (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && (steps.analyze.outcome == 'failure' || steps.live_output.outputs.safe_operating_output != 'true' || steps.persist.outcome == 'failure' || steps.telegram_delivery.outcome == 'failure') }}
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: mer-ai-live-failure-${{ github.run_id }}
+          path: |
+            output/run_status.json
+            output/portfolio_state.json
+            output/decision_latest.json
+            output/model_portfolio_ledger.json
+            output/performance_cache.json
+            output/posts_db.json
+            output/dashboard.html
+            output/chart_latest.png
+            output/report_*.md
+            output/error_*.log
+          if-no-files-found: warn
+          retention-days: 21
+
+      - name: Enforce validated live output
+        if: ${{ always() && (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && steps.live_output.outputs.safe_operating_output != 'true' }}
+        run: |
+          echo "::error::No validated deferred-delivery receipt was produced; report/state were not persisted or delivered."
+          exit 1
+
+      - name: Enforce live report persistence
+        if: ${{ always() && (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && steps.live_output.outputs.safe_operating_output == 'true' && steps.persist.outcome != 'success' }}
+        run: |
+          echo "::error::Validated report/state could not be committed and pushed; Telegram delivery was intentionally skipped."
+          exit 1
+
+      - name: Enforce persisted Telegram delivery
+        if: ${{ always() && (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && steps.live_output.outputs.safe_operating_output == 'true' && steps.persist.outcome == 'success' && steps.telegram_delivery.outcome != 'success' }}
+        run: |
+          echo "::error::The report/state was persisted, but the post-persist Telegram delivery was not accepted."
+          exit 1
+
+      - name: Enforce analysis outcome
+        if: ${{ always() && steps.analyze.outcome == 'failure' }}
+        env:
+          SAFE_OPERATING_OUTPUT: ${{ steps.live_output.outputs.safe_operating_output }}
+        run: |
+          if [ "$SAFE_OPERATING_OUTPUT" = "true" ]; then
+            echo "::error::A safe deferred-delivery receipt was written, but the analysis step failed."
+          else
+            echo "::error::The analysis step failed before a validated live report/state receipt was available."
+          fi
+          exit 1
+
+      - name: Write run summary
+        if: ${{ always() }}
+        env:
+          EFFECTIVE_RUN_MODE: ${{ github.event_name == 'schedule' && 'scheduled' || github.event.inputs.run_mode || 'verify' }}
+          JOB_STATUS: ${{ job.status }}
+          ANALYZE_OUTCOME: ${{ steps.analyze.outcome }}
+          SAFE_OPERATING_OUTPUT: ${{ steps.live_output.outputs.safe_operating_output }}
+          PERSIST_OUTCOME: ${{ steps.persist.outcome }}
+          TELEGRAM_DELIVERY_OUTCOME: ${{ steps.telegram_delivery.outcome }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          {
+            echo "## MerAI run summary"
+            echo
+            echo "- Mode: \`$EFFECTIVE_RUN_MODE\`"
+            echo "- Status: \`$JOB_STATUS\`"
+            echo "- Analysis step: \`$ANALYZE_OUTCOME\`"
+            if [ -n "$SAFE_OPERATING_OUTPUT" ]; then
+              echo "- Safe live output receipt: \`$SAFE_OPERATING_OUTPUT\`"
+            fi
+            if [ -n "$PERSIST_OUTCOME" ]; then
+              echo "- Report/state persistence: \`$PERSIST_OUTCOME\`"
+            fi
+            if [ -n "$TELEGRAM_DELIVERY_OUTCOME" ]; then
+              echo "- Post-persist Telegram delivery: \`$TELEGRAM_DELIVERY_OUTCOME\`"
+            fi
+            echo "- Run: $RUN_URL"
+            if [ -f output/portfolio_state.json ]; then
+              echo "- Portfolio state: generated"
+            fi
+            if [ -f output/decision_latest.json ]; then
+              echo "- Structured decision: generated"
+            fi
+            if [ -f output/chart_latest.png ]; then
+              echo "- Telegram chart attachment: generated"
+            fi
+            echo "- For live runs, inspect the post-persist delivery step for chart and structured-summary receipts."
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Notify workflow failure
         if: ${{ failure() }}
+        continue-on-error: true
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -126,6 +383,35 @@ jobs:
             echo "Telegram secrets are missing; failure notification skipped."
             exit 0
           fi
-          curl -sS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+          response_file="$(mktemp)"
+          trap 'rm -f "$response_file"' EXIT
+          if curl --fail --retry 3 --retry-all-errors --connect-timeout 10 --max-time 30 \
+            --silent --output "$response_file" \
+            -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             -H "Content-Type: application/json" \
-            -d "{\"chat_id\":\"${TELEGRAM_CHAT_ID}\",\"text\":\"MerAI GitHub Actions failed.\\n${RUN_URL}\",\"disable_web_page_preview\":true}"
+            -d "{\"chat_id\":\"${TELEGRAM_CHAT_ID}\",\"text\":\"MerAI GitHub Actions failed.\\n${RUN_URL}\",\"disable_web_page_preview\":true}"; then
+            if RESPONSE_FILE="$response_file" python - <<'PY'
+          import json
+          import os
+          import sys
+
+          try:
+              with open(os.environ["RESPONSE_FILE"], encoding="utf-8") as handle:
+                  payload = json.load(handle)
+          except (OSError, ValueError, TypeError):
+              sys.exit(1)
+
+          result = payload.get("result")
+          message_id = result.get("message_id") if isinstance(result, dict) else None
+          if payload.get("ok") is not True or isinstance(message_id, bool) or not isinstance(message_id, int):
+              sys.exit(1)
+          print(f"Telegram failure notification accepted: message_id={message_id}")
+          PY
+            then
+              :
+            else
+              echo "::warning::Telegram failure notification was not accepted by Telegram."
+            fi
+          else
+            echo "::warning::Telegram failure notification HTTP request failed."
+          fi

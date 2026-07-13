@@ -9,17 +9,20 @@ fetch_mer.py
 import feedparser
 import requests
 from bs4 import BeautifulSoup
+import hashlib
 import re
 import json
 import os
+import unicodedata
 from datetime import datetime, timedelta
 from typing import List, Dict, Optional
 from pathlib import Path
 from google import genai
 from google.genai import types
 from gemini_utils import (
-    DEFAULT_HTTP_TIMEOUT_MS,
+    SUMMARY_HTTP_TIMEOUT_MS,
     generate_content_with_retry,
+    is_permanent_error,
     is_transient_error,
 )
 
@@ -34,19 +37,97 @@ _fetch_days_env = os.environ.get("FETCH_DAYS", "").strip()
 DEFAULT_DAYS = int(_fetch_days_env) if _fetch_days_env else 14  # 빈 문자열 방어
 _summary_env = os.environ.get("ENABLE_POST_SUMMARIES", "true").strip().lower()
 ENABLE_POST_SUMMARIES = _summary_env not in ("0", "false", "no", "off")
-SUMMARY_VERSION = 2
+SUMMARY_MODEL = (
+    os.environ.get("GEMINI_SUMMARY_MODEL", "gemini-3.1-flash-lite").strip()
+    or "gemini-3.1-flash-lite"
+)
+SUMMARY_VERSION = 4
 MODEL_INPUT_TOKEN_LIMIT = 1_048_576
 MODEL_INPUT_SAFE_RATIO = 0.8
-SUMMARY_DEFERRED_TEXT = "글별 Flash 요약 실패로 투자 분석 보류"
+SUMMARY_OUTPUT_TOKEN_LIMIT = 2_048
+# A cache-schema upgrade must never turn one scheduled run into a large batch of
+# free-tier requests.  New RSS entries are still summarized immediately; these
+# limits apply only to upgrading already-persisted summaries and retrying a
+# previously deferred summary.
+SUMMARY_CACHE_UPGRADE_MAX_PER_RUN = max(
+    0,
+    int(os.environ.get("SUMMARY_CACHE_UPGRADE_MAX_PER_RUN", "4")),
+)
+SUMMARY_DEFERRED_RETRY_MAX_PER_RUN = max(
+    0,
+    int(os.environ.get("SUMMARY_DEFERRED_RETRY_MAX_PER_RUN", "1")),
+)
+SUMMARY_RETRY_BASE_SECONDS = max(
+    60,
+    int(os.environ.get("SUMMARY_RETRY_BASE_SECONDS", str(6 * 60 * 60))),
+)
+SUMMARY_RETRY_MAX_SECONDS = max(
+    SUMMARY_RETRY_BASE_SECONDS,
+    int(os.environ.get("SUMMARY_RETRY_MAX_SECONDS", str(7 * 24 * 60 * 60))),
+)
+SUMMARY_DEFERRED_TEXT = "글별 Flash-Lite 요약 실패로 투자 분석 보류"
+_SUMMARY_CLIENT: genai.Client | None = None
 SUMMARY_RESPONSE_SCHEMA = {
     "type": "object",
     "properties": {
         "investment_relevant": {"type": "boolean"},
         "relevance_reason": {"type": "string"},
         "summary": {"type": "string"},
+        "signal_candidates": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "exact_text": {"type": "string"},
+                    "classification": {
+                        "type": "string",
+                        "enum": ["MER_DIRECT", "DIRECTIONAL_THESIS", "MENTION_ONLY"],
+                    },
+                    "entity_name": {"type": "string"},
+                    "entity_type": {"type": "string"},
+                    "direction": {"type": "string"},
+                    "horizon_kind": {"type": "string"},
+                    "catalysts": {"type": "array", "items": {"type": "string"}},
+                    "invalidation_conditions": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "thesis_summary": {"type": "string"},
+                },
+                "required": [
+                    "exact_text",
+                    "classification",
+                    "entity_name",
+                    "entity_type",
+                    "direction",
+                    "horizon_kind",
+                    "catalysts",
+                    "invalidation_conditions",
+                    "thesis_summary",
+                ],
+            },
+        },
     },
-    "required": ["investment_relevant", "relevance_reason", "summary"],
+    "required": [
+        "investment_relevant",
+        "relevance_reason",
+        "summary",
+        "signal_candidates",
+    ],
 }
+
+SIGNAL_CLASSIFICATIONS = {"MER_DIRECT", "DIRECTIONAL_THESIS", "MENTION_ONLY"}
+SIGNAL_CANDIDATE_FIELDS = (
+    "exact_text",
+    "classification",
+    "entity_name",
+    "entity_type",
+    "direction",
+    "horizon_kind",
+    "catalysts",
+    "invalidation_conditions",
+    "thesis_summary",
+)
 
 # 1차 정밀 요약 프롬프트
 MAP_SUMMARY_PROMPT = """
@@ -57,7 +138,8 @@ MAP_SUMMARY_PROMPT = """
 {
   "investment_relevant": true,
   "relevance_reason": "투자 분석 포함 또는 제외 이유",
-  "summary": "정밀 압축 요약"
+  "summary": "정밀 압축 요약",
+  "signal_candidates": []
 }
 
 투자 관련 글에는 거시경제, 정책, 지정학, 산업, 기업, 수급, 리스크처럼 투자 판단에 영향을
@@ -73,6 +155,18 @@ MAP_SUMMARY_PROMPT = """
 
 없는 사실을 창작하지 마십시오. 투자와 무관한 글도 `summary`에 짧은 내용 요약을 남기십시오.
 `summary`는 1200자 이하, `relevance_reason`은 200자 이하로 작성하십시오.
+
+`signal_candidates`에는 반드시 원문에서 그대로 복사한 `exact_text`가 있는 후보만 기록하십시오.
+문장 부호와 숫자를 바꾸거나 여러 문장을 재구성하지 마십시오. 후보별 필드는 다음과 같습니다.
+- `classification`: 메르 본인의 명시적 매수·보유·매도·관심 공개는 `MER_DIRECT`, 기업·산업의
+  수혜/피해 방향과 인과관계가 있는 논지는 `DIRECTIONAL_THESIS`, 이름만 언급된 경우는
+  `MENTION_ONLY`.
+- `entity_name`, `entity_type`: 근거가 가리키는 기업·종목·ETF·산업·국가·자산의 이름과 유형.
+- `direction`: 수혜/피해/중립/혼합 등 원문이 뒷받침하는 방향. 불명확하면 빈 문자열.
+- `horizon_kind`: event/tactical/cyclical/structural 중 원문으로 판단 가능한 값. 불명확하면 빈 문자열.
+- `catalysts`, `invalidation_conditions`: 원문이 명시한 항목만 기록하고 없으면 빈 배열.
+- `thesis_summary`: 원문 범위를 넘지 않는 한 문장 요약.
+동일 근거와 대상을 반복하지 마십시오. 투자 근거 후보가 없으면 빈 배열을 출력하십시오.
 출력은 반드시 지정된 JSON 스키마를 만족해야 하며, 마크다운 코드블록을 쓰지 마십시오.
 """
 
@@ -225,21 +319,115 @@ def _fit_summary_request(client: genai.Client, content: str) -> str:
     suffix = "\n\n" + MAP_SUMMARY_PROMPT
     request = prefix + content + suffix
     safe_limit = int(MODEL_INPUT_TOKEN_LIMIT * MODEL_INPUT_SAFE_RATIO)
-    if _count_tokens(client, "gemini-2.5-flash", request) <= safe_limit:
+    if _count_tokens(client, SUMMARY_MODEL, request) <= safe_limit:
         return request
 
     low, high = 0, len(content)
     while low < high:
         middle = (low + high + 1) // 2
         candidate = prefix + content[:middle] + "\n...(전송용 본문 끝부분 생략)" + suffix
-        if _count_tokens(client, "gemini-2.5-flash", candidate) <= safe_limit:
+        if _count_tokens(client, SUMMARY_MODEL, candidate) <= safe_limit:
             low = middle
         else:
             high = middle - 1
     return prefix + content[:low] + "\n...(전송용 본문 끝부분 생략)" + suffix
 
 
-def _parse_summary_response(text: str) -> dict:
+def _normalize_evidence_text(text: str) -> str:
+    """Normalize source and quote identically without changing word order."""
+    normalized = unicodedata.normalize("NFKC", str(text or ""))
+    normalized = re.sub(r"[\u200b-\u200f\u2028\u2029\ufeff\u00ad]", "", normalized)
+    return re.sub(r"\s+", " ", normalized).strip()
+
+
+def _string_list(value) -> list[str] | None:
+    if not isinstance(value, list) or any(not isinstance(item, str) for item in value):
+        return None
+    return [item.strip() for item in value if item.strip()]
+
+
+def _validated_signal_candidates(
+    raw_candidates,
+    source_text: str,
+    source_key: str,
+) -> list[dict]:
+    """Keep only candidates whose exact quote is present in the normalized source."""
+    if not isinstance(raw_candidates, list):
+        return []
+
+    normalized_source = _normalize_evidence_text(source_text)
+    if not normalized_source:
+        return []
+
+    validated: list[dict] = []
+    seen_ids: set[str] = set()
+    for raw in raw_candidates:
+        if not isinstance(raw, dict):
+            continue
+        if any(field not in raw for field in SIGNAL_CANDIDATE_FIELDS):
+            continue
+
+        exact_text = _normalize_evidence_text(raw.get("exact_text", ""))
+        classification = str(raw.get("classification", "")).strip()
+        if (
+            not exact_text
+            or exact_text not in normalized_source
+            or classification not in SIGNAL_CLASSIFICATIONS
+        ):
+            continue
+
+        string_fields: dict[str, str] = {}
+        malformed = False
+        for field in (
+            "entity_name",
+            "entity_type",
+            "direction",
+            "horizon_kind",
+            "thesis_summary",
+        ):
+            value = raw.get(field)
+            if not isinstance(value, str):
+                malformed = True
+                break
+            string_fields[field] = value.strip()
+        catalysts = _string_list(raw.get("catalysts"))
+        invalidation_conditions = _string_list(raw.get("invalidation_conditions"))
+        if malformed or catalysts is None or invalidation_conditions is None:
+            continue
+
+        evidence_sha256 = hashlib.sha256(exact_text.encode("utf-8")).hexdigest()
+        identity_parts = (
+            _normalize_evidence_text(source_key),
+            evidence_sha256,
+            classification,
+            _normalize_evidence_text(string_fields["entity_name"]),
+            _normalize_evidence_text(string_fields["entity_type"]),
+            _normalize_evidence_text(string_fields["direction"]),
+        )
+        signal_id = hashlib.sha256("\x1f".join(identity_parts).encode("utf-8")).hexdigest()
+        if signal_id in seen_ids:
+            continue
+        seen_ids.add(signal_id)
+        validated.append(
+            {
+                "signal_id": signal_id,
+                "evidence_sha256": evidence_sha256,
+                "exact_text": exact_text,
+                "classification": classification,
+                **string_fields,
+                "catalysts": catalysts,
+                "invalidation_conditions": invalidation_conditions,
+            }
+        )
+    return validated
+
+
+def _parse_summary_response(
+    text: str,
+    *,
+    source_text: str = "",
+    source_key: str = "",
+) -> dict:
     stripped = text.strip()
     if stripped.startswith("```"):
         stripped = re.sub(r"^```(?:json)?\s*", "", stripped)
@@ -259,38 +447,67 @@ def _parse_summary_response(text: str) -> dict:
         raise SummaryResponseError("글별 요약에 investment_relevant boolean이 없습니다.")
     if not isinstance(reason, str) or not reason.strip():
         raise SummaryResponseError("글별 요약에 relevance_reason이 없습니다.")
+    signal_candidates = _validated_signal_candidates(
+        payload.get("signal_candidates", []),
+        source_text,
+        source_key,
+    )
     return {
         "summary": summary.strip(),
         "investment_relevant": relevant,
         "relevance_reason": reason.strip(),
+        "signal_candidates": signal_candidates,
         "summary_version": SUMMARY_VERSION,
     }
 
 
-def summarize_single_post(content: str) -> dict:
-    """Use gemini-2.5-flash to summarize and classify one full article."""
+def _get_summary_client() -> genai.Client:
+    global _SUMMARY_CLIENT
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
-        raise ValueError("GEMINI_API_KEY 미설정: 글별 Flash 요약을 생성할 수 없습니다.")
-    client = genai.Client(
-        api_key=api_key,
-        http_options=types.HttpOptions(timeout=DEFAULT_HTTP_TIMEOUT_MS),
-    )
+        raise ValueError("GEMINI_API_KEY 미설정: 글별 요약을 생성할 수 없습니다.")
+    if _SUMMARY_CLIENT is None:
+        _SUMMARY_CLIENT = genai.Client(
+            api_key=api_key,
+            http_options=types.HttpOptions(
+                timeout=SUMMARY_HTTP_TIMEOUT_MS,
+                retry_options=types.HttpRetryOptions(attempts=1),
+            ),
+        )
+    return _SUMMARY_CLIENT
+
+
+def summarize_single_post(content: str, source_key: str = "") -> dict:
+    """Use the explicit Flash-Lite model to summarize and classify one article."""
+    client = _get_summary_client()
     response = generate_content_with_retry(
         client=client,
-        model="gemini-2.5-flash",
+        model=SUMMARY_MODEL,
         contents=_fit_summary_request(client, content),
         config=types.GenerateContentConfig(
-            temperature=0.2,
-            max_output_tokens=4096,
+            max_output_tokens=SUMMARY_OUTPUT_TOKEN_LIMIT,
             response_mime_type="application/json",
             response_schema=SUMMARY_RESPONSE_SCHEMA,
+            thinking_config=types.ThinkingConfig(
+                thinking_level=types.ThinkingLevel.MINIMAL,
+            ),
         ),
         max_retries=3,
+        http_timeout_ms=SUMMARY_HTTP_TIMEOUT_MS,
     )
     if not response.text:
         raise SummaryResponseError("글별 Flash 요약 응답이 비어 있습니다.")
-    return _parse_summary_response(response.text)
+    parsed = _parse_summary_response(
+        response.text,
+        source_text=content,
+        source_key=source_key,
+    )
+    model_version = getattr(response, "model_version", None)
+    if not isinstance(model_version, str) or not model_version.strip():
+        model_version = SUMMARY_MODEL
+    parsed["summary_model_id"] = SUMMARY_MODEL
+    parsed["summary_model_version"] = model_version.strip()
+    return parsed
 
 
 def _deferred_summary_fields(error: Exception) -> dict:
@@ -301,12 +518,14 @@ def _deferred_summary_fields(error: Exception) -> dict:
         "relevance_reason": SUMMARY_DEFERRED_TEXT,
         "summary_version": None,
         "summary_status": "deferred",
+        "summary_model_id": SUMMARY_MODEL,
+        "summary_model_version": None,
+        "signal_candidates": [],
         "summary_error": message[:500],
-        "summary_failed_at": datetime.now().isoformat(timespec="seconds"),
     }
 
 
-def _summary_fields(content: str, title: str) -> dict:
+def _summary_fields(content: str, title: str, source_key: str = "") -> dict:
     if not ENABLE_POST_SUMMARIES:
         print("      글별 요약 OFF -> 기존 캐시 또는 원문을 사용")
         return {
@@ -314,17 +533,21 @@ def _summary_fields(content: str, title: str) -> dict:
             "investment_relevant": None,
             "relevance_reason": "",
             "summary_version": None,
+            "summary_model_id": None,
+            "summary_model_version": None,
+            "signal_candidates": [],
         }
     print(f"      1차 요약 캐시 생성(Flash): {title[:30]}...")
     try:
-        result = summarize_single_post(content)
+        result = summarize_single_post(content, source_key=source_key)
     except SummaryResponseError as exc:
-        print(f"      ⚠ 글별 요약 보류: {type(exc).__name__}: {exc}")
+        print(f"      글별 요약 보류: {type(exc).__name__}: {exc}")
         return _deferred_summary_fields(exc)
     except Exception as exc:
-        if not is_transient_error(str(exc)):
+        message = str(exc)
+        if not is_transient_error(message) and not is_permanent_error(message):
             raise
-        print(f"      ⚠ 글별 요약 일시 실패, 보류: {type(exc).__name__}: {exc}")
+        print(f"      글별 요약 API 실패, 보류: {type(exc).__name__}: {exc}")
         return _deferred_summary_fields(exc)
     return {
         **result,
@@ -340,26 +563,150 @@ def _write_posts_db(posts: list[dict]) -> None:
         json.dump(posts, f, ensure_ascii=False, indent=2)
 
 
+def _retry_count(post: dict) -> int:
+    try:
+        return max(0, int(post.get("summary_retry_count", 0)))
+    except (TypeError, ValueError):
+        return 0
+
+
+def _summary_retry_due(post: dict, now: datetime) -> bool:
+    """Return whether a deferred summary may consume this run's retry slot."""
+    next_retry = post.get("summary_next_retry_at")
+    if not isinstance(next_retry, str) or not next_retry.strip():
+        # Legacy deferred cache entries predate retry scheduling.  They remain
+        # retryable, but only through the per-run cap below.
+        return True
+    try:
+        return datetime.fromisoformat(next_retry) <= now
+    except (TypeError, ValueError):
+        return True
+
+
+def _schedule_summary_retry(post: dict, now: datetime) -> None:
+    """Persist exponential retry metadata without giving up on a source post."""
+    retry_count = _retry_count(post) + 1
+    # Cap the exponent as well as the delay to avoid oversized integer work on
+    # malformed cache data while keeping retry cadence bounded at seven days.
+    delay = min(
+        SUMMARY_RETRY_BASE_SECONDS * (2 ** min(retry_count - 1, 16)),
+        SUMMARY_RETRY_MAX_SECONDS,
+    )
+    post["summary_retry_count"] = retry_count
+    post["summary_failed_at"] = now.isoformat(timespec="seconds")
+    post["summary_next_retry_at"] = (
+        now + timedelta(seconds=delay)
+    ).isoformat(timespec="seconds")
+
+
+def _clear_summary_retry_metadata(post: dict) -> None:
+    for key in (
+        "summary_retry_count",
+        "summary_next_retry_at",
+        "summary_failed_at",
+    ):
+        post.pop(key, None)
+
+
+def _apply_refreshed_summary(
+    post: dict,
+    summary_fields: dict,
+    now: datetime,
+    *,
+    was_pending_retry: bool,
+) -> None:
+    """Apply one cache refresh while preserving post-analysis semantics.
+
+    A v2 -> v4 cache upgrade is provenance enrichment, not a newly discovered
+    investment signal.  It must therefore retain its existing analysis status
+    (normally ``legacy_untracked``) so a partially migrated historical window
+    cannot produce a partial portfolio decision.  A real deferred/pending post
+    keeps the prior fail-closed behavior and becomes pending only after a
+    usable retry succeeds.
+    """
+    post.update(summary_fields)
+    if summary_fields.get("summary_status") == "deferred":
+        _schedule_summary_retry(post, now)
+        return
+
+    _clear_summary_retry_metadata(post)
+    if not was_pending_retry:
+        return
+    if summary_fields.get("investment_relevant") is True:
+        post["analysis_status"] = "pending"
+        post.pop("analysis_completed_date", None)
+    elif summary_fields.get("investment_relevant") is False:
+        post["analysis_status"] = "not_relevant"
+        post.pop("analysis_completed_date", None)
+
+
 def _refresh_recent_summary_cache(posts: list[dict], now: datetime) -> bool:
-    """Upgrade only the recent rebalance window once after the summary policy changes."""
+    """Boundedly upgrade recent cache entries and retry deferred source posts.
+
+    Older cache schema upgrades are intentionally not treated as current
+    analysis work.  This prevents a rollout from both exhausting the free API
+    quota and making a decision from only a fraction of the historical window.
+    A genuinely pending/deferred input remains fail-closed and is retried even
+    after the normal 14-day upgrade window, but only in a capped retry slot.
+    """
     if not ENABLE_POST_SUMMARIES:
         return False
 
     cutoff = now - timedelta(days=14)
-    changed = False
-    for post in posts:
+    retries: list[tuple[datetime, int, dict]] = []
+    upgrades: list[tuple[datetime, int, dict]] = []
+    for index, post in enumerate(posts):
         try:
             post_date = datetime.fromisoformat(post["date"])
         except Exception:
             continue
-        if post_date < cutoff or post.get("summary_version") == SUMMARY_VERSION:
+        retry_blocked_pending = (
+            post.get("summary_status") == "deferred"
+            or (
+                post.get("analysis_status") == "pending"
+                and not str(post.get("summary") or "").strip()
+                and post.get("investment_relevant") is not False
+            )
+        )
+        if retry_blocked_pending:
+            if _summary_retry_due(post, now):
+                retries.append((post_date, index, post))
             continue
+        if post_date < cutoff:
+            continue
+        if post.get("summary_version") != SUMMARY_VERSION:
+            upgrades.append((post_date, index, post))
+
+    # Most recent source material first.  The index makes equal publication
+    # dates deterministic while avoiding dependence on RSS list ordering.
+    retries.sort(key=lambda item: (item[0], -item[1]), reverse=True)
+    upgrades.sort(key=lambda item: (item[0], -item[1]), reverse=True)
+    selected = [
+        (post, True)
+        for _, _, post in retries[:SUMMARY_DEFERRED_RETRY_MAX_PER_RUN]
+    ] + [
+        (post, False)
+        for _, _, post in upgrades[:SUMMARY_CACHE_UPGRADE_MAX_PER_RUN]
+    ]
+
+    changed = False
+    for post, was_pending_retry in selected:
         post_id = extract_post_id(post.get("url", ""))
         if post_id:
             refreshed = fetch_full_post(post_id, post.get("title", ""))
             if refreshed:
                 post["content"] = refreshed
-        post.update(_summary_fields(post.get("content", ""), post.get("title", "")))
+        summary_fields = _summary_fields(
+            post.get("content", ""),
+            post.get("title", ""),
+            post.get("url", ""),
+        )
+        _apply_refreshed_summary(
+            post,
+            summary_fields,
+            now,
+            was_pending_retry=was_pending_retry,
+        )
         _write_posts_db(posts)
         changed = True
     return changed
@@ -378,6 +725,11 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
         try:
             with open(db_path, encoding="utf-8") as f:
                 db_posts = json.load(f)
+            if isinstance(db_posts, list):
+                for post in db_posts:
+                    if isinstance(post, dict):
+                        post.setdefault("signal_candidates", [])
+                        post.setdefault("analysis_status", "legacy_untracked")
             print(f"기존 posts_db.json 로드 성공 (총 {len(db_posts)}편)")
         except Exception as e:
             print(f"기존 posts_db.json 로드 실패, 새로 빌드합니다: {e}")
@@ -421,13 +773,25 @@ def fetch_recent_posts(days: int = DEFAULT_DAYS) -> List[Dict]:
         if not full_text:
             full_text = entry.get("summary", "")
 
-        newly_added.append({
+        summary_fields = _summary_fields(full_text, title, entry.link)
+        new_post = {
             "title": title,
             "date": pub_date.strftime("%Y-%m-%d"),
             "url": entry.link,
             "content": full_text,
-            **_summary_fields(full_text, title),
-        })
+            **summary_fields,
+            "analysis_status": (
+                "pending"
+                if summary_fields.get("summary_status") == "deferred"
+                or summary_fields.get("investment_relevant") is True
+                else "not_relevant"
+            ),
+        }
+        if summary_fields.get("summary_status") == "deferred":
+            # A failed fresh source remains fail-closed, but must not be
+            # retried a second time during this same collection run.
+            _schedule_summary_retry(new_post, datetime.now())
+        newly_added.append(new_post)
         new_posts_count += 1
 
     # 3. 새로운 포스트 병합 및 저장
@@ -475,7 +839,13 @@ def load_cached_posts() -> list[dict]:
         return []
     with open(path, encoding="utf-8") as f:
         posts = json.load(f)
-    return posts if isinstance(posts, list) else []
+    if not isinstance(posts, list):
+        return []
+    for post in posts:
+        if isinstance(post, dict):
+            post.setdefault("signal_candidates", [])
+            post.setdefault("analysis_status", "legacy_untracked")
+    return posts
 
 
 def is_investment_relevant(post: dict) -> bool:
@@ -485,6 +855,11 @@ def is_investment_relevant(post: dict) -> bool:
 
 def is_ready_for_analysis(post: dict) -> bool:
     """Require a usable summary before a post can enter Pro analysis."""
+    # A legacy cache row may look complete but has no validated v4 signal
+    # candidates.  Keep this gate in the selector itself so direct callers
+    # cannot accidentally treat a partial cache upgrade as fresh source input.
+    if post.get("summary_version") != SUMMARY_VERSION:
+        return False
     if post.get("investment_relevant") is not True:
         return False
     if post.get("summary_status") == "deferred":
@@ -495,8 +870,36 @@ def is_ready_for_analysis(post: dict) -> bool:
 def select_new_relevant_posts(posts: list[dict], new_urls: set[str]) -> list[dict]:
     return [
         post for post in posts
-        if post.get("url") in new_urls and is_ready_for_analysis(post)
+        if (
+            post.get("url") in new_urls
+            or post.get("analysis_status") == "pending"
+        )
+        and is_ready_for_analysis(post)
     ]
+
+
+def mark_posts_analysis_completed(
+    urls: set[str],
+    analysis_date: str,
+    path: Path | None = None,
+) -> None:
+    """Acknowledge posts only after the portfolio state bundle was committed."""
+    target = path or Path(DB_FILE)
+    if not urls or not target.exists():
+        return
+    with open(target, encoding="utf-8") as file:
+        posts = json.load(file)
+    changed = False
+    for post in posts if isinstance(posts, list) else []:
+        if isinstance(post, dict) and post.get("url") in urls:
+            post["analysis_status"] = "completed"
+            post["analysis_completed_date"] = analysis_date
+            changed = True
+    if changed:
+        temporary = target.with_suffix(target.suffix + ".tmp")
+        with open(temporary, "w", encoding="utf-8") as file:
+            json.dump(posts, file, ensure_ascii=False, indent=2)
+        temporary.replace(target)
 
 
 def select_rebalance_posts(

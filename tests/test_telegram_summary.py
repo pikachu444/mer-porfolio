@@ -11,7 +11,7 @@ class TelegramSummaryTest(unittest.TestCase):
         self.assertIn("메르 블로거의 실제 보유 내역이 아닙니다", summary)
         self.assertIn("알루미늄 공급 제한", summary)
         self.assertIn("*해외주식 추천*", summary)
-        self.assertIn("Alcoa (AA) — Buy (8%)", summary)
+        self.assertIn("Alcoa (AA) — Buy (목표 8% / 실제 집계 전)", summary)
         self.assertNotIn("AI 제안 · 매수", summary)
         self.assertIn("우주 데이터센터", summary)
 
@@ -30,7 +30,7 @@ class TelegramSummaryTest(unittest.TestCase):
         self.assertIn("모델 포트폴리오 수익률: +3.2%", summary)
         self.assertIn("포트폴리오 변경 없음", summary)
         self.assertIn("*해외주식 추천*", summary)
-        self.assertIn("Alcoa (AA) — Buy (8%)", summary)
+        self.assertIn("Alcoa (AA) — Buy (목표 8% / 실제 집계 전)", summary)
         self.assertNotIn("수익률", summary.split("*해외주식 추천*", 1)[1])
 
     def test_no_change_summary_can_explain_deferred_analysis(self):
@@ -98,6 +98,24 @@ class TelegramSummaryTest(unittest.TestCase):
         self.assertIn("모델 포트폴리오 수익률: +1.9%", summary)
         self.assertIn("핵심 인사이트", summary)
         self.assertIn("*해외주식 추천*", summary)
+
+    def test_summary_uses_actual_position_weights_and_distinguishes_targets(self):
+        summary = build_structured_summary(
+            state_payload(),
+            "2026년 06월 01일",
+            {
+                "portfolio_return_krw": 1.25,
+                "active_positions": [{
+                    "code": "AA",
+                    "return_pct_krw": 1.25,
+                    "actual_weight": 6.5,
+                }],
+                "actual_cash_weight": 93.5,
+            },
+        )
+
+        self.assertIn("주식 노출 목표: 8% / 실제: 6.5%", summary)
+        self.assertIn("Alcoa (AA) — Buy (목표 8% / 실제 6.5%)", summary)
 
     def test_insights_are_numbered_without_dropping_items(self):
         state = state_payload()
