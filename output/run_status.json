@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "github_run_id": "29260710626",
+  "mode": "rebalance",
+  "run_label": "rebalance",
+  "completed_at": "2026-07-14T00:05:41.624841",
+  "state_bundle_committed": true,
+  "report_path": "report_20260714.md",
+  "chart_path": "chart_latest.png",
+  "no_changes": true,
+  "telegram_delivery_required": true,
+  "telegram_delivery_deferred": true,
+  "telegram_delivery_accepted": null,
+  "status_note": "새 글 24건 요약 실패/없음으로 투자 분석 보류: HLB 간암신약 미국FDA승인 불발의 비밀 A/S, 트럼프가 비료부족에 대응하는 보법 외 22건"
+}
