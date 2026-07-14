@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "github_run_id": "29294767012",
+  "github_run_id": "29294851103",
   "mode": "rebalance",
   "run_label": "rebalance",
-  "completed_at": "2026-07-14T09:02:29.363800",
+  "completed_at": "2026-07-14T09:04:12.277569",
   "state_bundle_committed": true,
   "report_path": "report_20260714.md",
   "chart_path": "chart_latest.png",
@@ -11,5 +11,5 @@
   "telegram_delivery_required": true,
   "telegram_delivery_deferred": true,
   "telegram_delivery_accepted": null,
-  "status_note": "기존 출처 요약 8건 v4 업그레이드 진행으로 전체 리밸런싱 보류: 축구협회의 비밀, 금과 은값이 왜 이럴까? 2 외 6건"
+  "status_note": "기존 출처 요약 4건 v4 업그레이드 진행으로 전체 리밸런싱 보류: 한화오션, 차기 구축함 우선협상대상자 선정(feat 복잡한 …, 삼성전자와 SK하이닉스가 힘이 없는 이유와 전환점은? 외 2건"
 }
