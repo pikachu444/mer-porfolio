@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "github_run_id": "29295452514",
+  "github_run_id": "29307536501",
   "mode": "rebalance",
   "run_label": "rebalance",
-  "completed_at": "2026-07-14T09:16:46.954755",
+  "completed_at": "2026-07-14T14:04:33.657708",
   "state_bundle_committed": true,
   "report_path": "report_20260714.md",
   "chart_path": "chart_latest.png",
-  "no_changes": false,
+  "no_changes": true,
   "telegram_delivery_required": true,
   "telegram_delivery_deferred": true,
   "telegram_delivery_accepted": null,
-  "status_note": ""
+  "status_note": "포트폴리오 안전 검증으로 변경 보류: structured cash target residual exceeds 10 bps"
 }
