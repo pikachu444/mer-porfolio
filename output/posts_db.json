@@ -32,7 +32,8 @@
     "summary_model_version": "gemini-3.1-flash-lite",
     "summary_status": "ok",
     "summary_error": "",
-    "analysis_status": "pending"
+    "analysis_status": "completed",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "미장에 SK하이닉스는 15%이상 올랐는데, 국장은 왜 빠질까?",
@@ -65,7 +66,8 @@
     "summary_model_version": "gemini-3.1-flash-lite",
     "summary_status": "ok",
     "summary_error": "",
-    "analysis_status": "pending"
+    "analysis_status": "completed",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "엔트로픽과 알리바바의 AI 전쟁",
@@ -101,7 +103,8 @@
     "summary_model_version": "gemini-3.1-flash-lite",
     "summary_status": "ok",
     "summary_error": "",
-    "analysis_status": "pending"
+    "analysis_status": "completed",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "미해군, 이란 해안선 해상봉쇄 발표, 트럼프, 통행료는 우리에게",
@@ -155,7 +158,8 @@
     "summary_model_version": "gemini-3.1-flash-lite",
     "summary_status": "ok",
     "summary_error": "",
-    "analysis_status": "pending"
+    "analysis_status": "completed",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
@@ -204,9 +208,10 @@
         "invalidation_conditions": []
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "항서제약의 비밀",
@@ -237,9 +242,10 @@
         "invalidation_conditions": []
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "중국이 반도체에 사용되는 헬륨을 수출금지한 속사정",
@@ -286,9 +292,10 @@
         "invalidation_conditions": []
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "계란가격은 왜 이리 비싼가?",
@@ -354,9 +361,10 @@
         ]
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "HLB 간암신약 미국FDA승인 불발의 비밀 A/S",
@@ -388,9 +396,10 @@
         ]
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "트럼프가 비료부족에 대응하는 보법",
@@ -454,9 +463,10 @@
         ]
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "KB국민은행에서 시작되는 주담대 축소의 속사정",
@@ -501,9 +511,10 @@
         "invalidation_conditions": []
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "국민연금 리밸런싱은 끝난것 같다. 그런데 국장은",
@@ -552,9 +563,10 @@
         ]
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "오늘 우리 국장은? 오랜만에..",
@@ -587,9 +599,10 @@
         ]
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "삼성전자등 반도체 메가 프로젝트 근황 A/S (feat 물은 괜찮을까?)",
@@ -636,9 +649,10 @@
         "invalidation_conditions": []
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "SK하이닉스와 삼성전자 2배짜리를 금융당국이 승인한 비밀",
@@ -670,9 +684,10 @@
         ]
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "어떻게 베팅해야, 안전하면서도 빨리 불릴수 있는가?(feat 켈리공식)",
@@ -730,9 +745,10 @@
         "invalidation_conditions": []
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "청년미래적금 정말 괜찮을까? 예산이 남는다는데",
@@ -763,9 +779,10 @@
         "invalidation_conditions": []
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "삼성전자 역대최고 영업이익 발표, 주가는?",
@@ -799,9 +816,10 @@
         ]
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "캐나다가 독일 잠수함을 선택한 속사정",
@@ -846,9 +864,10 @@
         "invalidation_conditions": []
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "SK하이닉스 상장으로 인한 환율안정 효과가 이미 끝났나?",
@@ -882,9 +901,10 @@
         ]
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "반려동물을 집에서 키울때 주의할 점과 장점은?(feat 알레르기,비염)",
@@ -948,9 +968,10 @@
         ]
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "홈플러스 사태 근황",
@@ -999,9 +1020,10 @@
         "invalidation_conditions": []
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "일본은행이 엔화약세를 돌리기위해 엔숏세력 타격에 나서나?",
@@ -1034,9 +1056,10 @@
         ]
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "축구협회의 비밀",
@@ -1087,9 +1110,10 @@
         ]
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "금과 은값이 왜 이럴까? 1",
@@ -1157,9 +1181,10 @@
         "invalidation_conditions": []
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "오늘 하락으로 국민연금 리밸런싱이 끝났을까?",
@@ -1205,9 +1230,10 @@
         "invalidation_conditions": []
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "한화오션, 차기 구축함 우선협상대상자 선정(feat 복잡한 히스토리)",
@@ -1256,9 +1282,10 @@
         ]
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "삼성전자와 SK하이닉스가 힘이 없는 이유와 전환점은?",
@@ -1306,9 +1333,10 @@
         "invalidation_conditions": []
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "국민연금이 국장을 어떻게 팔것인지 딱 걸린듯 (feat 리밸런싱)",
@@ -1341,9 +1369,10 @@
         ]
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "케빈 워시의 국제무대 데뷔전과 연방대법원의 특이한 판결",
@@ -1393,9 +1422,10 @@
         ]
       }
     ],
-    "analysis_status": "legacy_untracked",
+    "analysis_status": "completed",
     "summary_model_id": "gemini-3.1-flash-lite",
-    "summary_model_version": "gemini-3.1-flash-lite"
+    "summary_model_version": "gemini-3.1-flash-lite",
+    "analysis_completed_date": "2026-07-14"
   },
   {
     "title": "규제(토허,조정대상,투기과열지구)지역 확대와 보유세 인상 동향",
