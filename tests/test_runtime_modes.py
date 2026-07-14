@@ -18,7 +18,12 @@ import main
 from main import _gemini_deferral_note, _is_llm_service_unavailable_error
 from portfolio_schema import parse_portfolio_state
 from portfolio_provenance import prepare_post_signal_events
-from runtime_modes import get_run_policy, should_rebalance
+from runtime_modes import (
+    REBALANCE_INTERVAL_DAYS,
+    REBALANCE_SOURCE_WINDOW_DAYS,
+    get_run_policy,
+    should_rebalance,
+)
 from test_portfolio_schema import decision, insight, state_payload
 from portfolio_schema import parse_analysis_decision
 from track_returns import create_model_ledger
@@ -57,11 +62,13 @@ class RuntimeModesTest(unittest.TestCase):
         self.assertFalse(policy.persist_operating_state)
         self.assertFalse(policy.send_telegram)
 
-    def test_scheduled_rebalances_after_fourteen_days(self):
+    def test_scheduled_rebalances_after_seven_days(self):
         today = date(2026, 6, 1)
 
-        self.assertFalse(should_rebalance("scheduled", "2026-05-19", today))
-        self.assertTrue(should_rebalance("scheduled", "2026-05-18", today))
+        self.assertEqual(REBALANCE_INTERVAL_DAYS, 7)
+        self.assertEqual(REBALANCE_SOURCE_WINDOW_DAYS, 14)
+        self.assertFalse(should_rebalance("scheduled", "2026-05-26", today))
+        self.assertTrue(should_rebalance("scheduled", "2026-05-25", today))
         self.assertTrue(should_rebalance("scheduled", None, today))
 
     def test_manual_rebalance_always_rebalances(self):
@@ -84,6 +91,14 @@ class RuntimeModesTest(unittest.TestCase):
             cutoff = main._rebalance_cutoff_date(state, datetime(2026, 6, 15))
 
         self.assertEqual(cutoff.date(), date(2026, 5, 18))
+
+    def test_first_scheduled_rebalance_uses_two_week_source_window(self):
+        state = Mock(last_rebalanced_date=None)
+
+        with patch.object(main, "RUN_POLICY", Mock(mode="scheduled")):
+            cutoff = main._rebalance_cutoff_date(state, datetime(2026, 6, 15))
+
+        self.assertEqual(cutoff.date(), date(2026, 6, 1))
 
     def test_verify_does_not_force_rebalance(self):
         today = date(2026, 6, 1)

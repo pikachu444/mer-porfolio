@@ -51,7 +51,7 @@
 
 글별 Flash 요약 응답이 깨졌거나 비어 있으면 해당 글은 `summary_status: deferred`,
 `investment_relevant: false`, `summary_version: null`로 저장합니다. 이 상태의 글은 투자
-투자 판단 입력에서 제외되며, 최근 14일 범위 안에서는 다음 scheduled/rebalance 실행 때 다시
+투자 판단 입력에서 제외되며, 최근 14일 요약 캐시 범위 안에서는 다음 scheduled/rebalance 실행 때 다시
 요약을 시도합니다.
 
 투자 판단에는 요약이 준비된 글만 전달합니다. 요약이 없거나 보류된 글을 원문 그대로 넘기지

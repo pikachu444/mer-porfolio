@@ -16,7 +16,11 @@ try:
 except ImportError:
     pass
 
-from runtime_modes import REBALANCE_INTERVAL_DAYS, get_run_policy, should_rebalance
+from runtime_modes import (
+    REBALANCE_SOURCE_WINDOW_DAYS,
+    get_run_policy,
+    should_rebalance,
+)
 
 
 RUN_MODE = os.environ.get("RUN_MODE", "scheduled").lower()
@@ -422,8 +426,9 @@ def _rebalance_cutoff_date(state, today: datetime) -> datetime:
         # Keep the blocked-source scope identical to fetch_mer.select_rebalance_posts
         # when there is no prior full rebalance.  A scheduled first rebalance
         # otherwise falls back to its normal two-day fetch window and could make
-        # a decision from only part of the 14-day source window.
-        return today - timedelta(days=REBALANCE_INTERVAL_DAYS)
+        # a decision from only part of the two-week source window.  The cadence
+        # (weekly) is intentionally independent from this evidence lookback.
+        return today - timedelta(days=REBALANCE_SOURCE_WINDOW_DAYS)
     return datetime.fromisoformat(state.last_rebalanced_date)
 
 

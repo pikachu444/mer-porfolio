@@ -25,6 +25,7 @@ from gemini_utils import (
     is_permanent_error,
     is_transient_error,
 )
+from runtime_modes import REBALANCE_SOURCE_WINDOW_DAYS
 
 # ─── 설정 ───────────────────────────────────────────────────────────────────
 
@@ -652,7 +653,7 @@ def _refresh_recent_summary_cache(posts: list[dict], now: datetime) -> bool:
     if not ENABLE_POST_SUMMARIES:
         return False
 
-    cutoff = now - timedelta(days=14)
+    cutoff = now - timedelta(days=REBALANCE_SOURCE_WINDOW_DAYS)
     retries: list[tuple[datetime, int, dict]] = []
     upgrades: list[tuple[datetime, int, dict]] = []
     for index, post in enumerate(posts):
@@ -910,7 +911,7 @@ def select_rebalance_posts(
     cutoff = (
         datetime.fromisoformat(last_rebalanced_date)
         if last_rebalanced_date
-        else today - timedelta(days=14)
+        else today - timedelta(days=REBALANCE_SOURCE_WINDOW_DAYS)
     )
     return [
         post for post in posts

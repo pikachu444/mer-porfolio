@@ -6,7 +6,11 @@ from dataclasses import dataclass
 from datetime import date
 
 
-REBALANCE_INTERVAL_DAYS = 14
+# Full portfolio allocation is reevaluated weekly.  Keep the source lookback
+# separate: a two-week evidence window preserves Mer's thesis continuity while
+# preventing a single week's posts from driving an overreactive decision.
+REBALANCE_INTERVAL_DAYS = 7
+REBALANCE_SOURCE_WINDOW_DAYS = 14
 
 
 @dataclass(frozen=True)
