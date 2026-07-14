@@ -13,6 +13,7 @@ import json
 import os
 import re
 import time
+from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Callable, List, Dict, Tuple
@@ -669,6 +670,34 @@ def _compact_state_for_inference(current_state: dict | None) -> dict:
     }
 
 
+def _decision_for_pre_provenance_projection(
+    decision: AnalysisDecisionV2,
+) -> AnalysisDecisionV2:
+    """Make a state-valid preview before main.py attaches source events.
+
+    The decision model is shown host-created signal IDs, but the corresponding
+    events are deliberately appended only later in ``main.py`` after their
+    URL, entity, and direction have been validated.  Applying the raw model
+    decision here used to reject a perfectly valid candidate because those
+    new IDs were not in the persisted ledger *yet*.  This preview is used
+    solely for first-call consistency checks and the deterministic draft
+    report; it never changes the decision returned to main.py.
+    """
+    payload = deepcopy(decision.to_dict())
+    for item in payload["portfolio_decisions"]:
+        item["linked_signal_ids"] = []
+        item["origin_signal_ids"] = []
+        item["provenance_status"] = "legacy_unvalidated"
+        item["origin_signal_type"] = "LEGACY_UNVALIDATED"
+        item["rejected_linked_signal_ids"] = []
+    for item in payload["watchlist"]:
+        item["linked_signal_ids"] = []
+        item["origin_signal_ids"] = []
+        item["provenance_status"] = "legacy_unvalidated"
+        item["origin_signal_type"] = "LEGACY_UNVALIDATED"
+    return parse_analysis_decision(payload)
+
+
 def analyze_posts_structured(
     posts: List[Dict],
     analysis_date: str,
@@ -719,7 +748,7 @@ def analyze_posts_structured(
     if current_state and current_state.get("schema_version") in {"2.0", "2.1"}:
         projected_state = apply_analysis_decision(
             parse_portfolio_state(current_state),
-            decision,
+            _decision_for_pre_provenance_projection(decision),
         ).to_dict()
 
     # main.py는 구조화 결과로 최종 사용자 보고서를 다시 생성한다. 여기서는
@@ -953,7 +982,10 @@ def _parse_and_validate_model_decision_json(
                 raise ValueError(f"{key} 보유 must keep proposed_weight unchanged")
             if action == "매도" and proposed != 0.0:
                 raise ValueError(f"{key} 매도 must set proposed_weight to 0")
-        apply_analysis_decision(state, decision)
+        apply_analysis_decision(
+            state,
+            _decision_for_pre_provenance_projection(decision),
+        )
     return decision
 
 

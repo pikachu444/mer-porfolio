@@ -264,6 +264,33 @@ class StructuredAnalysisTest(unittest.TestCase):
         self.assertIn("Alcoa", result.report)
         call.assert_called_once()
 
+    def test_new_host_signal_link_does_not_fail_before_provenance_enrichment(self):
+        response = json.loads(json.dumps(DECISION_RESPONSE, ensure_ascii=False))
+        response["portfolio_decisions"][0]["linked_signal_ids"] = ["sig_pending_host_validation"]
+
+        with patch.object(analyze, "_get_client", return_value=object()), \
+             patch.object(analyze, "_call_model_text", return_value=json.dumps(response, ensure_ascii=False)):
+            result = analyze.analyze_posts_structured(
+                POSTS,
+                "2026-06-01",
+                {
+                    "schema_version": "2.0",
+                    "portfolio": [],
+                    "watchlist": [],
+                    "closed_positions": [],
+                    "decision_history": [],
+                    "insights": [],
+                    "last_rebalanced_date": "2026-05-14",
+                },
+            )
+
+        # The source link remains available for main.py's host-side
+        # enrichment, while the pre-enrichment state preview stays valid.
+        self.assertEqual(
+            result.decision.portfolio_decisions[0]["linked_signal_ids"],
+            ["sig_pending_host_validation"],
+        )
+
     def test_repairs_invalid_structured_decision_once(self):
         invalid = json.loads(json.dumps(DECISION_RESPONSE, ensure_ascii=False))
         invalid["portfolio_decisions"][0]["evidence_posts"] = []
