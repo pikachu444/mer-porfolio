@@ -44,7 +44,6 @@ class RebalancePolicy:
     rebalance_band_pct: float = 0.50
     minimum_trade_weight_pct: float = 0.50
     minimum_trade_amount: float = 0.50
-    cash_buffer: float = 20.0
     allow_fractional_shares: bool = True
     market_open_check: bool = False
     stale_price_threshold_days: int = 3
@@ -60,7 +59,6 @@ class RebalancePolicy:
             minimum_trade_amount=_env_float(
                 "MINIMUM_TRADE_AMOUNT", cls.minimum_trade_amount
             ),
-            cash_buffer=_env_float("CASH_BUFFER_PCT", cls.cash_buffer),
             allow_fractional_shares=_env_bool("ALLOW_FRACTIONAL_SHARES", cls.allow_fractional_shares),
             market_open_check=_env_bool("MARKET_OPEN_CHECK", cls.market_open_check),
             stale_price_threshold_days=max(0, stale),

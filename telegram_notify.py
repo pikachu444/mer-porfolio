@@ -471,7 +471,7 @@ def send_report(report: str, today_str: str, *, run_label: str | None = None) ->
     return ok
 
 
-def build_structured_summary(
+def _legacy_build_structured_summary(
     state: dict,
     today_str: str,
     performance: dict | None = None,
@@ -583,6 +583,91 @@ def build_structured_summary(
         lines += ["", f"🌐 [상세 대시보드 보기]({_get_dashboard_url()})"]
     else:
         lines += ["", "🌐 상세 대시보드는 실행 artifact에서 확인합니다."]
+    return "\n".join(lines)
+
+
+def build_structured_summary(
+    state: dict,
+    today_str: str,
+    performance: dict | None = None,
+    *,
+    no_changes: bool = False,
+    status_note: str = "",
+    include_dashboard_link: bool = True,
+    run_label: str | None = None,
+    insight_limit: int = 3,
+) -> str:
+    """Build the compact, article-first Telegram briefing."""
+
+    _ = run_label
+    output = build_output_model(
+        state,
+        performance or {},
+        today_str=today_str,
+        status_note=status_note,
+        approved_changes=not no_changes,
+    )
+
+    def pct(value: Any) -> str:
+        return "집계 전" if value is None else f"{float(value):.2f}%"
+
+    lines = ["📌 *메르AI 투자 브리핑*", f"기준일: {today_str}"]
+    if state.get("policy_correction_notice"):
+        lines += [
+            "",
+            "광범위 지수 ETF 고정 편입 정책을 제거했습니다.",
+            "이는 시장 전망에 따른 매도 판단이 아니라 시스템 정책 정정입니다.",
+        ]
+
+    insights = output.get("insights", []) or []
+    lines += ["", "*오늘 읽은 글*"]
+    if insights:
+        for item in insights[: max(1, insight_limit)]:
+            evidence = (item.get("evidence_posts") or [{}])[0]
+            title = evidence.get("title") or item.get("title") or "새 글 분석"
+            lines += [f"• *{title}*", f"  {item.get('summary', '')}"]
+    else:
+        lines.append("• 새 투자 관련 글 없음")
+
+    lines += ["", "*투자 인사이트*"]
+    if insights:
+        for item in insights[: max(1, insight_limit)]:
+            lines.append(f"• {item.get('title', '핵심 논지')}: {item.get('investment_implication', '')}")
+    else:
+        lines.append("• 확인할 새 인사이트 없음")
+
+    lines += ["", "*참고 종목 · 현재 보유 종목*"]
+    for item in output.get("portfolio", []):
+        lines += [
+            f"• *{item.get('name', '')}* ({item.get('code', '')})",
+            f"  {item.get('source_label', '메르 논지 기반 AI 추론')} · 실제 {pct(item.get('actual_weight'))} / 목표 {pct(item.get('target_weight'))}",
+            f"  {item.get('display_reason') or '투자 근거를 확인 중입니다.'}",
+        ]
+    if not output.get("portfolio"):
+        lines.append("• 현재 보유 종목 없음")
+
+    lines += ["", "*오늘의 변경*"]
+    changes = output.get("approved_today_changes", []) or []
+    if changes:
+        for item in changes:
+            lines.append(
+                f"• {item.get('name')} · {item.get('display_today_action') or item.get('today_action', '변경')} "
+                f"({pct(item.get('actual_weight'))} → {pct(item.get('target_weight'))})"
+            )
+    else:
+        lines.append("• 변경 없음")
+
+    actual = output.get("actual_allocation_available")
+    stock = output.get("actual_stock_weight") if actual else output.get("target_stock_weight")
+    etf = output.get("actual_etf_weight") if actual else output.get("target_etf_weight")
+    cash = output.get("actual_cash_weight") if actual else output.get("target_cash_weight")
+    lines += [
+        "",
+        "*포트폴리오*",
+        f"• 개별주 {pct(stock)} / 섹터 ETF {pct(etf)} / 현금 {pct(cash)}",
+    ]
+    if include_dashboard_link:
+        lines += ["", f"🔗 [상세 HTML 보기]({_get_dashboard_url()})"]
     return "\n".join(lines)
 
 

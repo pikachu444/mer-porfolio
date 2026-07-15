@@ -60,10 +60,7 @@ from portfolio_provenance import enrich_decision_provenance, prepare_post_signal
 from portfolio_runtime import (
     PortfolioPolicyBlocked,
     allocate_projected_state,
-    ensure_policy_positions,
-    ledger_risk_inputs,
     security_key,
-    update_ledger_risk_state,
     validate_rebalance_coverage,
 )
 from portfolio_schema import (
@@ -83,7 +80,6 @@ from track_returns import (
     MODEL_LEDGER_FILE,
     apply_structured_transactions,
     get_structured_prices,
-    get_structured_volatilities,
     load_model_ledger,
     refresh_structured_performance,
     refresh_structured_corporate_actions,
@@ -92,7 +88,6 @@ from track_returns import (
     sanitize_performance_cache_for_state,
     sanitize_performance_files_for_state,
     save_model_ledger,
-    structured_actual_weights,
     transaction_decisions_for_run,
 )
 
@@ -554,8 +549,6 @@ def _run_no_change_update(
         print("  신규 글 없음: 판단과 목표 비중을 유지하고 성과만 갱신합니다.")
     if advance_lifecycle:
         state = advance_watchlist_lifecycle(state, today.strftime("%Y-%m-%d"))
-    if allow_maintenance:
-        state = ensure_policy_positions(state, today.strftime("%Y-%m-%d"))
     ledger = load_model_ledger()
     ledger = sanitize_model_ledger_for_state(ledger, state.to_dict())
     if ledger.get("positions"):
@@ -574,26 +567,9 @@ def _run_no_change_update(
                 today.strftime("%Y-%m-%d"),
             )
         try:
-            current_weights = (
-                structured_actual_weights(ledger, prices)
-                if ledger.get("positions")
-                else {}
-            )
-            volatility_by_key = get_structured_volatilities(state.portfolio)
-            portfolio_volatility, portfolio_drawdown = ledger_risk_inputs(ledger)
-            risk_scale = update_ledger_risk_state(
-                ledger,
-                portfolio_drawdown,
-                as_of_date=today.strftime("%Y-%m-%d"),
-            )
             maintained_state, _ = allocate_projected_state(
                 state,
-                volatility_by_key=volatility_by_key,
-                portfolio_volatility=portfolio_volatility,
-                max_portfolio_drawdown=portfolio_drawdown,
-                risk_scale_override=risk_scale,
                 as_of_date=today.strftime("%Y-%m-%d"),
-                current_weights_by_key=current_weights,
             )
             decisions = []
             for item in maintained_state.portfolio:
@@ -985,7 +961,7 @@ def main() -> int:
                 state,
             )
             validate_rebalance_coverage(state, priceable_decision)
-            policy_state = ensure_policy_positions(state, today_date)
+            policy_state = state
             enriched_decision, signal_events = enrich_decision_provenance(
                 priceable_decision,
                 source_signal_events,
@@ -1011,26 +987,9 @@ def main() -> int:
             )
             if ledger.get("positions"):
                 record_model_snapshot(ledger, pretrade_prices, today_date)
-            current_weights = (
-                structured_actual_weights(ledger, pretrade_prices)
-                if ledger.get("positions")
-                else {}
-            )
-            volatility_by_key = get_structured_volatilities(projected_state.portfolio)
-            portfolio_volatility, portfolio_drawdown = ledger_risk_inputs(ledger)
-            risk_scale = update_ledger_risk_state(
-                ledger,
-                portfolio_drawdown,
-                as_of_date=today_date,
-            )
             updated_state, allocation_summary = allocate_projected_state(
                 projected_state,
-                volatility_by_key=volatility_by_key,
-                portfolio_volatility=portfolio_volatility,
-                max_portfolio_drawdown=portfolio_drawdown,
-                risk_scale_override=risk_scale,
                 as_of_date=today_date,
-                current_weights_by_key=current_weights,
             )
             enriched_decision = _decision_with_allocated_weights(
                 enriched_decision,

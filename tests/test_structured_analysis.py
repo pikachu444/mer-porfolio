@@ -316,7 +316,7 @@ class StructuredAnalysisTest(unittest.TestCase):
         self.assertEqual(first_budget, analyze.RETRY_BUDGET_SECONDS)
         self.assertEqual(repair_budget, analyze.RETRY_BUDGET_SECONDS - 10.0)
 
-    def test_repairs_decision_when_applied_portfolio_exceeds_one_hundred(self):
+    def test_keeps_decision_for_runtime_normalization_when_total_exceeds_one_hundred(self):
         retained = json.loads(json.dumps(DECISION_RESPONSE["portfolio_decisions"][0]))
         retained["proposed_weight"] = 75.0
         current_state = {
@@ -331,12 +331,7 @@ class StructuredAnalysisTest(unittest.TestCase):
         additional["portfolio_decisions"][0]["name"] = "Microsoft"
         additional["portfolio_decisions"][0]["code"] = "MSFT"
         additional["portfolio_decisions"][0]["proposed_weight"] = 30.0
-        repaired = json.loads(json.dumps(additional, ensure_ascii=False))
-        repaired["portfolio_decisions"][0]["proposed_weight"] = 5.0
-        responses = [
-            json.dumps(additional, ensure_ascii=False),
-            json.dumps(repaired, ensure_ascii=False),
-        ]
+        responses = [json.dumps(additional, ensure_ascii=False)]
 
         with patch.object(analyze, "_get_client", return_value=object()), \
              patch.object(analyze, "_call_model_text", side_effect=responses) as call:
@@ -346,8 +341,8 @@ class StructuredAnalysisTest(unittest.TestCase):
                 current_state,
             )
 
-        self.assertEqual(result.decision.portfolio_decisions[0]["proposed_weight"], 5.0)
-        self.assertEqual(call.call_count, 2)
+        self.assertEqual(result.decision.portfolio_decisions[0]["proposed_weight"], 30.0)
+        self.assertEqual(call.call_count, 1)
 
     def test_repairs_decision_when_listing_code_has_no_price(self):
         responses = [

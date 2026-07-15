@@ -5,10 +5,10 @@ from portfolio_metrics import benchmark_returns, max_drawdown, performance_metri
 
 
 class PortfolioMetricsTest(unittest.TestCase):
-    def test_strategic_benchmark_uses_fixed_forty_forty_twenty_weights(self):
+    def test_comparison_benchmark_uses_the_two_market_indexes_only(self):
         result = benchmark_returns([0.01, -0.01], [0.02, 0.01])
 
-        self.assertEqual(result, [0.012, 0.0])
+        self.assertEqual(result, [0.015, 0.0])
 
     def test_max_drawdown_uses_high_water_mark(self):
         self.assertAlmostEqual(max_drawdown([100.0, 110.0, 88.0, 99.0]), -0.2)

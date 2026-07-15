@@ -555,7 +555,6 @@ class RuntimeModesTest(unittest.TestCase):
              patch.object(main, "prepare_post_signal_events", return_value=(prepared, events)), \
              patch.object(main, "analyze_posts_structured", return_value=SimpleNamespace(decision=analysis)), \
              patch.object(main, "load_model_ledger", return_value=create_model_ledger()), \
-             patch.object(main, "get_structured_volatilities", return_value={"stock:US:AA": 0.3}), \
              patch.object(main, "get_structured_prices", return_value={
                  "stock:US:AA": 10.0,
                  "etf:KR:069500": 10.0,
@@ -572,11 +571,8 @@ class RuntimeModesTest(unittest.TestCase):
         self.assertEqual(state_payload_committed["schema_version"], "2.1")
         alcoa = next(item for item in state_payload_committed["portfolio"] if item["code"] == "AA")
         self.assertEqual(alcoa["origin_signal_type"], "MER_THESIS")
-        self.assertEqual(alcoa["proposed_weight"], 5.0)
-        self.assertEqual(
-            sum(item["proposed_weight"] for item in state_payload_committed["portfolio"] if item["origin_signal_type"] == "PASSIVE_INDEX"),
-            20.0,
-        )
+        self.assertEqual(alcoa["proposed_weight"], 8.0)
+        self.assertFalse(any(item["code"] in {"069500", "360750"} for item in state_payload_committed["portfolio"]))
         self.assertEqual(len(state_payload_committed["signal_events"]), 1)
 
 

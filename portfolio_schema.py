@@ -51,14 +51,12 @@ ORIGIN_SIGNAL_TYPES = {
     "MER_DIRECT",
     "MER_THESIS",
     "AI_INFERRED",
-    "PASSIVE_INDEX",
     "LEGACY_UNVALIDATED",
 }
 SIGNAL_TYPES = {"MER_DIRECT", "MER_THESIS", "AI_INFERRED", "MENTION_ONLY"}
 SIGNAL_DIRECTIONS = {"bullish", "bearish", "neutral"}
 RUN_TYPES = {"regular", "rebalance"}
 ALLOCATION_ROLES = {"core", "satellite", "risk", "defensive", "watch"}
-DEFENSIVE_CASH_TARGET = 20.0
 SOURCE_SCOPES = {
     "blogger_trade_disclosure",
     "source_named_security",
@@ -259,11 +257,10 @@ def parse_portfolio_state(payload: Any) -> PortfolioStateV2:
             allow_unclassified=True,
         )
         _validate_provenance(item, f"state.portfolio[{index}]", signal_by_id)
-    total_weight = sum(item["proposed_weight"] for item in portfolio)
-    if total_weight > 100:
-        raise PortfolioSchemaError(
-            f"state.portfolio proposed_weight total must not exceed 100, got {total_weight}"
-        )
+    # An LLM response may temporarily total more than 100%.  The runtime caps
+    # individual positions and applies its single proportional normalization
+    # before a state is persisted; rejecting here only caused an unnecessary
+    # second model call.
     for index, item in enumerate(watchlist):
         _validate_watchlist_item(item, f"state.watchlist[{index}]")
         _validate_provenance(item, f"state.watchlist[{index}]", signal_by_id)
@@ -1035,10 +1032,6 @@ def _validate_provenance(
                 f"{path}: legacy_unvalidated provenance must use an empty LEGACY_UNVALIDATED origin"
             )
         return
-    if origin_type == "PASSIVE_INDEX":
-        if origin_ids:
-            raise PortfolioSchemaError(f"{path}: PASSIVE_INDEX must not claim source signal ids")
-        return
     if origin_type == "LEGACY_UNVALIDATED" or not origin_ids:
         raise PortfolioSchemaError(
             f"{path}: verified provenance requires a non-legacy origin signal"
@@ -1204,12 +1197,10 @@ def _validate_decision(
     _require_optional_string(item, "current_entry_reason", path)
     _require_optional_string_list(item, "key_risks", path)
     _require_optional_string_list(item, "linked_insight_ids", path)
-    is_passive_policy = item.get("origin_signal_type") == "PASSIVE_INDEX"
     if (
         _weight_changed(item)
         and not evidence_posts
         and not allow_legacy_closed
-        and not is_passive_policy
     ):
         raise PortfolioSchemaError(
             f"{path}.evidence_posts must not be empty when weight changes"
@@ -1299,7 +1290,6 @@ def apply_portfolio_decisions(
     decision_history = updated["decision_history"]
     by_key = {_item_key(item): item for item in portfolio}
     performance = closed_performance_by_key or {}
-    before_cash = _cash_weight(portfolio)
 
     for index, raw_decision in enumerate(decisions):
         decision = _with_decision_provenance_defaults(raw_decision)
@@ -1340,15 +1330,7 @@ def apply_portfolio_decisions(
 
         decision_history.append(decision)
 
-    after_cash = _cash_weight(portfolio)
-    if after_cash < DEFENSIVE_CASH_TARGET and after_cash < before_cash:
-        if not any(_has_defensive_cash_reason(decision) for decision in decisions):
-            raise PortfolioSchemaError(
-                "decisions reduce defensive cash below 20% without explaining cash/defensive risk"
-            )
-
     if rebalanced_date is not None:
-        _validate_rebalance_defensive_cash_progress(before_cash, after_cash)
         if not rebalanced_date.strip():
             raise PortfolioSchemaError("rebalanced_date must not be empty")
         updated["last_rebalanced_date"] = rebalanced_date
@@ -1429,13 +1411,6 @@ def _has_defensive_cash_reason(item: dict[str, Any]) -> bool:
         "방어자산",
     )
     return any(keyword in reason for keyword in keywords)
-
-
-def _validate_rebalance_defensive_cash_progress(before_cash: float, after_cash: float) -> None:
-    if before_cash < DEFENSIVE_CASH_TARGET and after_cash < DEFENSIVE_CASH_TARGET:
-        raise PortfolioSchemaError(
-            "rebalance must restore defensive cash to at least 20% when current cash is below target"
-        )
 
 
 def _item_key(item: dict[str, Any]) -> str:

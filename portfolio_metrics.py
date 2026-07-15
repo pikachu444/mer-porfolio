@@ -8,9 +8,10 @@ from typing import Iterable, Sequence
 
 
 BENCHMARK_WEIGHTS = {
-    "kospi200_tr": 0.40,
-    "sp500_tr_krw": 0.40,
-    "cash": 0.20,
+    # Comparison only.  These are not model-portfolio allocations.
+    "kospi200_tr": 0.50,
+    "sp500_tr_krw": 0.50,
+    "cash": 0.00,
 }
 
 

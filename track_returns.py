@@ -801,7 +801,7 @@ def refresh_structured_performance(
         ),
         "risk_metrics": risk_metrics,
         "benchmark": {
-            "policy": "KODEX200 40% + TIGER 미국S&P500 40% + 현금 20%",
+            "policy": "KOSPI200 TR 및 S&P500 TR(KRW) 비교 벤치마크",
             "status": benchmark_status,
             "period_returns": benchmark_daily,
         },

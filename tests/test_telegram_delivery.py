@@ -162,7 +162,7 @@ class TelegramDeliveryTest(unittest.TestCase):
             run_label="rebalance",
         )
 
-        self.assertIn("오늘의 요약", summary)
+        self.assertIn("메르AI 투자 브리핑", summary)
 
 
 if __name__ == "__main__":

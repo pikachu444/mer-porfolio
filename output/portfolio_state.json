@@ -133,84 +133,6 @@
       "allocation_method": "deterministic_risk_adjusted_v1",
       "policy_action": "비중축소",
       "policy_change_reason": "슬리브·품질·변동성·MDD·집중도 한도 적용 / 일반 거래 총 명목 15% 회전율 상한 적용"
-    },
-    {
-      "name": "KODEX 200",
-      "code": "069500",
-      "market": "KR",
-      "asset_type": "etf",
-      "decision_actor": "AI",
-      "action": "보유",
-      "basis": "이전 판단 유지",
-      "decision_date": "2026-07-14",
-      "evidence_posts": [],
-      "source_mentioned": false,
-      "previous_weight": 0.0,
-      "proposed_weight": 10.0,
-      "weight_source": "AI 제안",
-      "change_reason": "사전 합의된 전략적 패시브 지수 슬리브",
-      "allocation_role": "core",
-      "source_scope": "previous_decision",
-      "investment_rationale": "시장 베타 20%를 고정 패시브로 분리",
-      "current_entry_reason": "20/40/20/20 전략 정책",
-      "key_risks": [
-        "지수 가격 변동",
-        "추적오차"
-      ],
-      "linked_insight_ids": [],
-      "provenance_status": "verified",
-      "origin_signal_type": "PASSIVE_INDEX",
-      "origin_signal_ids": [],
-      "linked_signal_ids": [],
-      "thesis_id": "policy-passive-069500",
-      "issuer_id": "POLICY-069500",
-      "theme_ids": [
-        "PASSIVE_INDEX"
-      ],
-      "country_code": "KR",
-      "fixed_weight": 1.0,
-      "allocation_method": "deterministic_risk_adjusted_v1",
-      "policy_action": "매수",
-      "policy_change_reason": "슬리브·품질·변동성·MDD·집중도 한도 적용"
-    },
-    {
-      "name": "TIGER 미국S&P500",
-      "code": "360750",
-      "market": "KR",
-      "asset_type": "etf",
-      "decision_actor": "AI",
-      "action": "보유",
-      "basis": "이전 판단 유지",
-      "decision_date": "2026-07-14",
-      "evidence_posts": [],
-      "source_mentioned": false,
-      "previous_weight": 0.0,
-      "proposed_weight": 10.0,
-      "weight_source": "AI 제안",
-      "change_reason": "사전 합의된 전략적 패시브 지수 슬리브",
-      "allocation_role": "core",
-      "source_scope": "previous_decision",
-      "investment_rationale": "시장 베타 20%를 고정 패시브로 분리",
-      "current_entry_reason": "20/40/20/20 전략 정책",
-      "key_risks": [
-        "지수 가격 변동",
-        "추적오차"
-      ],
-      "linked_insight_ids": [],
-      "provenance_status": "verified",
-      "origin_signal_type": "PASSIVE_INDEX",
-      "origin_signal_ids": [],
-      "linked_signal_ids": [],
-      "thesis_id": "policy-passive-360750",
-      "issuer_id": "POLICY-360750",
-      "theme_ids": [
-        "PASSIVE_INDEX"
-      ],
-      "country_code": "US",
-      "fixed_weight": 1.0,
-      "allocation_method": "deterministic_risk_adjusted_v1",
-      "policy_action": "매수",
-      "policy_change_reason": "슬리브·품질·변동성·MDD·집중도 한도 적용"
     }
   ],
   "watchlist": [
@@ -9783,6 +9705,7 @@
     "archived": []
   },
   "last_rebalanced_date": "2026-07-14",
+  "policy_correction_notice": true,
   "admin_review_queue": [
     {
       "queue_id": "admin-2026-07-15-stock:KR:006220",

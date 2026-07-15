@@ -4,11 +4,11 @@
   "inception_date": "2026-07-14",
   "legacy_epoch_count": 1,
   "portfolio_return_krw": 0.73717532,
-  "cash": 76.7714145,
+  "cash": 97.54912245,
   "realized_pnl": -0.18447314,
   "dividend_income": 0.0,
   "cumulative_costs": 0.10788348583529808,
-  "actual_cash_weight": 76.2096160192394,
+  "actual_cash_weight": 96.83527668653883,
   "risk_metrics": {
     "total_return": 0.007371753200000164,
     "annualized_volatility": 0.14522974942166694,
@@ -20,7 +20,7 @@
     "information_ratio": -27.556787428764892
   },
   "benchmark": {
-    "policy": "KODEX200 40% + TIGER 미국S&P500 40% + 현금 20%",
+    "policy": "KOSPI200 TR 및 S&P500 TR(KRW) 비교 벤치마크",
     "status": "ok",
     "period_returns": [
       0.0,
@@ -28,38 +28,6 @@
     ]
   },
   "active_positions": [
-    {
-      "key": "etf:KR:069500",
-      "name": "KODEX 200",
-      "code": "069500",
-      "market": "KR",
-      "asset_type": "etf",
-      "quantity": 9.17957328746231e-05,
-      "average_cost": 109146.46,
-      "decision_actor": "AI",
-      "opened_date": "2026-07-14",
-      "episode_realized_pnl": 0.0,
-      "target_weight": 10.0,
-      "current_price": 118510.0,
-      "return_pct_krw": 8.578876493108423,
-      "actual_weight": 10.79910397391183
-    },
-    {
-      "key": "etf:KR:360750",
-      "name": "TIGER 미국S&P500",
-      "code": "360750",
-      "market": "KR",
-      "asset_type": "etf",
-      "quantity": 0.0003537882646154236,
-      "average_cost": 28319.705000000005,
-      "decision_actor": "AI",
-      "opened_date": "2026-07-14",
-      "episode_realized_pnl": 0.0,
-      "target_weight": 10.0,
-      "current_price": 27980.0,
-      "return_pct_krw": -1.1995358002493517,
-      "actual_weight": 9.826556693387605
-    },
     {
       "key": "stock:KR:005930",
       "name": "삼성전자",
@@ -91,6 +59,20 @@
       "current_price": 80500.0,
       "return_pct_krw": 1.8518049911180112,
       "actual_weight": 1.5195058204062653
+    }
+  ],
+  "policy_removed_positions": [
+    {
+      "key": "etf:KR:069500",
+      "name": "KODEX 200",
+      "code": "069500",
+      "policy_removed_reason": "광범위 지수 ETF 고정 편입 정책 제거"
+    },
+    {
+      "key": "etf:KR:360750",
+      "name": "TIGER 미국S&P500",
+      "code": "360750",
+      "policy_removed_reason": "광범위 지수 ETF 고정 편입 정책 제거"
     }
   ],
   "closed_positions": [

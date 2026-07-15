@@ -14,8 +14,6 @@ from typing import Any
 from portfolio_actions import RebalancePolicy, derive_portfolio_actions
 from portfolio_schema import normalize_security_code
 
-DEFENSIVE_CASH_TARGET = 20.0
-
 ALLOCATION_ROLE_LABELS = {
     "core": "핵심",
     "satellite": "위성",
@@ -72,6 +70,17 @@ def _actor_label(item: dict) -> str:
     if origin == "AI_INFERRED":
         return "AI 추론"
     return "메르 직접 발언" if actor == "메르" else "AI 제안" if actor == "AI" else "미분류"
+
+
+def _source_label(item: dict) -> str:
+    """Short, user-facing distinction between source evidence and AI inference."""
+
+    if str(item.get("asset_type") or "").lower() == "etf":
+        return "섹터 ETF"
+    origin = str(item.get("origin_signal_type") or "").upper()
+    if origin == "MER_DIRECT" or item.get("decision_actor") == "메르":
+        return "메르 직접 언급"
+    return "메르 논지 기반 AI 추론"
 
 
 def _action_label(item: dict) -> str:
@@ -344,6 +353,7 @@ def build_output_model(
         )
         row["weight"] = row["target_weight"]
         row["actor_label"] = _actor_label(item)
+        row["source_label"] = _source_label(item)
         row["action_label"] = _action_label(item)
         row["return_value"] = _return_value(perf_row)
         row["return_label"] = _return_label(row["return_value"])
@@ -393,21 +403,20 @@ def build_output_model(
         actual_cash_weight = float(actual_cash_weight)
     except (TypeError, ValueError):
         actual_cash_weight = None
+    all_position_actuals_available = bool(portfolio) and all(
+        item.get("actual_weight") is not None for item in portfolio
+    )
     actual_stock_weight = (
         sum(_as_float(item.get("actual_weight")) for item in stock_rows)
-        if stock_rows and all(item.get("actual_weight") is not None for item in stock_rows)
-        else None
+        if all_position_actuals_available else None
     )
     actual_etf_weight = (
         sum(_as_float(item.get("actual_weight")) for item in etf_rows)
-        if etf_rows and all(item.get("actual_weight") is not None for item in etf_rows)
-        else None
+        if all_position_actuals_available else None
     )
     target_stock_weight = sum(item["target_weight"] for item in stock_rows)
     target_etf_weight = sum(item["target_weight"] for item in etf_rows)
-    actual_all_available = bool(portfolio) and all(
-        item.get("actual_weight") is not None for item in portfolio
-    ) and actual_cash_weight is not None
+    actual_all_available = all_position_actuals_available and actual_cash_weight is not None
     active_watchlist = [
         _public_item(item)
         for item in _dedupe_watchlist(list(state.get("watchlist", []) or []))
@@ -519,12 +528,6 @@ def build_output_model(
         "target_etf_weight": target_etf_weight,
         "actual_etf_weight": actual_etf_weight,
         "actual_allocation_available": actual_all_available,
-        "risk_weight": sum(item["target_weight"] for item in portfolio if item.get("allocation_role") == "risk"),
-        "defensive_weight": target_cash_weight,
-        "defensive_cash_target": DEFENSIVE_CASH_TARGET,
-        "defensive_alert": (
-            actual_cash_weight if actual_cash_weight is not None else target_cash_weight
-        ) < DEFENSIVE_CASH_TARGET,
         "performance_inception_date": performance.get("inception_date"),
         "portfolio_return_value": portfolio_return,
         "portfolio_return_label": _return_label(portfolio_return),
@@ -552,7 +555,7 @@ def _weight_label(value: Any) -> str:
 
 
 def _table(rows: list[dict], *, include_return: bool = True) -> list[str]:
-    headers = ["종목", "실제비중", "목표비중", "오늘 상태", "역할"]
+    headers = ["종목", "실제비중", "목표비중", "구분", "상태"]
     if include_return:
         headers.append("수익률")
     headers.append("핵심 근거")
@@ -571,8 +574,8 @@ def _table(rows: list[dict], *, include_return: bool = True) -> list[str]:
             display_name,
             _weight_label(item.get("actual_weight")),
             _weight_label(item.get("target_weight", item.get("proposed_weight"))),
+            str(item.get("source_label") or _source_label(item)),
             str(item.get("display_today_action") or item.get("today_action") or "유지"),
-            str(item.get("allocation_role_label") or _allocation_role_label(item)),
         ]
         if include_return:
             values.append(str(item.get("return_label", "데이터 없음")))

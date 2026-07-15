@@ -74,7 +74,7 @@ class UserOutputPolicyTest(unittest.TestCase):
         self.assertIsNone(output["portfolio"][0]["actual_weight"])
         self.assertEqual(output["portfolio"][0]["today_action"], "데이터 없음")
         summary = build_structured_summary(_state([item]), "2026-07-15", _performance([item]))
-        self.assertIn("데이터 없음 → 목표 10.00%", summary)
+        self.assertIn("실제 집계 전 / 목표 10.00%", summary)
 
     def test_legacy_is_not_user_output(self):
         item = _item(name="레거시", code="000001", verified=False)
@@ -118,8 +118,8 @@ class UserOutputPolicyTest(unittest.TestCase):
             no_changes=True,
             status_note="오늘 제안된 조정안이 내부 검증 기준을 충족하지 않아 기존 포트폴리오를 유지합니다.",
         )
-        self.assertIn("오늘 승인된 비중 변경: 없음", summary)
-        self.assertIn("자동 조정을 보류", summary)
+        self.assertIn("오늘의 변경", summary)
+        self.assertIn("변경 없음", summary)
         self.assertNotIn("비중축소 검토", summary)
 
 

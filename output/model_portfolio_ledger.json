@@ -4,37 +4,11 @@
   "inception_date": "2026-07-14",
   "base_currency": "KRW",
   "starting_value": 100.0,
-  "cash": 76.77141450216448,
+  "cash": 97.54912244907562,
   "realized_pnl": -0.1844731391828804,
   "dividend_income": 0.0,
   "cumulative_costs": 0.10788348583529808,
   "positions": [
-    {
-      "key": "etf:KR:069500",
-      "name": "KODEX 200",
-      "code": "069500",
-      "market": "KR",
-      "asset_type": "etf",
-      "quantity": 9.17957328746231e-05,
-      "average_cost": 109146.46,
-      "decision_actor": "AI",
-      "opened_date": "2026-07-14",
-      "episode_realized_pnl": 0.0,
-      "target_weight": 10.0
-    },
-    {
-      "key": "etf:KR:360750",
-      "name": "TIGER 미국S&P500",
-      "code": "360750",
-      "market": "KR",
-      "asset_type": "etf",
-      "quantity": 0.0003537882646154236,
-      "average_cost": 28319.705000000005,
-      "decision_actor": "AI",
-      "opened_date": "2026-07-14",
-      "episode_realized_pnl": 0.0,
-      "target_weight": 10.0
-    },
     {
       "key": "stock:KR:005930",
       "name": "삼성전자",
@@ -60,6 +34,40 @@
       "opened_date": "2026-07-14",
       "episode_realized_pnl": 0.0,
       "target_weight": 1.5
+    }
+  ],
+  "policy_removed_positions": [
+    {
+      "key": "etf:KR:069500",
+      "name": "KODEX 200",
+      "code": "069500",
+      "market": "KR",
+      "asset_type": "etf",
+      "quantity": 9.17957328746231e-05,
+      "average_cost": 109146.46,
+      "decision_actor": "AI",
+      "opened_date": "2026-07-14",
+      "episode_realized_pnl": 0.0,
+      "target_weight": 10.0,
+      "policy_removed_date": "2026-07-15",
+      "policy_removed_value": 10.878712302971584,
+      "policy_removed_reason": "광범위 지수 ETF 고정 편입 정책 제거"
+    },
+    {
+      "key": "etf:KR:360750",
+      "name": "TIGER 미국S&P500",
+      "code": "360750",
+      "market": "KR",
+      "asset_type": "etf",
+      "quantity": 0.0003537882646154236,
+      "average_cost": 28319.705000000005,
+      "decision_actor": "AI",
+      "opened_date": "2026-07-14",
+      "episode_realized_pnl": 0.0,
+      "target_weight": 10.0,
+      "policy_removed_date": "2026-07-15",
+      "policy_removed_value": 9.898995643939552,
+      "policy_removed_reason": "광범위 지수 ETF 고정 편입 정책 제거"
     }
   ],
   "closed_positions": [

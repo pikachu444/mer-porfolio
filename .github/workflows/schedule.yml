@@ -188,12 +188,6 @@ jobs:
         if: ${{ github.event_name != 'schedule' || steps.schedule_guard.outputs.decision == 'run' }}
         run: python -m unittest discover -s tests -v
 
-      - name: Normalize approved portfolio state
-        if: ${{ (github.event_name == 'schedule' && steps.schedule_guard.outputs.decision == 'run') || github.event.inputs.run_mode == 'rebalance' }}
-        run: |
-          MIGRATION_DATE=$(TZ=Asia/Seoul date +%F)
-          PYTHONPATH=. python scripts/migrate_legacy_approved_state.py --apply --date "$MIGRATION_DATE"
-
       - name: Run portfolio analysis
         id: analyze
         if: ${{ (github.event_name == 'schedule' && steps.schedule_guard.outputs.decision == 'run') || (github.event_name != 'schedule' && github.event.inputs.run_mode != 'test') }}
@@ -213,7 +207,6 @@ jobs:
           REBALANCE_BAND_PCT: '0.50'
           MINIMUM_TRADE_WEIGHT_PCT: '0.50'
           MINIMUM_TRADE_AMOUNT: '0.50'
-          CASH_BUFFER_PCT: '20.0'
           ALLOW_FRACTIONAL_SHARES: 'true'
           MARKET_OPEN_CHECK: 'false'
           STALE_PRICE_THRESHOLD_DAYS: '3'
@@ -373,7 +366,6 @@ jobs:
           REBALANCE_BAND_PCT: '0.50'
           MINIMUM_TRADE_WEIGHT_PCT: '0.50'
           MINIMUM_TRADE_AMOUNT: '0.50'
-          CASH_BUFFER_PCT: '20.0'
           ALLOW_FRACTIONAL_SHARES: 'true'
           MARKET_OPEN_CHECK: 'false'
           STALE_PRICE_THRESHOLD_DAYS: '3'

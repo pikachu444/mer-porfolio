@@ -220,14 +220,14 @@ class PortfolioSchemaTest(unittest.TestCase):
         with self.assertRaisesRegex(PortfolioSchemaError, r"analysis\.run_type"):
             parse_analysis_decision_json(json.dumps(payload, ensure_ascii=False))
 
-    def test_rejects_portfolio_weight_total_over_one_hundred(self):
+    def test_allows_temporary_portfolio_weight_total_over_one_hundred(self):
         payload = state_payload()
         payload["portfolio"].append(
             decision(name="Microsoft", code="MSFT", proposed_weight=93.0)
         )
 
-        with self.assertRaisesRegex(PortfolioSchemaError, r"total must not exceed 100"):
-            parse_portfolio_state_json(json.dumps(payload, ensure_ascii=False))
+        parsed = parse_portfolio_state_json(json.dumps(payload, ensure_ascii=False))
+        self.assertEqual(len(parsed.portfolio), 2)
 
     def test_decision_prompt_requests_structured_contract(self):
         message = build_decision_user_message(
@@ -549,19 +549,12 @@ class PortfolioSchemaTest(unittest.TestCase):
         payload["portfolio"][0]["proposed_weight"] = 97.0
         state = parse_portfolio_state_json(json.dumps(payload, ensure_ascii=False))
 
-        with self.assertRaisesRegex(PortfolioSchemaError, r"defensive cash to at least 20%"):
-            apply_portfolio_decisions(
-                state,
-                [
-                    decision(
-                        action="보유",
-                        previous_weight=97.0,
-                        proposed_weight=97.0,
-                        change_reason="기존 성장 논리가 유지되어 현금성보다 우선",
-                    )
-                ],
-                rebalanced_date="2026-06-01",
-            )
+        updated = apply_portfolio_decisions(
+            state,
+            [decision(action="보유", previous_weight=97.0, proposed_weight=97.0, change_reason="기존 논리 유지")],
+            rebalanced_date="2026-06-01",
+        )
+        self.assertEqual(updated.portfolio[0]["proposed_weight"], 97.0)
 
     def test_rebalance_allows_cash_restored_to_defensive_target(self):
         payload = state_payload()
@@ -597,8 +590,8 @@ class PortfolioSchemaTest(unittest.TestCase):
             change_reason="AI 인프라 수혜 추론",
         )
 
-        with self.assertRaisesRegex(PortfolioSchemaError, r"defensive cash"):
-            apply_portfolio_decisions(state, [new_buy])
+        updated = apply_portfolio_decisions(state, [new_buy])
+        self.assertEqual(len(updated.portfolio), 2)
 
     def test_allows_reducing_cash_below_target_with_defensive_reason(self):
         payload = state_payload()
