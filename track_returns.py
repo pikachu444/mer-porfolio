@@ -807,13 +807,14 @@ def refresh_structured_performance(
         },
         "active_positions": active_positions,
         "closed_positions": deepcopy(ledger.get("closed_positions", [])),
-        "report_summaries": [
-            {
+        "report_summaries": list({
+            str(item["date"]): {
                 "date": item["date"],
                 "avg_return_krw": item["return_pct"],
             }
             for item in ledger.get("snapshots", [])
-        ],
+            if item.get("date")
+        }.values()),
     }, {"portfolio": ledger.get("positions", [])})
     if persist:
         path.parent.mkdir(parents=True, exist_ok=True)

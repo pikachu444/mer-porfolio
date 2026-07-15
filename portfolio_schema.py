@@ -12,7 +12,7 @@ import hashlib
 import math
 import re
 from copy import deepcopy
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -65,6 +65,7 @@ SOURCE_SCOPES = {
     "sector_only",
     "previous_decision",
 }
+ADMIN_REVIEW_STATUSES = {"pending_admin", "reduced", "exited"}
 
 KNOWN_LEGACY_CODE_CORRECTIONS = {
     ("KR", "대한전선", "011440"): "001440",
@@ -100,6 +101,7 @@ class PortfolioStateV2:
     signal_events: list[dict[str, Any]]
     last_watchlist_changes: dict[str, Any]
     last_rebalanced_date: str | None
+    admin_review_queue: list[dict[str, Any]] = field(default_factory=list)
     schema_version: str = SCHEMA_VERSION
 
     def to_dict(self) -> dict[str, Any]:
@@ -114,6 +116,7 @@ class PortfolioStateV2:
             "signal_events": self.signal_events,
             "last_watchlist_changes": self.last_watchlist_changes,
             "last_rebalanced_date": self.last_rebalanced_date,
+            "admin_review_queue": self.admin_review_queue,
         }
 
 
@@ -240,6 +243,13 @@ def parse_portfolio_state(payload: Any) -> PortfolioStateV2:
         "last_rebalanced_date",
         "state",
     )
+    admin_review_queue = root.get("admin_review_queue", [])
+    if not isinstance(admin_review_queue, list) or any(
+        not isinstance(item, dict) for item in admin_review_queue
+    ):
+        raise PortfolioSchemaError("state.admin_review_queue must be a list of objects")
+    for index, item in enumerate(admin_review_queue):
+        _validate_admin_review_item(item, f"state.admin_review_queue[{index}]")
 
     signal_by_id = _validate_signal_event_ledger(signal_events, "state.signal_events")
     for index, item in enumerate(portfolio):
@@ -293,6 +303,7 @@ def parse_portfolio_state(payload: Any) -> PortfolioStateV2:
         signal_events=signal_events,
         last_watchlist_changes=last_watchlist_changes,
         last_rebalanced_date=last_rebalanced_date,
+        admin_review_queue=admin_review_queue,
     )
 
 
@@ -313,6 +324,7 @@ def upgrade_v2_state(payload: Any) -> PortfolioStateV2:
     root.setdefault("signal_events", [])
     root.setdefault("watchlist_archive", [])
     root.setdefault("last_watchlist_changes", _empty_watchlist_changes())
+    root.setdefault("admin_review_queue", [])
     root.setdefault("portfolio", [])
     root.setdefault("watchlist", [])
     root.setdefault("closed_positions", [])
@@ -327,6 +339,7 @@ def upgrade_v2_state(payload: Any) -> PortfolioStateV2:
         "decision_history",
         "insights",
         "signal_events",
+        "admin_review_queue",
     ):
         _require_object_list(root, key, "v2_state")
 
@@ -1044,6 +1057,21 @@ def _validate_last_watchlist_changes(item: dict[str, Any], path: str) -> None:
     _require_optional_date(item, "date", path)
     for key in ("added", "updated", "promoted", "rejected", "expired", "archived"):
         _require_string_list(item, key, path)
+
+
+def _validate_admin_review_item(item: dict[str, Any], path: str) -> None:
+    """Validate internal migration queue rows without exposing them publicly."""
+    _require_string(item, "queue_id", path)
+    _require_string(item, "name", path)
+    _require_string(item, "code", path, allow_empty=True)
+    _require_string(item, "market", path, allow_empty=True)
+    _require_allowed(item, "queue_status", ADMIN_REVIEW_STATUSES, path)
+    _require_string(item, "queued_date", path)
+    _require_string(item, "reason", path)
+    try:
+        date.fromisoformat(str(item["queued_date"]))
+    except (TypeError, ValueError) as exc:
+        raise PortfolioSchemaError(f"{path}.queued_date must be YYYY-MM-DD") from exc
 
 
 def _validate_signal_event_ledger(

@@ -30,13 +30,15 @@
 | `portfolio_allocator.py` | 20/40/20/20 슬리브, 품질·변동성 비중과 종목/테마/국가 상한 |
 | `portfolio_provenance.py` | 원문 검증 후보를 신호 이벤트로 변환하고 판단의 최초 출처 연결 |
 | `portfolio_runtime.py` | 전 종목 커버리지, 레거시 격리, 운영 allocator 안전 게이트 |
+| `portfolio_actions.py` | 승인 목표비중·실제비중·리밸런싱 밴드로 오늘 상태를 결정 |
 | `run_bundle.py` | 상태·판단·원장·성과 캐시의 체크섬 기반 장애 복구 묶음 저장 |
 | `portfolio_validation.py` | 보고서/판단 보조 검증 |
 | `track_returns.py` | 모델 포트폴리오 거래 원장, 실제 NAV, 배당·분할, 20거래일 KRW 변동성과 수익률 계산 |
 | `portfolio_output.py` | Telegram, HTML, Markdown이 함께 쓰는 사용자 출력 기준 자료 생성 |
 | `generate_dashboard.py` | HTML 대시보드와 Telegram용 PNG 차트 생성 |
 | `telegram_notify.py` | Telegram 메시지와 이미지 전송 |
-| `scripts/backfill_legacy_evidence.py` | 2026-06-15 과거 미분류 보유 종목 근거 복구용 일회성 유지보수 스크립트 |
+| `scripts/backfill_legacy_evidence.py` | 과거 근거 복구용 일회성 유지보수 스크립트 |
+| `scripts/migrate_legacy_approved_state.py` | 승인 근거가 없는 레거시 종목을 관리자 큐로 이동하고 원장에서 행정 편출 |
 
 ## 출력 파일 관계
 
@@ -64,13 +66,10 @@
 이 기준 자료에서 다음 항목을 함께 만든다.
 
 - 핵심 인사이트
-- 국내주식 추천
-- 해외주식 추천
-- 현재 모델 포트폴리오 목표/실제 비중
-- 주식 노출과 현금성 비중
-- 재검증 필요 포지션
-- Watchlist
-- 종료 포지션
+- 현재 보유 종목과 오늘의 조정
+- 목표/실제 자산배분
+- 관심종목 변경
+- 과거 편출 종목
 - 수익률 표시
 
 수익률 계산 자료에 현재 종목이 없으면 종목을 제거하지 않고 `집계 전`으로 표시한다.
@@ -78,10 +77,12 @@
 동일 종목을 청산 후 재편입한 경우 현재 포지션과 과거 종료 episode를 함께 보존한다. 대한전선처럼
 과거 코드 오기(`011440`)가 있으면 실제 코드(`001440`) 기준으로 정규화하되 과거 이력은 삭제하지 않는다.
 
-기존 상태 마이그레이션, `미분류` 보유 종목, `allocation_role`이 없는 AI 포지션은 국내/해외
-추천 목록에서 제외하고 `재검증 필요 포지션`으로 표시한다. 신규 매수 판단에는
-`allocation_role`을 요구하며, 이 값은 핵심/core, 위성/satellite, 위험자산/risk, 방어/defensive,
-관찰/watch 중 하나다.
+승인 근거가 없는 레거시 보유 종목은 `admin_review_queue`로 이동하고 승인 포트폴리오와
+사용자 출력에서 제거한다. 관리자 큐는 원문 근거를 확인한 뒤에만 다시 승인한다.
+
+오늘의 상태는 `portfolio_actions.py`가 목표비중과 실제비중을 비교해 계산한다. 과거 LLM
+action은 오늘의 주문 신호로 재사용하지 않으며, 모델 포트폴리오이므로 `비중확대 검토`·
+`비중축소 검토`로 표시한다.
 
 신규 매수로 현금성 비중이 기본 방어 기준인 20% 아래로 내려가면 판단 사유에 현금성 비중을
 낮추는 이유가 포함되어야 한다. 이유가 없으면 `portfolio_schema.py` 검증 단계에서 차단한다.

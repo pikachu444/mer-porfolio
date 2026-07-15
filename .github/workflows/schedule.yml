@@ -188,6 +188,12 @@ jobs:
         if: ${{ github.event_name != 'schedule' || steps.schedule_guard.outputs.decision == 'run' }}
         run: python -m unittest discover -s tests -v
 
+      - name: Normalize approved portfolio state
+        if: ${{ (github.event_name == 'schedule' && steps.schedule_guard.outputs.decision == 'run') || github.event.inputs.run_mode == 'rebalance' }}
+        run: |
+          MIGRATION_DATE=$(TZ=Asia/Seoul date +%F)
+          PYTHONPATH=. python scripts/migrate_legacy_approved_state.py --apply --date "$MIGRATION_DATE"
+
       - name: Run portfolio analysis
         id: analyze
         if: ${{ (github.event_name == 'schedule' && steps.schedule_guard.outputs.decision == 'run') || (github.event_name != 'schedule' && github.event.inputs.run_mode != 'test') }}
@@ -203,6 +209,14 @@ jobs:
           FETCH_DAYS: ${{ github.event.inputs.fetch_days || '' }}
           GEMINI_SUMMARY_MODEL: ${{ github.event.inputs.gemini_summary_model || 'gemini-3.1-flash-lite' }}
           GEMINI_DECISION_MODEL: ${{ github.event.inputs.gemini_decision_model || 'gemini-3.5-flash' }}
+          # User-facing action policy: compare approved target vs actual weight.
+          REBALANCE_BAND_PCT: '0.50'
+          MINIMUM_TRADE_WEIGHT_PCT: '0.50'
+          MINIMUM_TRADE_AMOUNT: '0.50'
+          CASH_BUFFER_PCT: '20.0'
+          ALLOW_FRACTIONAL_SHARES: 'true'
+          MARKET_OPEN_CHECK: 'false'
+          STALE_PRICE_THRESHOLD_DAYS: '3'
           ENABLE_POST_SUMMARIES: ${{ (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance' || github.event.inputs.run_mode == 'full_verify') && 'true' || 'false' }}
           # Live reports are delivered only after their state/report commit succeeds.
           DEFER_TELEGRAM_DELIVERY_TO_WORKFLOW: ${{ (github.event_name == 'schedule' || github.event.inputs.run_mode == 'rebalance') && 'true' || 'false' }}
@@ -356,6 +370,13 @@ jobs:
           DASHBOARD_URL: https://pikachu444.github.io/mer-portfolio/output/dashboard.html
           OUTPUT_DIR: output
           RUN_MODE: ${{ github.event_name == 'schedule' && 'scheduled' || 'rebalance' }}
+          REBALANCE_BAND_PCT: '0.50'
+          MINIMUM_TRADE_WEIGHT_PCT: '0.50'
+          MINIMUM_TRADE_AMOUNT: '0.50'
+          CASH_BUFFER_PCT: '20.0'
+          ALLOW_FRACTIONAL_SHARES: 'true'
+          MARKET_OPEN_CHECK: 'false'
+          STALE_PRICE_THRESHOLD_DAYS: '3'
         run: |
           python - <<'PY'
           import json

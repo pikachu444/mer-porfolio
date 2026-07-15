@@ -480,152 +480,97 @@ def build_structured_summary(
     status_note: str = "",
     include_dashboard_link: bool = True,
     run_label: str | None = None,
+    insight_limit: int = 3,
 ) -> str:
-    """Build a user-facing summary from validated structured state."""
+    """모바일에서 투자자가 바로 읽는 요약 대시보드."""
     performance = performance or {}
-    output = build_output_model(
-        state,
-        performance,
-        today_str=today_str,
-        status_note=status_note,
-    )
-    watchlist = output["watchlist"]
-    closed = output["closed_positions"]
-    insights = output["insights"]
-    deferred_posts = output.get("deferred_posts", [])
-    review_required = output.get("review_required_positions", [])
+    output = build_output_model(state, performance, today_str=today_str, status_note=status_note)
+    policy = output.get("rebalance_policy", {})
+
+    def pct(value: Any) -> str:
+        if value is None:
+            return "데이터 없음"
+        return f"{float(value):.2f}%"
+
+    inception = output.get("performance_inception_date")
+    return_label = f"누적 수익률{f' ({inception} 이후)' if inception else ''}"
+    actual_available = output.get("actual_allocation_available")
+    stock = output.get("actual_stock_weight") if actual_available else output.get("target_stock_weight")
+    etf = output.get("actual_etf_weight") if actual_available else output.get("target_etf_weight")
+    cash = output.get("actual_cash_weight") if actual_available else output.get("target_cash_weight")
     lines = [
         "📊 *메르AI 모델 포트폴리오*",
         f"📅 {today_str}",
-        "※ 메르 블로거의 실제 보유 내역이 아닙니다.",
-        "※ 블로그 직접 판단과 AI 해석을 구분해 표시합니다.",
-    ]
-    execution_context = _execution_context_label(run_label)
-    if execution_context:
-        lines.insert(2, f"⚙ 실행: {execution_context}")
-    lines += [
+        "※ 메르 블로그 공개 분석을 바탕으로 구성한 참고용 모델 포트폴리오입니다.",
         "",
-        "*오늘의 성과 요약*",
-        f"• 모델 포트폴리오 수익률: {output['portfolio_return_label']}",
-        f"• 주식 노출 목표: {output.get('stock_weight', 0):g}% / 실제: "
-        + (
-            f"{output.get('actual_stock_weight'):g}%"
-            if output.get("actual_stock_weight") is not None
-            else "집계 전"
-        ),
-        f"• 현금성 목표: {output.get('cash_weight', 0):g}% / 실제: "
-        + (f"{output.get('actual_cash_weight'):g}%" if output.get("actual_cash_weight") is not None else "집계 전")
-        + f" / 방어 기준 {output.get('defensive_cash_target', 20):g}%",
+        "*오늘의 요약*",
+        f"• {return_label}: {output.get('portfolio_return_label', '데이터 없음')}",
+        f"• 최대 낙폭: {output.get('max_drawdown_label', '데이터 없음')}",
+        f"• 기준 포트폴리오 대비: {output.get('benchmark_difference_label', '데이터 없음')} (수익률 차이)",
+        f"• 자산배분({'실제' if actual_available else '목표'}): 개별주 {pct(stock)} / 주식형 ETF {pct(etf)} / 현금성 {pct(cash)}",
+        f"• 오늘 승인된 비중 변경: {'있음' if output.get('today_changes') else '없음'}",
     ]
-    if output.get("defensive_alert"):
-        lines.append("• 방어 기준 미달: 다음 리밸런싱에서 현금성 비중 재검토 필요")
-    risk_metrics = output.get("performance", {}).get("risk_metrics", {}) or {}
-    if risk_metrics.get("max_drawdown") is not None:
-        lines.append(f"• clean epoch MDD: {risk_metrics['max_drawdown'] * 100:+.2f}%")
-    if risk_metrics.get("excess_return") is not None:
-        lines.append(f"• 벤치마크 대비: {risk_metrics['excess_return'] * 100:+.2f}%")
-    if output.get("performance", {}).get("cumulative_costs") is not None:
-        lines.append(f"• 누적 추정비용: {output['performance']['cumulative_costs']:.4f}")
-    if status_note:
-        lines.append(f"• {status_note}")
-    if no_changes:
-        lines.append("• 포트폴리오 변경 없음")
-
+    if not output.get("today_changes"):
+        lines.append("• 전 종목이 리밸런싱 허용 범위 또는 최소 조정 기준 안에 있습니다.")
+    if output.get("status_note"):
+        lines.append(f"• {output['status_note']}")
+    if output.get("cumulative_costs") is not None:
+        lines.append(f"• 누적 거래비용 추정: {float(output['cumulative_costs']):.4f} 모델단위")
+    deferred_posts = output.get("deferred_posts", []) or []
     if deferred_posts:
-        lines += ["", "⚠ *분석 보류 글*"]
+        lines += ["", "⚠ *오늘 분석에서 제외된 글*"]
         for item in deferred_posts[:3]:
             title = str(item.get("title") or "제목 없음")
             url = str(item.get("url") or "")
-            lines.append(f"• {title}")
-            if url:
-                lines.append(f"  {url}")
-        if len(deferred_posts) > 3:
-            lines.append(f"• 외 {len(deferred_posts) - 3}건은 HTML에서 확인")
+            lines.append(f"• {title}" + (f" — {url}" if url else ""))
+
+    def holding_line(item: dict) -> str:
+        code = f" ({item.get('code')})" if item.get("code") else ""
+        return (
+            f"• {item.get('name', '')}{code} {pct(item.get('actual_weight'))} → 목표 {pct(item.get('target_weight'))}"
+            f" | {item.get('today_action', '유지')}"
+        )
+
+    lines += ["", "*현재 보유 종목*"]
+    groups = [
+        ("국내 개별주", [r for r in output["portfolio"] if r.get("asset_type") == "stock" and str(r.get("market", "")).upper().startswith("KR")]),
+        ("국내·해외 ETF", [r for r in output["portfolio"] if r.get("asset_type") == "etf"]),
+        ("해외 개별주", [r for r in output["portfolio"] if r.get("asset_type") == "stock" and not str(r.get("market", "")).upper().startswith("KR")]),
+    ]
+    for title, rows in groups:
+        if rows:
+            lines.append(f"[{title}]")
+            lines.extend(holding_line(item) for item in rows)
+    lines.append(f"[현금성 자산] • 현금성 {pct(output.get('actual_cash_weight'))} → 목표 {pct(output.get('target_cash_weight'))} | 유지")
+
+    lines += ["", "*오늘의 조정*"]
+    if output.get("today_changes"):
+        for item in output["today_changes"]:
+            lines.append(f"• {item.get('name')} {pct(item.get('actual_weight'))} → {pct(item.get('target_weight'))} | {item.get('today_action')}")
+    else:
+        lines += ["• 승인된 매매 없음", "• 전 종목이 리밸런싱 허용 범위 내에 있습니다."]
 
     lines += ["", "📌 *핵심 인사이트*"]
+    insights = output.get("insights", []) or []
     if insights:
-        for index, item in enumerate(insights, start=1):
-            lines.append(f"{index}. *{item.get('title', '')}*")
+        for index, item in enumerate(insights[: max(0, insight_limit)], start=1):
+            lines.append(f"{index}. *{item.get('title', '시장 인사이트')}*")
             lines.append(f"  └ {item.get('summary', '')}")
-            lines.append(f"  └ 시사점: {item.get('investment_implication', '')}")
+            lines.append(f"  └ 추적할 조건: {item.get('investment_implication', '')}")
     else:
         lines.append("• 표시할 인사이트 없음")
 
-    def recommendation_action(item: dict) -> str:
-        action = str(item.get("policy_action") or item.get("action_label") or item.get("action") or "보유")
-        market = str(item.get("market") or "").upper()
-        if market.startswith("KR"):
-            return action
-        return {
-            "매수": "Buy",
-            "보유": "Hold",
-            "비중확대": "Buy",
-            "비중축소": "Hold",
-            "매도": "Sell",
-        }.get(action, action)
-
-    def recommendation_name(item: dict) -> str:
-        name = str(item.get("name") or "")
-        code = str(item.get("code") or "")
-        market = str(item.get("market") or "").upper()
-        if market.startswith("KR") or not code:
-            return name
-        return f"{name} ({code})"
-
-    def recommendation_weight(item: dict) -> str:
-        target = float(item.get("target_weight", item.get("weight", 0)) or 0)
-        actual = item.get("actual_weight")
-        actual_label = f"{float(actual):g}%" if actual is not None else "집계 전"
-        return f"목표 {target:g}% / 실제 {actual_label}"
-
-    def append_recommendations(title: str, rows: list[dict]) -> None:
-        lines.extend(["", title])
-        if not rows:
-            lines.append("• 표시할 종목 없음")
-            return
-        for item in rows:
-            lines.append(
-                f"• {recommendation_name(item)}"
-                f" — {recommendation_action(item)}"
-                f" ({recommendation_weight(item)})"
-            )
-
-    append_recommendations("*국내주식 추천*", output["domestic"])
-    append_recommendations("*해외주식 추천*", output["overseas"])
-
-    lines += ["", "*재검증 필요 포지션*"]
-    if review_required:
-        for item in review_required[:5]:
-            lines.append(
-                f"• {recommendation_name(item)}"
-                f" — {recommendation_action(item)}"
-                f" ({recommendation_weight(item)})"
-            )
-        if len(review_required) > 5:
-            lines.append(f"• 외 {len(review_required) - 5}건은 HTML에서 확인")
-    else:
-        lines.append("• 표시할 항목 없음")
-
-    lines += ["", "*Watchlist*"]
-    if watchlist:
-        for item in watchlist:
-            lines.append(f"• {item.get('name', '')} | {item.get('observation_reason', '')}")
-        if output.get("watchlist_hidden_count"):
-            lines.append(f"• 외 {output.get('watchlist_hidden_count')}건은 HTML에서 확인")
-    else:
-        lines.append("• 표시할 항목 없음")
-    changes = output.get("watchlist_changes", {}) or {}
-    changed_labels = []
-    for key, label in (("added", "신규"), ("promoted", "편입"), ("expired", "만료")):
-        if changes.get(key):
-            changed_labels.append(f"{label} {len(changes[key])}건")
-    if changed_labels:
-        lines.append("• 변화: " + ", ".join(changed_labels))
-    lines += ["", f"• 종료 포지션: {len(closed)}건"]
+    changed_watchlist = output.get("watchlist_changes_display", []) or []
+    if changed_watchlist:
+        lines += ["", "*관심종목 변경*"]
+        for item in changed_watchlist:
+            reason = f" — {item['reason']}" if item.get("reason") else ""
+            code = f" ({item['code']})" if item.get("code") else ""
+            lines.append(f"• {item['label']}: {item['name']}{code}{reason}")
     if include_dashboard_link:
-        lines += ["", f"🌐 [대시보드 전체 보기]({_get_dashboard_url()})"]
+        lines += ["", f"🌐 [상세 대시보드 보기]({_get_dashboard_url()})"]
     else:
-        lines += ["", "🌐 검증 모드: HTML은 GitHub Actions artifact에서 확인합니다."]
+        lines += ["", "🌐 상세 대시보드는 실행 artifact에서 확인합니다."]
     return "\n".join(lines)
 
 
@@ -669,8 +614,12 @@ def send_structured_summary(
             f"텔레그램 알림 스킵: target={_target_fingerprint(chat_id)}"
         )
         return False
-    messages = split_telegram_message(
-        build_structured_summary(
+    # Shrink explanatory content first. Holdings and today's adjustment are
+    # never dropped; if the result still exceeds Telegram's limit it is split
+    # at line boundaries afterwards.
+    summary = ""
+    for insight_limit in (3, 2, 1, 0):
+        candidate = build_structured_summary(
             state,
             today_str,
             performance,
@@ -678,8 +627,12 @@ def send_structured_summary(
             status_note=status_note,
             include_dashboard_link=include_dashboard_link,
             run_label=run_label,
+            insight_limit=insight_limit,
         )
-    )
+        summary = candidate
+        if len(candidate) <= MAX_MSG_LEN:
+            break
+    messages = split_telegram_message(summary)
     ok = all(_send_message(token, chat_id, message) for message in messages)
     print(f"  텔레그램 구조화 요약 전송: {'성공' if ok else '실패'}")
     return ok

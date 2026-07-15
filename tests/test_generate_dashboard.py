@@ -12,12 +12,9 @@ class GenerateDashboardTest(unittest.TestCase):
 
         self.assertEqual(weights[0]["name"], "Alcoa")
         self.assertEqual(weights[0]["weight"], 8.0)
-        self.assertEqual(weights[-1], {
-            "name": "현금",
-            "weight": 92.0,
-            "action": "보유",
-            "market": "ETF",
-        })
+        self.assertEqual(weights[-1]["name"], "현금")
+        self.assertEqual(weights[-1]["weight"], 92.0)
+        self.assertEqual(weights[-1]["basis"], "target")
 
     def test_html_distinguishes_model_portfolio_and_decision_actor(self):
         cache = {
@@ -64,21 +61,20 @@ class GenerateDashboardTest(unittest.TestCase):
             finally:
                 generate_dashboard.DASHBOARD_FILE = previous
 
-        self.assertIn("메르 블로거의 실제 보유 내역이 아닙니다", html)
-        self.assertIn('"decision_actor": "AI"', html)
-        self.assertIn("Watchlist", html)
-        self.assertIn("국내주식 추천", html)
-        self.assertIn("해외주식 추천", html)
-        self.assertIn("const domestic=", html)
-        self.assertIn("const overseas=", html)
+        self.assertIn('name="viewport"', html)
+        self.assertIn("메르 블로그 공개 분석을 바탕으로 구성한 참고용 모델 포트폴리오", html)
+        self.assertIn("현재 보유 종목", html)
+        self.assertIn("오늘의 조정", html)
+        self.assertIn("관심종목", html)
+        self.assertNotIn("국내주식 추천", html)
+        self.assertNotIn("해외주식 추천", html)
+        self.assertNotIn("provenance_status", html)
         self.assertIn("${i+1}. ${esc(r.title)}", html)
         self.assertIn("알루미늄 공급 제한", html)
-        self.assertIn("메르 직접 발언", html)
-        self.assertIn("AI 제안", html)
         self.assertIn("https://blog.naver.com/ranto28/123", html)
-        self.assertIn('"return_label": "집계 전"', html)
+        self.assertIn('"return_label": "데이터 없음"', html)
         self.assertIn("대한전선", html)
-        self.assertIn("새 글 1건 요약 실패로 투자 분석 보류", html)
+        self.assertIn("기존 포트폴리오를 유지", html)
         self.assertIn("코스트코와 이마트", html)
         self.assertIn("const deferredPosts=", html)
         self.assertIn("https://blog.naver.com/ranto28/223456789012", html)

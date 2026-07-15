@@ -1,10 +1,17 @@
-"""사용자 출력용 단일 기준 자료를 만드는 모듈."""
+"""사용자 출력의 단일 기준 자료.
+
+이 모듈은 승인된 포트폴리오만 사용자 화면으로 내보낸다. 과거 LLM action,
+provenance, validator 메시지는 내부 상태/로그에 남아도 Telegram·Markdown·일반
+대시보드에는 들어가지 않는다.
+"""
 
 from __future__ import annotations
 
+import re
 from datetime import datetime
 from typing import Any
 
+from portfolio_actions import RebalancePolicy, derive_portfolio_actions
 from portfolio_schema import normalize_security_code
 
 DEFENSIVE_CASH_TARGET = 20.0
@@ -15,6 +22,27 @@ ALLOCATION_ROLE_LABELS = {
     "risk": "위험자산",
     "defensive": "방어",
     "watch": "관찰",
+}
+
+_PUBLIC_REPLACEMENTS = {
+    "파트너쉽": "파트너십",
+    "매커니즘": "메커니즘",
+    "규제 허들": "승인 장애 요인",
+    "관찰 유지": "관심종목으로 유지",
+    "수급 디커플링": "시장 간 가격 괴리",
+    "clean epoch MDD": "최대 낙폭",
+    "clean epoch 최대낙폭": "최대 낙폭",
+    "전략 벤치마크 대비 초과수익": "기준 포트폴리오 대비",
+    "누적 추정비용": "누적 거래비용 추정",
+    "누적 추정 거래비용": "누적 거래비용 추정",
+    "재검증 필요 포지션": "관리자 검토 대기 종목",
+    "Watchlist": "관심종목",
+    "watchlist": "관심종목",
+    "Hold": "유지",
+    "legacy_unvalidated": "",
+    "provenance_status": "",
+    "source_mentioned": "",
+    "weight_source": "",
 }
 
 
@@ -34,6 +62,7 @@ def _is_domestic(item: dict) -> bool:
 
 
 def _actor_label(item: dict) -> str:
+    """Compatibility label for detailed/admin tooling; not rendered in summaries."""
     origin = str(item.get("origin_signal_type") or "").strip().upper()
     actor = item.get("decision_actor")
     if origin == "MER_DIRECT":
@@ -42,47 +71,17 @@ def _actor_label(item: dict) -> str:
         return "메르 방향성 · AI 관리" if actor == "AI" else "메르 방향성"
     if origin == "AI_INFERRED":
         return "AI 추론"
-    if origin == "LEGACY_UNVALIDATED" or item.get("provenance_status") == "legacy_unvalidated":
-        return "검증 전 레거시"
-    if actor == "메르":
-        return "메르 직접 발언"
-    if actor == "AI":
-        return "AI 제안"
-    return "미분류"
+    return "메르 직접 발언" if actor == "메르" else "AI 제안" if actor == "AI" else "미분류"
 
 
 def _action_label(item: dict) -> str:
+    """Historical action, retained only for backward-compatible diagnostics."""
     return str(item.get("policy_action") or item.get("action") or "보유")
 
 
 def _allocation_role_label(item: dict) -> str:
     role = str(item.get("allocation_role") or "").strip()
     return ALLOCATION_ROLE_LABELS.get(role, "역할 미지정")
-
-
-def _review_required(item: dict) -> bool:
-    if item.get("provenance_status") == "legacy_unvalidated":
-        return True
-    if item.get("decision_actor") == "미분류":
-        return True
-    reason = str(item.get("change_reason") or "")
-    if "기존 상태 마이그레이션" in reason:
-        return True
-    if item.get("decision_actor") == "AI" and not str(item.get("allocation_role") or "").strip():
-        return True
-    return False
-
-
-def _review_reason(item: dict) -> str:
-    if item.get("provenance_status") == "legacy_unvalidated":
-        return "원문 근거 신호와 연결되지 않은 과거 상태라 재검증 필요"
-    if item.get("decision_actor") == "미분류":
-        return "판단 주체가 미분류라 다음 리밸런싱에서 유지 근거 재검증 필요"
-    if "기존 상태 마이그레이션" in str(item.get("change_reason") or ""):
-        return "기존 상태 마이그레이션 비중이라 다음 리밸런싱에서 재검증 필요"
-    if item.get("decision_actor") == "AI" and not str(item.get("allocation_role") or "").strip():
-        return "AI 판단이지만 포트폴리오 역할이 없어 다음 리밸런싱에서 재검증 필요"
-    return ""
 
 
 def _return_value(row: dict | None) -> float | None:
@@ -99,8 +98,15 @@ def _return_value(row: dict | None) -> float | None:
 
 def _return_label(value: float | None) -> str:
     if value is None:
-        return "집계 전"
-    return f"{value:+.1f}%"
+        return "데이터 없음"
+    return f"{value:+.2f}%"
+
+
+def _return_difference_label(value: float | None) -> str:
+    """Format a return spread in percentage points, not percent."""
+    if value is None:
+        return "데이터 없음"
+    return f"{value:+.2f}%p"
 
 
 def _security_identity(item: dict) -> str:
@@ -116,23 +122,22 @@ def _performance_by_identity(performance: dict | None) -> tuple[dict[str, dict],
     by_identity: dict[str, dict] = {}
     by_code: dict[str, dict] = {}
     ambiguous_codes: set[str] = set()
-    if not performance:
-        return by_identity, by_code
-    for row in performance.get("active_positions", []) or []:
+    for row in (performance or {}).get("active_positions", []) or []:
         identity = str(row.get("key") or _security_identity(row)).strip()
         if identity:
             by_identity[identity] = row
         for key in (row.get("code"), row.get("ticker")):
             code = _code(key)
-            if code:
-                if code in by_code and by_code[code] is not row:
-                    ambiguous_codes.add(code)
-                by_code[code] = row
-                if code.endswith(".KS") or code.endswith(".KQ"):
-                    bare_code = code.split(".", 1)[0]
-                    if bare_code in by_code and by_code[bare_code] is not row:
-                        ambiguous_codes.add(bare_code)
-                    by_code[bare_code] = row
+            if not code:
+                continue
+            if code in by_code and by_code[code] is not row:
+                ambiguous_codes.add(code)
+            by_code[code] = row
+            if code.endswith(".KS") or code.endswith(".KQ"):
+                bare = code.split(".", 1)[0]
+                if bare in by_code and by_code[bare] is not row:
+                    ambiguous_codes.add(bare)
+                by_code[bare] = row
     for code in ambiguous_codes:
         by_code.pop(code, None)
     return by_identity, by_code
@@ -146,24 +151,160 @@ def _closed_positions_for_output(state: dict, performance: dict | None) -> list[
         (performance or {}).get("closed_positions", []) or [],
     ):
         for item in source:
-            # Re-entry starts a new episode; an old closed episode remains valid
-            # even when the same security is active again.  Deduplicate only the
-            # same episode copied from state and performance cache.
             key = str(item.get("position_episode_id") or "").strip() or ":".join((
                 _security_identity(item),
                 str(item.get("closed_date") or item.get("decision_date") or ""),
             ))
             if key in episode_index:
-                existing = closed[episode_index[key]]
-                existing.update({
-                    field: value
-                    for field, value in item.items()
-                    if value is not None
+                closed[episode_index[key]].update({
+                    field: value for field, value in item.items() if value is not None
                 })
-                continue
-            episode_index[key] = len(closed)
-            closed.append(dict(item))
+            else:
+                episode_index[key] = len(closed)
+                closed.append(dict(item))
     return closed
+
+
+def _clean_user_text(value: Any, *, fallback: str = "") -> str:
+    text = " ".join(str(value or "").split())
+    for source, target in _PUBLIC_REPLACEMENTS.items():
+        text = text.replace(source, target)
+    # Never pass schema/validator fragments to a user-facing surface.
+    if re.search(r"decisions?\[|links signals|validator|schema[_ ]version|provenance", text, re.I):
+        return fallback
+    text = re.sub(r"\s{2,}", " ", text).strip(" /·")
+    return text or fallback
+
+
+def public_status_note(note: Any) -> str:
+    """Map an internal failure/deferral to a short, safe user message."""
+    raw = str(note or "").strip()
+    if not raw:
+        return ""
+    lowered = raw.lower()
+    if any(token in lowered for token in (
+        "decisions[", "links signals", "validator", "portfolio policy",
+        "포트폴리오 안전 검증", "structured", "schema", "provenance", "allocator",
+    )):
+        return "오늘 제안된 조정안이 내부 검증 기준을 충족하지 않아 기존 포트폴리오를 유지합니다."
+    if any(token in lowered for token in ("gemini", "요약 실패", "분석 보류", "transient")):
+        return "오늘 일부 블로그 분석이 완료되지 않아 기존 포트폴리오를 유지합니다."
+    cleaned = _clean_user_text(raw)
+    return cleaned if cleaned else "기존 포트폴리오를 유지합니다."
+
+
+def _watchlist_identity(item: dict) -> str:
+    market = _code(item.get("market"))
+    code = normalize_security_code(item.get("name"), market, item.get("code"))
+    name = " ".join(str(item.get("name") or "").split()).casefold()
+    return f"{market}:{code or name}"
+
+
+def _dedupe_watchlist(items: list[dict]) -> list[dict]:
+    """Merge duplicate security records (for example the two HLB theses)."""
+    merged: dict[str, dict] = {}
+    for item in items:
+        key = _watchlist_identity(item)
+        current = merged.get(key)
+        if current is None:
+            merged[key] = dict(item)
+            continue
+        current_date = str(current.get("latest_material_signal_date") or "")
+        item_date = str(item.get("latest_material_signal_date") or "")
+        if item_date > current_date:
+            preferred, other = dict(item), current
+        else:
+            preferred, other = current, item
+        ids = list(dict.fromkeys(
+            [*(preferred.get("linked_signal_ids") or []), *(other.get("linked_signal_ids") or [])]
+        ))
+        preferred["linked_signal_ids"] = ids
+        preferred["merged_thesis_ids"] = list(dict.fromkeys(
+            [*(preferred.get("merged_thesis_ids") or []), str(other.get("thesis_id") or "")]
+        ))
+        if not preferred.get("observation_reason"):
+            preferred["observation_reason"] = other.get("observation_reason")
+        merged[key] = preferred
+    return list(merged.values())
+
+
+def _watchlist_change_rows(state: dict, watchlist: list[dict]) -> list[dict]:
+    changes = state.get("last_watchlist_changes", {}) or {}
+    by_id = {
+        str(item.get("thesis_id")): item
+        for item in [*(state.get("watchlist", []) or []), *(state.get("watchlist_archive", []) or [])]
+        if item.get("thesis_id")
+    }
+    labels = {
+        "added": "신규",
+        "updated": "판단 변경",
+        "promoted": "편입 검토",
+        "rejected": "제외",
+        "expired": "관심종목 만료",
+        "archived": "보관",
+    }
+    result: list[dict] = []
+    seen: set[str] = set()
+    for kind, label in labels.items():
+        for thesis_id in changes.get(kind, []) or []:
+            item = by_id.get(str(thesis_id))
+            if not item:
+                continue
+            identity = _watchlist_identity(item)
+            if identity in seen:
+                continue
+            seen.add(identity)
+            result.append({
+                "category": kind,
+                "label": label,
+                "name": item.get("name", ""),
+                "code": item.get("code", ""),
+                "reason": _clean_user_text(
+                    item.get("observation_reason") or item.get("change_reason"),
+                    fallback="판단 조건이 변경되었습니다.",
+                ),
+            })
+    return result
+
+
+_INTERNAL_OUTPUT_FIELDS = {
+    "provenance_status",
+    "origin_signal_type",
+    "origin_signal_ids",
+    "linked_signal_ids",
+    "source_mentioned",
+    "weight_source",
+    "allocation_role_source",
+    "allocation_role_reason",
+    "source_scope",
+    "decision_actor",
+    "action",
+    "action_label",
+    "policy_action",
+    "policy_change_reason",
+    "allocation_method",
+    "decision_model_id",
+    "thesis_id",
+    "issuer_id",
+    "theme_ids",
+    "quality_components",
+    "country_code",
+    "fixed_weight",
+    "rejected_linked_signal_ids",
+    "linked_insight_ids",
+    "review_required",
+    "review_reason",
+}
+
+
+def _public_item(item: dict) -> dict:
+    value = dict(item)
+    for key in _INTERNAL_OUTPUT_FIELDS:
+        value.pop(key, None)
+    for key in ("change_reason", "observation_reason", "investment_rationale", "current_entry_reason", "close_reason"):
+        if key in value:
+            value[key] = _clean_user_text(value[key])
+    return value
 
 
 def build_output_model(
@@ -173,34 +314,27 @@ def build_output_model(
     today_str: str = "",
     status_note: str = "",
 ) -> dict:
-    """현재 상태를 기준으로 Telegram, HTML, Markdown이 함께 쓸 자료를 만든다."""
+    """현재 승인 상태를 Telegram·HTML·Markdown이 함께 사용하는 모델로 만든다."""
     performance = performance or {}
     active_by_identity, active_by_code = _performance_by_identity(performance)
-    portfolio = []
+    portfolio: list[dict] = []
     missing_return_codes: list[str] = []
-
-    for item in state.get("portfolio", []) or []:
+    approved_items = [
+        item for item in (state.get("portfolio", []) or [])
+        if str(item.get("provenance_status") or "") != "legacy_unvalidated"
+        and str(item.get("queue_status") or "") != "pending_admin"
+        and str(item.get("decision_actor") or "") != "미분류"
+        and not (item.get("decision_actor") == "AI" and not str(item.get("allocation_role") or "").strip())
+    ]
+    for item in approved_items:
         row = dict(item)
-        perf_row = active_by_identity.get(_security_identity(item))
-        if perf_row is None:
-            # Older performance caches did not carry market/asset identity.
-            # Code-only fallback is accepted only when the code is unambiguous.
-            perf_row = active_by_code.get(_code(item.get("code")))
-        return_value = _return_value(perf_row)
+        perf_row = active_by_identity.get(_security_identity(item)) or active_by_code.get(_code(item.get("code")))
         if perf_row:
             for key in ("return_pct", "return_pct_krw", "entry_date", "current_price"):
                 if key in perf_row:
                     row[key] = perf_row[key]
         else:
             missing_return_codes.append(str(item.get("code") or item.get("name") or ""))
-        row["actor_label"] = _actor_label(item)
-        row["action_label"] = _action_label(item)
-        row["decision_label"] = f"{row['actor_label']} · {row['action_label']}"
-        row["allocation_role_label"] = _allocation_role_label(row)
-        row["review_required"] = _review_required(row)
-        row["review_reason"] = _review_reason(row)
-        row["return_value"] = return_value
-        row["return_label"] = _return_label(return_value)
         row["target_weight"] = _as_float(item.get("proposed_weight"))
         row["actual_weight"] = (
             _as_float(perf_row.get("actual_weight"))
@@ -208,82 +342,64 @@ def build_output_model(
             else None
         )
         row["weight"] = row["target_weight"]
-        portfolio.append(row)
+        row["actor_label"] = _actor_label(item)
+        row["action_label"] = _action_label(item)
+        row["return_value"] = _return_value(perf_row)
+        row["return_label"] = _return_label(row["return_value"])
+        row["allocation_role_label"] = _allocation_role_label(row)
+        rationale = _clean_user_text(
+            item.get("investment_rationale") or item.get("change_reason"),
+            fallback="승인된 투자 논리를 추적합니다.",
+        )
+        # Explanations are rendered after allocation. Avoid carrying a stale
+        # historical percentage such as “현행 5% 유지” into a 1.50% target.
+        rationale = re.sub(r"\b\d+(?:\.\d+)?\s*%", "", rationale)
+        rationale = re.sub(r"\(\s*\)", "", rationale)
+        row["display_reason"] = f"{rationale.rstrip('.')} · 최종 목표비중 {_as_float(item.get('proposed_weight')):.2f}%"
+        row["display_evidence"] = [
+            {
+                "title": _clean_user_text(post.get("title"), fallback="원문"),
+                "url": str(post.get("url") or ""),
+                "published_date": str(post.get("published_date") or ""),
+            }
+            for post in (item.get("evidence_posts") or [])
+            if isinstance(post, dict)
+        ]
+        portfolio.append(_public_item(row))
 
-    recommendation_rows = [item for item in portfolio if not item.get("review_required")]
-    domestic = [item for item in recommendation_rows if _is_domestic(item)]
-    overseas = [item for item in recommendation_rows if not _is_domestic(item)]
-    review_required_positions = [item for item in portfolio if item.get("review_required")]
-    cash_weight = max(0.0, 100.0 - sum(item["weight"] for item in portfolio))
+    portfolio, today_changes = derive_portfolio_actions(portfolio)
+    domestic = [item for item in portfolio if _is_domestic(item)]
+    overseas = [item for item in portfolio if not _is_domestic(item)]
+    stock_rows = [item for item in portfolio if item.get("asset_type") == "stock"]
+    etf_rows = [item for item in portfolio if item.get("asset_type") == "etf"]
+    target_cash_weight = max(0.0, 100.0 - sum(item["target_weight"] for item in portfolio))
     actual_cash_weight = performance.get("actual_cash_weight")
     try:
         actual_cash_weight = float(actual_cash_weight)
     except (TypeError, ValueError):
         actual_cash_weight = None
-    stock_weight = sum(item["weight"] for item in portfolio if item.get("asset_type") == "stock")
-    etf_weight = sum(item["weight"] for item in portfolio if item.get("asset_type") == "etf")
-    stock_rows = [item for item in portfolio if item.get("asset_type") == "stock"]
-    etf_rows = [item for item in portfolio if item.get("asset_type") == "etf"]
     actual_stock_weight = (
         sum(_as_float(item.get("actual_weight")) for item in stock_rows)
-        if all(item.get("actual_weight") is not None for item in stock_rows)
+        if stock_rows and all(item.get("actual_weight") is not None for item in stock_rows)
         else None
     )
     actual_etf_weight = (
         sum(_as_float(item.get("actual_weight")) for item in etf_rows)
-        if all(item.get("actual_weight") is not None for item in etf_rows)
+        if etf_rows and all(item.get("actual_weight") is not None for item in etf_rows)
         else None
     )
-    risk_weight = sum(item["weight"] for item in portfolio if item.get("allocation_role") == "risk")
-    defensive_weight = cash_weight + sum(
-        item["weight"]
-        for item in portfolio
-        if item.get("allocation_role") == "defensive"
-    )
-    chart_rows = [
-        {
-            "name": item.get("name", ""),
-            "code": item.get("code", ""),
-            "weight": item["actual_weight"] if item["actual_weight"] is not None else item["weight"],
-            "target_weight": item["weight"],
-            "actor": item.get("decision_actor", ""),
-            "action": item.get("action", ""),
-            "reason": item.get("change_reason", ""),
-            "market": item.get("market", ""),
-            "allocation_role": item.get("allocation_role", ""),
-        }
-        for item in portfolio
-        if item.get("weight", 0) > 0
+    target_stock_weight = sum(item["target_weight"] for item in stock_rows)
+    target_etf_weight = sum(item["target_weight"] for item in etf_rows)
+    actual_all_available = bool(portfolio) and all(
+        item.get("actual_weight") is not None for item in portfolio
+    ) and actual_cash_weight is not None
+    active_watchlist = [
+        _public_item(item)
+        for item in _dedupe_watchlist(list(state.get("watchlist", []) or []))
     ]
-    chart_cash_weight = actual_cash_weight if actual_cash_weight is not None else cash_weight
-    if chart_cash_weight:
-        chart_rows.append({
-            "name": "현금",
-            "code": "",
-            "weight": chart_cash_weight,
-            "target_weight": cash_weight,
-            "actor": "",
-            "action": "보유",
-            "reason": "",
-            "market": "CASH",
-        })
-
-    portfolio_return = performance.get("portfolio_return_krw")
-    portfolio_return_value: float | None = None
-    if portfolio and not missing_return_codes:
-        try:
-            portfolio_return_value = float(portfolio_return)
-        except (TypeError, ValueError):
-            portfolio_return_value = None
-
-    active_watchlist = list(state.get("watchlist", []) or [])
 
     def watchlist_sort_key(item: dict) -> tuple[int, int, int, str]:
-        date_text = str(
-            item.get("latest_material_signal_date")
-            or item.get("latest_evidence_date")
-            or ""
-        )
+        date_text = str(item.get("latest_material_signal_date") or item.get("latest_evidence_date") or "")
         try:
             recency = datetime.fromisoformat(date_text).toordinal()
         except ValueError:
@@ -296,230 +412,243 @@ def build_output_model(
         )
 
     active_watchlist.sort(key=watchlist_sort_key)
-    watchlist_total = len(active_watchlist)
+    risk_metrics = performance.get("risk_metrics", {}) or {}
+    portfolio_return = None
+    if not missing_return_codes:
+        try:
+            portfolio_return = float(performance.get("portfolio_return_krw"))
+        except (TypeError, ValueError):
+            pass
+    chart_rows = []
+    for item in portfolio:
+        if item["target_weight"] <= 0:
+            continue
+        chart_rows.append({
+            "name": item.get("name", ""),
+            "code": item.get("code", ""),
+            "weight": item.get("actual_weight") if item.get("actual_weight") is not None else None,
+            "target_weight": item["target_weight"],
+            "market": item.get("market", ""),
+            "asset_type": item.get("asset_type", ""),
+        })
+    if actual_cash_weight is not None:
+        chart_rows.append({
+            "name": "현금성 자산", "code": "", "weight": actual_cash_weight,
+            "target_weight": target_cash_weight, "market": "CASH", "asset_type": "cash",
+        })
+
+    public_insights = []
+    for item in state.get("insights", []) or []:
+        if not isinstance(item, dict):
+            continue
+        public_insights.append({
+            **item,
+            "title": _clean_user_text(item.get("title"), fallback="시장 인사이트"),
+            "summary": _clean_user_text(item.get("summary"), fallback="새로운 시장 변화가 기록되었습니다."),
+            "investment_implication": _clean_user_text(
+                item.get("investment_implication"),
+                fallback="관련 조건을 다음 점검에서 확인합니다.",
+            ),
+        })
+
+    public_closed = []
+    for item in _closed_positions_for_output(state, performance):
+        closed_item = _public_item(item)
+        if item.get("administrative_exit"):
+            closed_item["close_reason"] = "승인 포트폴리오 정리 과정에서 편출"
+        public_closed.append(closed_item)
+
     return {
         "today": today_str,
-        "status_note": status_note or state.get("status_note", ""),
+        "status_note": public_status_note(status_note or state.get("status_note", "")),
         "portfolio": portfolio,
+        "approved_portfolio": portfolio,
         "domestic": domestic,
         "overseas": overseas,
-        "watchlist": active_watchlist[:10],
-        "watchlist_total": watchlist_total,
-        "watchlist_hidden_count": max(0, watchlist_total - 10),
-        "watchlist_changes": state.get("last_watchlist_changes", {}) or {},
-        "closed_positions": _closed_positions_for_output(state, performance),
-        "review_required_positions": review_required_positions,
-        "decision_history": state.get("decision_history", []) or [],
-        "insights": state.get("insights", []) or [],
-        "deferred_posts": state.get("deferred_posts", []) or [],
+        "today_changes": today_changes,
+        "all_within_rebalance_band": not today_changes and all(
+            item.get("actual_weight") is not None for item in portfolio
+        ),
+        "rebalance_policy": RebalancePolicy.from_environment().to_dict(),
+        "watchlist": active_watchlist,
+        "watchlist_total": len(active_watchlist),
+        "watchlist_hidden_count": 0,
+        "watchlist_changes": {},
+        "watchlist_changes_display": _watchlist_change_rows(state, active_watchlist),
+        "closed_positions": public_closed,
+        # Kept as an empty compatibility key. Admin rows never enter the
+        # user-facing model; they are available only in the state/log bundle.
+        "review_required_positions": [],
+        "decision_history": [],
+        "insights": public_insights,
+        "deferred_posts": [
+            {
+                "title": _clean_user_text(item.get("title"), fallback="제목 없음"),
+                "date": str(item.get("date") or ""),
+                "url": str(item.get("url") or ""),
+                "reason": "요약 미완료",
+            }
+            for item in (state.get("deferred_posts", []) or [])
+            if isinstance(item, dict)
+        ],
         "chart_rows": chart_rows,
-        "cash_weight": cash_weight,
+        "target_cash_weight": target_cash_weight,
         "actual_cash_weight": actual_cash_weight,
-        "stock_weight": stock_weight,
+        "cash_weight": target_cash_weight,
+        "stock_weight": target_stock_weight,
+        "target_stock_weight": target_stock_weight,
         "actual_stock_weight": actual_stock_weight,
-        "etf_weight": etf_weight,
+        "etf_weight": target_etf_weight,
+        "target_etf_weight": target_etf_weight,
         "actual_etf_weight": actual_etf_weight,
-        "risk_weight": risk_weight,
-        "defensive_weight": defensive_weight,
+        "actual_allocation_available": actual_all_available,
+        "risk_weight": sum(item["target_weight"] for item in portfolio if item.get("allocation_role") == "risk"),
+        "defensive_weight": target_cash_weight,
         "defensive_cash_target": DEFENSIVE_CASH_TARGET,
         "defensive_alert": (
-            actual_cash_weight if actual_cash_weight is not None else cash_weight
+            actual_cash_weight if actual_cash_weight is not None else target_cash_weight
         ) < DEFENSIVE_CASH_TARGET,
-        "performance": performance,
-        "performance_epoch_id": performance.get("epoch_id"),
         "performance_inception_date": performance.get("inception_date"),
-        "legacy_epoch_count": performance.get("legacy_epoch_count", 0),
-        "portfolio_return_value": portfolio_return_value,
-        "portfolio_return_label": _return_label(portfolio_return_value),
+        "portfolio_return_value": portfolio_return,
+        "portfolio_return_label": _return_label(portfolio_return),
         "missing_return_codes": missing_return_codes,
+        "max_drawdown_label": _return_label(
+            _as_float(risk_metrics.get("max_drawdown")) * 100
+            if risk_metrics.get("max_drawdown") is not None else None
+        ),
+        "benchmark_difference_label": _return_difference_label(
+            _as_float(risk_metrics.get("excess_return")) * 100
+            if risk_metrics.get("excess_return") is not None else None
+        ),
+        "cumulative_costs": performance.get("cumulative_costs"),
     }
 
 
 def _date_for_title(today_str: str) -> str:
-    if not today_str:
-        return datetime.now().strftime("%Y-%m-%d")
-    return today_str
+    return today_str or datetime.now().strftime("%Y-%m-%d")
+
+
+def _weight_label(value: Any) -> str:
+    if value is None:
+        return "데이터 없음"
+    return f"{_as_float(value):.2f}%"
 
 
 def _table(rows: list[dict], *, include_return: bool = True) -> list[str]:
-    headers = ["종목", "코드", "판단", "역할", "목표/실제", "근거"]
+    headers = ["종목", "실제비중", "목표비중", "오늘 상태", "역할"]
     if include_return:
         headers.append("수익률")
+    headers.append("핵심 근거")
     lines = [
         "| " + " | ".join(headers) + " |",
         "| " + " | ".join("---" for _ in headers) + " |",
     ]
     if not rows:
-        empty = ["표시할 항목 없음", "", "", "", "", ""]
-        if include_return:
-            empty.append("")
-        lines.append("| " + " | ".join(empty) + " |")
+        lines.append("| 표시할 항목 없음 | " + " | ".join("" for _ in headers[1:]) + " |")
         return lines
     for item in rows:
+        display_name = str(item.get("name") or "")
+        if item.get("code"):
+            display_name += f" ({item.get('code')})"
         values = [
-            str(item.get("name", "")),
-            str(item.get("code", "")),
-            str(item.get("decision_label") or f"{_actor_label(item)} · {_action_label(item)}"),
+            display_name,
+            _weight_label(item.get("actual_weight")),
+            _weight_label(item.get("target_weight", item.get("proposed_weight"))),
+            str(item.get("today_action") or "유지"),
             str(item.get("allocation_role_label") or _allocation_role_label(item)),
-            (
-                f"{_as_float(item.get('target_weight', item.get('proposed_weight', item.get('weight')))):g}% / "
-                + (f"{_as_float(item.get('actual_weight')):g}%" if item.get("actual_weight") is not None else "집계 전")
-            ),
-            str(item.get("policy_change_reason") or item.get("change_reason") or item.get("observation_reason") or ""),
         ]
         if include_return:
-            values.append(str(item.get("return_label", "집계 전")))
+            values.append(str(item.get("return_label", "데이터 없음")))
+        values.append(str(item.get("display_reason") or "승인된 투자 논리를 추적합니다."))
         lines.append("| " + " | ".join(value.replace("|", "/") for value in values) + " |")
     return lines
 
 
+def _append_holdings(lines: list[str], output: dict) -> None:
+    lines += ["", "## 현재 보유 종목"]
+    groups = [
+        ("국내 개별주", [r for r in output["portfolio"] if _is_domestic(r) and r.get("asset_type") == "stock"]),
+        ("국내·해외 ETF", [r for r in output["portfolio"] if r.get("asset_type") == "etf"]),
+        ("해외 개별주", [r for r in output["portfolio"] if not _is_domestic(r) and r.get("asset_type") == "stock"]),
+    ]
+    for title, rows in groups:
+        if rows:
+            lines += ["", f"### {title}"] + _table(rows)
+    lines += ["", "### 현금성 자산", "", f"목표 {_weight_label(output.get('target_cash_weight'))} / 실제 {_weight_label(output.get('actual_cash_weight'))}"]
+
+
 def build_markdown_report(output: dict) -> str:
-    """단일 기준 자료에서 사용자용 Markdown 보고서를 만든다."""
+    """승인 상태 중심의 사용자용 Markdown 보고서."""
     today = _date_for_title(output.get("today", ""))
+    inception = output.get("performance_inception_date")
+    return_basis = f" ({inception} 이후)" if inception else ""
     lines = [
         "# 메르AI 모델 포트폴리오 리포트",
         "",
         f"- 기준일: {today}",
-        "- 메르 블로거의 실제 보유 내역이 아닙니다.",
-        "- 블로그 직접 판단과 AI 해석을 구분해 표시합니다.",
-        f"- 모델 포트폴리오 수익률: {output.get('portfolio_return_label', '집계 전')}",
-        f"- 주식 노출: {output.get('stock_weight', 0):g}%",
-        f"- 현금성 목표/실제: {output.get('cash_weight', 0):g}% / "
-        + (f"{output.get('actual_cash_weight'):g}%" if output.get("actual_cash_weight") is not None else "집계 전")
-        + f" (방어 기준 {output.get('defensive_cash_target', 20):g}%)",
+        "- 메르 블로그 분석을 바탕으로 구성한 참고용 모델 포트폴리오입니다.",
+        f"- 누적 수익률{return_basis}: {output.get('portfolio_return_label', '데이터 없음')}",
+        f"- 최대 낙폭: {output.get('max_drawdown_label', '데이터 없음')}",
+        f"- 기준 포트폴리오 대비: {output.get('benchmark_difference_label', '데이터 없음')} (수익률 차이)",
+        f"- 자산배분(목표): 개별주 {_weight_label(output.get('target_stock_weight'))} / 주식형 ETF {_weight_label(output.get('target_etf_weight'))} / 현금성 {_weight_label(output.get('target_cash_weight'))}",
     ]
-    if output.get("defensive_alert"):
-        lines.append("- 방어 기준 미달: 현금성 비중이 20% 아래라 다음 리밸런싱에서 방어 비중 재검토 필요")
-    if output.get("status_note"):
-        lines.append(f"- 분석 보류: {output['status_note']}")
-    if output.get("missing_return_codes"):
-        joined = ", ".join(output["missing_return_codes"])
-        lines.append(f"- 수익률 집계 전 종목: {joined}")
-    if output.get("performance_epoch_id"):
+    if output.get("actual_allocation_available"):
         lines.append(
-            f"- 성과 원장: {output['performance_epoch_id']}"
-            + (f" (시작 {output.get('performance_inception_date')})" if output.get("performance_inception_date") else "")
+            f"- 자산배분(실제): 개별주 {_weight_label(output.get('actual_stock_weight'))} / 주식형 ETF {_weight_label(output.get('actual_etf_weight'))} / 현금성 {_weight_label(output.get('actual_cash_weight'))}"
         )
-    if output.get("legacy_epoch_count"):
-        lines.append(f"- 과거 검증 전 성과원장 {output['legacy_epoch_count']}개는 현재 성과와 분리 보존")
-    risk_metrics = output.get("performance", {}).get("risk_metrics", {}) or {}
-    if risk_metrics.get("max_drawdown") is not None:
-        lines.append(f"- clean epoch 최대낙폭: {risk_metrics['max_drawdown'] * 100:+.2f}%")
-    if risk_metrics.get("excess_return") is not None:
-        lines.append(f"- 전략 벤치마크 대비 초과수익: {risk_metrics['excess_return'] * 100:+.2f}%")
-    if output.get("performance", {}).get("cumulative_costs") is not None:
-        lines.append(f"- 누적 추정 거래비용: {output['performance']['cumulative_costs']:.4f} KRW 모델단위")
+    if output.get("status_note"):
+        lines.append(f"- 안내: {output['status_note']}")
+    if output.get("defensive_alert"):
+        lines.append("- 현금성 자산이 방어 기준보다 낮아 다음 주 점검에서 위험 노출을 확인합니다.")
+    if output.get("cumulative_costs") is not None:
+        lines.append(f"- 누적 거래비용 추정: {_as_float(output['cumulative_costs']):.4f} 모델단위")
 
-    deferred_posts = output.get("deferred_posts", [])
+    deferred_posts = output.get("deferred_posts", []) or []
     if deferred_posts:
-        lines += [
-            "",
-            "## 분석 보류 글",
-            "",
-            "| 제목 | 날짜 | 사유 | URL |",
-            "| --- | --- | --- | --- |",
-        ]
+        lines += ["", "## 오늘 분석에서 제외된 글", ""]
         for item in deferred_posts:
-            title = str(item.get("title", "제목 없음")).replace("|", "/")
-            date = str(item.get("date", "")).replace("|", "/")
-            reason = str(item.get("reason", "")).replace("|", "/")
-            url = str(item.get("url", "")).replace("|", "/")
-            lines.append(f"| {title} | {date} | {reason} | {url} |")
-        lines += [
-            "",
-            "위 글은 요약이 준비되지 않아 이번 투자 판단에서 제외됐고 다음 실행에서 다시 확인합니다.",
-        ]
+            title = _clean_user_text(item.get("title"), fallback="제목 없음")
+            url = str(item.get("url") or "")
+            lines.append(f"- {title}" + (f" ([원문]({url}))" if url else ""))
+        lines.append("요약이 준비된 뒤 다음 실행에서 다시 확인합니다.")
+
+    _append_holdings(lines, output)
+    lines += ["", "## 오늘의 조정"]
+    if output.get("today_changes"):
+        for item in output["today_changes"]:
+            lines.append(
+                f"- {item.get('name')} {_weight_label(item.get('actual_weight'))} → {_weight_label(item.get('target_weight'))} | {item.get('today_action')}"
+            )
+    else:
+        lines += ["- 승인된 매매 없음", "- 전 종목이 리밸런싱 허용 범위 또는 최소 조정 기준 안에 있습니다."]
 
     lines += ["", "## 핵심 인사이트"]
-    insights = output.get("insights", [])
-    if insights:
-        for index, item in enumerate(insights, start=1):
-            lines += [
-                "",
-                f"### 인사이트 {index}: {item.get('title', '')}",
-                "",
-                str(item.get("summary", "")),
-                "",
-                f"**투자판단:** {item.get('investment_implication', '')}",
-            ]
+    insights = output.get("insights", []) or []
+    if not insights:
+        lines.append("표시할 인사이트가 없습니다.")
+    for index, item in enumerate(insights, start=1):
+        title = _clean_user_text(item.get("title"), fallback=f"인사이트 {index}")
+        summary = _clean_user_text(item.get("summary"), fallback="새로운 시장 변화가 기록되었습니다.")
+        implication = _clean_user_text(item.get("investment_implication"), fallback="관련 조건을 다음 점검에서 확인합니다.")
+        lines += ["", f"### 인사이트 {index}: {title}", "", summary, "", f"**추적할 조건:** {implication}"]
+
+    changes = output.get("watchlist_changes_display", []) or []
+    lines += ["", "## 관심종목 변경"]
+    if changes:
+        for item in changes:
+            lines.append(f"- {item['label']}: {item['name']}" + (f" — {item['reason']}" if item.get("reason") else ""))
     else:
-        lines += ["", "표시할 인사이트가 없습니다."]
+        lines.append("- 변경 없음")
 
-    lines += ["", "## 포트폴리오 추천", "", "### 국내주식 추천"]
-    lines += _table(output.get("domestic", []))
-    lines += ["", "### 해외주식 추천"]
-    lines += _table(output.get("overseas", []))
-
-    lines += ["", "## Watchlist"]
-    watchlist = output.get("watchlist", [])
-    if watchlist:
-        lines += [
-            "| 대상 | 판단 | 상태 | 근거 |",
-            "| --- | --- | --- | --- |",
-        ]
-        for item in watchlist:
-            lines.append(
-                "| "
-                + " | ".join([
-                    str(item.get("name", "")),
-                    f"{_actor_label(item)} · {item.get('basis', '')}",
-                    str(item.get("status", "")),
-                    str(item.get("observation_reason") or item.get("change_reason") or ""),
-                ])
-                + " |"
-            )
-        if output.get("watchlist_hidden_count"):
-            lines.append(f"\n활성 {output.get('watchlist_total')}건 중 상위 10건 표시, 외 {output.get('watchlist_hidden_count')}건")
-    else:
-        lines.append("표시할 항목이 없습니다.")
-
-    lines += ["", "## 재검증 필요 포지션"]
-    review_required = output.get("review_required_positions", [])
-    if review_required:
-        lines += [
-            "| 종목 | 코드 | 현재비중 | 재검증 사유 |",
-            "| --- | --- | --- | --- |",
-        ]
-        for item in review_required:
-            lines.append(
-                "| "
-                + " | ".join([
-                    str(item.get("name", "")),
-                    str(item.get("code", "")),
-                    f"{_as_float(item.get('weight', item.get('proposed_weight'))):g}%",
-                    str(item.get("review_reason", "")),
-                ])
-                + " |"
-            )
-    else:
-        lines.append("표시할 항목이 없습니다.")
-
-    lines += ["", "## 종료 포지션"]
-    closed = output.get("closed_positions", [])
+    lines += ["", "## 과거 편출 종목"]
+    closed = output.get("closed_positions", []) or []
     if closed:
-        lines += [
-            "| 종목 | 코드 | 종료일 | 종료 사유 |",
-            "| --- | --- | --- | --- |",
-        ]
         for item in closed:
-            lines.append(
-                "| "
-                + " | ".join([
-                    str(item.get("name", "")),
-                    str(item.get("code", "")),
-                    str(item.get("closed_date", "")),
-                    str(item.get("close_reason") or item.get("change_reason") or ""),
-                ])
-                + " |"
-            )
+            reason = _clean_user_text(item.get("close_reason"), fallback="과거 포트폴리오에서 편출된 종목입니다.")
+            if item.get("administrative_exit"):
+                reason = "승인 포트폴리오 정리 과정에서 편출"
+            lines.append(f"- {item.get('name')} ({item.get('code')}) · {item.get('closed_date', '')} · {reason}")
     else:
-        lines.append("표시할 항목이 없습니다.")
-
-    lines += [
-        "",
-        "## 한 줄 코멘트",
-        "",
-        "> 이 보고서는 현재 모델 포트폴리오 상태를 기준으로 작성되며, 분석 보류 항목은 다음 실행에서 다시 확인합니다.",
-        "",
-    ]
+        lines.append("- 기록 없음")
+    lines += ["", "> 이 보고서는 메르 블로그의 공개 분석을 참고해 만든 모델 포트폴리오이며 실제 주문을 대신하지 않습니다.", ""]
     return "\n".join(lines)

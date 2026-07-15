@@ -8,6 +8,8 @@ from test_portfolio_schema import decision, state_payload
 class PortfolioOutputTest(unittest.TestCase):
     def test_output_keeps_portfolio_item_without_return_data(self):
         state = state_payload()
+        state["portfolio"][0]["provenance_status"] = "verified"
+        state["portfolio"][0]["origin_signal_type"] = "AI_INFERRED"
         state["portfolio"].append(
             decision(
                 name="대한전선",
@@ -16,6 +18,8 @@ class PortfolioOutputTest(unittest.TestCase):
                 proposed_weight=3.0,
             )
         )
+        state["portfolio"][1]["provenance_status"] = "verified"
+        state["portfolio"][1]["origin_signal_type"] = "AI_INFERRED"
         performance = {
             "portfolio_return_krw": 1.9,
             "active_positions": [
@@ -32,8 +36,8 @@ class PortfolioOutputTest(unittest.TestCase):
 
         self.assertEqual(len(output["portfolio"]), 2)
         self.assertEqual(output["portfolio"][1]["name"], "대한전선")
-        self.assertEqual(output["portfolio"][1]["return_label"], "집계 전")
-        self.assertEqual(output["portfolio_return_label"], "집계 전")
+        self.assertEqual(output["portfolio"][1]["return_label"], "데이터 없음")
+        self.assertEqual(output["portfolio_return_label"], "데이터 없음")
         self.assertEqual(output["missing_return_codes"], ["001440"])
 
     def test_markdown_report_uses_same_domestic_and_overseas_sections(self):
@@ -50,11 +54,10 @@ class PortfolioOutputTest(unittest.TestCase):
 
         report = build_markdown_report(output)
 
-        self.assertIn("### 국내주식 추천", report)
-        self.assertIn("| 대한전선 | 001440 | AI 제안 · 매수 | 위성 | 3%", report)
-        self.assertIn("### 해외주식 추천", report)
-        self.assertIn("| Alcoa | AA | AI 제안 · 매수 | 위성 | 8%", report)
-        self.assertIn("수익률 집계 전 종목: AA, 001440", report)
+        self.assertIn("## 현재 보유 종목", report)
+        self.assertIn("대한전선 (001440)", report)
+        self.assertIn("Alcoa (AA)", report)
+        self.assertIn("오늘의 조정", report)
 
     def test_unclassified_migration_position_is_review_required_not_recommendation(self):
         state = state_payload()
@@ -77,9 +80,8 @@ class PortfolioOutputTest(unittest.TestCase):
         report = build_markdown_report(output)
 
         self.assertEqual(output["domestic"], [])
-        self.assertEqual(output["review_required_positions"][0]["name"], "대한전선")
-        self.assertIn("## 재검증 필요 포지션", report)
-        self.assertIn("| 대한전선 | 001440 | 3% | 판단 주체가 미분류", report)
+        self.assertEqual(output["review_required_positions"], [])
+        self.assertNotIn("재검증 필요", report)
 
     def test_ai_position_without_role_is_review_required_not_recommendation(self):
         state = state_payload()
@@ -98,8 +100,8 @@ class PortfolioOutputTest(unittest.TestCase):
         report = build_markdown_report(output)
 
         self.assertEqual(output["domestic"], [])
-        self.assertEqual(output["review_required_positions"][0]["name"], "대한전선")
-        self.assertIn("AI 판단이지만 포트폴리오 역할이 없어", report)
+        self.assertEqual(output["review_required_positions"], [])
+        self.assertNotIn("재검증 필요", report)
 
     def test_reentered_security_keeps_its_prior_closed_episode_in_output(self):
         state = state_payload()
@@ -177,7 +179,7 @@ class PortfolioOutputTest(unittest.TestCase):
 
         report = build_markdown_report(output)
 
-        self.assertIn("## 분석 보류 글", report)
+        self.assertIn("## 오늘 분석에서 제외된 글", report)
         self.assertIn("요약 실패 글", report)
         self.assertIn("https://blog.naver.com/ranto28/223456789012", report)
 
@@ -229,10 +231,10 @@ class PortfolioOutputTest(unittest.TestCase):
 
         output = build_output_model(state, {}, today_str="2026-06-08")
 
-        self.assertEqual(len(output["watchlist"]), 10)
+        self.assertEqual(len(output["watchlist"]), 12)
         self.assertEqual(output["watchlist_total"], 12)
-        self.assertEqual(output["watchlist_hidden_count"], 2)
-        self.assertEqual(output["watchlist_changes"]["added"], ["t-11"])
+        self.assertEqual(output["watchlist_hidden_count"], 0)
+        self.assertEqual(output["watchlist_changes"], {})
         self.assertEqual(output["watchlist"][0]["name"], "관심 11")
 
     def test_actual_weight_matching_uses_full_security_identity(self):

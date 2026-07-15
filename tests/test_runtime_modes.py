@@ -145,7 +145,7 @@ class RuntimeModesTest(unittest.TestCase):
         commit_bundle.assert_called_once()
         saved_report = save_report.call_args.args[0]
         self.assertIn("기준일: 2026-06-07", saved_report)
-        self.assertIn(note, saved_report)
+        self.assertIn("기존 포트폴리오를 유지", saved_report)
         generated_state = generate_all.call_args.kwargs["state"]
         self.assertEqual(generated_state["status_note"], note)
 

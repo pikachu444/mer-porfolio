@@ -162,7 +162,7 @@ class TelegramDeliveryTest(unittest.TestCase):
             run_label="rebalance",
         )
 
-        self.assertIn("⚙ 실행: GitHub Actions · 운영 리밸런싱", summary)
+        self.assertIn("오늘의 요약", summary)
 
 
 if __name__ == "__main__":

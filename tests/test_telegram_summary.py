@@ -8,12 +8,13 @@ class TelegramSummaryTest(unittest.TestCase):
     def test_summary_labels_model_portfolio_and_ai_decision(self):
         summary = build_structured_summary(state_payload(), "2026년 06월 01일")
 
-        self.assertIn("메르 블로거의 실제 보유 내역이 아닙니다", summary)
+        self.assertIn("메르 블로그 공개 분석을 바탕으로 구성한 참고용 모델 포트폴리오", summary)
         self.assertIn("알루미늄 공급 제한", summary)
-        self.assertIn("*해외주식 추천*", summary)
-        self.assertIn("Alcoa (AA) — Buy (목표 8% / 실제 집계 전)", summary)
+        self.assertIn("*현재 보유 종목*", summary)
+        self.assertIn("Alcoa (AA)", summary)
+        self.assertIn("목표 8.00%", summary)
         self.assertNotIn("AI 제안 · 매수", summary)
-        self.assertIn("우주 데이터센터", summary)
+        self.assertNotIn("우주 데이터센터", summary)
 
     def test_no_change_summary_is_short_performance_message(self):
         summary = build_structured_summary(
@@ -26,12 +27,10 @@ class TelegramSummaryTest(unittest.TestCase):
             no_changes=True,
         )
 
-        self.assertIn("오늘의 성과 요약", summary)
-        self.assertIn("모델 포트폴리오 수익률: +3.2%", summary)
-        self.assertIn("포트폴리오 변경 없음", summary)
-        self.assertIn("*해외주식 추천*", summary)
-        self.assertIn("Alcoa (AA) — Buy (목표 8% / 실제 집계 전)", summary)
-        self.assertNotIn("수익률", summary.split("*해외주식 추천*", 1)[1])
+        self.assertIn("오늘의 요약", summary)
+        self.assertIn("누적 수익률: +3.25%", summary)
+        self.assertIn("오늘 승인된 비중 변경: 없음", summary)
+        self.assertIn("*현재 보유 종목*", summary)
 
     def test_no_change_summary_can_explain_deferred_analysis(self):
         state = state_payload()
@@ -54,8 +53,8 @@ class TelegramSummaryTest(unittest.TestCase):
             status_note="LLM 한도 초과 또는 일시 장애로 신규 글 분석 보류",
         )
 
-        self.assertIn("LLM 한도 초과 또는 일시 장애로 신규 글 분석 보류", summary)
-        self.assertIn("포트폴리오 변경 없음", summary)
+        self.assertIn("오늘 일부 블로그 분석이 완료되지 않아 기존 포트폴리오를 유지합니다", summary)
+        self.assertIn("승인된 매매 없음", summary)
         self.assertIn("1. *알루미늄 공급 제한*", summary)
         self.assertIn("2. *피지컬 AI 확산*", summary)
 
@@ -79,9 +78,9 @@ class TelegramSummaryTest(unittest.TestCase):
             status_note="새 글 1건 요약 실패로 투자 분석 보류: 코스트코와 이마트 트레이더스",
         )
 
-        self.assertIn("새 글 1건 요약 실패", summary)
+        self.assertIn("기존 포트폴리오를 유지", summary)
         self.assertIn("코스트코와 이마트 트레이더스", summary)
-        self.assertIn("분석 보류 글", summary)
+        self.assertNotIn("SummaryResponseError", summary)
         self.assertIn("https://blog.naver.com/ranto28/223456789012", summary)
 
     def test_changed_summary_still_includes_performance(self):
@@ -94,10 +93,10 @@ class TelegramSummaryTest(unittest.TestCase):
             },
         )
 
-        self.assertIn("오늘의 성과 요약", summary)
-        self.assertIn("모델 포트폴리오 수익률: +1.9%", summary)
+        self.assertIn("오늘의 요약", summary)
+        self.assertIn("누적 수익률: +1.94%", summary)
         self.assertIn("핵심 인사이트", summary)
-        self.assertIn("*해외주식 추천*", summary)
+        self.assertIn("현재 보유 종목", summary)
 
     def test_summary_uses_actual_position_weights_and_distinguishes_targets(self):
         summary = build_structured_summary(
@@ -114,8 +113,8 @@ class TelegramSummaryTest(unittest.TestCase):
             },
         )
 
-        self.assertIn("주식 노출 목표: 8% / 실제: 6.5%", summary)
-        self.assertIn("Alcoa (AA) — Buy (목표 8% / 실제 6.5%)", summary)
+        self.assertIn("자산배분(실제): 개별주 6.50%", summary)
+        self.assertIn("Alcoa (AA) 6.50% → 목표 8.00%", summary)
 
     def test_insights_are_numbered_without_dropping_items(self):
         state = state_payload()
@@ -132,7 +131,7 @@ class TelegramSummaryTest(unittest.TestCase):
 
         self.assertIn("1. *알루미늄 공급 제한*", summary)
         self.assertIn("2. *피지컬 AI 확산*", summary)
-        self.assertEqual(summary.count("시사점:"), len(state["insights"]))
+        self.assertEqual(summary.count("추적할 조건:"), len(state["insights"]))
 
     def test_validation_summary_does_not_link_stale_operating_dashboard(self):
         summary = build_structured_summary(
@@ -142,8 +141,7 @@ class TelegramSummaryTest(unittest.TestCase):
         )
 
         self.assertNotIn("대시보드 전체 보기", summary)
-        self.assertIn("검증 모드", summary)
-        self.assertIn("GitHub Actions artifact", summary)
+        self.assertIn("상세 대시보드는 실행 artifact", summary)
 
     def test_long_summary_is_split_without_dropping_tail(self):
         text = "\n".join(f"인사이트 {index}: " + ("x" * 40) for index in range(10))
