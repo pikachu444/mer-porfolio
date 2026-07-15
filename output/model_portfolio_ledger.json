@@ -4,7 +4,7 @@
   "inception_date": "2026-07-14",
   "base_currency": "KRW",
   "starting_value": 100.0,
-  "cash": 97.54912244907562,
+  "cash": 97.54912244907563,
   "realized_pnl": -0.1844731391828804,
   "dividend_income": 0.0,
   "cumulative_costs": 0.10788348583529808,
@@ -920,7 +920,7 @@
   ],
   "corporate_events": [],
   "corporate_action_state": {
-    "last_checked_date": "2026-07-15",
+    "last_checked_date": "2026-07-16",
     "last_applied_date": null
   },
   "snapshots": [
@@ -953,6 +953,17 @@
       "invested_value": 23.96576082,
       "total_value": 100.73717532,
       "return_pct": 0.73717532,
+      "realized_pnl": -0.18447314,
+      "dividend_income": 0.0,
+      "cumulative_costs": 0.10788349
+    },
+    {
+      "date": "2026-07-16",
+      "kind": "closing",
+      "cash": 97.54912245,
+      "invested_value": 3.20480026,
+      "total_value": 100.75392271,
+      "return_pct": 0.75392271,
       "realized_pnl": -0.18447314,
       "dividend_income": 0.0,
       "cumulative_costs": 0.10788349

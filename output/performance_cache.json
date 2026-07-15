@@ -1,30 +1,31 @@
 {
-  "updated": "2026-07-15",
+  "updated": "2026-07-16",
   "epoch_id": "clean-v4-2026-07-14",
   "inception_date": "2026-07-14",
   "legacy_epoch_count": 1,
-  "portfolio_return_krw": 0.73717532,
+  "portfolio_return_krw": 0.75392271,
   "cash": 97.54912245,
   "realized_pnl": -0.18447314,
   "dividend_income": 0.0,
   "cumulative_costs": 0.10788348583529808,
-  "actual_cash_weight": 96.83527668653883,
+  "actual_cash_weight": 96.81918065937306,
   "risk_metrics": {
-    "total_return": 0.007371753200000164,
-    "annualized_volatility": 0.14522974942166694,
-    "sharpe": 6.456269158086674,
-    "sortino": 15.389595401780127,
+    "total_return": 0.007539227100000101,
+    "annualized_volatility": 0.12152642576448443,
+    "sharpe": 5.258607413284567,
+    "sortino": 12.846271324089765,
     "max_drawdown": -0.005427811299999918,
-    "benchmark_return": 0.03304843062951801,
-    "excess_return": -0.025676677429517847,
-    "information_ratio": -27.556787428764892
+    "benchmark_return": 0.03223645694398414,
+    "excess_return": -0.024697229843984037,
+    "information_ratio": -15.866964663296523
   },
   "benchmark": {
     "policy": "KOSPI200 TR 및 S&P500 TR(KRW) 비교 벤치마크",
     "status": "ok",
     "period_returns": [
       0.0,
-      0.03304843062951806
+      0.03223645694398425,
+      0.0
     ]
   },
   "active_positions": [
@@ -40,9 +41,9 @@
       "opened_date": "2026-07-14",
       "episode_realized_pnl": 0.0,
       "target_weight": 1.5,
-      "current_price": 281500.0,
-      "return_pct_krw": 10.278202719934493,
-      "actual_weight": 1.6452174893856353
+      "current_price": 279500.0,
+      "return_pct_krw": 9.494698615352348,
+      "actual_weight": 1.6332570288314272
     },
     {
       "key": "stock:KR:042660",
@@ -56,23 +57,9 @@
       "opened_date": "2026-07-14",
       "episode_realized_pnl": 0.0,
       "target_weight": 1.5,
-      "current_price": 80500.0,
-      "return_pct_krw": 1.8518049911180112,
-      "actual_weight": 1.5195058204062653
-    }
-  ],
-  "policy_removed_positions": [
-    {
-      "key": "etf:KR:069500",
-      "name": "KODEX 200",
-      "code": "069500",
-      "policy_removed_reason": "광범위 지수 ETF 고정 편입 정책 제거"
-    },
-    {
-      "key": "etf:KR:360750",
-      "name": "TIGER 미국S&P500",
-      "code": "360750",
-      "policy_removed_reason": "광범위 지수 ETF 고정 편입 정책 제거"
+      "current_price": 82000.0,
+      "return_pct_krw": 3.7496647114493964,
+      "actual_weight": 1.5475623137166195
     }
   ],
   "closed_positions": [
@@ -373,6 +360,10 @@
     {
       "date": "2026-07-15",
       "avg_return_krw": 0.73717532
+    },
+    {
+      "date": "2026-07-16",
+      "avg_return_krw": 0.75392271
     }
   ]
 }
