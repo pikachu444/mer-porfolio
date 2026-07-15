@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "github_run_id": "29433745230",
-  "mode": "scheduled",
-  "run_label": "scheduled",
-  "completed_at": "2026-07-16T01:46:12.461381",
+  "github_run_id": "29453200970",
+  "mode": "rebalance",
+  "run_label": "rebalance",
+  "completed_at": "2026-07-16T06:48:34.168929",
   "state_bundle_committed": true,
   "report_path": "report_20260716.md",
   "chart_path": "chart_latest.png",

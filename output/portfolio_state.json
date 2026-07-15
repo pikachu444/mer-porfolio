@@ -9701,9 +9701,7 @@
     "updated": [],
     "promoted": [],
     "rejected": [],
-    "expired": [
-      "legacy-0d9d042931f8f3ac513e"
-    ],
+    "expired": [],
     "archived": []
   },
   "last_rebalanced_date": "2026-07-14",
