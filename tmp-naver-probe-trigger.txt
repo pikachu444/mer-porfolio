@@ -1,1 +1,1 @@
-trigger 2026-07-15 fulltext
+trigger 2026-07-15 market-data
