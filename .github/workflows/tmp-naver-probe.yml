@@ -1,0 +1,44 @@
+name: Temporary Naver blog endpoint probe
+
+on:
+  push:
+    paths:
+      - '.github/workflows/tmp-naver-probe.yml'
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - name: Probe public endpoints
+        run: |
+          python - <<'PY'
+          import json, pathlib, requests
+          headers={'User-Agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1','Referer':'https://m.blog.naver.com/','Accept-Language':'ko-KR,ko;q=0.9'}
+          urls=[
+            'https://blog.naver.com/PostTitleListAsync.naver?blogId=ranto28&viewdate=&currentPage=1&categoryNo=0&parentCategoryNo=&countPerPage=30',
+            'https://m.blog.naver.com/PostTitleListAsync.naver?blogId=ranto28&viewdate=&currentPage=1&categoryNo=0&parentCategoryNo=&countPerPage=30',
+            'https://m.blog.naver.com/api/blogs/ranto28/post-list?categoryNo=0&itemCount=30&page=1',
+            'https://m.blog.naver.com/PostList.naver?blogId=ranto28&categoryNo=0&currentPage=1&listStyle=post',
+          ]
+          out=[]
+          p=pathlib.Path('probe'); p.mkdir()
+          for i,u in enumerate(urls):
+            try:
+              r=requests.get(u,headers=headers,timeout=20)
+              text=r.text
+              out.append({'url':u,'status':r.status_code,'content_type':r.headers.get('content-type'),'length':len(text),'head':text[:1000]})
+              (p/f'{i}.txt').write_text(text[:50000],encoding='utf-8')
+            except Exception as e:
+              out.append({'url':u,'error':repr(e)})
+          (p/'summary.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: naver-probe
+          path: probe
