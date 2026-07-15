@@ -3,21 +3,21 @@
   "epoch_id": "clean-v4-2026-07-14",
   "inception_date": "2026-07-14",
   "legacy_epoch_count": 1,
-  "portfolio_return_krw": 0.75392271,
-  "cash": 97.54912245,
+  "portfolio_return_krw": 0.72974757,
+  "cash": 89.4665675,
   "realized_pnl": -0.18447314,
   "dividend_income": 0.0,
-  "cumulative_costs": 0.10788348583529808,
-  "actual_cash_weight": 96.81918065937306,
+  "cumulative_costs": 0.13205862525248854,
+  "actual_cash_weight": 88.81841725834477,
   "risk_metrics": {
-    "total_return": 0.007539227100000101,
-    "annualized_volatility": 0.12152642576448443,
-    "sharpe": 5.258607413284567,
-    "sortino": 12.846271324089765,
+    "total_return": 0.007297475699999945,
+    "annualized_volatility": 0.12193209860094344,
+    "sharpe": 5.075786085260215,
+    "sortino": 12.439900519984825,
     "max_drawdown": -0.005427811299999918,
     "benchmark_return": 0.03223645694398414,
-    "excess_return": -0.024697229843984037,
-    "information_ratio": -15.866964663296523
+    "excess_return": -0.024938981243984193,
+    "information_ratio": -16.181542844527325
   },
   "benchmark": {
     "policy": "KOSPI200 TR 및 S&P500 TR(KRW) 비교 벤치마크",
@@ -43,7 +43,7 @@
       "target_weight": 1.5,
       "current_price": 279500.0,
       "return_pct_krw": 9.494698615352348,
-      "actual_weight": 1.6332570288314272
+      "actual_weight": 1.6336490105183468
     },
     {
       "key": "stock:KR:042660",
@@ -59,7 +59,39 @@
       "target_weight": 1.5,
       "current_price": 82000.0,
       "return_pct_krw": 3.7496647114493964,
-      "actual_weight": 1.5475623137166195
+      "actual_weight": 1.5479337286719117
+    },
+    {
+      "key": "etf:KR:305720",
+      "name": "KODEX 2차전지산업",
+      "code": "305720",
+      "market": "KR",
+      "asset_type": "etf",
+      "quantity": 0.00036430288452667965,
+      "average_cost": 13866.474999999999,
+      "decision_actor": "AI",
+      "opened_date": "2026-07-16",
+      "episode_realized_pnl": 0.0,
+      "target_weight": 5.0,
+      "current_price": 13825.0,
+      "return_pct_krw": -0.29910269192421346,
+      "actual_weight": 4.999999999999984
+    },
+    {
+      "key": "stock:KR:000660",
+      "name": "SK하이닉스",
+      "code": "000660",
+      "market": "KR",
+      "asset_type": "stock",
+      "quantity": 1.4514372848937594e-06,
+      "average_cost": 2088246.0000000002,
+      "decision_actor": "AI",
+      "opened_date": "2026-07-16",
+      "episode_realized_pnl": 0.0,
+      "target_weight": 3.0,
+      "current_price": 2082000.0,
+      "return_pct_krw": -0.29910269192423566,
+      "actual_weight": 2.9999999999999902
     }
   ],
   "closed_positions": [
@@ -363,7 +395,7 @@
     },
     {
       "date": "2026-07-16",
-      "avg_return_krw": 0.75392271
+      "avg_return_krw": 0.72974757
     }
   ]
 }

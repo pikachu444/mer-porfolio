@@ -8,31 +8,26 @@
       "asset_type": "stock",
       "decision_actor": "AI",
       "action": "보유",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-14",
+      "basis": "이전 판단 유지",
+      "decision_date": "2026-07-16",
       "evidence_posts": [
         {
           "title": "캐나다가 독일 잠수함을 선택한 속사정",
           "url": "https://blog.naver.com/ranto28/224338753575?fromRss=true&trackingCode=rss",
           "published_date": "2026-07-06"
-        },
-        {
-          "title": "한화오션, 차기 구축함 우선협상대상자 선정(feat 복잡한 히스토리)",
-          "url": "https://blog.naver.com/ranto28/224333859654?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-02"
         }
       ],
       "source_mentioned": true,
-      "previous_weight": 3.0,
+      "previous_weight": 1.5,
       "proposed_weight": 1.5,
       "weight_source": "AI 제안",
-      "change_reason": "리밸런싱 점검. 캐나다 잠수함 수주 탈락 악재는 선제 비중 축소(3%)로 반영되었으며, KDDX 우선협상 대상선정 및 필리조선소 인수 기반 미국 특수선 시장 진출 등 장기 수혜가 유효하므로 현 포지션 유지.",
+      "change_reason": "캐나다 수주 실패 이슈는 이전 리밸런싱에서 1.5% 수준으로 완벽하게 선반영되어 조율되었으며, 차기 구축함 우선협상 지위 및 장기 해군 MRO 성장성은 훼손되지 않았으므로 비중 유지.",
       "source_scope": "source_named_security",
-      "investment_rationale": "KDDX 우선협상 지위 및 미 해군 MRO 시장 본격 교두보 마련.",
-      "current_entry_reason": "단기 노이즈가 제거된 상태에서 장기 성장 궤도가 여전함을 재확인.",
+      "investment_rationale": "KDDX 구축함 사업 및 미군 MRO 특수선 기반 성장 포지션 유효.",
+      "current_entry_reason": "단기 노이즈 해소 국면 및 중장기 수주 파이프라인 기대 유지.",
       "key_risks": [
-        "해외 방산 수주의 외교 지정학적 불확실성",
-        "국내 특수선 사업 법적 분쟁 지속"
+        "해외 수주의 높은 정치·지정학적 리스크",
+        "국내 특수선 경쟁사 간 소송 노이즈"
       ],
       "linked_insight_ids": [],
       "allocation_role": "satellite",
@@ -45,8 +40,7 @@
       ],
       "thesis_id": "thesis_10c2680e31c656ca8932e2c7",
       "linked_signal_ids": [
-        "sig_08f5a5b06dfa9ae85ffe069a06d0deac75ac55fa86d1f14f4dfc28eb4bdc16c7",
-        "sig_801c6b21e36a044835339691ccadb7cc6de20303a7db303fadf7932baee6c88f"
+        "sig_08f5a5b06dfa9ae85ffe069a06d0deac75ac55fa86d1f14f4dfc28eb4bdc16c7"
       ],
       "issuer_id": "HANWHA_OCEAN",
       "theme_ids": [
@@ -74,32 +68,27 @@
       "asset_type": "stock",
       "decision_actor": "AI",
       "action": "보유",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-14",
+      "basis": "이전 판단 유지",
+      "decision_date": "2026-07-16",
       "evidence_posts": [
         {
           "title": "중국이 반도체에 사용되는 헬륨을 수출금지한 속사정",
           "url": "https://blog.naver.com/ranto28/224343061316?fromRss=true&trackingCode=rss",
           "published_date": "2026-07-11"
-        },
-        {
-          "title": "삼성전자 역대최고 영업이익 발표, 주가는?",
-          "url": "https://blog.naver.com/ranto28/224338820373?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-06"
         }
       ],
       "source_mentioned": true,
-      "previous_weight": 5.0,
+      "previous_weight": 1.5,
       "proposed_weight": 1.5,
       "weight_source": "AI 제안",
-      "change_reason": "리밸런싱 점검. 89.4조 원에 달하는 압도적 2분기 잠정 실적으로 기초체력이 증명되었습니다. 비록 중국 헬륨 수출 제한 및 호르무즈 봉쇄 위험이라는 외부 조달 압박이 발생했으나 실적 성장의 우위를 훼손하지 않으므로 현행 5% 유지.",
+      "change_reason": "압도적인 2분기 영업이익 기초체력이 입증되었으며, 헬륨 조달 및 호르무즈 해협 위기는 공정 효율화와 장기 대체 조달망으로 이겨낼 수 있는 수준이므로 리스크 대비 비중을 유지함.",
       "allocation_role": "core",
       "source_scope": "source_named_security",
-      "investment_rationale": "메모리 반도체 공급자 우위 사이클 지속 및 장기 투자 결실의 영업이익화 본격 개시.",
-      "current_entry_reason": "실적 대비 가치 평가 매력 및 업황 체력이 원자재 병목 리스크를 이겨낼 수 있다는 판단.",
+      "investment_rationale": "메모리 반도체 사이클 성과 실적 가시화 본격 진행.",
+      "current_entry_reason": "강력한 실적 안정성과 업황 체력이 원자재 리스크를 통제하고 있음을 판단함.",
       "key_risks": [
-        "헬륨 수급 불안으로 인한 D램 라인 가동 리스크",
-        "국내 수급 변동성 확대"
+        "헬륨 병목으로 인한 일부 미세공정 영향 가능성",
+        "국내 유동성 축소로 인한 단기 수급 부담"
       ],
       "linked_insight_ids": [
         "INSIGHT-20260714-2"
@@ -111,8 +100,7 @@
       ],
       "thesis_id": "thesis_d440cb53229e025ace44361f",
       "linked_signal_ids": [
-        "sig_1493e477e571db527a08aaad3002326e6c89064ed43c1d27a3bf3064dce39849",
-        "sig_ad2170fd380757f5f112202a0ac941ea2eacfc278ef655d2d973541fbde830df"
+        "sig_1493e477e571db527a08aaad3002326e6c89064ed43c1d27a3bf3064dce39849"
       ],
       "issuer_id": "SAMSUNG_ELECTRONICS",
       "theme_ids": [
@@ -133,6 +121,135 @@
       "allocation_method": "deterministic_risk_adjusted_v1",
       "policy_action": "비중축소",
       "policy_change_reason": "슬리브·품질·변동성·MDD·집중도 한도 적용 / 일반 거래 총 명목 15% 회전율 상한 적용"
+    },
+    {
+      "name": "SK하이닉스",
+      "code": "000660",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "매수",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-16",
+      "evidence_posts": [
+        {
+          "title": "미국 CPI 결과가 잘 나왔고, SK하이닉스 주가는 폭등했다.",
+          "url": "https://blog.naver.com/ranto28/224347004537?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-14"
+        },
+        {
+          "title": "SK하이닉스의 미국 ADR주식이 국장 본주보다 비싼 이유 A/S",
+          "url": "https://blog.naver.com/ranto28/224345322649?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-13"
+        },
+        {
+          "title": "삼성전자등 반도체 메가 프로젝트 근황 A/S (feat 물은 괜찮을까?)",
+          "url": "https://blog.naver.com/ranto28/224339365503?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-07"
+        }
+      ],
+      "source_mentioned": true,
+      "previous_weight": 0.0,
+      "proposed_weight": 3.0,
+      "weight_source": "AI 제안",
+      "change_reason": "이전 리밸런싱에서 행정적 편출 상태였으나, ADR 차익거래 비대칭 기저와 M15X 초순수 국산화 및 미국 ADR 수요 급증을 입증하는 분석이 구체적으로 완료되어 신규 3.0% 비중으로 복귀 제안.",
+      "allocation_role": "satellite",
+      "source_scope": "source_named_security",
+      "investment_rationale": "나스닥 ADR 가치 가산과 더불어 국산 초순수 인프라 확보에 기반한 D램·HBM 공정 안정화.",
+      "current_entry_reason": "미국 자금 유입 신뢰도 회복 및 글로벌 투자 은행의 장기 DRAM 공급 부족 전망 합의.",
+      "key_risks": [
+        "외환 기습 개입으로 인한 단기 환율 충격",
+        "대중국 반도체 장비 통제 수위 강화 리스크"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260716-3"
+      ],
+      "linked_signal_ids": [
+        "sig_b0812f75a9616ba8e4f75e9487de58939c5cdb5d359161dd9478861b75f9c410",
+        "sig_f68fa0c88f67ef6e480a4a4d19e2bd8a9bbc583a87d9657257d74b71308905b3",
+        "sig_72709e9b66b5708c5c911ec0c295292e60f9a4dd87499d1efdce03b1fb51c296"
+      ],
+      "thesis_id": "thesis_f71c12c78b2b0afd880b57f8",
+      "issuer_id": "SK_HYNIX",
+      "theme_ids": [
+        "memory_semiconductors",
+        "adr_demand"
+      ],
+      "country_code": "KR",
+      "quality_components": {
+        "explicitness": 0.8,
+        "causality": 0.8,
+        "catalyst": 0.8,
+        "confirmation": 0.7,
+        "invalidation": 0.5,
+        "recency": 0.9
+      },
+      "provenance_status": "verified",
+      "origin_signal_type": "MER_THESIS",
+      "origin_signal_ids": [
+        "sig_b0812f75a9616ba8e4f75e9487de58939c5cdb5d359161dd9478861b75f9c410",
+        "sig_72709e9b66b5708c5c911ec0c295292e60f9a4dd87499d1efdce03b1fb51c296"
+      ],
+      "decision_model_id": "gemini-3.5-flash",
+      "rejected_linked_signal_ids": []
+    },
+    {
+      "name": "KODEX 2차전지산업",
+      "code": "305720",
+      "market": "KR",
+      "asset_type": "etf",
+      "decision_actor": "AI",
+      "action": "매수",
+      "basis": "섹터 분석",
+      "decision_date": "2026-07-16",
+      "evidence_posts": [
+        {
+          "title": "미국의 중국규제 3종세트로 배터리 3사가 힘을 낼 수 있을까?",
+          "url": "https://blog.naver.com/ranto28/224346093395?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-14"
+        }
+      ],
+      "source_mentioned": false,
+      "previous_weight": 0.0,
+      "proposed_weight": 5.0,
+      "weight_source": "AI 제안",
+      "change_reason": "미국 무역장벽 규제(OBBBA) 시행으로 수혜를 얻는 국내 배터리 주요 기업들을 종합 포괄하고, 향후 ESS 부문에서 시장 지배력이 급증할 모멘텀에 대응하기 위한 신규 섹터 ETF 매수 제안.",
+      "allocation_role": "satellite",
+      "source_scope": "sector_only",
+      "investment_rationale": "미국 대중국 규제 3종 세트(MACR, 고관세율, AMPC 지급 보장) 수혜를 직접 입는 국내 배터리 대형주 분산 투자.",
+      "current_entry_reason": "미국 주도 무역 법안을 통한 시장 구도 개편 수혜 본격화 시점.",
+      "key_risks": [
+        "중국 우회 공급망의 단기 소재 단절 위험",
+        "글로벌 완성차 및 대용량 ESS 수요의 일시적 정체 가능성"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260716-2"
+      ],
+      "linked_signal_ids": [
+        "sig_32fe7ef7f7a85fa4886685274a576ee6fdba03ff723dd5e6105c896f605b6fab"
+      ],
+      "thesis_id": "thesis_f1681dfea0bd6980c0e2330c",
+      "issuer_id": "SAMSUNG_SDI_LG_ENS_SK_ON",
+      "theme_ids": [
+        "battery_regulatory_benefit",
+        "ess_growth"
+      ],
+      "country_code": "KR",
+      "quality_components": {
+        "explicitness": 0.7,
+        "causality": 0.8,
+        "catalyst": 0.8,
+        "confirmation": 0.6,
+        "invalidation": 0.5,
+        "recency": 0.8
+      },
+      "provenance_status": "verified",
+      "origin_signal_type": "AI_INFERRED",
+      "origin_signal_ids": [
+        "sig_3de60dd2e605343b1d57923b550b5dfa91c3e238ae725c4ed35cfa17bc3e3c0b"
+      ],
+      "decision_model_id": "gemini-3.5-flash",
+      "rejected_linked_signal_ids": []
     }
   ],
   "watchlist": [
@@ -190,7 +307,7 @@
       "asset_type": "stock",
       "decision_actor": "AI",
       "basis": "종목 분석",
-      "decision_date": "2026-07-13",
+      "decision_date": "2026-07-16",
       "evidence_posts": [
         {
           "title": "홈플러스 사태 근황",
@@ -206,7 +323,7 @@
       "watchlist_closed_date": null,
       "status": "관심",
       "source_scope": "source_named_security",
-      "observation_reason": "경쟁사 홈플러스의 몰락 과정에서 트레이더스(창고형 할인점)를 통해 생존 전략을 모색하는 기업으로 언급되었습니다. 대형마트 산업의 구조적 위기 속에서 반사 이익 및 차별화 가능성이 있는지 관찰이 필요하나, 투자 논리가 구체화되지 않아 Watchlist에 유지합니다.",
+      "observation_reason": "홈플러스 파산 우려가 구체화된 상황에서 오프라인 마트 업계 생존 및 반사이익 가능성이 있으나 주도적인 투자 메커니즘을 형성하지 못해 Watchlist에 유지합니다.",
       "provenance_status": "legacy_unvalidated",
       "origin_signal_type": "LEGACY_UNVALIDATED",
       "origin_signal_ids": [],
@@ -265,7 +382,7 @@
       "asset_type": "stock",
       "decision_actor": "AI",
       "basis": "종목 분석",
-      "decision_date": "2026-07-13",
+      "decision_date": "2026-07-16",
       "evidence_posts": [
         {
           "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
@@ -281,7 +398,7 @@
       "watchlist_closed_date": null,
       "status": "관심",
       "source_scope": "source_named_security",
-      "observation_reason": "신규 스테이블코인 'Open USD' 컨소시엄에 참여하여 블록체인 기반 결제 시장으로의 확장성을 보여주었습니다. 기존 결제 네트워크의 강자와 신기술의 결합이 어떤 시너지를 낼지 관찰할 필요가 있습니다.",
+      "observation_reason": "Open USD 컨소시엄 참여에 기초한 스테이블코인 생태계와 결제 시장 진입 여부를 관찰하기 위해 관심 단계 유지.",
       "provenance_status": "legacy_unvalidated",
       "origin_signal_type": "LEGACY_UNVALIDATED",
       "origin_signal_ids": [],
@@ -301,7 +418,7 @@
       "asset_type": "stock",
       "decision_actor": "AI",
       "basis": "종목 분석",
-      "decision_date": "2026-07-13",
+      "decision_date": "2026-07-16",
       "evidence_posts": [
         {
           "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
@@ -317,7 +434,7 @@
       "watchlist_closed_date": null,
       "status": "관심",
       "source_scope": "source_named_security",
-      "observation_reason": "신규 스테이블코인 'Open USD' 컨소시엄에 참여하여 블록체인 기반 결제 시장으로의 확장성을 보여주었습니다. 기존 결제 네트워크의 강자와 신기술의 결합이 어떤 시너지를 낼지 관찰할 필요가 있습니다.",
+      "observation_reason": "OUSD 플랫폼 파트너십을 통한 신규 스테이블코인 성장 수혜 여부를 장기 관찰.",
       "provenance_status": "legacy_unvalidated",
       "origin_signal_type": "LEGACY_UNVALIDATED",
       "origin_signal_ids": [],
@@ -337,7 +454,7 @@
       "asset_type": "stock",
       "decision_actor": "AI",
       "basis": "종목 분석",
-      "decision_date": "2026-07-13",
+      "decision_date": "2026-07-16",
       "evidence_posts": [
         {
           "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
@@ -353,7 +470,7 @@
       "watchlist_closed_date": null,
       "status": "관심",
       "source_scope": "source_named_security",
-      "observation_reason": "비상장 기업. 신규 스테이블코인 'Open USD' 컨소시엄 참여사로 언급되었습니다. 국내 최대 가상자산 거래소로서 글로벌 블록체인 생태계에서의 역할을 확대할 가능성이 있어 관찰이 필요합니다.",
+      "observation_reason": "비상장 주식으로서 Open USD 컨소시엄 국내 명단에 포함됨에 따라 관련 블록체인 시너지를 관심 대상으로 관찰.",
       "provenance_status": "legacy_unvalidated",
       "origin_signal_type": "LEGACY_UNVALIDATED",
       "origin_signal_ids": [],
@@ -373,7 +490,7 @@
       "asset_type": "stock",
       "decision_actor": "AI",
       "basis": "종목 분석",
-      "decision_date": "2026-07-13",
+      "decision_date": "2026-07-16",
       "evidence_posts": [
         {
           "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
@@ -389,7 +506,7 @@
       "watchlist_closed_date": null,
       "status": "관심",
       "source_scope": "source_named_security",
-      "observation_reason": "신규 스테이블코인 'Open USD' 컨소시엄 참여사로 언급되었습니다. 전통 금융사의 디지털 자산 시장 진출 사례로, 향후 사업 전개 방향을 관찰할 필요가 있습니다.",
+      "observation_reason": "스테이블코인 OUSD 참여 의향 및 디지털 결제 생태계 수혜 연계성 검토를 위한 관심 분류 유지.",
       "provenance_status": "legacy_unvalidated",
       "origin_signal_type": "LEGACY_UNVALIDATED",
       "origin_signal_ids": [],
@@ -409,7 +526,7 @@
       "asset_type": "stock",
       "decision_actor": "AI",
       "basis": "종목 분석",
-      "decision_date": "2026-07-13",
+      "decision_date": "2026-07-16",
       "evidence_posts": [
         {
           "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
@@ -425,7 +542,7 @@
       "watchlist_closed_date": null,
       "status": "관심",
       "source_scope": "source_named_security",
-      "observation_reason": "신규 스테이블코인 'Open USD' 컨소시엄 참여사로 언급되었습니다. 인터넷 은행의 블록체인 기술 도입 및 글로벌 핀테크 생태계 참여 가능성을 관찰할 필요가 있습니다.",
+      "observation_reason": "전통 은행에 맞선 인터넷 전문은행의 디지털 블록체인 금융 확장성을 주목하며 관심 단계 유지.",
       "provenance_status": "legacy_unvalidated",
       "origin_signal_type": "LEGACY_UNVALIDATED",
       "origin_signal_ids": [],
@@ -492,7 +609,7 @@
       "asset_type": "stock",
       "decision_actor": "AI",
       "basis": "종목 분석",
-      "decision_date": "2026-07-14",
+      "decision_date": "2026-07-16",
       "evidence_posts": [
         {
           "title": "어떻게 베팅해야, 안전하면서도 빨리 불릴수 있는가?(feat 켈리공식)",
@@ -508,7 +625,7 @@
       "watchlist_closed_date": null,
       "status": "관심",
       "source_scope": "source_named_security",
-      "observation_reason": "트럼프의 매집 이후 미 국방부의 15% 지분 인수 발표가 확인되었습니다. 정부 직접 계약 및 특화 자원 수혜 매커니즘이 강하지만 추가 촉매가 확보되는 시점까지 대기합니다.",
+      "observation_reason": "미 국방부의 15% 지분 인수 계약으로 우방국 희토류 공급 수혜가 있으나, 실제 사업성 증대를 유도할 추가 촉매 확보 시기까지 관심으로 분류하여 대기.",
       "linked_signal_ids": [
         "sig_d724325f1885b7531227a1cd2ae40bb5e69c0e98bc5192a67feedbaffb8a97d6"
       ],
@@ -520,6 +637,208 @@
       "lifecycle_status": "active",
       "latest_material_signal_date": "2026-07-06",
       "expires_on": "2026-07-20",
+      "archived_date": null,
+      "archive_reason": null
+    },
+    {
+      "name": "농산물/곡물 섹터",
+      "code": "",
+      "market": "",
+      "asset_type": "sector",
+      "decision_actor": "AI",
+      "basis": "섹터 분석",
+      "decision_date": "2026-07-16",
+      "evidence_posts": [
+        {
+          "title": "계란가격은 왜 이리 비싼가?",
+          "url": "https://blog.naver.com/ranto28/224343106209?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-11"
+        }
+      ],
+      "source_mentioned": false,
+      "watchlist_entry_date": "2026-06-16",
+      "latest_evidence_date": "2026-07-11",
+      "watchlist_duration_days": 30,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "sector_only",
+      "observation_reason": "고환율 및 미 옥수수/콩 풍작 여파에 따라 사료 원가의 하방 압력이 유효하게 지지되고 있으므로 육계 및 계란 공급망 주기와 연계해 관찰을 지속합니다.",
+      "linked_signal_ids": [
+        "sig_25c21c66d247f716ce63393271333f844ccd9c4e9b2ecc494d7501380ddfc31e"
+      ],
+      "thesis_id": "thesis_25adbcaa24a6badd0112706e",
+      "watchlist_kind": "cyclical",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "lifecycle_status": "active",
+      "latest_material_signal_date": "2026-07-11",
+      "expires_on": "2026-10-02",
+      "archived_date": null,
+      "archive_reason": null
+    },
+    {
+      "name": "CF Industries Holdings",
+      "code": "CF",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-16",
+      "evidence_posts": [
+        {
+          "title": "트럼프가 비료부족에 대응하는 보법",
+          "url": "https://blog.naver.com/ranto28/224341638501?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-09"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-10",
+      "latest_evidence_date": "2026-07-09",
+      "watchlist_duration_days": 6,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "법무부 합의로 수출에서 내수로 물량을 배정하면서 정기점검을 미루는 비료 공급의 단기 변동성과 농무부 반독점 지적 노이즈가 상존하므로 관심 단계 유지.",
+      "linked_signal_ids": [
+        "sig_d8d6b479c2bf395d8a2650fa93b511295d65135ff58d2da2130736e48ff4ace1"
+      ],
+      "thesis_id": "thesis_eb914de4086d88c82c688dfe",
+      "watchlist_kind": "event",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "lifecycle_status": "active",
+      "latest_material_signal_date": "2026-07-09",
+      "expires_on": "2026-08-06",
+      "archived_date": null,
+      "archive_reason": null
+    },
+    {
+      "name": "HLB",
+      "code": "028300",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-16",
+      "evidence_posts": [
+        {
+          "title": "항서제약의 비밀",
+          "url": "https://blog.naver.com/ranto28/224343832057?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-12"
+        },
+        {
+          "title": "HLB 간암신약 미국FDA승인 불발의 비밀 A/S",
+          "url": "https://blog.naver.com/ranto28/224342169959?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-10"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-13",
+      "latest_evidence_date": "2026-07-12",
+      "watchlist_duration_days": 3,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "파트너사인 항서제약의 반복적인 제조품질관리(cGMP) 및 Warning Letter 지적 등의 리스크 해결 시점이 불투명하므로 불확실성이 해소되는 구간까지 투자 집행을 완전 보류하고 관찰만 유지.",
+      "linked_signal_ids": [
+        "sig_c7de0e83eda6d6f8cd174bd9af0306664b10516ac3070c747624b96126ce37f6",
+        "sig_b86ecd1688c2b29ba598c1cd02a338dfcc1048a26051c9710ecb32a9533a12ef"
+      ],
+      "thesis_id": "thesis_46f59fe016ba1642e8e20029",
+      "watchlist_kind": "mention",
+      "provenance_status": "verified",
+      "origin_signal_type": "MER_THESIS",
+      "origin_signal_ids": [
+        "sig_b86ecd1688c2b29ba598c1cd02a338dfcc1048a26051c9710ecb32a9533a12ef"
+      ],
+      "lifecycle_status": "active",
+      "latest_material_signal_date": "2026-07-12",
+      "expires_on": "2026-07-24",
+      "archived_date": null,
+      "archive_reason": null
+    },
+    {
+      "name": "TKMS",
+      "code": "",
+      "market": "DE",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-16",
+      "evidence_posts": [
+        {
+          "title": "캐나다가 독일 잠수함을 선택한 속사정",
+          "url": "https://blog.naver.com/ranto28/224338753575?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-06"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-16",
+      "latest_evidence_date": "2026-07-06",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "독일의 조선/방산 기업으로, 한화오션을 제치고 캐나다 차세대 잠수함 우선협상대상자로 선정되어 주가 강세가 확인됨에 따라 수혜 흐름을 추적합니다.",
+      "linked_signal_ids": [
+        "sig_4cf88c4d719e3fb00e699cf05f2fdfb499bfa8e15b3acc766bf5bf0389717da0"
+      ],
+      "thesis_id": "thesis_dae98beef5763f9ba6cab278",
+      "watchlist_kind": "event",
+      "provenance_status": "verified",
+      "origin_signal_type": "MER_THESIS",
+      "origin_signal_ids": [
+        "sig_4cf88c4d719e3fb00e699cf05f2fdfb499bfa8e15b3acc766bf5bf0389717da0"
+      ],
+      "lifecycle_status": "active",
+      "latest_material_signal_date": "2026-07-06",
+      "expires_on": "2026-08-03",
+      "archived_date": null,
+      "archive_reason": null
+    },
+    {
+      "name": "롯데건설",
+      "code": "011160",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-16",
+      "evidence_posts": [
+        {
+          "title": "홈플러스 사태 근황",
+          "url": "https://blog.naver.com/ranto28/224336684901?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-04"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-16",
+      "latest_evidence_date": "2026-07-04",
+      "watchlist_duration_days": 0,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": null,
+      "status": "관심",
+      "source_scope": "source_named_security",
+      "observation_reason": "홈플러스 관련 점포 2조 2,505억 원 규모 PF 보증 손실 가능성이 언급되어, 향후 신용 우려 여부와 부지 주상복합 개발 진행 상황을 확인합니다.",
+      "linked_signal_ids": [
+        "sig_fb07c5b09596fba62548f36937676cfc3e35d6a56812dec0436a027d6085adb7"
+      ],
+      "thesis_id": "thesis_b8f78eb1ffc29bf75187ad96",
+      "watchlist_kind": "event",
+      "provenance_status": "verified",
+      "origin_signal_type": "MER_THESIS",
+      "origin_signal_ids": [
+        "sig_fb07c5b09596fba62548f36937676cfc3e35d6a56812dec0436a027d6085adb7"
+      ],
+      "lifecycle_status": "active",
+      "latest_material_signal_date": "2026-07-04",
+      "expires_on": "2026-07-31",
       "archived_date": null,
       "archive_reason": null
     }
@@ -7963,35 +8282,71 @@
       "origin_signal_ids": [],
       "decision_model_id": "gemini-3.5-flash",
       "rejected_linked_signal_ids": []
-    }
-  ],
-  "insights": [
-    {
-      "id": "INSIGHT-20260714-1",
-      "title": "SK하이닉스 나스닥 ADR과 국내 본주 간의 가격 괴리 구조 분석",
-      "summary": "SK하이닉스 ADR이 나스닥에서 본주 대비 16% 이상 프리미엄 거래되었으나 본주는 약세를 보였습니다. 이는 본주의 ADR 전환은 제한되고 ADR의 본주 반납만 가능한 구조적 차익거래 비대칭성에 기인합니다.",
-      "investment_implication": "미국 시장 내 프리미엄 고착화 현상이 나타날 수 있으며, 두 시장 간 일시적 수급 디커플링을 이해하는 지표로 활용해야 합니다.",
-      "evidence_posts": [
-        {
-          "title": "SK하이닉스의 미국 ADR주식이 국장 본주보다 비싼 이유 A/S",
-          "url": "https://blog.naver.com/ranto28/224345322649?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-13"
-        },
-        {
-          "title": "미장에 SK하이닉스는 15%이상 올랐는데, 국장은 왜 빠질까?",
-          "url": "https://blog.naver.com/ranto28/224344934129?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-13"
-        }
-      ],
-      "related_decision_codes": [
-        "000660"
-      ]
     },
     {
-      "id": "INSIGHT-20260714-2",
-      "title": "중국 헬륨 수출 통제 및 호르무즈 사태로 인한 반도체 필수 공급망 타격",
-      "summary": "중국의 헬륨 수출 통제와 호르무즈 해협 봉쇄로 카타르산 공급에 차질이 생기며 반도체 공정에 필수적인 헬륨 스팟 가격이 급등했습니다. 한국은 헬륨의 59%를 카타르 수입에 의존하며, 헬륨은 장기 비축이 불가능해 단기 조달 리스크가 큽니다.",
-      "investment_implication": "삼성전자와 SK하이닉스 등 대형 반도체 제조사의 공급망 안정성이 시험대에 올라 운영 원가 증가 우려가 상존합니다.",
+      "name": "한화오션",
+      "code": "042660",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "보유",
+      "basis": "이전 판단 유지",
+      "decision_date": "2026-07-16",
+      "evidence_posts": [
+        {
+          "title": "캐나다가 독일 잠수함을 선택한 속사정",
+          "url": "https://blog.naver.com/ranto28/224338753575?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-06"
+        }
+      ],
+      "source_mentioned": true,
+      "previous_weight": 1.5,
+      "proposed_weight": 1.5,
+      "weight_source": "AI 제안",
+      "change_reason": "캐나다 수주 실패 이슈는 이전 리밸런싱에서 1.5% 수준으로 완벽하게 선반영되어 조율되었으며, 차기 구축함 우선협상 지위 및 장기 해군 MRO 성장성은 훼손되지 않았으므로 비중 유지.",
+      "allocation_role": "satellite",
+      "source_scope": "source_named_security",
+      "investment_rationale": "KDDX 구축함 사업 및 미군 MRO 특수선 기반 성장 포지션 유효.",
+      "current_entry_reason": "단기 노이즈 해소 국면 및 중장기 수주 파이프라인 기대 유지.",
+      "key_risks": [
+        "해외 수주의 높은 정치·지정학적 리스크",
+        "국내 특수선 경쟁사 간 소송 노이즈"
+      ],
+      "linked_insight_ids": [],
+      "linked_signal_ids": [
+        "sig_08f5a5b06dfa9ae85ffe069a06d0deac75ac55fa86d1f14f4dfc28eb4bdc16c7"
+      ],
+      "thesis_id": "thesis_10c2680e31c656ca8932e2c7",
+      "issuer_id": "HANWHA_OCEAN",
+      "theme_ids": [
+        "naval_mro_defense"
+      ],
+      "country_code": "KR",
+      "quality_components": {
+        "explicitness": 0.8,
+        "causality": 0.8,
+        "catalyst": 0.7,
+        "confirmation": 0.7,
+        "invalidation": 0.5,
+        "recency": 0.8
+      },
+      "provenance_status": "verified",
+      "origin_signal_type": "MER_THESIS",
+      "origin_signal_ids": [
+        "sig_801c6b21e36a044835339691ccadb7cc6de20303a7db303fadf7932baee6c88f"
+      ],
+      "decision_model_id": "gemini-3.5-flash",
+      "rejected_linked_signal_ids": []
+    },
+    {
+      "name": "삼성전자",
+      "code": "005930",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "보유",
+      "basis": "이전 판단 유지",
+      "decision_date": "2026-07-16",
       "evidence_posts": [
         {
           "title": "중국이 반도체에 사용되는 헬륨을 수출금지한 속사정",
@@ -7999,25 +8354,233 @@
           "published_date": "2026-07-11"
         }
       ],
-      "related_decision_codes": [
-        "005930",
-        "000660"
-      ]
+      "source_mentioned": true,
+      "previous_weight": 1.5,
+      "proposed_weight": 1.5,
+      "weight_source": "AI 제안",
+      "change_reason": "압도적인 2분기 영업이익 기초체력이 입증되었으며, 헬륨 조달 및 호르무즈 해협 위기는 공정 효율화와 장기 대체 조달망으로 이겨낼 수 있는 수준이므로 리스크 대비 비중을 유지함.",
+      "allocation_role": "core",
+      "source_scope": "source_named_security",
+      "investment_rationale": "메모리 반도체 사이클 성과 실적 가시화 본격 진행.",
+      "current_entry_reason": "강력한 실적 안정성과 업황 체력이 원자재 리스크를 통제하고 있음을 판단함.",
+      "key_risks": [
+        "헬륨 병목으로 인한 일부 미세공정 영향 가능성",
+        "국내 유동성 축소로 인한 단기 수급 부담"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260714-2"
+      ],
+      "linked_signal_ids": [
+        "sig_1493e477e571db527a08aaad3002326e6c89064ed43c1d27a3bf3064dce39849"
+      ],
+      "thesis_id": "thesis_d440cb53229e025ace44361f",
+      "issuer_id": "SAMSUNG_ELECTRONICS",
+      "theme_ids": [
+        "memory_semiconductors",
+        "materials_risk"
+      ],
+      "country_code": "KR",
+      "quality_components": {
+        "explicitness": 0.8,
+        "causality": 0.8,
+        "catalyst": 0.8,
+        "confirmation": 0.7,
+        "invalidation": 0.5,
+        "recency": 0.9
+      },
+      "provenance_status": "verified",
+      "origin_signal_type": "MER_THESIS",
+      "origin_signal_ids": [
+        "sig_ad2170fd380757f5f112202a0ac941ea2eacfc278ef655d2d973541fbde830df"
+      ],
+      "decision_model_id": "gemini-3.5-flash",
+      "rejected_linked_signal_ids": []
     },
     {
-      "id": "INSIGHT-20260714-3",
-      "title": "미국의 호르무즈 해협 통행 안전 보장 수수료 부과 움직임",
-      "summary": "미국이 호르무즈 해협 통과 화물에 20%의 안전 보장 수수료를 부과하겠다는 입장을 표명하며 공급망 리스크가 고조되고 있습니다. 이는 국제 유가 상승 및 해운 운송 비용 증가로 직결될 위험이 있습니다.",
-      "investment_implication": "해운 및 물류 비용의 급격한 상승과 원유 수입 단가 상승으로 글로벌 원자재 가격에 하방 압력 또는 불확실성을 가할 수 있습니다.",
+      "name": "SK하이닉스",
+      "code": "000660",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "action": "매수",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-16",
       "evidence_posts": [
+        {
+          "title": "미국 CPI 결과가 잘 나왔고, SK하이닉스 주가는 폭등했다.",
+          "url": "https://blog.naver.com/ranto28/224347004537?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-14"
+        },
+        {
+          "title": "SK하이닉스의 미국 ADR주식이 국장 본주보다 비싼 이유 A/S",
+          "url": "https://blog.naver.com/ranto28/224345322649?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-13"
+        },
+        {
+          "title": "삼성전자등 반도체 메가 프로젝트 근황 A/S (feat 물은 괜찮을까?)",
+          "url": "https://blog.naver.com/ranto28/224339365503?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-07"
+        }
+      ],
+      "source_mentioned": true,
+      "previous_weight": 0.0,
+      "proposed_weight": 3.0,
+      "weight_source": "AI 제안",
+      "change_reason": "이전 리밸런싱에서 행정적 편출 상태였으나, ADR 차익거래 비대칭 기저와 M15X 초순수 국산화 및 미국 ADR 수요 급증을 입증하는 분석이 구체적으로 완료되어 신규 3.0% 비중으로 복귀 제안.",
+      "allocation_role": "satellite",
+      "source_scope": "source_named_security",
+      "investment_rationale": "나스닥 ADR 가치 가산과 더불어 국산 초순수 인프라 확보에 기반한 D램·HBM 공정 안정화.",
+      "current_entry_reason": "미국 자금 유입 신뢰도 회복 및 글로벌 투자 은행의 장기 DRAM 공급 부족 전망 합의.",
+      "key_risks": [
+        "외환 기습 개입으로 인한 단기 환율 충격",
+        "대중국 반도체 장비 통제 수위 강화 리스크"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260716-3"
+      ],
+      "linked_signal_ids": [
+        "sig_b0812f75a9616ba8e4f75e9487de58939c5cdb5d359161dd9478861b75f9c410",
+        "sig_f68fa0c88f67ef6e480a4a4d19e2bd8a9bbc583a87d9657257d74b71308905b3",
+        "sig_72709e9b66b5708c5c911ec0c295292e60f9a4dd87499d1efdce03b1fb51c296"
+      ],
+      "thesis_id": "thesis_f71c12c78b2b0afd880b57f8",
+      "issuer_id": "SK_HYNIX",
+      "theme_ids": [
+        "memory_semiconductors",
+        "adr_demand"
+      ],
+      "country_code": "KR",
+      "quality_components": {
+        "explicitness": 0.8,
+        "causality": 0.8,
+        "catalyst": 0.8,
+        "confirmation": 0.7,
+        "invalidation": 0.5,
+        "recency": 0.9
+      },
+      "provenance_status": "verified",
+      "origin_signal_type": "MER_THESIS",
+      "origin_signal_ids": [
+        "sig_b0812f75a9616ba8e4f75e9487de58939c5cdb5d359161dd9478861b75f9c410",
+        "sig_72709e9b66b5708c5c911ec0c295292e60f9a4dd87499d1efdce03b1fb51c296"
+      ],
+      "decision_model_id": "gemini-3.5-flash",
+      "rejected_linked_signal_ids": []
+    },
+    {
+      "name": "KODEX 2차전지산업",
+      "code": "305720",
+      "market": "KR",
+      "asset_type": "etf",
+      "decision_actor": "AI",
+      "action": "매수",
+      "basis": "섹터 분석",
+      "decision_date": "2026-07-16",
+      "evidence_posts": [
+        {
+          "title": "미국의 중국규제 3종세트로 배터리 3사가 힘을 낼 수 있을까?",
+          "url": "https://blog.naver.com/ranto28/224346093395?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-14"
+        }
+      ],
+      "source_mentioned": false,
+      "previous_weight": 0.0,
+      "proposed_weight": 5.0,
+      "weight_source": "AI 제안",
+      "change_reason": "미국 무역장벽 규제(OBBBA) 시행으로 수혜를 얻는 국내 배터리 주요 기업들을 종합 포괄하고, 향후 ESS 부문에서 시장 지배력이 급증할 모멘텀에 대응하기 위한 신규 섹터 ETF 매수 제안.",
+      "allocation_role": "satellite",
+      "source_scope": "sector_only",
+      "investment_rationale": "미국 대중국 규제 3종 세트(MACR, 고관세율, AMPC 지급 보장) 수혜를 직접 입는 국내 배터리 대형주 분산 투자.",
+      "current_entry_reason": "미국 주도 무역 법안을 통한 시장 구도 개편 수혜 본격화 시점.",
+      "key_risks": [
+        "중국 우회 공급망의 단기 소재 단절 위험",
+        "글로벌 완성차 및 대용량 ESS 수요의 일시적 정체 가능성"
+      ],
+      "linked_insight_ids": [
+        "INSIGHT-20260716-2"
+      ],
+      "linked_signal_ids": [
+        "sig_32fe7ef7f7a85fa4886685274a576ee6fdba03ff723dd5e6105c896f605b6fab"
+      ],
+      "thesis_id": "thesis_f1681dfea0bd6980c0e2330c",
+      "issuer_id": "SAMSUNG_SDI_LG_ENS_SK_ON",
+      "theme_ids": [
+        "battery_regulatory_benefit",
+        "ess_growth"
+      ],
+      "country_code": "KR",
+      "quality_components": {
+        "explicitness": 0.7,
+        "causality": 0.8,
+        "catalyst": 0.8,
+        "confirmation": 0.6,
+        "invalidation": 0.5,
+        "recency": 0.8
+      },
+      "provenance_status": "verified",
+      "origin_signal_type": "AI_INFERRED",
+      "origin_signal_ids": [
+        "sig_3de60dd2e605343b1d57923b550b5dfa91c3e238ae725c4ed35cfa17bc3e3c0b"
+      ],
+      "decision_model_id": "gemini-3.5-flash",
+      "rejected_linked_signal_ids": []
+    }
+  ],
+  "insights": [
+    {
+      "id": "INSIGHT-20260716-1",
+      "title": "홍해 및 바브엘만데브 해협 봉쇄 위기 고조와 원유 공급망 타격",
+      "summary": "이란 하메네이 사망 이후 예멘 후티 반군과 사우디 정부군 간의 휴전이 종료되고 무력 충돌이 재개되면서, 사우디의 주요 우회 원유 수출 경로인 홍해와 바브엘만데브 해협의 해상 물류 리스크가 심화되었습니다. 이는 호르무즈 해협 봉쇄에 이은 원유 공급망의 2차 타격으로 이어질 수 있습니다.",
+      "investment_implication": "글로벌 원유 및 에너지 공급 불확실성 가중으로 국제 유가 상승 압력 및 글로벌 에너지 물류 비용 증가가 예상됩니다.",
+      "evidence_posts": [
+        {
+          "title": "호르무즈해협에 이어서 홍해까지 막히나?",
+          "url": "https://blog.naver.com/ranto28/224347566409?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-15"
+        },
         {
           "title": "미해군, 이란 해안선 해상봉쇄 발표, 트럼프, 통행료는 우리에게",
           "url": "https://blog.naver.com/ranto28/224345852124?fromRss=true&trackingCode=rss",
           "published_date": "2026-07-13"
         }
       ],
+      "related_decision_codes": []
+    },
+    {
+      "id": "INSIGHT-20260716-2",
+      "title": "미국 OBBBA 법안 도입에 따른 국내 배터리 3사의 미국 ESS 시장 반사 수혜",
+      "summary": "미국의 OBBBA 법안 발효로 중국산 배터리 부품 및 소재 비중을 줄여야 하는 제한(MACR)과 중국산 ESS 관세 대폭 인상, 미국 내 생산 가속화를 돕는 AMPC 세액공제가 결합하면서 국내 배터리 대기업의 미국 ESS 시장 지배력이 구조적으로 급등할 전망입니다.",
+      "investment_implication": "LFP를 비롯한 한국 기업들의 배터리 가격 경쟁력이 대폭 제고되면서 중장기 ESS 공급 실적 및 수익성 개선이 크게 기대됩니다.",
+      "evidence_posts": [
+        {
+          "title": "미국의 중국규제 3종세트로 배터리 3사가 힘을 낼 수 있을까?",
+          "url": "https://blog.naver.com/ranto28/224346093395?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-14"
+        }
+      ],
       "related_decision_codes": [
-        "AA"
+        "305720"
+      ]
+    },
+    {
+      "id": "INSIGHT-20260716-3",
+      "title": "SK하이닉스 ADR 거래 활성화 및 메모리 공급 부족 장기화 전망",
+      "summary": "미국 나스닥 상장 ADR의 대규모 달러 자금 유입이 원화 가치 안정에 기여하고 있으며, 바클레이스 등 글로벌 IB들이 2027년까지의 DRAM 공급 부족 지속을 근거로 가치를 높게 평가하고 있습니다.",
+      "investment_implication": "ADR 프리미엄 거래 지속과 메모리 업황 개선의 실적 가시화가 국내 본주의 가치 재평가 동력으로 작용할 것입니다.",
+      "evidence_posts": [
+        {
+          "title": "미국 CPI 결과가 잘 나왔고, SK하이닉스 주가는 폭등했다.",
+          "url": "https://blog.naver.com/ranto28/224347004537?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-14"
+        },
+        {
+          "title": "SK하이닉스의 미국 ADR주식이 국장 본주보다 비싼 이유 A/S",
+          "url": "https://blog.naver.com/ranto28/224345322649?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-13"
+        }
+      ],
+      "related_decision_codes": [
+        "000660"
       ]
     }
   ],
@@ -9693,18 +10256,204 @@
       "created_at": "2026-07-14T09:16:46.954755",
       "source_classification": "DIRECTIONAL_THESIS",
       "signal_id": "sig_61010ccd4850591d920a39b427a921be33e752034a52da0328cd14204f3ba619"
+    },
+    {
+      "signal_type": "MER_THESIS",
+      "post_id": "224347566409",
+      "post_title": "호르무즈해협에 이어서 홍해까지 막히나?",
+      "post_url": "https://blog.naver.com/ranto28/224347566409?fromRss=true&trackingCode=rss",
+      "published_date": "2026-07-15",
+      "evidence_text": "호르무즈 봉쇄이후, 한국 유조선들은 사우디 얀부항에서 원유를 싣고 바브엘만데브 해협을 통과해서 원유를 배송하고 있었음.",
+      "evidence_sha256": "c6742dd84d358f0a7742d88b3ee3db891e2f276ed384b1a1b44e64fb0e8cf493",
+      "entity": {
+        "name": "에너지 물류",
+        "code": "",
+        "market": "",
+        "asset_type": "sector"
+      },
+      "direction": "bearish",
+      "horizon": {
+        "min_days": 0,
+        "max_days": 20
+      },
+      "catalysts": [
+        "후티 반군-사우디 휴전 종료",
+        "바브엘만데브 해협 위협"
+      ],
+      "invalidation_conditions": [
+        "후티 반군과 사우디 간의 새로운 휴전 합의"
+      ],
+      "thesis_id": "thesis_64f536c2012c4e563261ebf2",
+      "parent_signal_ids": [],
+      "created_by": "gemini-summary-host-verified",
+      "model_id": "gemini-3.1-flash-lite",
+      "created_at": "2026-07-16T06:57:00.282303",
+      "source_classification": "DIRECTIONAL_THESIS",
+      "signal_id": "sig_eda22778f8a3b4efed446232d746291a9b492c0350f5a4533164398c7a8447e8"
+    },
+    {
+      "signal_type": "MER_THESIS",
+      "post_id": "224347566409",
+      "post_title": "호르무즈해협에 이어서 홍해까지 막히나?",
+      "post_url": "https://blog.naver.com/ranto28/224347566409?fromRss=true&trackingCode=rss",
+      "published_date": "2026-07-15",
+      "evidence_text": "트럼프도 이란전쟁 재개를 의회에 통보한 상황이니, 호르무즈해협과 홍해가 동시에 막힐 가능성이 생긴것 같음.",
+      "evidence_sha256": "e1adb071168cbe5a6e2057d8a966f6b5f66a2d5f1addab9f419dc054a0645171",
+      "entity": {
+        "name": "원유/에너지",
+        "code": "",
+        "market": "",
+        "asset_type": "sector"
+      },
+      "direction": "bullish",
+      "horizon": {
+        "min_days": 20,
+        "max_days": 180
+      },
+      "catalysts": [
+        "미국-이란 지정학적 갈등 격화"
+      ],
+      "invalidation_conditions": [
+        "이란 전쟁 재개 보류"
+      ],
+      "thesis_id": "thesis_8129ac5b2ecb0f6c6b12b3e6",
+      "parent_signal_ids": [],
+      "created_by": "gemini-summary-host-verified",
+      "model_id": "gemini-3.1-flash-lite",
+      "created_at": "2026-07-16T06:57:00.282303",
+      "source_classification": "DIRECTIONAL_THESIS",
+      "signal_id": "sig_99b01b1d7c195503e36eb8cff78cfdf85841c3508850e0b5e1e2af2c6a791bdb"
+    },
+    {
+      "signal_type": "MER_THESIS",
+      "post_id": "224346093395",
+      "post_title": "미국의 중국규제 3종세트로 배터리 3사가 힘을 낼 수 있을까?",
+      "post_url": "https://blog.naver.com/ranto28/224346093395?fromRss=true&trackingCode=rss",
+      "published_date": "2026-07-14",
+      "evidence_text": "한국 배터리 3사의 ESS용 배터리에 가격경쟁력이 생겼다.",
+      "evidence_sha256": "15178012ec3d741a06436fe6074ab1d8996f4f6ddfd4b60c15a1eabe2ce066c9",
+      "entity": {
+        "name": "한국 배터리 3사",
+        "code": "",
+        "market": "",
+        "asset_type": "sector"
+      },
+      "direction": "bullish",
+      "horizon": {
+        "min_days": 60,
+        "max_days": 365
+      },
+      "catalysts": [
+        "MACR 도입",
+        "관세 인상",
+        "AMPC 세액공제"
+      ],
+      "invalidation_conditions": [
+        "한국 기업의 공급과잉 심화",
+        "중국 공급망 의존도 탈피 실패"
+      ],
+      "thesis_id": "thesis_f1681dfea0bd6980c0e2330c",
+      "parent_signal_ids": [],
+      "created_by": "gemini-summary-host-verified",
+      "model_id": "gemini-3.1-flash-lite",
+      "created_at": "2026-07-16T06:57:00.282303",
+      "source_classification": "DIRECTIONAL_THESIS",
+      "signal_id": "sig_32fe7ef7f7a85fa4886685274a576ee6fdba03ff723dd5e6105c896f605b6fab"
+    },
+    {
+      "signal_type": "MER_THESIS",
+      "post_id": "224347004537",
+      "post_title": "미국 CPI 결과가 잘 나왔고, SK하이닉스 주가는 폭등했다.",
+      "post_url": "https://blog.naver.com/ranto28/224347004537?fromRss=true&trackingCode=rss",
+      "published_date": "2026-07-14",
+      "evidence_text": "바클레이스에서 메모리 공급부족 사태가 지속될 것이라며 목표주가를 330달러로 제시한 영향을 받은 것 같다.",
+      "evidence_sha256": "b4a6e35c116fef5c5f359928c2dc6fa6c22da1a5cd7ad272f12f79d38afa6ab3",
+      "entity": {
+        "name": "SK하이닉스",
+        "code": "",
+        "market": "",
+        "asset_type": "stock"
+      },
+      "direction": "bullish",
+      "horizon": {
+        "min_days": 60,
+        "max_days": 365
+      },
+      "catalysts": [
+        "메모리 공급 부족 사태 지속",
+        "2027년 DRAM 수요 대비 공급 부족 예상"
+      ],
+      "invalidation_conditions": [],
+      "thesis_id": "thesis_f71c12c78b2b0afd880b57f8",
+      "parent_signal_ids": [],
+      "created_by": "gemini-summary-host-verified",
+      "model_id": "gemini-3.1-flash-lite",
+      "created_at": "2026-07-16T06:57:00.282303",
+      "source_classification": "DIRECTIONAL_THESIS",
+      "signal_id": "sig_b0812f75a9616ba8e4f75e9487de58939c5cdb5d359161dd9478861b75f9c410"
+    },
+    {
+      "signal_type": "AI_INFERRED",
+      "post_id": "224346093395",
+      "post_title": "미국의 중국규제 3종세트로 배터리 3사가 힘을 낼 수 있을까?",
+      "post_url": "https://blog.naver.com/ranto28/224346093395?fromRss=true&trackingCode=rss",
+      "published_date": "2026-07-14",
+      "evidence_text": "한국 배터리 3사의 ESS용 배터리에 가격경쟁력이 생겼다.",
+      "evidence_sha256": "15178012ec3d741a06436fe6074ab1d8996f4f6ddfd4b60c15a1eabe2ce066c9",
+      "entity": {
+        "name": "KODEX 2차전지산업",
+        "code": "305720",
+        "market": "KR",
+        "asset_type": "etf"
+      },
+      "direction": "bullish",
+      "horizon": {
+        "min_days": 20,
+        "max_days": 63
+      },
+      "catalysts": [
+        "MACR 도입",
+        "관세 인상",
+        "AMPC 세액공제"
+      ],
+      "invalidation_conditions": [
+        "한국 기업의 공급과잉 심화",
+        "중국 공급망 의존도 탈피 실패"
+      ],
+      "thesis_id": "thesis_f1681dfea0bd6980c0e2330c",
+      "parent_signal_ids": [
+        "sig_32fe7ef7f7a85fa4886685274a576ee6fdba03ff723dd5e6105c896f605b6fab"
+      ],
+      "created_by": "gemini-decision-host-linked",
+      "model_id": "gemini-3.5-flash",
+      "created_at": "2026-07-16T06:57:00.282303",
+      "signal_id": "sig_3de60dd2e605343b1d57923b550b5dfa91c3e238ae725c4ed35cfa17bc3e3c0b"
     }
   ],
   "last_watchlist_changes": {
     "date": "2026-07-16",
-    "added": [],
-    "updated": [],
+    "added": [
+      "thesis_25adbcaa24a6badd0112706e",
+      "thesis_eb914de4086d88c82c688dfe",
+      "thesis_46f59fe016ba1642e8e20029",
+      "thesis_dae98beef5763f9ba6cab278",
+      "thesis_b8f78eb1ffc29bf75187ad96"
+    ],
+    "updated": [
+      "legacy-c810b85c6b5beefe67d3",
+      "legacy-ec1d68e7764d2537d182",
+      "legacy-5eb0de4d56b7b299bc62",
+      "legacy-9a129e7fdc120bae6f4b",
+      "legacy-5e862fb8f7dc9ce21bcf",
+      "legacy-1c7400c86f89a974a6cf",
+      "thesis_60d60d89afd5524a52e9dd4f"
+    ],
     "promoted": [],
     "rejected": [],
     "expired": [],
     "archived": []
   },
-  "last_rebalanced_date": "2026-07-14",
+  "last_rebalanced_date": "2026-07-16",
   "admin_review_queue": [
     {
       "queue_id": "admin-2026-07-15-stock:KR:006220",

@@ -4,10 +4,10 @@
   "inception_date": "2026-07-14",
   "base_currency": "KRW",
   "starting_value": 100.0,
-  "cash": 97.54912244907563,
+  "cash": 89.46656750392827,
   "realized_pnl": -0.1844731391828804,
   "dividend_income": 0.0,
-  "cumulative_costs": 0.10788348583529808,
+  "cumulative_costs": 0.13205862525248854,
   "positions": [
     {
       "key": "stock:KR:005930",
@@ -34,6 +34,32 @@
       "opened_date": "2026-07-14",
       "episode_realized_pnl": 0.0,
       "target_weight": 1.5
+    },
+    {
+      "key": "etf:KR:305720",
+      "name": "KODEX 2차전지산업",
+      "code": "305720",
+      "market": "KR",
+      "asset_type": "etf",
+      "quantity": 0.00036430288452667965,
+      "average_cost": 13866.474999999999,
+      "decision_actor": "AI",
+      "opened_date": "2026-07-16",
+      "episode_realized_pnl": 0.0,
+      "target_weight": 5.0
+    },
+    {
+      "key": "stock:KR:000660",
+      "name": "SK하이닉스",
+      "code": "000660",
+      "market": "KR",
+      "asset_type": "stock",
+      "quantity": 1.4514372848937594e-06,
+      "average_cost": 2088246.0000000002,
+      "decision_actor": "AI",
+      "opened_date": "2026-07-16",
+      "episode_realized_pnl": 0.0,
+      "target_weight": 3.0
     }
   ],
   "policy_removed_positions": [
@@ -916,6 +942,36 @@
       "drift_bps_before": -59.918136035304634,
       "reason": "승인 근거 확인 전 모델 포트폴리오에서 행정적으로 편출",
       "administrative_exit": true
+    },
+    {
+      "date": "2026-07-16",
+      "type": "신규 매수",
+      "key": "etf:KR:305720",
+      "name": "KODEX 2차전지산업",
+      "decision_actor": "AI",
+      "price": 13825.0,
+      "quantity": 0.00036430288452667965,
+      "value": 5.036487378581346,
+      "trade_cost": 0.015109462135744038,
+      "realized_pnl": 0.0,
+      "target_weight": 5.0,
+      "drift_bps_before": 500.0,
+      "reason": "미국 무역장벽 규제(OBBBA) 시행으로 수혜를 얻는 국내 배터리 주요 기업들을 종합 포괄하고, 향후 ESS 부문에서 시장 지배력이 급증할 모멘텀에 대응하기 위한 신규 섹터 ETF 매수 제안. / 결정론적 슬리브·변동성·상한 정책 적용"
+    },
+    {
+      "date": "2026-07-16",
+      "type": "신규 매수",
+      "key": "stock:KR:000660",
+      "name": "SK하이닉스",
+      "decision_actor": "AI",
+      "price": 2082000.0,
+      "quantity": 1.4514372848937594e-06,
+      "value": 3.0218924271488072,
+      "trade_cost": 0.009065677281446421,
+      "realized_pnl": 0.0,
+      "target_weight": 3.0,
+      "drift_bps_before": 300.0,
+      "reason": "이전 리밸런싱에서 행정적 편출 상태였으나, ADR 차익거래 비대칭 기저와 M15X 초순수 국산화 및 미국 ADR 수요 급증을 입증하는 분석이 구체적으로 완료되어 신규 3.0% 비중으로 복귀 제안. / 결정론적 슬리브·변동성·상한 정책 적용"
     }
   ],
   "corporate_events": [],
@@ -960,13 +1016,13 @@
     {
       "date": "2026-07-16",
       "kind": "closing",
-      "cash": 97.54912245,
-      "invested_value": 3.20480026,
-      "total_value": 100.75392271,
-      "return_pct": 0.75392271,
+      "cash": 89.4665675,
+      "invested_value": 11.26318007,
+      "total_value": 100.72974757,
+      "return_pct": 0.72974757,
       "realized_pnl": -0.18447314,
       "dividend_income": 0.0,
-      "cumulative_costs": 0.10788349
+      "cumulative_costs": 0.13205863
     }
   ],
   "legacy_epochs": [
