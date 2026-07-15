@@ -313,17 +313,24 @@ def generate_html(
     report_text: str,
     today_str: str,
     state: Optional[dict] = None,
+    approved_changes: bool | None = None,
 ) -> Path:
     """모바일에서도 현재 보유·오늘 조정·상세 근거를 분리해 보여준다."""
     state = state or _load_portfolio_state()
-    output = build_output_model(state, cache or {}, today_str=today_str)
+    output = build_output_model(
+        state,
+        cache or {},
+        today_str=today_str,
+        approved_changes=approved_changes,
+    )
     watchlist = output["watchlist"]
     closed_positions = output["closed_positions"]
     insights = output["insights"]
     deferred_posts = output.get("deferred_posts", [])
     summaries = cache.get("report_summaries", []) if cache else []
     portfolio_rows = output["portfolio"]
-    change_rows = output.get("today_changes", [])
+    change_rows = output.get("approved_today_changes", output.get("today_changes", []))
+    drift_rows = output.get("today_changes", [])
     chart_rows = output["chart_rows"]
     report_escaped = report_text.replace("\\", "\\\\").replace("`", "\\`").replace("${", "\\${")
     chart_basis = "실제" if output.get("actual_allocation_available") else "목표"
@@ -353,6 +360,8 @@ def generate_html(
         "const updated=" + json.dumps(today_str) + ";\n"
         "const portfolio=" + json.dumps(portfolio_rows, ensure_ascii=False) + ";\n"
         "const changes=" + json.dumps(change_rows, ensure_ascii=False) + ";\n"
+        "const driftRows=" + json.dumps(drift_rows, ensure_ascii=False) + ";\n"
+        "const actionsDeferred=" + json.dumps(bool(output.get("actions_deferred")), ensure_ascii=False) + ";\n"
         "const watchlist=" + json.dumps(watchlist, ensure_ascii=False) + ";\n"
         "const closed=" + json.dumps(closed_positions, ensure_ascii=False) + ";\n"
         "const insights=" + json.dumps(insights, ensure_ascii=False) + ";\n"
@@ -378,14 +387,14 @@ const buttons=id=>`<div class="toolbar"><button onclick="toggleAll('${id}',true)
 function toggle(id){document.getElementById(id).classList.toggle('open')}
 function toggleAll(id,open){document.querySelectorAll(`#${id} .detail`).forEach(el=>el.classList.toggle('open',open))}
 function detail(r,kind){if(kind==='watchlist')return `최근 확인일: ${esc(r.latest_material_signal_date||r.latest_evidence_date||'-')}<br>관찰 이유: ${esc(r.observation_reason||'조건을 추적합니다.')}<br>근거: ${evidence(r)}`;const reason=r.display_reason||r.change_reason||r.close_reason||'승인된 투자 논리를 추적합니다.';return `판단일: ${esc(r.decision_date||r.closed_date||'-')}<br>역할: ${esc(r.allocation_role_label||r.allocation_role||'-')}<br>근거 유형: ${esc(r.basis||'-')}<br>투자 논리: ${esc(reason)}<br>근거: ${evidence(r)}`}
-function table(id,rows,kind){if(!rows.length)return '<div class="empty">표시할 항목이 없습니다.</div>';const body=rows.map((r,i)=>{const key=`${id}-${i}`;const changed=kind==='changes'?'changed':'';let cells='';if(kind==='portfolio'||kind==='changes'){cells=`<td>${esc(r.name)}<br><span class="muted">${esc(r.code)}</span></td><td>실제 ${weight(r.actual_weight)}<br>목표 ${weight(r.target_weight)}</td><td><span class="pill">${esc(r.today_action||'유지')}</span></td><td>${esc(r.allocation_role_label||'-')}</td><td>${esc(r.return_label||'데이터 없음')}</td>`}else if(kind==='watchlist'){cells=`<td>${esc(r.name)}<br><span class="muted">${esc(r.code)}</span></td><td>${esc(r.status||'관심')}</td><td>${esc(r.latest_material_signal_date||'-')}</td>`}else{cells=`<td>${esc(r.name)}<br><span class="muted">${esc(r.code)}</span></td><td>${esc(r.closed_date||'-')}</td><td>${esc(r.close_reason||'과거 편출')}</td>`}return `<tr class="${changed}">${cells}<td><button onclick="toggle('${key}')">상세</button></td></tr><tr id="${key}" class="detail"><td colspan="8">${detail(r,kind)}</td></tr>`}).join('');let head=kind==='watchlist'?'<th>종목</th><th>상태</th><th>최근 확인</th><th>상세</th>':kind==='closed'?'<th>종목</th><th>편출일</th><th>사유</th><th>상세</th>':'<th>종목</th><th>비중</th><th>오늘 상태</th><th>역할</th><th>수익률</th><th>상세</th>';return buttons(id)+`<div class="table-wrap"><table class="data-table" id="${id}"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`}
+function table(id,rows,kind){if(!rows.length)return '<div class="empty">표시할 항목이 없습니다.</div>';const body=rows.map((r,i)=>{const key=`${id}-${i}`;const changed=kind==='changes'?'changed':'';let cells='';if(kind==='portfolio'||kind==='changes'){cells=`<td>${esc(r.name)}<br><span class="muted">${esc(r.code)}</span></td><td>실제 ${weight(r.actual_weight)}<br>목표 ${weight(r.target_weight)}</td><td><span class="pill">${esc(r.display_today_action||r.today_action||'유지')}</span></td><td>${esc(r.allocation_role_label||'-')}</td><td>${esc(r.return_label||'데이터 없음')}</td>`}else if(kind==='watchlist'){cells=`<td>${esc(r.name)}<br><span class="muted">${esc(r.code)}</span></td><td>${esc(r.status||'관심')}</td><td>${esc(r.latest_material_signal_date||'-')}</td>`}else{cells=`<td>${esc(r.name)}<br><span class="muted">${esc(r.code)}</span></td><td>${esc(r.closed_date||'-')}</td><td>${esc(r.close_reason||'과거 편출')}</td>`}return `<tr class="${changed}">${cells}<td><button onclick="toggle('${key}')">상세</button></td></tr><tr id="${key}" class="detail"><td colspan="8">${detail(r,kind)}</td></tr>`}).join('');let head=kind==='watchlist'?'<th>종목</th><th>상태</th><th>최근 확인</th><th>상세</th>':kind==='closed'?'<th>종목</th><th>편출일</th><th>사유</th><th>상세</th>':'<th>종목</th><th>비중</th><th>오늘 상태</th><th>역할</th><th>수익률</th><th>상세</th>';return buttons(id)+`<div class="table-wrap"><table class="data-table" id="${id}"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`}
 function deferredTable(rows){if(!rows.length){document.getElementById('deferred-card').style.display='none';return ''}return `<div class="notice">요약이 준비되지 않은 글은 오늘 판단에서 제외하고 다음 실행에서 다시 확인합니다.</div><ul>${rows.map(r=>`<li>${esc(r.title||'제목 없음')} ${r.url?`<a href="${esc(r.url)}" target="_blank" rel="noopener">원문</a>`:''}</li>`).join('')}</ul>`}
 const allocationActual=actualStockWeight!==null&&actualEtfWeight!==null&&actualCashWeight!==null;
 document.getElementById('summary').innerHTML=`누적 수익률: ${esc(""" + json.dumps(output.get("portfolio_return_label", "데이터 없음"), ensure_ascii=False) + """)} · 최대 낙폭: ${esc(""" + json.dumps(output.get("max_drawdown_label", "데이터 없음"), ensure_ascii=False) + """)}<br>기준 포트폴리오 대비: ${esc(""" + json.dumps(output.get("benchmark_difference_label", "데이터 없음"), ensure_ascii=False) + """)} (수익률 차이)<br>자산배분(${allocationActual?'실제':'목표'}): 개별주 ${weight(allocationActual?actualStockWeight:stockWeight)} / 주식형 ETF ${weight(allocationActual?actualEtfWeight:etfWeight)} / 현금성 ${weight(allocationActual?actualCashWeight:cashWeight)}<br>오늘 승인된 비중 변경: ${changes.length?'있음':'없음'}${statusNote?`<br><strong>${esc(statusNote)}</strong>`:''}`;
 document.getElementById('deferred').innerHTML=deferredTable(deferredPosts);
 document.getElementById('insights').innerHTML=insights.length?insights.map((r,i)=>`<article><h3>${i+1}. ${esc(r.title)}</h3><p>${esc(r.summary)}</p><p><strong>추적할 조건:</strong> ${esc(r.investment_implication)}</p><p class="muted">${evidence(r)}</p></article>`).join(''):'<div class="empty">표시할 인사이트가 없습니다.</div>';
 document.getElementById('portfolio').innerHTML=table('portfolio-table',portfolio,'portfolio');
-document.getElementById('changes').innerHTML=changes.length?table('changes-table',changes,'changes'):'<div class="empty">승인된 매매 없음 · 전 종목이 허용 범위 안에 있습니다.</div>';
+document.getElementById('changes').innerHTML=changes.length?table('changes-table',changes,'changes'):(actionsDeferred&&driftRows.length?'<div class="empty">승인된 매매 없음 · 현재 비중 이탈이 확인됐지만 내부 검증이 끝나지 않아 자동 조정을 보류합니다.</div>':'<div class="empty">승인된 매매 없음 · 전 종목이 허용 범위 안에 있습니다.</div>');
 document.getElementById('watchlist').innerHTML=table('watchlist-table',watchlist,'watchlist');
 document.getElementById('closed').innerHTML=table('closed-table',closed,'closed');
 const colors=['#ef4444','#3b82f6','#22c55e','#f97316','#a855f7','#06b6d4','#eab308','#ec4899','#14b8a6','#f59e0b','#6366f1','#84cc16','#64748b'];const chartable=chartRows.map(r=>({...r,weight:r.weight??r.target_weight}));
@@ -400,7 +409,12 @@ document.getElementById('report-content').innerHTML=reportText.trim()?marked.par
     return DASHBOARD_FILE
 
 
-def generate_all(report_text: str, today: datetime, state: Optional[dict] = None) -> tuple:
+def generate_all(
+    report_text: str,
+    today: datetime,
+    state: Optional[dict] = None,
+    approved_changes: bool | None = None,
+) -> tuple:
     """HTML 대시보드 + PNG 차트 모두 생성. Returns: (html_path, png_path)"""
     today_str = today.strftime("%Y-%m-%d")
     cache = _load_cache()
@@ -409,7 +423,13 @@ def generate_all(report_text: str, today: datetime, state: Optional[dict] = None
     html_path = None
     png_path = None
     try:
-        html_path = generate_html(cache or {}, report_content, today_str, state=state)
+        html_path = generate_html(
+            cache or {},
+            report_content,
+            today_str,
+            state=state,
+            approved_changes=approved_changes,
+        )
     except Exception as e:
         print(f"  ⚠ HTML 대시보드 생성 실패: {e}")
     try:

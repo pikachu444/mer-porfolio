@@ -684,10 +684,16 @@ def _run_no_change_update(
         cache,
         today_str=today.strftime("%Y-%m-%d"),
         status_note=status_note,
+        approved_changes=False,
     )
     report = build_markdown_report(output)
     report_path = _save_report(report, today)
-    _, png_path = generate_all(report, today, state=output_state)
+    _, png_path = generate_all(
+        report,
+        today,
+        state=output_state,
+        approved_changes=False,
+    )
     return _finalize_user_report(
         report_path=report_path,
         png_path=png_path,

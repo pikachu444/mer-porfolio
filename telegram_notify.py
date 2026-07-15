@@ -484,7 +484,13 @@ def build_structured_summary(
 ) -> str:
     """모바일에서 투자자가 바로 읽는 요약 대시보드."""
     performance = performance or {}
-    output = build_output_model(state, performance, today_str=today_str, status_note=status_note)
+    output = build_output_model(
+        state,
+        performance,
+        today_str=today_str,
+        status_note=status_note,
+        approved_changes=not no_changes,
+    )
     policy = output.get("rebalance_policy", {})
 
     def pct(value: Any) -> str:
@@ -508,10 +514,12 @@ def build_structured_summary(
         f"• 최대 낙폭: {output.get('max_drawdown_label', '데이터 없음')}",
         f"• 기준 포트폴리오 대비: {output.get('benchmark_difference_label', '데이터 없음')} (수익률 차이)",
         f"• 자산배분({'실제' if actual_available else '목표'}): 개별주 {pct(stock)} / 주식형 ETF {pct(etf)} / 현금성 {pct(cash)}",
-        f"• 오늘 승인된 비중 변경: {'있음' if output.get('today_changes') else '없음'}",
+        f"• 오늘 승인된 비중 변경: {'있음' if output.get('approved_today_changes') else '없음'}",
     ]
-    if not output.get("today_changes"):
+    if not output.get("approved_today_changes") and not output.get("actions_deferred"):
         lines.append("• 전 종목이 리밸런싱 허용 범위 또는 최소 조정 기준 안에 있습니다.")
+    elif output.get("actions_deferred") and output.get("today_changes"):
+        lines.append("• 현재 비중 이탈이 확인됐지만 내부 검증이 끝나지 않아 자동 조정을 보류합니다.")
     if output.get("status_note"):
         lines.append(f"• {output['status_note']}")
     if output.get("cumulative_costs") is not None:
@@ -528,7 +536,7 @@ def build_structured_summary(
         code = f" ({item.get('code')})" if item.get("code") else ""
         return (
             f"• {item.get('name', '')}{code} {pct(item.get('actual_weight'))} → 목표 {pct(item.get('target_weight'))}"
-            f" | {item.get('today_action', '유지')}"
+            f" | {item.get('display_today_action') or item.get('today_action', '유지')}"
         )
 
     lines += ["", "*현재 보유 종목*"]
@@ -544,12 +552,16 @@ def build_structured_summary(
     lines.append(f"[현금성 자산] • 현금성 {pct(output.get('actual_cash_weight'))} → 목표 {pct(output.get('target_cash_weight'))} | 유지")
 
     lines += ["", "*오늘의 조정*"]
-    if output.get("today_changes"):
-        for item in output["today_changes"]:
-            lines.append(f"• {item.get('name')} {pct(item.get('actual_weight'))} → {pct(item.get('target_weight'))} | {item.get('today_action')}")
+    if output.get("approved_today_changes"):
+        for item in output["approved_today_changes"]:
+            lines.append(f"• {item.get('name')} {pct(item.get('actual_weight'))} → {pct(item.get('target_weight'))} | {item.get('display_today_action') or item.get('today_action')}")
+    elif output.get("actions_deferred") and output.get("today_changes"):
+        lines += [
+            "• 승인된 매매 없음",
+            "• 현재 비중 이탈이 확인됐지만 내부 검증이 끝나지 않아 자동 조정을 보류합니다.",
+        ]
     else:
         lines += ["• 승인된 매매 없음", "• 전 종목이 리밸런싱 허용 범위 내에 있습니다."]
-
     lines += ["", "📌 *핵심 인사이트*"]
     insights = output.get("insights", []) or []
     if insights:

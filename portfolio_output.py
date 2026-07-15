@@ -313,6 +313,7 @@ def build_output_model(
     *,
     today_str: str = "",
     status_note: str = "",
+    approved_changes: bool | None = None,
 ) -> dict:
     """현재 승인 상태를 Telegram·HTML·Markdown이 함께 사용하는 모델로 만든다."""
     performance = performance or {}
@@ -368,6 +369,20 @@ def build_output_model(
         portfolio.append(_public_item(row))
 
     portfolio, today_changes = derive_portfolio_actions(portfolio)
+    # ``today_changes`` is a drift review derived from actual-vs-target
+    # weights.  It is not automatically an approved order.  A fail-closed
+    # run can therefore retain a drift row while explicitly suppressing it
+    # from the approved-adjustment section.
+    if approved_changes is None:
+        approved_changes = True
+    approved_today_changes = today_changes if approved_changes else []
+    for item in portfolio:
+        action = str(item.get("today_action") or "유지")
+        item["display_today_action"] = (
+            action
+            if approved_changes or action in {"유지", "데이터 없음"}
+            else "조정 보류"
+        )
     domestic = [item for item in portfolio if _is_domestic(item)]
     overseas = [item for item in portfolio if not _is_domestic(item)]
     stock_rows = [item for item in portfolio if item.get("asset_type") == "stock"]
@@ -466,6 +481,8 @@ def build_output_model(
         "domestic": domestic,
         "overseas": overseas,
         "today_changes": today_changes,
+        "approved_today_changes": approved_today_changes,
+        "actions_deferred": not approved_changes,
         "all_within_rebalance_band": not today_changes and all(
             item.get("actual_weight") is not None for item in portfolio
         ),
@@ -554,7 +571,7 @@ def _table(rows: list[dict], *, include_return: bool = True) -> list[str]:
             display_name,
             _weight_label(item.get("actual_weight")),
             _weight_label(item.get("target_weight", item.get("proposed_weight"))),
-            str(item.get("today_action") or "유지"),
+            str(item.get("display_today_action") or item.get("today_action") or "유지"),
             str(item.get("allocation_role_label") or _allocation_role_label(item)),
         ]
         if include_return:
@@ -614,11 +631,16 @@ def build_markdown_report(output: dict) -> str:
 
     _append_holdings(lines, output)
     lines += ["", "## 오늘의 조정"]
-    if output.get("today_changes"):
-        for item in output["today_changes"]:
+    approved_changes = output.get("approved_today_changes", output.get("today_changes", [])) or []
+    drift_review = output.get("today_changes", []) or []
+    if approved_changes:
+        for item in approved_changes:
             lines.append(
-                f"- {item.get('name')} {_weight_label(item.get('actual_weight'))} → {_weight_label(item.get('target_weight'))} | {item.get('today_action')}"
+                f"- {item.get('name')} {_weight_label(item.get('actual_weight'))} → {_weight_label(item.get('target_weight'))} | {item.get('display_today_action') or item.get('today_action')}"
             )
+    elif output.get("actions_deferred") and drift_review:
+        lines.append("- 승인된 매매 없음")
+        lines.append("- 현재 비중 이탈이 확인됐지만 내부 검증이 끝나지 않아 자동 조정을 보류합니다.")
     else:
         lines += ["- 승인된 매매 없음", "- 전 종목이 리밸런싱 허용 범위 또는 최소 조정 기준 안에 있습니다."]
 

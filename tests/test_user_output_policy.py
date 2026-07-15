@@ -109,6 +109,19 @@ class UserOutputPolicyTest(unittest.TestCase):
         joined = "\n".join(parts)
         self.assertIn("종목49", joined)
 
+    def test_deferred_run_does_not_present_drift_as_approved_trade(self):
+        item = _item(target=10.0, actual=10.8)
+        summary = build_structured_summary(
+            _state([item]),
+            "2026-07-15",
+            _performance([item]),
+            no_changes=True,
+            status_note="오늘 제안된 조정안이 내부 검증 기준을 충족하지 않아 기존 포트폴리오를 유지합니다.",
+        )
+        self.assertIn("오늘 승인된 비중 변경: 없음", summary)
+        self.assertIn("자동 조정을 보류", summary)
+        self.assertNotIn("비중축소 검토", summary)
+
 
 if __name__ == "__main__":
     unittest.main()
