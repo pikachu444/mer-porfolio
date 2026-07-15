@@ -1,4 +1,4 @@
-name: Temporary Naver blog history collector
+name: Temporary Mer blog full-text collector
 
 on:
   pull_request:
@@ -9,58 +9,101 @@ on:
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install requests
-      - name: Collect dated post list
+      - run: pip install requests beautifulsoup4 lxml
+      - name: Collect six-month full text
         run: |
           python - <<'PY'
-          import json, pathlib, requests, time
+          import json, pathlib, re, requests, time
+          from bs4 import BeautifulSoup
+          from concurrent.futures import ThreadPoolExecutor, as_completed
           from datetime import datetime, timezone, timedelta
-          headers={'User-Agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1','Referer':'https://m.blog.naver.com/','Accept-Language':'ko-KR,ko;q=0.9'}
-          start=datetime(2026,1,15,tzinfo=timezone(timedelta(hours=9)))
-          end=datetime(2026,7,16,tzinfo=timezone(timedelta(hours=9)))
-          rows=[]; seen=set(); page=1
-          while page <= 50:
-            u=f'https://m.blog.naver.com/api/blogs/ranto28/post-list?categoryNo=0&itemCount=30&page={page}'
-            r=requests.get(u,headers=headers,timeout=30); r.raise_for_status()
-            items=(r.json().get('result') or {}).get('items') or []
-            if not items: break
-            oldest=None
-            for item in items:
-              log=str(item.get('logNo') or item.get('logNoObject') or '')
-              if not log or log in seen: continue
-              seen.add(log)
-              ms=item.get('addDate')
-              dt=datetime.fromtimestamp(ms/1000,tz=timezone(timedelta(hours=9))) if isinstance(ms,(int,float)) else None
-              if dt and (oldest is None or dt < oldest): oldest=dt
-              if dt and start <= dt < end:
-                rows.append({
-                  'logNo':log,
-                  'published_at':dt.isoformat(),
-                  'date':dt.date().isoformat(),
-                  'title':item.get('titleWithInspectMessage') or '',
-                  'brief':item.get('briefContents') or '',
-                  'category':item.get('categoryName') or '',
-                  'url':f'https://blog.naver.com/ranto28/{log}',
-                })
-            print('page',page,'items',len(items),'oldest',oldest.isoformat() if oldest else None,'kept',len(rows))
-            if oldest and oldest < start: break
-            page += 1
-            time.sleep(.25)
-          rows.sort(key=lambda x:x['published_at'])
-          p=pathlib.Path('history'); p.mkdir()
-          (p/'post_list.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2),encoding='utf-8')
+
+          HEADERS={'User-Agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1','Referer':'https://m.blog.naver.com/','Accept-Language':'ko-KR,ko;q=0.9'}
+          START=datetime(2026,1,15,tzinfo=timezone(timedelta(hours=9)))
+          END=datetime(2026,7,16,tzinfo=timezone(timedelta(hours=9)))
+
+          def clean(text):
+            text=re.sub(r'[\u200b-\u200f\u2028\u2029\ufeff\u00ad]','',text or '').replace('\u00a0',' ')
+            lines=[]; empty=False
+            for line in text.splitlines():
+              line=line.strip()
+              if line:
+                lines.append(line); empty=False
+              elif not empty:
+                lines.append(''); empty=True
+            return '\n'.join(lines).strip()
+
+          def collect_list():
+            rows=[]; seen=set(); page=1
+            while page<=50:
+              u=f'https://m.blog.naver.com/api/blogs/ranto28/post-list?categoryNo=0&itemCount=30&page={page}'
+              r=requests.get(u,headers=HEADERS,timeout=30); r.raise_for_status()
+              items=(r.json().get('result') or {}).get('items') or []
+              if not items: break
+              oldest=None
+              for item in items:
+                log=str(item.get('logNo') or item.get('logNoObject') or '')
+                ms=item.get('addDate')
+                if not log or log in seen or not isinstance(ms,(int,float)): continue
+                seen.add(log)
+                dt=datetime.fromtimestamp(ms/1000,tz=timezone(timedelta(hours=9)))
+                oldest=dt if oldest is None or dt<oldest else oldest
+                if START<=dt<END:
+                  rows.append({'logNo':log,'published_at':dt.isoformat(),'date':dt.date().isoformat(),'title':item.get('titleWithInspectMessage') or '','brief':item.get('briefContents') or '','category':item.get('categoryName') or '','url':f'https://blog.naver.com/ranto28/{log}'})
+              print('list page',page,'oldest',oldest,'kept',len(rows))
+              if oldest and oldest<START: break
+              page+=1; time.sleep(.2)
+            return sorted(rows,key=lambda x:x['published_at'])
+
+          def fetch(row):
+            u=f"https://m.blog.naver.com/ranto28/{row['logNo']}"
+            err=''
+            for attempt in range(3):
+              try:
+                r=requests.get(u,headers=HEADERS,timeout=30); r.raise_for_status(); r.encoding='utf-8'
+                soup=BeautifulSoup(r.text,'lxml')
+                node=soup.select_one('div.se-main-container') or soup.select_one('#postViewArea')
+                if node is None:
+                  for cls in ('post_ct','view','__se_component_area'):
+                    node=soup.find('div',class_=cls)
+                    if node is not None: break
+                if node is None:
+                  for tag in soup(['nav','header','footer','script','style']): tag.decompose()
+                  node=soup.body
+                text=clean(node.get_text('\n',strip=True) if node else '')
+                if len(text)>=100:
+                  return {**row,'content':text,'content_length':len(text),'fetch_status':'ok','fetch_error':''}
+                err='content_too_short'
+              except Exception as e:
+                err=f'{type(e).__name__}: {e}'
+              time.sleep(.5*(attempt+1))
+            return {**row,'content':'','content_length':0,'fetch_status':'failed','fetch_error':err}
+
+          rows=collect_list()
+          done=[]
+          with ThreadPoolExecutor(max_workers=4) as pool:
+            futs={pool.submit(fetch,row):row for row in rows}
+            for i,fut in enumerate(as_completed(futs),1):
+              done.append(fut.result())
+              if i%25==0: print('full text',i,'/',len(rows))
+          done.sort(key=lambda x:x['published_at'])
+          out=pathlib.Path('history'); out.mkdir()
+          (out/'posts_full.json').write_text(json.dumps(done,ensure_ascii=False,indent=2),encoding='utf-8')
+          failures=[{'date':r['date'],'title':r['title'],'url':r['url'],'error':r['fetch_error']} for r in done if r['fetch_status']!='ok']
           monthly={}
-          for row in rows: monthly[row['date'][:7]]=monthly.get(row['date'][:7],0)+1
-          summary={'count':len(rows),'first':rows[0]['published_at'] if rows else None,'last':rows[-1]['published_at'] if rows else None,'monthly':monthly,'pages_scanned':page}
-          (p/'summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
+          for r in done: monthly[r['date'][:7]]=monthly.get(r['date'][:7],0)+1
+          summary={'count':len(done),'success':len(done)-len(failures),'failed':len(failures),'first':done[0]['published_at'] if done else None,'last':done[-1]['published_at'] if done else None,'monthly':monthly,'characters':sum(r['content_length'] for r in done)}
+          (out/'summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
+          (out/'failures.json').write_text(json.dumps(failures,ensure_ascii=False,indent=2),encoding='utf-8')
           print(json.dumps(summary,ensure_ascii=False,indent=2))
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: mer-blog-history-list
+          name: mer-blog-fulltext-20260115-20260715
           path: history
+          retention-days: 7
