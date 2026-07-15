@@ -1043,6 +1043,28 @@ class PortfolioSchemaTest(unittest.TestCase):
         with self.assertRaisesRegex(PortfolioSchemaError, "signals incompatible"):
             apply_portfolio_decisions(state, [discarded_link])
 
+    def test_repeated_existing_signal_does_not_block_verified_hold(self):
+        event = signal_event()
+        state = append_signal_events(parse_portfolio_state(state_payload()), [event])
+        payload = state.to_dict()
+        payload["portfolio"][0].update({
+            "provenance_status": "verified",
+            "origin_signal_type": "MER_DIRECT",
+            "origin_signal_ids": [event["signal_id"]],
+            "linked_signal_ids": [event["signal_id"]],
+            "thesis_id": event["thesis_id"],
+        })
+        state = parse_portfolio_state(payload)
+        repeated = decision(
+            action="보유",
+            previous_weight=8.0,
+            proposed_weight=8.0,
+            rejected_linked_signal_ids=[event["signal_id"]],
+        )
+
+        updated = apply_portfolio_decisions(state, [repeated])
+        self.assertEqual(updated.portfolio[0]["proposed_weight"], 8.0)
+
     def test_business_day_ttl_skips_weekends_for_all_watchlist_kinds(self):
         self.assertEqual(add_business_days("2026-05-29", 1), "2026-06-01")
         self.assertEqual(watchlist_expiry_date("2026-05-29", "mention"), "2026-06-12")

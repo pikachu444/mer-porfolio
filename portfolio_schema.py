@@ -1376,6 +1376,20 @@ def _reject_incompatible_linked_origin_update(
     ]
     if not linked_ids and not rejected_ids:
         return
+    # A maintenance decision may repeat a signal ID that already belongs to
+    # this verified holding.  Provenance enrichment only receives *new* post
+    # signals, so that repeated historical ID is recorded as rejected even
+    # though it is not a new or incompatible thesis.  Keep rejecting every
+    # other unresolved signal link.
+    current_signal_ids = {
+        str(value).strip()
+        for field in ("linked_signal_ids", "origin_signal_ids")
+        for value in current.get(field, []) or []
+        if str(value).strip()
+    }
+    unresolved_ids = set(linked_ids + rejected_ids) - current_signal_ids
+    if not unresolved_ids:
+        return
     if decision.get("provenance_status") == "verified" and not rejected_ids:
         return
     current_weight = float(current.get("proposed_weight") or 0.0)
