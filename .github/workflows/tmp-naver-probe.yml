@@ -4,6 +4,10 @@ on:
   push:
     paths:
       - '.github/workflows/tmp-naver-probe.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tmp-naver-probe-trigger.txt'
 
 jobs:
   probe:
