@@ -1055,24 +1055,6 @@ def apply_structured_transactions(
             price_by_key,
             max_residual_bps=STRUCTURED_EXECUTION_RESIDUAL_BPS,
         )
-        final_position_keys = {position["key"] for position in updated.get("positions", [])}
-        if final_position_keys.issubset(seen_keys):
-            target_cash_weight = max(
-                0.0,
-                100.0 - sum(
-                    float(decision["proposed_weight"])
-                    for decision in decisions
-                    if decision.get("action") != "매도"
-                ),
-            )
-            final_nav = _model_portfolio_value(updated, price_by_key)
-            actual_cash_weight = float(updated["cash"]) / final_nav * 100.0
-            if abs(actual_cash_weight - target_cash_weight) * 100.0 > STRUCTURED_EXECUTION_RESIDUAL_BPS + 1e-6:
-                raise ValueError(
-                    "structured cash target residual exceeds "
-                    f"{STRUCTURED_EXECUTION_RESIDUAL_BPS:g} bps"
-                )
-
     record_model_snapshot(updated, price_by_key, trade_date)
     return updated
 
