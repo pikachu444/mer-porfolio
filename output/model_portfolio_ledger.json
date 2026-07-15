@@ -942,9 +942,9 @@
       "date": "2026-07-15",
       "kind": "closing",
       "cash": 76.7714145,
-      "invested_value": 22.95483596,
-      "total_value": 99.72625046,
-      "return_pct": -0.27374954,
+      "invested_value": 23.90401577,
+      "total_value": 100.67543027,
+      "return_pct": 0.67543027,
       "realized_pnl": -0.18447314,
       "dividend_income": 0.0,
       "cumulative_costs": 0.10788349
