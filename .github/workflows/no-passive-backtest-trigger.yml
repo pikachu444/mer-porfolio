@@ -1,0 +1,38 @@
+name: Temporary isolated no-passive backtest trigger
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/no-passive-backtest.yml'
+      - 'backtest-trigger.txt'
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 lxml google-genai==2.11.0 yfinance pandas numpy
+      - name: Restore isolated runner from PR workflow
+        run: |
+          awk '/^H4sI/{capture=1} /^EOF$/{capture=0} capture' .github/workflows/no-passive-backtest.yml > /tmp/bt.b64
+          base64 -d /tmp/bt.b64 | gzip -d > /tmp/bt.py
+          python -m py_compile /tmp/bt.py
+      - name: Run point-in-time backtest
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_BACKTEST_MODEL: gemini-3.1-flash-lite
+        run: python /tmp/bt.py
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: no-passive-backtest-results
+          path: backtest_output
+          if-no-files-found: warn
+          retention-days: 14
