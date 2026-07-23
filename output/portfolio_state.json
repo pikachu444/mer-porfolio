@@ -276,7 +276,7 @@
       "source_mentioned": false,
       "watchlist_entry_date": "2026-06-16",
       "latest_evidence_date": "2026-07-11",
-      "watchlist_duration_days": 37,
+      "watchlist_duration_days": 38,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -318,7 +318,7 @@
       "source_mentioned": true,
       "watchlist_entry_date": "2026-07-10",
       "latest_evidence_date": "2026-07-09",
-      "watchlist_duration_days": 13,
+      "watchlist_duration_days": 14,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -340,233 +340,6 @@
       "archive_reason": null
     },
     {
-      "name": "Visa",
-      "code": "V",
-      "market": "US",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-16",
-      "evidence_posts": [
-        {
-          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
-          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-12"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-07-13",
-      "latest_evidence_date": "2026-07-12",
-      "watchlist_duration_days": 10,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "Open USD 컨소시엄 참여에 기초한 스테이블코인 생태계와 결제 시장 진입 여부를 관찰하기 위해 관심 단계 유지.",
-      "provenance_status": "legacy_unvalidated",
-      "origin_signal_type": "LEGACY_UNVALIDATED",
-      "origin_signal_ids": [],
-      "thesis_id": "legacy-ec1d68e7764d2537d182",
-      "linked_signal_ids": [],
-      "lifecycle_status": "active",
-      "watchlist_kind": "mention",
-      "latest_material_signal_date": "2026-07-12",
-      "expires_on": "2026-07-24",
-      "archived_date": null,
-      "archive_reason": null
-    },
-    {
-      "name": "Mastercard",
-      "code": "MA",
-      "market": "US",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-16",
-      "evidence_posts": [
-        {
-          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
-          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-12"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-07-13",
-      "latest_evidence_date": "2026-07-12",
-      "watchlist_duration_days": 10,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "OUSD 플랫폼 파트너십을 통한 신규 스테이블코인 성장 수혜 여부를 장기 관찰.",
-      "provenance_status": "legacy_unvalidated",
-      "origin_signal_type": "LEGACY_UNVALIDATED",
-      "origin_signal_ids": [],
-      "thesis_id": "legacy-5eb0de4d56b7b299bc62",
-      "linked_signal_ids": [],
-      "lifecycle_status": "active",
-      "watchlist_kind": "mention",
-      "latest_material_signal_date": "2026-07-12",
-      "expires_on": "2026-07-24",
-      "archived_date": null,
-      "archive_reason": null
-    },
-    {
-      "name": "두나무",
-      "code": "",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-16",
-      "evidence_posts": [
-        {
-          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
-          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-12"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-07-13",
-      "latest_evidence_date": "2026-07-12",
-      "watchlist_duration_days": 10,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "비상장 주식으로서 Open USD 컨소시엄 국내 명단에 포함됨에 따라 관련 블록체인 시너지를 관심 대상으로 관찰.",
-      "provenance_status": "legacy_unvalidated",
-      "origin_signal_type": "LEGACY_UNVALIDATED",
-      "origin_signal_ids": [],
-      "thesis_id": "legacy-9a129e7fdc120bae6f4b",
-      "linked_signal_ids": [],
-      "lifecycle_status": "active",
-      "watchlist_kind": "mention",
-      "latest_material_signal_date": "2026-07-12",
-      "expires_on": "2026-07-24",
-      "archived_date": null,
-      "archive_reason": null
-    },
-    {
-      "name": "신한금융지주",
-      "code": "055550",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-16",
-      "evidence_posts": [
-        {
-          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
-          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-12"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-07-13",
-      "latest_evidence_date": "2026-07-12",
-      "watchlist_duration_days": 10,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "스테이블코인 OUSD 참여 의향 및 디지털 결제 생태계 수혜 연계성 검토를 위한 관심 분류 유지.",
-      "provenance_status": "legacy_unvalidated",
-      "origin_signal_type": "LEGACY_UNVALIDATED",
-      "origin_signal_ids": [],
-      "thesis_id": "legacy-5e862fb8f7dc9ce21bcf",
-      "linked_signal_ids": [],
-      "lifecycle_status": "active",
-      "watchlist_kind": "mention",
-      "latest_material_signal_date": "2026-07-12",
-      "expires_on": "2026-07-24",
-      "archived_date": null,
-      "archive_reason": null
-    },
-    {
-      "name": "카카오뱅크",
-      "code": "323410",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-16",
-      "evidence_posts": [
-        {
-          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
-          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-12"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-07-13",
-      "latest_evidence_date": "2026-07-12",
-      "watchlist_duration_days": 10,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "전통 은행에 맞선 인터넷 전문은행의 디지털 블록체인 금융 확장성을 주목하며 관심 단계 유지.",
-      "provenance_status": "legacy_unvalidated",
-      "origin_signal_type": "LEGACY_UNVALIDATED",
-      "origin_signal_ids": [],
-      "thesis_id": "legacy-1c7400c86f89a974a6cf",
-      "linked_signal_ids": [],
-      "lifecycle_status": "active",
-      "watchlist_kind": "mention",
-      "latest_material_signal_date": "2026-07-12",
-      "expires_on": "2026-07-24",
-      "archived_date": null,
-      "archive_reason": null
-    },
-    {
-      "name": "HLB",
-      "code": "028300",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-13",
-      "evidence_posts": [
-        {
-          "title": "항서제약의 비밀",
-          "url": "https://blog.naver.com/ranto28/224343832057?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-12"
-        },
-        {
-          "title": "HLB 간암신약 미국FDA승인 불발의 비밀 A/S",
-          "url": "https://blog.naver.com/ranto28/224342169959?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-10"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-07-13",
-      "latest_evidence_date": "2026-07-12",
-      "watchlist_duration_days": 10,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "파트너사인 중국 항서제약의 제조품질관리(cGMP) 및 데이터 무결성 문제로 인해 간암 신약의 FDA 승인이 반복적으로 지연되고 있습니다. 이는 HLB 자체의 문제가 아닌 파트너 리스크로, 해결 시점이 불투명하여 투자 불확실성이 매우 높습니다.",
-      "provenance_status": "legacy_unvalidated",
-      "origin_signal_type": "LEGACY_UNVALIDATED",
-      "origin_signal_ids": [],
-      "thesis_id": "legacy-c6169227304e2fe124f4",
-      "linked_signal_ids": [
-        "sig_c7de0e83eda6d6f8cd174bd9af0306664b10516ac3070c747624b96126ce37f6",
-        "sig_b86ecd1688c2b29ba598c1cd02a338dfcc1048a26051c9710ecb32a9533a12ef"
-      ],
-      "lifecycle_status": "active",
-      "watchlist_kind": "mention",
-      "latest_material_signal_date": "2026-07-12",
-      "expires_on": "2026-07-24",
-      "archived_date": null,
-      "archive_reason": null,
-      "merged_thesis_ids": [
-        "thesis_46f59fe016ba1642e8e20029"
-      ]
-    },
-    {
       "name": "농산물/곡물 섹터",
       "code": "",
       "market": "",
@@ -584,7 +357,7 @@
       "source_mentioned": false,
       "watchlist_entry_date": "2026-06-16",
       "latest_evidence_date": "2026-07-11",
-      "watchlist_duration_days": 37,
+      "watchlist_duration_days": 38,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -622,7 +395,7 @@
       "source_mentioned": true,
       "watchlist_entry_date": "2026-07-10",
       "latest_evidence_date": "2026-07-09",
-      "watchlist_duration_days": 13,
+      "watchlist_duration_days": 14,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -639,52 +412,6 @@
       "lifecycle_status": "active",
       "latest_material_signal_date": "2026-07-09",
       "expires_on": "2026-08-06",
-      "archived_date": null,
-      "archive_reason": null
-    },
-    {
-      "name": "HLB",
-      "code": "028300",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-16",
-      "evidence_posts": [
-        {
-          "title": "항서제약의 비밀",
-          "url": "https://blog.naver.com/ranto28/224343832057?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-12"
-        },
-        {
-          "title": "HLB 간암신약 미국FDA승인 불발의 비밀 A/S",
-          "url": "https://blog.naver.com/ranto28/224342169959?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-10"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-07-13",
-      "latest_evidence_date": "2026-07-12",
-      "watchlist_duration_days": 10,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "파트너사인 항서제약의 반복적인 제조품질관리(cGMP) 및 Warning Letter 지적 등의 리스크 해결 시점이 불투명하므로 불확실성이 해소되는 구간까지 투자 집행을 완전 보류하고 관찰만 유지.",
-      "linked_signal_ids": [
-        "sig_c7de0e83eda6d6f8cd174bd9af0306664b10516ac3070c747624b96126ce37f6",
-        "sig_b86ecd1688c2b29ba598c1cd02a338dfcc1048a26051c9710ecb32a9533a12ef"
-      ],
-      "thesis_id": "thesis_46f59fe016ba1642e8e20029",
-      "watchlist_kind": "mention",
-      "provenance_status": "verified",
-      "origin_signal_type": "MER_THESIS",
-      "origin_signal_ids": [
-        "sig_b86ecd1688c2b29ba598c1cd02a338dfcc1048a26051c9710ecb32a9533a12ef"
-      ],
-      "lifecycle_status": "active",
-      "latest_material_signal_date": "2026-07-12",
-      "expires_on": "2026-07-24",
       "archived_date": null,
       "archive_reason": null
     },
@@ -706,7 +433,7 @@
       "source_mentioned": true,
       "watchlist_entry_date": "2026-07-16",
       "latest_evidence_date": "2026-07-06",
-      "watchlist_duration_days": 7,
+      "watchlist_duration_days": 8,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -746,7 +473,7 @@
       "source_mentioned": true,
       "watchlist_entry_date": "2026-07-16",
       "latest_evidence_date": "2026-07-04",
-      "watchlist_duration_days": 7,
+      "watchlist_duration_days": 8,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -1731,6 +1458,279 @@
       "latest_material_signal_date": "2026-07-06",
       "expires_on": "2026-07-20",
       "archived_date": "2026-07-21",
+      "archive_reason": "Watchlist 유효기간 만료"
+    },
+    {
+      "name": "Visa",
+      "code": "V",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-16",
+      "evidence_posts": [
+        {
+          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
+          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-12"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-13",
+      "latest_evidence_date": "2026-07-12",
+      "watchlist_duration_days": 10,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": "2026-07-24",
+      "status": "종료",
+      "source_scope": "source_named_security",
+      "observation_reason": "Open USD 컨소시엄 참여에 기초한 스테이블코인 생태계와 결제 시장 진입 여부를 관찰하기 위해 관심 단계 유지.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-ec1d68e7764d2537d182",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-07-12",
+      "expires_on": "2026-07-24",
+      "archived_date": "2026-07-24",
+      "archive_reason": "Watchlist 유효기간 만료"
+    },
+    {
+      "name": "Mastercard",
+      "code": "MA",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-16",
+      "evidence_posts": [
+        {
+          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
+          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-12"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-13",
+      "latest_evidence_date": "2026-07-12",
+      "watchlist_duration_days": 10,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": "2026-07-24",
+      "status": "종료",
+      "source_scope": "source_named_security",
+      "observation_reason": "OUSD 플랫폼 파트너십을 통한 신규 스테이블코인 성장 수혜 여부를 장기 관찰.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-5eb0de4d56b7b299bc62",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-07-12",
+      "expires_on": "2026-07-24",
+      "archived_date": "2026-07-24",
+      "archive_reason": "Watchlist 유효기간 만료"
+    },
+    {
+      "name": "두나무",
+      "code": "",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-16",
+      "evidence_posts": [
+        {
+          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
+          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-12"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-13",
+      "latest_evidence_date": "2026-07-12",
+      "watchlist_duration_days": 10,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": "2026-07-24",
+      "status": "종료",
+      "source_scope": "source_named_security",
+      "observation_reason": "비상장 주식으로서 Open USD 컨소시엄 국내 명단에 포함됨에 따라 관련 블록체인 시너지를 관심 대상으로 관찰.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-9a129e7fdc120bae6f4b",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-07-12",
+      "expires_on": "2026-07-24",
+      "archived_date": "2026-07-24",
+      "archive_reason": "Watchlist 유효기간 만료"
+    },
+    {
+      "name": "신한금융지주",
+      "code": "055550",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-16",
+      "evidence_posts": [
+        {
+          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
+          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-12"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-13",
+      "latest_evidence_date": "2026-07-12",
+      "watchlist_duration_days": 10,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": "2026-07-24",
+      "status": "종료",
+      "source_scope": "source_named_security",
+      "observation_reason": "스테이블코인 OUSD 참여 의향 및 디지털 결제 생태계 수혜 연계성 검토를 위한 관심 분류 유지.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-5e862fb8f7dc9ce21bcf",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-07-12",
+      "expires_on": "2026-07-24",
+      "archived_date": "2026-07-24",
+      "archive_reason": "Watchlist 유효기간 만료"
+    },
+    {
+      "name": "카카오뱅크",
+      "code": "323410",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-16",
+      "evidence_posts": [
+        {
+          "title": "새로운 스테이블 코인 등장, Open USD의 정체는?",
+          "url": "https://blog.naver.com/ranto28/224344083594?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-12"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-13",
+      "latest_evidence_date": "2026-07-12",
+      "watchlist_duration_days": 10,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": "2026-07-24",
+      "status": "종료",
+      "source_scope": "source_named_security",
+      "observation_reason": "전통 은행에 맞선 인터넷 전문은행의 디지털 블록체인 금융 확장성을 주목하며 관심 단계 유지.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-1c7400c86f89a974a6cf",
+      "linked_signal_ids": [],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-07-12",
+      "expires_on": "2026-07-24",
+      "archived_date": "2026-07-24",
+      "archive_reason": "Watchlist 유효기간 만료"
+    },
+    {
+      "name": "HLB",
+      "code": "028300",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-13",
+      "evidence_posts": [
+        {
+          "title": "항서제약의 비밀",
+          "url": "https://blog.naver.com/ranto28/224343832057?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-12"
+        },
+        {
+          "title": "HLB 간암신약 미국FDA승인 불발의 비밀 A/S",
+          "url": "https://blog.naver.com/ranto28/224342169959?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-10"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-13",
+      "latest_evidence_date": "2026-07-12",
+      "watchlist_duration_days": 10,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": "2026-07-24",
+      "status": "종료",
+      "source_scope": "source_named_security",
+      "observation_reason": "파트너사인 중국 항서제약의 제조품질관리(cGMP) 및 데이터 무결성 문제로 인해 간암 신약의 FDA 승인이 반복적으로 지연되고 있습니다. 이는 HLB 자체의 문제가 아닌 파트너 리스크로, 해결 시점이 불투명하여 투자 불확실성이 매우 높습니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-c6169227304e2fe124f4",
+      "linked_signal_ids": [
+        "sig_c7de0e83eda6d6f8cd174bd9af0306664b10516ac3070c747624b96126ce37f6",
+        "sig_b86ecd1688c2b29ba598c1cd02a338dfcc1048a26051c9710ecb32a9533a12ef"
+      ],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "mention",
+      "latest_material_signal_date": "2026-07-12",
+      "expires_on": "2026-07-24",
+      "archived_date": "2026-07-24",
+      "archive_reason": "Watchlist 유효기간 만료",
+      "merged_thesis_ids": [
+        "thesis_46f59fe016ba1642e8e20029"
+      ]
+    },
+    {
+      "name": "HLB",
+      "code": "028300",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-16",
+      "evidence_posts": [
+        {
+          "title": "항서제약의 비밀",
+          "url": "https://blog.naver.com/ranto28/224343832057?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-12"
+        },
+        {
+          "title": "HLB 간암신약 미국FDA승인 불발의 비밀 A/S",
+          "url": "https://blog.naver.com/ranto28/224342169959?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-10"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-13",
+      "latest_evidence_date": "2026-07-12",
+      "watchlist_duration_days": 10,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": "2026-07-24",
+      "status": "종료",
+      "source_scope": "source_named_security",
+      "observation_reason": "파트너사인 항서제약의 반복적인 제조품질관리(cGMP) 및 Warning Letter 지적 등의 리스크 해결 시점이 불투명하므로 불확실성이 해소되는 구간까지 투자 집행을 완전 보류하고 관찰만 유지.",
+      "linked_signal_ids": [
+        "sig_c7de0e83eda6d6f8cd174bd9af0306664b10516ac3070c747624b96126ce37f6",
+        "sig_b86ecd1688c2b29ba598c1cd02a338dfcc1048a26051c9710ecb32a9533a12ef"
+      ],
+      "thesis_id": "thesis_46f59fe016ba1642e8e20029",
+      "watchlist_kind": "mention",
+      "provenance_status": "verified",
+      "origin_signal_type": "MER_THESIS",
+      "origin_signal_ids": [
+        "sig_b86ecd1688c2b29ba598c1cd02a338dfcc1048a26051c9710ecb32a9533a12ef"
+      ],
+      "lifecycle_status": "expired",
+      "latest_material_signal_date": "2026-07-12",
+      "expires_on": "2026-07-24",
+      "archived_date": "2026-07-24",
       "archive_reason": "Watchlist 유효기간 만료"
     }
   ],
@@ -10431,12 +10431,20 @@
     }
   ],
   "last_watchlist_changes": {
-    "date": "2026-07-23",
+    "date": "2026-07-24",
     "added": [],
     "updated": [],
     "promoted": [],
     "rejected": [],
-    "expired": [],
+    "expired": [
+      "legacy-ec1d68e7764d2537d182",
+      "legacy-5eb0de4d56b7b299bc62",
+      "legacy-9a129e7fdc120bae6f4b",
+      "legacy-5e862fb8f7dc9ce21bcf",
+      "legacy-1c7400c86f89a974a6cf",
+      "legacy-c6169227304e2fe124f4",
+      "thesis_46f59fe016ba1642e8e20029"
+    ],
     "archived": []
   },
   "last_rebalanced_date": "2026-07-16",
