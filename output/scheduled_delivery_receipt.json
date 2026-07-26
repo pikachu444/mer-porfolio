@@ -4,7 +4,7 @@
   "report_path": "report_20260727.md",
   "prepared_at": "2026-07-27T01:16:54.577063+09:00",
   "prepared_by_run_id": "30209969438",
-  "delivery_status": "prepared",
-  "delivered_at": null,
-  "delivered_by_run_id": null
+  "delivery_status": "delivered",
+  "delivered_at": "2026-07-27T01:16:59.800811+09:00",
+  "delivered_by_run_id": "30209969438"
 }
