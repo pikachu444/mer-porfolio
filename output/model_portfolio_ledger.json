@@ -976,7 +976,7 @@
   ],
   "corporate_events": [],
   "corporate_action_state": {
-    "last_checked_date": "2026-07-29",
+    "last_checked_date": "2026-07-30",
     "last_applied_date": null
   },
   "snapshots": [
@@ -1119,6 +1119,17 @@
       "invested_value": 9.53334199,
       "total_value": 98.99990949,
       "return_pct": -1.00009051,
+      "realized_pnl": -0.18447314,
+      "dividend_income": 0.0,
+      "cumulative_costs": 0.13205863
+    },
+    {
+      "date": "2026-07-30",
+      "kind": "closing",
+      "cash": 89.4665675,
+      "invested_value": 8.9109148,
+      "total_value": 98.3774823,
+      "return_pct": -1.6225177,
       "realized_pnl": -0.18447314,
       "dividend_income": 0.0,
       "cumulative_costs": 0.13205863
