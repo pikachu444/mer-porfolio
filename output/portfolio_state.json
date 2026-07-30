@@ -276,7 +276,7 @@
       "source_mentioned": false,
       "watchlist_entry_date": "2026-06-16",
       "latest_evidence_date": "2026-07-11",
-      "watchlist_duration_days": 44,
+      "watchlist_duration_days": 45,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -318,7 +318,7 @@
       "source_mentioned": true,
       "watchlist_entry_date": "2026-07-10",
       "latest_evidence_date": "2026-07-09",
-      "watchlist_duration_days": 20,
+      "watchlist_duration_days": 21,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -357,7 +357,7 @@
       "source_mentioned": false,
       "watchlist_entry_date": "2026-06-16",
       "latest_evidence_date": "2026-07-11",
-      "watchlist_duration_days": 44,
+      "watchlist_duration_days": 45,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -395,7 +395,7 @@
       "source_mentioned": true,
       "watchlist_entry_date": "2026-07-10",
       "latest_evidence_date": "2026-07-09",
-      "watchlist_duration_days": 20,
+      "watchlist_duration_days": 21,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -433,7 +433,7 @@
       "source_mentioned": true,
       "watchlist_entry_date": "2026-07-16",
       "latest_evidence_date": "2026-07-06",
-      "watchlist_duration_days": 14,
+      "watchlist_duration_days": 15,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -452,46 +452,6 @@
       "lifecycle_status": "active",
       "latest_material_signal_date": "2026-07-06",
       "expires_on": "2026-08-03",
-      "archived_date": null,
-      "archive_reason": null
-    },
-    {
-      "name": "롯데건설",
-      "code": "011160",
-      "market": "KR",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-16",
-      "evidence_posts": [
-        {
-          "title": "홈플러스 사태 근황",
-          "url": "https://blog.naver.com/ranto28/224336684901?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-04"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-07-16",
-      "latest_evidence_date": "2026-07-04",
-      "watchlist_duration_days": 14,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "홈플러스 관련 점포 2조 2,505억 원 규모 PF 보증 손실 가능성이 언급되어, 향후 신용 우려 여부와 부지 주상복합 개발 진행 상황을 확인합니다.",
-      "linked_signal_ids": [
-        "sig_fb07c5b09596fba62548f36937676cfc3e35d6a56812dec0436a027d6085adb7"
-      ],
-      "thesis_id": "thesis_b8f78eb1ffc29bf75187ad96",
-      "watchlist_kind": "event",
-      "provenance_status": "verified",
-      "origin_signal_type": "MER_THESIS",
-      "origin_signal_ids": [
-        "sig_fb07c5b09596fba62548f36937676cfc3e35d6a56812dec0436a027d6085adb7"
-      ],
-      "lifecycle_status": "active",
-      "latest_material_signal_date": "2026-07-04",
-      "expires_on": "2026-07-31",
       "archived_date": null,
       "archive_reason": null
     }
@@ -1731,6 +1691,46 @@
       "latest_material_signal_date": "2026-07-12",
       "expires_on": "2026-07-24",
       "archived_date": "2026-07-24",
+      "archive_reason": "Watchlist 유효기간 만료"
+    },
+    {
+      "name": "롯데건설",
+      "code": "011160",
+      "market": "KR",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-16",
+      "evidence_posts": [
+        {
+          "title": "홈플러스 사태 근황",
+          "url": "https://blog.naver.com/ranto28/224336684901?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-04"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-16",
+      "latest_evidence_date": "2026-07-04",
+      "watchlist_duration_days": 14,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": "2026-07-31",
+      "status": "종료",
+      "source_scope": "source_named_security",
+      "observation_reason": "홈플러스 관련 점포 2조 2,505억 원 규모 PF 보증 손실 가능성이 언급되어, 향후 신용 우려 여부와 부지 주상복합 개발 진행 상황을 확인합니다.",
+      "linked_signal_ids": [
+        "sig_fb07c5b09596fba62548f36937676cfc3e35d6a56812dec0436a027d6085adb7"
+      ],
+      "thesis_id": "thesis_b8f78eb1ffc29bf75187ad96",
+      "watchlist_kind": "event",
+      "provenance_status": "verified",
+      "origin_signal_type": "MER_THESIS",
+      "origin_signal_ids": [
+        "sig_fb07c5b09596fba62548f36937676cfc3e35d6a56812dec0436a027d6085adb7"
+      ],
+      "lifecycle_status": "expired",
+      "latest_material_signal_date": "2026-07-04",
+      "expires_on": "2026-07-31",
+      "archived_date": "2026-07-31",
       "archive_reason": "Watchlist 유효기간 만료"
     }
   ],
@@ -10431,12 +10431,14 @@
     }
   ],
   "last_watchlist_changes": {
-    "date": "2026-07-30",
+    "date": "2026-07-31",
     "added": [],
     "updated": [],
     "promoted": [],
     "rejected": [],
-    "expired": [],
+    "expired": [
+      "thesis_b8f78eb1ffc29bf75187ad96"
+    ],
     "archived": []
   },
   "last_rebalanced_date": "2026-07-16",
