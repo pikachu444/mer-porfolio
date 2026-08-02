@@ -276,7 +276,7 @@
       "source_mentioned": false,
       "watchlist_entry_date": "2026-06-16",
       "latest_evidence_date": "2026-07-11",
-      "watchlist_duration_days": 47,
+      "watchlist_duration_days": 48,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -318,7 +318,7 @@
       "source_mentioned": true,
       "watchlist_entry_date": "2026-07-10",
       "latest_evidence_date": "2026-07-09",
-      "watchlist_duration_days": 23,
+      "watchlist_duration_days": 24,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -357,7 +357,7 @@
       "source_mentioned": false,
       "watchlist_entry_date": "2026-06-16",
       "latest_evidence_date": "2026-07-11",
-      "watchlist_duration_days": 47,
+      "watchlist_duration_days": 48,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -395,7 +395,7 @@
       "source_mentioned": true,
       "watchlist_entry_date": "2026-07-10",
       "latest_evidence_date": "2026-07-09",
-      "watchlist_duration_days": 23,
+      "watchlist_duration_days": 24,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -412,46 +412,6 @@
       "lifecycle_status": "active",
       "latest_material_signal_date": "2026-07-09",
       "expires_on": "2026-08-06",
-      "archived_date": null,
-      "archive_reason": null
-    },
-    {
-      "name": "TKMS",
-      "code": "",
-      "market": "DE",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-16",
-      "evidence_posts": [
-        {
-          "title": "캐나다가 독일 잠수함을 선택한 속사정",
-          "url": "https://blog.naver.com/ranto28/224338753575?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-06"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-07-16",
-      "latest_evidence_date": "2026-07-06",
-      "watchlist_duration_days": 17,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "독일의 조선/방산 기업으로, 한화오션을 제치고 캐나다 차세대 잠수함 우선협상대상자로 선정되어 주가 강세가 확인됨에 따라 수혜 흐름을 추적합니다.",
-      "linked_signal_ids": [
-        "sig_4cf88c4d719e3fb00e699cf05f2fdfb499bfa8e15b3acc766bf5bf0389717da0"
-      ],
-      "thesis_id": "thesis_dae98beef5763f9ba6cab278",
-      "watchlist_kind": "event",
-      "provenance_status": "verified",
-      "origin_signal_type": "MER_THESIS",
-      "origin_signal_ids": [
-        "sig_4cf88c4d719e3fb00e699cf05f2fdfb499bfa8e15b3acc766bf5bf0389717da0"
-      ],
-      "lifecycle_status": "active",
-      "latest_material_signal_date": "2026-07-06",
-      "expires_on": "2026-08-03",
       "archived_date": null,
       "archive_reason": null
     }
@@ -1731,6 +1691,46 @@
       "latest_material_signal_date": "2026-07-04",
       "expires_on": "2026-07-31",
       "archived_date": "2026-07-31",
+      "archive_reason": "Watchlist 유효기간 만료"
+    },
+    {
+      "name": "TKMS",
+      "code": "",
+      "market": "DE",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-16",
+      "evidence_posts": [
+        {
+          "title": "캐나다가 독일 잠수함을 선택한 속사정",
+          "url": "https://blog.naver.com/ranto28/224338753575?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-06"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-16",
+      "latest_evidence_date": "2026-07-06",
+      "watchlist_duration_days": 17,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": "2026-08-03",
+      "status": "종료",
+      "source_scope": "source_named_security",
+      "observation_reason": "독일의 조선/방산 기업으로, 한화오션을 제치고 캐나다 차세대 잠수함 우선협상대상자로 선정되어 주가 강세가 확인됨에 따라 수혜 흐름을 추적합니다.",
+      "linked_signal_ids": [
+        "sig_4cf88c4d719e3fb00e699cf05f2fdfb499bfa8e15b3acc766bf5bf0389717da0"
+      ],
+      "thesis_id": "thesis_dae98beef5763f9ba6cab278",
+      "watchlist_kind": "event",
+      "provenance_status": "verified",
+      "origin_signal_type": "MER_THESIS",
+      "origin_signal_ids": [
+        "sig_4cf88c4d719e3fb00e699cf05f2fdfb499bfa8e15b3acc766bf5bf0389717da0"
+      ],
+      "lifecycle_status": "expired",
+      "latest_material_signal_date": "2026-07-06",
+      "expires_on": "2026-08-03",
+      "archived_date": "2026-08-03",
       "archive_reason": "Watchlist 유효기간 만료"
     }
   ],
@@ -10431,12 +10431,14 @@
     }
   ],
   "last_watchlist_changes": {
-    "date": "2026-08-02",
+    "date": "2026-08-03",
     "added": [],
     "updated": [],
     "promoted": [],
     "rejected": [],
-    "expired": [],
+    "expired": [
+      "thesis_dae98beef5763f9ba6cab278"
+    ],
     "archived": []
   },
   "last_rebalanced_date": "2026-07-16",
