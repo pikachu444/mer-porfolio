@@ -1,23 +1,23 @@
 {
-  "updated": "2026-08-05",
+  "updated": "2026-08-06",
   "epoch_id": "clean-v4-2026-07-14",
   "inception_date": "2026-07-14",
   "legacy_epoch_count": 1,
-  "portfolio_return_krw": -0.42811089,
+  "portfolio_return_krw": -0.13696549,
   "cash": 89.4665675,
   "realized_pnl": -0.18447314,
   "dividend_income": 0.0,
   "cumulative_costs": 0.13205862525248854,
-  "actual_cash_weight": 89.85123040215059,
+  "actual_cash_weight": 89.58927388796809,
   "risk_metrics": {
-    "total_return": -0.004281108899999997,
-    "annualized_volatility": 0.09993620424154673,
-    "sharpe": -0.5194484478106546,
-    "sortino": -0.7651446964866327,
+    "total_return": -0.0013696548999999614,
+    "annualized_volatility": 0.09800586394695202,
+    "sharpe": -0.12727887041341415,
+    "sortino": -0.18863611370393663,
     "max_drawdown": -0.02342425239246848,
-    "benchmark_return": -0.05940888571355518,
-    "excess_return": 0.055127776813555185,
-    "information_ratio": 0.949702593675673
+    "benchmark_return": -0.022314012810280004,
+    "excess_return": 0.020944357910280043,
+    "information_ratio": 0.15244435217893626
   },
   "benchmark": {
     "policy": "KOSPI200 TR 및 S&P500 TR(KRW) 비교 벤치마크",
@@ -40,7 +40,8 @@
       0.0,
       0.0,
       -0.04171836366268,
-      0.0,
+      0.01413911530671419,
+      0.024946000778077515,
       0.0
     ]
   },
@@ -57,9 +58,9 @@
       "opened_date": "2026-07-14",
       "episode_realized_pnl": 0.0,
       "target_weight": 1.5,
-      "current_price": 240000.0,
-      "return_pct_krw": -5.979507450144661,
-      "actual_weight": 1.4190875254534758
+      "current_price": 246000.0,
+      "return_pct_krw": -3.628995136398283,
+      "actual_weight": 1.4503240069942662
     },
     {
       "key": "stock:KR:042660",
@@ -73,9 +74,9 @@
       "opened_date": "2026-07-14",
       "episode_realized_pnl": 0.0,
       "target_weight": 1.5,
-      "current_price": 87500.0,
-      "return_pct_krw": 10.708483685997837,
-      "actual_weight": 1.6709658064954571
+      "current_price": 91900.0,
+      "return_pct_krw": 16.275538865636573,
+      "actual_weight": 1.7498749305531007
     },
     {
       "key": "etf:KR:305720",
@@ -89,9 +90,9 @@
       "opened_date": "2026-07-16",
       "episode_realized_pnl": 0.0,
       "target_weight": 5.0,
-      "current_price": 13010.0,
-      "return_pct_krw": -6.17658777735508,
-      "actual_weight": 4.759958428228904
+      "current_price": 13120.0,
+      "return_pct_krw": -5.383307581775454,
+      "actual_weight": 4.78620930003435
     },
     {
       "key": "stock:KR:000660",
@@ -105,9 +106,9 @@
       "opened_date": "2026-07-16",
       "episode_realized_pnl": 0.0,
       "target_weight": 3.0,
-      "current_price": 1577000.0,
-      "return_pct_krw": -24.482077303152995,
-      "actual_weight": 2.2987578309570615
+      "current_price": 1668000.0,
+      "return_pct_krw": -20.12435316528801,
+      "actual_weight": 2.4243178700648875
     }
   ],
   "closed_positions": [
@@ -476,6 +477,10 @@
     {
       "date": "2026-08-05",
       "avg_return_krw": -0.42811089
+    },
+    {
+      "date": "2026-08-06",
+      "avg_return_krw": -0.13696549
     }
   ]
 }

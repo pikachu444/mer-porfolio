@@ -276,7 +276,7 @@
       "source_mentioned": false,
       "watchlist_entry_date": "2026-06-16",
       "latest_evidence_date": "2026-07-11",
-      "watchlist_duration_days": 50,
+      "watchlist_duration_days": 51,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -301,45 +301,6 @@
       ]
     },
     {
-      "name": "CF Industries Holdings",
-      "code": "CF",
-      "market": "US",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-14",
-      "evidence_posts": [
-        {
-          "title": "트럼프가 비료부족에 대응하는 보법",
-          "url": "https://blog.naver.com/ranto28/224341638501?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-09"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-07-10",
-      "latest_evidence_date": "2026-07-09",
-      "watchlist_duration_days": 26,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "법무부 합의로 질소비료를 수출 대신 내수로 전환해야 하고, 정기 점검 연기에 따라 운영 효율이 악화되는 마진 부담이 발생했습니다. 반독점 조사도 상존하여 편입 보류 후 관찰합니다.",
-      "provenance_status": "legacy_unvalidated",
-      "origin_signal_type": "LEGACY_UNVALIDATED",
-      "origin_signal_ids": [],
-      "thesis_id": "legacy-a19c6332d66b60bb7faa",
-      "linked_signal_ids": [
-        "sig_03224fabea03efd07ecad981b9377c13fd9ea99083627774391154f950a1c36a",
-        "sig_d8d6b479c2bf395d8a2650fa93b511295d65135ff58d2da2130736e48ff4ace1"
-      ],
-      "lifecycle_status": "active",
-      "watchlist_kind": "event",
-      "latest_material_signal_date": "2026-07-09",
-      "expires_on": "2026-08-06",
-      "archived_date": null,
-      "archive_reason": null
-    },
-    {
       "name": "농산물/곡물 섹터",
       "code": "",
       "market": "",
@@ -357,7 +318,7 @@
       "source_mentioned": false,
       "watchlist_entry_date": "2026-06-16",
       "latest_evidence_date": "2026-07-11",
-      "watchlist_duration_days": 50,
+      "watchlist_duration_days": 51,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -374,44 +335,6 @@
       "lifecycle_status": "active",
       "latest_material_signal_date": "2026-07-11",
       "expires_on": "2026-10-02",
-      "archived_date": null,
-      "archive_reason": null
-    },
-    {
-      "name": "CF Industries Holdings",
-      "code": "CF",
-      "market": "US",
-      "asset_type": "stock",
-      "decision_actor": "AI",
-      "basis": "종목 분석",
-      "decision_date": "2026-07-16",
-      "evidence_posts": [
-        {
-          "title": "트럼프가 비료부족에 대응하는 보법",
-          "url": "https://blog.naver.com/ranto28/224341638501?fromRss=true&trackingCode=rss",
-          "published_date": "2026-07-09"
-        }
-      ],
-      "source_mentioned": true,
-      "watchlist_entry_date": "2026-07-10",
-      "latest_evidence_date": "2026-07-09",
-      "watchlist_duration_days": 26,
-      "portfolio_entry_date": null,
-      "watchlist_closed_date": null,
-      "status": "관심",
-      "source_scope": "source_named_security",
-      "observation_reason": "법무부 합의로 수출에서 내수로 물량을 배정하면서 정기점검을 미루는 비료 공급의 단기 변동성과 농무부 반독점 지적 노이즈가 상존하므로 관심 단계 유지.",
-      "linked_signal_ids": [
-        "sig_d8d6b479c2bf395d8a2650fa93b511295d65135ff58d2da2130736e48ff4ace1"
-      ],
-      "thesis_id": "thesis_eb914de4086d88c82c688dfe",
-      "watchlist_kind": "event",
-      "provenance_status": "legacy_unvalidated",
-      "origin_signal_type": "LEGACY_UNVALIDATED",
-      "origin_signal_ids": [],
-      "lifecycle_status": "active",
-      "latest_material_signal_date": "2026-07-09",
-      "expires_on": "2026-08-06",
       "archived_date": null,
       "archive_reason": null
     }
@@ -1731,6 +1654,83 @@
       "latest_material_signal_date": "2026-07-06",
       "expires_on": "2026-08-03",
       "archived_date": "2026-08-03",
+      "archive_reason": "Watchlist 유효기간 만료"
+    },
+    {
+      "name": "CF Industries Holdings",
+      "code": "CF",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-14",
+      "evidence_posts": [
+        {
+          "title": "트럼프가 비료부족에 대응하는 보법",
+          "url": "https://blog.naver.com/ranto28/224341638501?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-09"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-10",
+      "latest_evidence_date": "2026-07-09",
+      "watchlist_duration_days": 26,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": "2026-08-06",
+      "status": "종료",
+      "source_scope": "source_named_security",
+      "observation_reason": "법무부 합의로 질소비료를 수출 대신 내수로 전환해야 하고, 정기 점검 연기에 따라 운영 효율이 악화되는 마진 부담이 발생했습니다. 반독점 조사도 상존하여 편입 보류 후 관찰합니다.",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "thesis_id": "legacy-a19c6332d66b60bb7faa",
+      "linked_signal_ids": [
+        "sig_03224fabea03efd07ecad981b9377c13fd9ea99083627774391154f950a1c36a",
+        "sig_d8d6b479c2bf395d8a2650fa93b511295d65135ff58d2da2130736e48ff4ace1"
+      ],
+      "lifecycle_status": "expired",
+      "watchlist_kind": "event",
+      "latest_material_signal_date": "2026-07-09",
+      "expires_on": "2026-08-06",
+      "archived_date": "2026-08-06",
+      "archive_reason": "Watchlist 유효기간 만료"
+    },
+    {
+      "name": "CF Industries Holdings",
+      "code": "CF",
+      "market": "US",
+      "asset_type": "stock",
+      "decision_actor": "AI",
+      "basis": "종목 분석",
+      "decision_date": "2026-07-16",
+      "evidence_posts": [
+        {
+          "title": "트럼프가 비료부족에 대응하는 보법",
+          "url": "https://blog.naver.com/ranto28/224341638501?fromRss=true&trackingCode=rss",
+          "published_date": "2026-07-09"
+        }
+      ],
+      "source_mentioned": true,
+      "watchlist_entry_date": "2026-07-10",
+      "latest_evidence_date": "2026-07-09",
+      "watchlist_duration_days": 26,
+      "portfolio_entry_date": null,
+      "watchlist_closed_date": "2026-08-06",
+      "status": "종료",
+      "source_scope": "source_named_security",
+      "observation_reason": "법무부 합의로 수출에서 내수로 물량을 배정하면서 정기점검을 미루는 비료 공급의 단기 변동성과 농무부 반독점 지적 노이즈가 상존하므로 관심 단계 유지.",
+      "linked_signal_ids": [
+        "sig_d8d6b479c2bf395d8a2650fa93b511295d65135ff58d2da2130736e48ff4ace1"
+      ],
+      "thesis_id": "thesis_eb914de4086d88c82c688dfe",
+      "watchlist_kind": "event",
+      "provenance_status": "legacy_unvalidated",
+      "origin_signal_type": "LEGACY_UNVALIDATED",
+      "origin_signal_ids": [],
+      "lifecycle_status": "expired",
+      "latest_material_signal_date": "2026-07-09",
+      "expires_on": "2026-08-06",
+      "archived_date": "2026-08-06",
       "archive_reason": "Watchlist 유효기간 만료"
     }
   ],
@@ -10431,12 +10431,15 @@
     }
   ],
   "last_watchlist_changes": {
-    "date": "2026-08-05",
+    "date": "2026-08-06",
     "added": [],
     "updated": [],
     "promoted": [],
     "rejected": [],
-    "expired": [],
+    "expired": [
+      "legacy-a19c6332d66b60bb7faa",
+      "thesis_eb914de4086d88c82c688dfe"
+    ],
     "archived": []
   },
   "last_rebalanced_date": "2026-07-16",
