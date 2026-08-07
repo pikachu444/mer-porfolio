@@ -276,7 +276,7 @@
       "source_mentioned": false,
       "watchlist_entry_date": "2026-06-16",
       "latest_evidence_date": "2026-07-11",
-      "watchlist_duration_days": 52,
+      "watchlist_duration_days": 53,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -318,7 +318,7 @@
       "source_mentioned": false,
       "watchlist_entry_date": "2026-06-16",
       "latest_evidence_date": "2026-07-11",
-      "watchlist_duration_days": 52,
+      "watchlist_duration_days": 53,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -10431,7 +10431,7 @@
     }
   ],
   "last_watchlist_changes": {
-    "date": "2026-08-07",
+    "date": "2026-08-08",
     "added": [],
     "updated": [],
     "promoted": [],
