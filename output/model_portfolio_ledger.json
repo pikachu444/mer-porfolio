@@ -4,10 +4,10 @@
   "inception_date": "2026-07-14",
   "base_currency": "KRW",
   "starting_value": 100.0,
-  "cash": 88.53709314116013,
+  "cash": 85.50295838197883,
   "realized_pnl": -0.1844731391828804,
   "dividend_income": 0.0,
-  "cumulative_costs": 0.13483870809227363,
+  "cumulative_costs": 0.14391388683359357,
   "positions": [
     {
       "key": "stock:KR:005930",
@@ -58,6 +58,19 @@
       "average_cost": 1883121.5218418436,
       "decision_actor": "AI",
       "opened_date": "2026-07-16",
+      "episode_realized_pnl": 0.0,
+      "target_weight": 3.0
+    },
+    {
+      "key": "etf:KR:091170",
+      "name": "KODEX 은행",
+      "code": "091170",
+      "market": "KR",
+      "asset_type": "etf",
+      "quantity": 0.0001870785145602955,
+      "average_cost": 16218.51,
+      "decision_actor": "AI",
+      "opened_date": "2026-08-15",
       "episode_realized_pnl": 0.0,
       "target_weight": 3.0
     }
@@ -987,11 +1000,26 @@
       "target_weight": 3.0,
       "drift_bps_before": 92.96529435504404,
       "reason": "구글 등 빅테크 CAPEX 상향과 CXL 2세대 샘플 공개 등 구조적 AI 메모리 호재가 유효한 가운데, 중국의 해외 TRS 규제로 인한 외국인 기계적 이탈 및 범용 DRAM 가격 경쟁 위협이 상존하여 중립적인 완충 비중인 3.0%를 고수함. / 결정론적 슬리브·변동성·상한 정책 적용"
+    },
+    {
+      "date": "2026-08-15",
+      "type": "신규 매수",
+      "key": "etf:KR:091170",
+      "name": "KODEX 은행",
+      "decision_actor": "AI",
+      "price": 16170.0,
+      "quantity": 0.0001870785145602955,
+      "value": 3.025059580439978,
+      "trade_cost": 0.009075178741319934,
+      "realized_pnl": 0.0,
+      "target_weight": 3.0,
+      "drift_bps_before": 300.0,
+      "reason": "8.13 금융대책으로 은행의 주택 관련 대출 총량 규제가 대폭 완화되면서 대출 중단 리스크가 경감되고 마진 확보 여력이 개선되어 신규 매수 편입함. / 결정론적 슬리브·변동성·상한 정책 적용"
     }
   ],
   "corporate_events": [],
   "corporate_action_state": {
-    "last_checked_date": "2026-08-14",
+    "last_checked_date": "2026-08-15",
     "last_applied_date": null
   },
   "snapshots": [
@@ -1313,6 +1341,17 @@
       "realized_pnl": -0.18447314,
       "dividend_income": 0.0,
       "cumulative_costs": 0.13483871
+    },
+    {
+      "date": "2026-08-15",
+      "kind": "closing",
+      "cash": 85.50295838,
+      "invested_value": 15.33236097,
+      "total_value": 100.83531935,
+      "return_pct": 0.83531935,
+      "realized_pnl": -0.18447314,
+      "dividend_income": 0.0,
+      "cumulative_costs": 0.14391389
     }
   ],
   "legacy_epochs": [
