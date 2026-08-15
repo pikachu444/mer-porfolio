@@ -319,7 +319,7 @@
       "source_mentioned": false,
       "watchlist_entry_date": "2026-06-16",
       "latest_evidence_date": "2026-07-11",
-      "watchlist_duration_days": 60,
+      "watchlist_duration_days": 61,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -361,7 +361,7 @@
       "source_mentioned": false,
       "watchlist_entry_date": "2026-06-16",
       "latest_evidence_date": "2026-07-11",
-      "watchlist_duration_days": 60,
+      "watchlist_duration_days": 61,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -404,7 +404,7 @@
       "source_mentioned": true,
       "watchlist_entry_date": "2026-08-09",
       "latest_evidence_date": "2026-07-31",
-      "watchlist_duration_days": 6,
+      "watchlist_duration_days": 7,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -445,7 +445,7 @@
       "source_mentioned": true,
       "watchlist_entry_date": "2026-08-14",
       "latest_evidence_date": "2026-08-12",
-      "watchlist_duration_days": 1,
+      "watchlist_duration_days": 2,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -485,7 +485,7 @@
       "source_mentioned": false,
       "watchlist_entry_date": "2026-08-15",
       "latest_evidence_date": "2026-08-14",
-      "watchlist_duration_days": 0,
+      "watchlist_duration_days": 1,
       "portfolio_entry_date": null,
       "watchlist_closed_date": null,
       "status": "관심",
@@ -14008,15 +14008,9 @@
     }
   ],
   "last_watchlist_changes": {
-    "date": "2026-08-15",
-    "added": [
-      "thesis_b30a9cd352a3cb0d06a01e82"
-    ],
-    "updated": [
-      "thesis_25adbcaa24a6badd0112706e",
-      "thesis_705f2a4ca4f67be5cc2d5c54",
-      "thesis_545e765806ba3a0b5b92451d"
-    ],
+    "date": "2026-08-16",
+    "added": [],
+    "updated": [],
     "promoted": [],
     "rejected": [],
     "expired": [],
