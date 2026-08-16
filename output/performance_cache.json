@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-16",
+  "updated": "2026-08-17",
   "epoch_id": "clean-v4-2026-07-14",
   "inception_date": "2026-07-14",
   "legacy_epoch_count": 1,
@@ -11,13 +11,13 @@
   "actual_cash_weight": 84.79465224205688,
   "risk_metrics": {
     "total_return": 0.008353193500000078,
-    "annualized_volatility": 0.08302748442699326,
-    "sharpe": 0.8831717724312286,
-    "sortino": 1.3318737003398096,
+    "annualized_volatility": 0.0816814315039251,
+    "sharpe": 0.8687669285786784,
+    "sortino": 1.3102157740260325,
     "max_drawdown": -0.02342425239246848,
     "benchmark_return": 0.005144099159157811,
     "excess_return": 0.0032090943408422667,
-    "information_ratio": -0.1937971937863298
+    "information_ratio": -0.1906453516038608
   },
   "benchmark": {
     "policy": "KOSPI200 TR 및 S&P500 TR(KRW) 비교 벤치마크",
@@ -51,6 +51,7 @@
       0.018602755422296946,
       0.02213913840357895,
       0.015387265859957644,
+      0.0,
       0.0,
       0.0
     ]
@@ -546,6 +547,10 @@
     },
     {
       "date": "2026-08-16",
+      "avg_return_krw": 0.83531935
+    },
+    {
+      "date": "2026-08-17",
       "avg_return_krw": 0.83531935
     }
   ]
