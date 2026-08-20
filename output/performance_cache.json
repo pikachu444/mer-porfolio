@@ -1,28 +1,64 @@
 {
-  "updated": "2026-08-20",
+  "updated": "2026-08-21",
   "epoch_id": "clean-v4-2026-07-14",
   "inception_date": "2026-07-14",
   "legacy_epoch_count": 1,
-  "portfolio_return_krw": -0.07630225,
+  "portfolio_return_krw": 0.41410054,
   "cash": 85.50295838,
   "realized_pnl": -0.18447314,
   "dividend_income": 0.0,
   "cumulative_costs": 0.14391388683359357,
-  "actual_cash_weight": 85.5682488791804,
+  "actual_cash_weight": 85.15035031951498,
   "risk_metrics": {
-    "total_return": -0.0007630224999999324,
-    "annualized_volatility": 0.08014711507681004,
-    "sharpe": -0.030566922312549642,
-    "sortino": -0.044752201928884607,
+    "total_return": 0.004141005399999953,
+    "annualized_volatility": 0.0800572534859826,
+    "sharpe": 0.4116567415475571,
+    "sortino": 0.6108087974354168,
     "max_drawdown": -0.02342425239246848,
-    "benchmark_return": null,
-    "excess_return": null,
-    "information_ratio": null
+    "benchmark_return": -0.016212073907169278,
+    "excess_return": 0.02035307930716923,
+    "information_ratio": 0.06272890032694162
   },
   "benchmark": {
     "policy": "KOSPI200 TR 및 S&P500 TR(KRW) 비교 벤치마크",
-    "status": "unavailable: ValueError",
-    "period_returns": []
+    "status": "ok",
+    "period_returns": [
+      0.0,
+      0.032236450281353024,
+      -0.034294441678037135,
+      -0.012738924575689481,
+      0.0036407126221467134,
+      0.018237928548559323,
+      -0.03608782801593802,
+      0.0,
+      0.0,
+      0.015316987139396332,
+      -0.06715428758026915,
+      -0.03498323662941788,
+      -0.018999432588147902,
+      0.12920079840924759,
+      0.0,
+      0.0,
+      -0.04171836366268,
+      0.01413911530671419,
+      0.024946000778077515,
+      -0.028258694771076176,
+      -0.007761406637077473,
+      0.0,
+      0.0,
+      0.0045854820610126135,
+      0.003988373346302587,
+      0.018602755422296946,
+      0.02213913840357895,
+      0.015387265859957644,
+      0.0,
+      0.0,
+      0.0,
+      -0.014430124446066783,
+      -0.037943811182257425,
+      0.0322509767642708,
+      0.0
+    ]
   },
   "active_positions": [
     {
@@ -37,9 +73,9 @@
       "opened_date": "2026-07-14",
       "episode_realized_pnl": 0.0,
       "target_weight": 1.5,
-      "current_price": 247500.0,
-      "return_pct_krw": -3.041367057961686,
-      "actual_weight": 1.4582815918318623
+      "current_price": 271000.0,
+      "return_pct_krw": 6.164806170878312,
+      "actual_weight": 1.5889465043858346
     },
     {
       "key": "stock:KR:042660",
@@ -53,9 +89,9 @@
       "opened_date": "2026-07-14",
       "episode_realized_pnl": 0.0,
       "target_weight": 1.5,
-      "current_price": 88100.0,
-      "return_pct_krw": 11.467627574130379,
-      "actual_weight": 1.676500425430883
+      "current_price": 88500.0,
+      "return_pct_krw": 11.973723499552102,
+      "actual_weight": 1.6758873581072289
     },
     {
       "key": "etf:KR:305720",
@@ -69,9 +105,9 @@
       "opened_date": "2026-07-16",
       "episode_realized_pnl": 0.0,
       "target_weight": 5.0,
-      "current_price": 14195.0,
-      "return_pct_krw": 2.3692034204799706,
-      "actual_weight": 5.1752282613004645
+      "current_price": 14310.0,
+      "return_pct_krw": 3.198541806767774,
+      "actual_weight": 5.191675521363187
     },
     {
       "key": "stock:KR:000660",
@@ -85,9 +121,9 @@
       "opened_date": "2026-07-16",
       "episode_realized_pnl": 0.0,
       "target_weight": 3.0,
-      "current_price": 1500000.0,
-      "return_pct_krw": -20.345023802134666,
-      "actual_weight": 3.157090470043914
+      "current_price": 1691000.0,
+      "return_pct_krw": -10.202290166273142,
+      "actual_weight": 3.5417114090912616
     },
     {
       "key": "etf:KR:091170",
@@ -101,9 +137,9 @@
       "opened_date": "2026-08-15",
       "episode_realized_pnl": 0.0,
       "target_weight": 3.0,
-      "current_price": 15835.0,
-      "return_pct_krw": -2.3646438544601245,
-      "actual_weight": 2.964650372908776
+      "current_price": 15305.0,
+      "return_pct_krw": -5.632514947427358,
+      "actual_weight": 2.8514288830283445
     }
   ],
   "closed_positions": [
@@ -532,6 +568,10 @@
     {
       "date": "2026-08-20",
       "avg_return_krw": -0.07630225
+    },
+    {
+      "date": "2026-08-21",
+      "avg_return_krw": 0.41410054
     }
   ]
 }
