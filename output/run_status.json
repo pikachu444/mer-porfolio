@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "github_run_id": "32747900511",
+  "github_run_id": "32869400831",
   "mode": "scheduled",
   "run_label": "scheduled",
-  "completed_at": "2026-08-25T00:57:03.462140",
+  "completed_at": "2026-08-26T01:02:05.464065",
   "state_bundle_committed": true,
-  "report_path": "report_20260825.md",
+  "report_path": "report_20260826.md",
   "chart_path": "chart_latest.png",
   "no_changes": true,
   "telegram_delivery_required": true,
   "telegram_delivery_deferred": true,
   "telegram_delivery_accepted": null,
-  "status_note": "포트폴리오 안전 검증으로 변경 보류: decisions[0] links signals incompatible with maintaining or increasing the verified long"
+  "status_note": "Gemini 일시 장애로 투자 판단 보류. 포트폴리오 비중은 변경하지 않음"
 }
