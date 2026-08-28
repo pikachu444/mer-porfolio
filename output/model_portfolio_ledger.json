@@ -4,9 +4,9 @@
   "inception_date": "2026-07-14",
   "base_currency": "KRW",
   "starting_value": 100.0,
-  "cash": 85.50295838197883,
+  "cash": 85.5037470523636,
   "realized_pnl": -0.1844731391828804,
-  "dividend_income": 0.0,
+  "dividend_income": 0.000788670384769854,
   "cumulative_costs": 0.14391388683359357,
   "positions": [
     {
@@ -1017,10 +1017,25 @@
       "reason": "8.13 금융대책으로 은행의 주택 관련 대출 총량 규제가 대폭 완화되면서 대출 중단 리스크가 경감되고 마진 확보 여력이 개선되어 신규 매수 편입함. / 결정론적 슬리브·변동성·상한 정책 적용"
     }
   ],
-  "corporate_events": [],
+  "corporate_events": [
+    {
+      "event_id": "yfinance:000660.KS:cash_dividend:2026-08-28:375",
+      "event_type": "cash_dividend",
+      "key": "stock:KR:000660",
+      "effective_date": "2026-08-28",
+      "source": "yfinance",
+      "ticker": "000660.KS",
+      "native_cash_per_share": 375.0,
+      "native_currency": "KRW",
+      "fx_rate": 1.0,
+      "cash_per_share": 375.0,
+      "quantity_at_event": 2.103121026052944e-06,
+      "cash_amount": 0.000788670384769854
+    }
+  ],
   "corporate_action_state": {
-    "last_checked_date": "2026-08-27",
-    "last_applied_date": null
+    "last_checked_date": "2026-08-28",
+    "last_applied_date": "2026-08-28"
   },
   "snapshots": [
     {
@@ -1483,6 +1498,17 @@
       "return_pct": 0.46664269,
       "realized_pnl": -0.18447314,
       "dividend_income": 0.0,
+      "cumulative_costs": 0.14391389
+    },
+    {
+      "date": "2026-08-28",
+      "kind": "closing",
+      "cash": 85.50374705,
+      "invested_value": 15.31593891,
+      "total_value": 100.81968597,
+      "return_pct": 0.81968597,
+      "realized_pnl": -0.18447314,
+      "dividend_income": 0.00078867,
       "cumulative_costs": 0.14391389
     }
   ],
