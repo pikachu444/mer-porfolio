@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "github_run_id": "33438229236",
+  "github_run_id": "33544254092",
   "mode": "scheduled",
-  "run_label": "scheduled",
-  "completed_at": "2026-09-01T05:51:29.678499",
+  "run_label": "scheduled_rebalance",
+  "completed_at": "2026-09-02T03:33:21.517698",
   "state_bundle_committed": true,
-  "report_path": "report_20260901.md",
+  "report_path": "report_20260902.md",
   "chart_path": "chart_latest.png",
-  "no_changes": true,
+  "no_changes": false,
   "telegram_delivery_required": true,
   "telegram_delivery_deferred": true,
   "telegram_delivery_accepted": null,
-  "status_note": "Gemini 일시 장애로 투자 판단 보류. 포트폴리오 비중은 변경하지 않음"
+  "status_note": ""
 }

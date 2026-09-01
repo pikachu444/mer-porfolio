@@ -4,10 +4,10 @@
   "inception_date": "2026-07-14",
   "base_currency": "KRW",
   "starting_value": 100.0,
-  "cash": 85.51478468472266,
-  "realized_pnl": -0.1844731391828804,
+  "cash": 79.55130119622945,
+  "realized_pnl": -0.1375889351489082,
   "dividend_income": 0.011826302743827288,
-  "cumulative_costs": 0.14391388683359357,
+  "cumulative_costs": 0.1648738565477441,
   "positions": [
     {
       "key": "stock:KR:005930",
@@ -41,11 +41,11 @@
       "code": "305720",
       "market": "KR",
       "asset_type": "etf",
-      "quantity": 0.00036430288452667965,
+      "quantity": 0.0003301474035778921,
       "average_cost": 13866.474999999999,
       "decision_actor": "AI",
       "opened_date": "2026-07-16",
-      "episode_realized_pnl": 0.0,
+      "episode_realized_pnl": 0.04688420403397224,
       "target_weight": 5.0
     },
     {
@@ -54,12 +54,12 @@
       "code": "000660",
       "market": "KR",
       "asset_type": "stock",
-      "quantity": 2.103121026052944e-06,
-      "average_cost": 1883121.5218418436,
+      "quantity": 2.9806869838677382e-06,
+      "average_cost": 1828641.7932438785,
       "decision_actor": "AI",
       "opened_date": "2026-07-16",
       "episode_realized_pnl": 0.0,
-      "target_weight": 3.0
+      "target_weight": 5.0
     },
     {
       "key": "etf:KR:091170",
@@ -67,10 +67,23 @@
       "code": "091170",
       "market": "KR",
       "asset_type": "etf",
-      "quantity": 0.0001870785145602955,
-      "average_cost": 16218.51,
+      "quantity": 0.0003050047182646165,
+      "average_cost": 16363.93395809696,
       "decision_actor": "AI",
       "opened_date": "2026-08-15",
+      "episode_realized_pnl": 0.0,
+      "target_weight": 5.0
+    },
+    {
+      "key": "etf:KR:233160",
+      "name": "KODEX 은선물(H)",
+      "code": "233160",
+      "market": "KR",
+      "asset_type": "etf",
+      "quantity": 0.00039813041922588405,
+      "average_cost": 7627.815,
+      "decision_actor": "AI",
+      "opened_date": "2026-09-02",
       "episode_realized_pnl": 0.0,
       "target_weight": 3.0
     }
@@ -1015,6 +1028,66 @@
       "target_weight": 3.0,
       "drift_bps_before": 300.0,
       "reason": "8.13 금융대책으로 은행의 주택 관련 대출 총량 규제가 대폭 완화되면서 대출 중단 리스크가 경감되고 마진 확보 여력이 개선되어 신규 매수 편입함. / 결정론적 슬리브·변동성·상한 정책 적용"
+    },
+    {
+      "date": "2026-09-02",
+      "type": "일부 매도",
+      "key": "etf:KR:305720",
+      "name": "KODEX 2차전지산업",
+      "decision_actor": "AI",
+      "price": 15285.0,
+      "quantity": 3.415548094878754e-05,
+      "value": -0.5220665263022175,
+      "trade_cost": 0.0015661995789066525,
+      "realized_pnl": 0.04688420403397224,
+      "target_weight": 5.0,
+      "drift_bps_before": -51.61306608144898,
+      "reason": "미국 OBBBA 등 제재법안 수혜와 메이저 기업 간 구조조정 흐름이 지속되고 있으므로 신규 촉매 확인 시까지 비중 변경 없이 보유함. / 결정론적 슬리브·변동성·상한 정책 적용"
+    },
+    {
+      "date": "2026-09-02",
+      "type": "추가 매수",
+      "key": "etf:KR:091170",
+      "name": "KODEX 은행",
+      "decision_actor": "AI",
+      "price": 16545.0,
+      "quantity": 0.00011792620370432104,
+      "value": 1.9510890402879917,
+      "trade_cost": 0.005853267120863975,
+      "realized_pnl": 0.0,
+      "target_weight": 5.0,
+      "drift_bps_before": 193.38233211114937,
+      "reason": "한국은행의 기준금리 0.25%p 추가 인상(3.0%)에 따라 시중은행의 단기 예대마진 및 순이자마진(NIM) 지표가 구조적으로 개선될 수 있어 비중을 기존 3.0%에서 5.0%로 확대함. / 결정론적 슬리브·변동성·상한 정책 적용"
+    },
+    {
+      "date": "2026-09-02",
+      "type": "신규 매수",
+      "key": "etf:KR:233160",
+      "name": "KODEX 은선물(H)",
+      "decision_actor": "AI",
+      "price": 7605.0,
+      "quantity": 0.00039813041922588405,
+      "value": 3.027781838212848,
+      "trade_cost": 0.009083345514638545,
+      "realized_pnl": 0.0,
+      "target_weight": 3.0,
+      "drift_bps_before": 300.0,
+      "reason": "전통적인 태양광 실버 박막화 우려를 전력 소비가 극대화되는 AI 데이터센터 서버용 하드웨어 및 단자 수요가 초과 상쇄하며, 만성 공급 부족에 따른 은 실물의 장기 우상향 모멘텀이 포착되어 신규 매수함. / 결정론적 슬리브·변동성·상한 정책 적용"
+    },
+    {
+      "date": "2026-09-02",
+      "type": "추가 매수",
+      "key": "stock:KR:000660",
+      "name": "SK하이닉스",
+      "decision_actor": "AI",
+      "price": 1693000.0,
+      "quantity": 8.775659578147943e-07,
+      "value": 1.4857191665804468,
+      "trade_cost": 0.00445715749974134,
+      "realized_pnl": 0.0,
+      "target_weight": 5.0,
+      "drift_bps_before": 147.28192538541637,
+      "reason": "이사회를 통한 40조 원 규모의 대규모 자사주 취득 및 전량 소각 결정으로 주당순가치(EPS)의 극적인 상승이 예상되어 포트폴리오 내 비중 확대를 결정함. / 결정론적 슬리브·변동성·상한 정책 적용"
     }
   ],
   "corporate_events": [
@@ -1048,7 +1121,7 @@
     }
   ],
   "corporate_action_state": {
-    "last_checked_date": "2026-09-01",
+    "last_checked_date": "2026-09-02",
     "last_applied_date": "2026-08-28"
   },
   "snapshots": [
@@ -1568,6 +1641,17 @@
       "realized_pnl": -0.18447314,
       "dividend_income": 0.0118263,
       "cumulative_costs": 0.14391389
+    },
+    {
+      "date": "2026-09-02",
+      "kind": "closing",
+      "cash": 79.5513012,
+      "invested_value": 21.37476008,
+      "total_value": 100.92606127,
+      "return_pct": 0.92606127,
+      "realized_pnl": -0.13758894,
+      "dividend_income": 0.0118263,
+      "cumulative_costs": 0.16487386
     }
   ],
   "legacy_epochs": [
